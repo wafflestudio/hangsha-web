@@ -9,23 +9,23 @@ export default function ProfileSetting() {
 	const [, setSearchParams] = useSearchParams();
 	const { updateUser } = useAuth();
 
-	const DEFAULT_PROFILE_URL = defaultProfile;
+	const defaultName = "푱푱한 토끼";
 	const [name, setName] = useState<string>("");
-	const [previewUrl, setPreviewUrl] = useState(DEFAULT_PROFILE_URL);
+	const [previewUrl, setPreviewUrl] = useState(defaultProfile);
 	const [imgFile, setImgFile] = useState<File | null>(null);
-	const [, setIsDefaultProfile] = useState(true);
 
 	const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const file = e.target.files?.[0];
 		if (!file) return;
 		setImgFile(file);
 		setPreviewUrl(URL.createObjectURL(file));
-		setIsDefaultProfile(false);
 	};
 
-	const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
-		updateUser(name, imgFile);
+		const finalName = name.trim() === "" ? defaultName : name.trim();
+
+		await updateUser(finalName, imgFile);
 
 		setSearchParams((prev) => {
 			const next = new URLSearchParams(prev);
@@ -34,7 +34,6 @@ export default function ProfileSetting() {
 		});
 	};
 
-	// profile image preview url cleanup (cleanup callback is executed before next effect / component unmount)
 	useEffect(() => {
 		return () => {
 			if (previewUrl?.startsWith("blob:")) {
@@ -77,7 +76,7 @@ export default function ProfileSetting() {
 					/>
 
 					<button className={styles.submit} type="submit">
-						닉네임 설정하기
+						완료
 					</button>
 				</form>
 			</div>

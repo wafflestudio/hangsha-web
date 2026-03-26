@@ -45,38 +45,38 @@ const BookmarksPage = () => {
 	const { showDetail, clickedEventId } = useDetail();
 
 	return (
-			<div className={styles.container}>
-				<div className={styles.bookmarksPage}>
-					<Navigationbar />
-					<div className={styles.bookmarksHeader}>
-						<FaChevronLeft
-							className={styles.backBtn}
-							color="ABABAB"
-							size={18}
-							onClick={() => navigate("/my")}
-						/>
-						<div className={styles.row}>
-							<span>내 찜 목록</span>
-							<img src="/assets/Bookmarked.svg" alt="filled bookmark icon" />
-						</div>
+		<div className={styles.container}>
+			<div className={styles.bookmarksPage}>
+				<Navigationbar />
+				<div className={styles.bookmarksHeader}>
+					<FaChevronLeft
+						className={styles.backBtn}
+						color="ABABAB"
+						size={18}
+						onClick={() => navigate("/my")}
+					/>
+					<div className={styles.row}>
+						<span>내 찜 목록</span>
+						<img src="/assets/Bookmarked.svg" alt="filled bookmark icon" />
 					</div>
-					<div className={styles.cardsColumn}>
-						{bookmarkedEvents &&
-							bookmarkedEvents.length > 0 &&
-							bookmarkedEvents.map((e) => <GalleryCard key={e.id} event={e} />)}
-					</div>
-					{(!bookmarkedEvents || bookmarkedEvents.length === 0) && (
-						<span
-							className={styles.noneText}
-						>{`아직 찜된 행사가 없습니다.\n관심있는 행사를 찜해보세요!`}</span>
-					)}
 				</div>
-				{showDetail && clickedEventId !== undefined && (
-					<div className={styles.sidePanel}>
-						<DetailView eventId={clickedEventId} />
-					</div>
+				<div className={styles.cardsColumn}>
+					{bookmarkedEvents &&
+						bookmarkedEvents.length > 0 &&
+						bookmarkedEvents.map((e) => <GalleryCard key={e.id} event={e} />)}
+				</div>
+				{(!bookmarkedEvents || bookmarkedEvents.length === 0) && (
+					<span
+						className={styles.noneText}
+					>{`아직 찜된 행사가 없습니다.\n관심있는 행사를 찜해보세요!`}</span>
 				)}
 			</div>
+			{showDetail && clickedEventId !== undefined && (
+				<div className={styles.sidePanel}>
+					<DetailView eventId={clickedEventId} />
+				</div>
+			)}
+		</div>
 	);
 };
 

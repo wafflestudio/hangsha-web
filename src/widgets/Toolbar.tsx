@@ -62,12 +62,13 @@ const SearchInput = () => {
 
 export const ProfileButton = ({ user }: { user: User | null }) => {
 	const navigate = useNavigate();
-	const [profilePreviewUrl, setProfilePreviewUrl] = useState<string>(user?.profileImageUrl || '/assets/defaultProfile.png');
+	const [profilePreviewUrl, setProfilePreviewUrl] = useState<string>(
+		user?.profileImageUrl || "/assets/defaultProfile.png",
+	);
 
 	const handleImageError = () => {
 		setProfilePreviewUrl("/assets/defaultProfile.png");
 	};
-
 
 	return (
 		<button

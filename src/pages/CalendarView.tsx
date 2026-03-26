@@ -79,7 +79,15 @@ const CalendarView = () => {
 			await fetchMonthEvents(paramMonth);
 		};
 		loadMonthEvents();
-	}, [currentDate, fetchMonthEvents, globalCategory, globalOrg, globalStatus, excludedKeywords, interestCategories]);
+	}, [
+		currentDate,
+		fetchMonthEvents,
+		globalCategory,
+		globalOrg,
+		globalStatus,
+		excludedKeywords,
+		interestCategories,
+	]);
 
 	useEffect(() => {
 		const getWeekRangeByDate = (date: Date) => {
