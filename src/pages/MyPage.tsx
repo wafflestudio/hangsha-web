@@ -64,6 +64,7 @@ const ProfileCard = ({ onClickInterest } : { onClickInterest: () => void }) => {
             setProfilePreviewUrl(defaultProfile);
         }
     }, [user?.profileImageUrl]);
+	
 	// profile image preview url cleanup (cleanup callback is executed before next effect / component unmount)
 	useEffect(() => {
 		return () => {

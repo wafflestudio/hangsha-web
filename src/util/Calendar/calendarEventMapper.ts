@@ -7,7 +7,11 @@ const calendarEventMapper = (event: Event | EventDetail, currentView: View) => {
 	if (!event.eventStart || !event.eventEnd) {
 		// 기본 : eventStart 혹은 eventEnd가 없으면 기간제 행사 처리
 		isPeriodEvent = true;
-	} else if (event.title.includes("공모전") || event.title.includes("인턴십")) {
+	} else if (
+		event.title.includes("공모전") ||
+		event.title.includes("인턴십") ||
+		event.title.includes("학생기자딘")
+	) {
 		// 인턴십, 공모전 : 신청형 기간제 행사임에도 eventStart, eventEnd 데이터가 들어있는 경우 있음
 		// -> 일괄적으로 기간제 행사 처리
 		isPeriodEvent = true;
@@ -27,6 +31,7 @@ const calendarEventMapper = (event: Event | EventDetail, currentView: View) => {
 		(isPeriodEvent ? event.applyEnd : event.eventEnd) ||
 		event.eventEnd ||
 		event.applyEnd;
+
 	const isAllDay = currentView === Views.MONTH ? true : isPeriodEvent;
 
 	return {

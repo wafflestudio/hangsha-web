@@ -1,7 +1,7 @@
 import { CATEGORY_COLORS } from "@constants";
 import type { CalendarEvent } from "@types";
 import styles from "@styles/DayEvent.module.css";
-import { formatDateDotParsed } from "@calendarUtil/dateFormatter";
+import { eventDateRenderer } from "@/util/Calendar/eventDateRenderer";
 
 const DayEvent = ({ event: calendarEvent }: { event: CalendarEvent }) => {
 	const { /*isPeriodEvent,*/ event } = calendarEvent.resource;
@@ -33,10 +33,7 @@ const DayEvent = ({ event: calendarEvent }: { event: CalendarEvent }) => {
 				{event.title}
 			</div>
 			<div className={`${styles.eventContent} ${styles.eventMeta}`}>
-				{formatDateDotParsed(calendarEvent.start) ===
-				formatDateDotParsed(calendarEvent.end)
-					? formatDateDotParsed(calendarEvent.start)
-					: `${formatDateDotParsed(calendarEvent.start)} ~ ${formatDateDotParsed(calendarEvent.end)}`}
+				{eventDateRenderer(calendarEvent)}
 			</div>
 			<div className={`${styles.eventContent} ${styles.eventMeta}`}>
 				{event.location === "-" ? "" : event.location}

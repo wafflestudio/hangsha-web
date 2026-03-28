@@ -1,7 +1,5 @@
 import { useEffect, useRef, useState } from "react";
 import { Views } from "react-big-calendar";
-import { useEvents } from "@contexts/EventContext";
-import { useFilter } from "@contexts/FilterContext";
 import styles from "@styles/CalendarView.module.css";
 import type {
 	CalendarEvent,
@@ -13,11 +11,15 @@ import DetailView from "@/widgets/DetailView";
 import MonthSideView from "@widgets/Month/MonthSideView/MonthSideView";
 import { MyCalendar } from "@widgets/MyCalendar";
 import { Sidebar } from "@widgets/Sidebar";
+
 import { useDetail } from "@contexts/DetailContext";
+import { useEvents } from "@contexts/EventContext";
+import { useFilter } from "@contexts/FilterContext";
 import { formatDateToYYYYMMDD } from "@calendarUtil/dateFormatter";
 import { useUserData } from "@/contexts/UserDataContext";
 
 const CalendarView = () => {
+	// EventContext
 	const {
 		monthViewData,
 		fetchMonthEvents,
@@ -64,6 +66,7 @@ const CalendarView = () => {
 		setCurrentDate(dayDate);
 	}, [dayDate]);
 
+	/** ----------------------  FETCH MONTH / WEEK / DAY data -------------------- */ 
 	// biome-ignore lint/correctness/useExhaustiveDependencies: excludedKeywords and interestCategories change server data although not explicitly used in FE
 	useEffect(() => {
 		const loadMonthEvents = async () => {
@@ -75,7 +78,6 @@ const CalendarView = () => {
 			if (globalOrg) paramMonth.orgId = globalOrg.map((g) => g.id);
 			if (globalStatus) paramMonth.statusId = globalStatus.map((g) => g.id);
 
-			console.log("paramMonth", paramMonth);
 			await fetchMonthEvents(paramMonth);
 		};
 		loadMonthEvents();
@@ -115,12 +117,12 @@ const CalendarView = () => {
 			if (globalOrg) paramWeek.orgId = globalOrg.map((g) => g.id);
 			if (globalStatus) paramWeek.statusId = globalStatus.map((g) => g.id);
 
-			console.log("paramWeek", paramWeek);
 			await fetchWeekEvents(paramWeek);
 		};
 		loadWeekEvents();
 	}, [currentDate, fetchWeekEvents, globalCategory, globalOrg, globalStatus]);
-
+	
+	// DAY
 	useEffect(() => {
 		const loadDayEvents = async () => {
 			const paramDay: FetchDayEventArgs = {

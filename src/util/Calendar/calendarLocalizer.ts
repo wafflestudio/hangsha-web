@@ -9,3 +9,6 @@ export const localizer = dateFnsLocalizer({
 	getDay,
 	locales: { ko: ko },
 });
+
+// Preserve original array order instead of react-big-calendar's default sorting
+localizer.sortEvents = () => false;
