@@ -1,0 +1,15 @@
+name: deploy-prod
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    uses: ./.github/workflows/_deploy.yml
+    with:
+      bucket_name: hangsha-web-prod
+      distribution_id: E1UQAE6HOA8O14
+    secrets: inherit
