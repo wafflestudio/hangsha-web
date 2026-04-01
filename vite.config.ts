@@ -6,8 +6,11 @@ import tsconfigPaths from "vite-tsconfig-paths";
 export default defineConfig(({ mode }) => {
 	const apiTarget =
 		mode === "production"
-			? "http://hangsha-api-dev.wafflestudio.com"
-			: "http://hangsha-api.wafflestudio.com";
+			? "https://hangsha-api.wafflestudio.com"
+			: "https://hangsha-api-dev.wafflestudio.com";
+
+	console.log("mode", mode);
+
 	return {
 		plugins: [react(), tsconfigPaths()],
 		server: {
