@@ -5,6 +5,10 @@ import { useEvents } from "@contexts/EventContext";
 import styles from "@styles/MonthSideView.module.css";
 import CardView from "./CardView";
 import { useDetail } from "@/contexts/DetailContext";
+import calendarEventMapper from "@/util/Calendar/calendarEventMapper";
+import { Views } from "react-big-calendar";
+import type { CalendarEvent, Event } from "@/util/types";
+import { startOfDay, isWithinInterval } from 'date-fns';
 
 const MonthSideView = ({
 	day,
@@ -17,10 +21,27 @@ const MonthSideView = ({
 	const { setShowDetail, setClickedEventId } = useDetail();
 	const [date, setDate] = useState<Date>(day);
 
+	// list of day events
+	const dayCalendarEvents: CalendarEvent[] = dayViewEvents.map((e: Event) => calendarEventMapper(e, Views.DAY));
+	const filteredCalendarEvents = dayCalendarEvents.filter((e) => {
+		if (!isWithinInterval(startOfDay(day), { start: startOfDay(e.start), end: startOfDay(e.end), })) {
+			console.log(`${startOfDay(day)} - ${e.resource.event.title} : filtered because START: ${startOfDay(e.start)} | END: ${startOfDay(e.end)}`);
+		}
+		return (isWithinInterval(startOfDay(day), {
+			start: startOfDay(e.start), 
+			end: startOfDay(e.end), 
+		}));
+	});
+	const events = filteredCalendarEvents.map(e => e.resource.event);
+	// const events = dayCalendarEvents.map(e => e.resource.event);
+
+
 	useEffect(() => {
 		const loadEvents = async () => {
 			await fetchDayEvents({
 				date,
+				page: 1,
+				size: 100,
 			});
 		};
 		loadEvents();
@@ -65,7 +86,7 @@ const MonthSideView = ({
 				</button>
 			</div>
 			<div className={styles.cardWrapper}>
-				{dayViewEvents.map((event) => (
+				{events.map((event) => (
 					// biome-ignore lint/a11y/useSemanticElements: Cannot use button because it contains nested interactive elements
 					<div
 						role="button"

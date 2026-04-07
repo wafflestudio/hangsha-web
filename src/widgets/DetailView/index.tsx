@@ -2,7 +2,6 @@ import { addBookmark, removeBookmark } from "@api/user";
 import { useEvents } from "@contexts/EventContext";
 import { useEffect, useRef, useState } from "react";
 import styles from "@styles/DetailView.module.css";
-import { formatDateDotParsed } from "@calendarUtil/dateFormatter";
 import { getDDay } from "../../util/Calendar/getDday";
 import { CATEGORY_COLORS, CATEGORY_LIST } from "@constants";
 import { FaAnglesRight } from "react-icons/fa6";
@@ -15,6 +14,7 @@ import DetailMemo from "./DetailMemo";
 import { ErrorModal } from "../Modal";
 import Loading from "../Loading";
 import calendarEventMapper from "@/util/Calendar/calendarEventMapper";
+import { eventDateRenderer } from "@/util/Calendar/eventDateRenderer";
 
 const DetailView = ({ eventId }: { eventId: number }) => {
 	const [event, setEvent] = useState<EventDetail>();
@@ -32,7 +32,7 @@ const DetailView = ({ eventId }: { eventId: number }) => {
 	const [isMemoExpanded, setIsMemoExpanded] = useState<boolean>(false);
 	const memoWrapperRef = useRef<HTMLDivElement>(null);
 
-	// detect outside clicks
+	// detect outside clicks - expand memo
 	useEffect(() => {
 		function handleClickOutside(event: MouseEvent) {
 			if (!memoWrapperRef.current) return;
@@ -145,15 +145,16 @@ const DetailView = ({ eventId }: { eventId: number }) => {
 			<span className={styles.date}>
 				{calendarEvent &&
 					// !event.eventStart : 기간제 행사, yyyy.mm.dd ~ yyyy.mm.dd로 표시
-					(calendarEvent.resource.isPeriodEvent
-						? `${formatDateDotParsed(calendarEvent.start)} ~ ${formatDateDotParsed(calendarEvent.end)}`
-						: // 단발성 행사
-							calendarEvent.start.toDateString() ===
-								calendarEvent.end.toDateString()
-							? // yyyy.mm.dd만 표시
-								formatDateDotParsed(calendarEvent.start)
-							: // yyyy.mm.dd ~ yyyy.mm.dd
-								`${formatDateDotParsed(calendarEvent.start)} ~ ${formatDateDotParsed(calendarEvent.end)}`)}
+					// calendarEvent.resource.isPeriodEvent ? 
+					// 	`${formatDateDotParsed(calendarEvent.start)} ~ ${formatDateDotParsed(calendarEvent.end)}`
+					// 	: // 단발성 행사
+					// 		calendarEvent.start.toDateString() === calendarEvent.end.toDateString()
+					// 		? // yyyy.mm.dd만 표시
+					// 			formatDateDotParsed(calendarEvent.start)
+					// 		: // yyyy.mm.dd ~ yyyy.mm.dd
+					// 			`${formatDateDotParsed(calendarEvent.start)} ~ ${formatDateDotParsed(calendarEvent.end)}`
+					eventDateRenderer(calendarEvent)
+				)}
 			</span>
 			<ul className={styles.chipsList}>
 				<li className={styles.deadlineChip}>{getDDay(ddayTargetDate)}</li>

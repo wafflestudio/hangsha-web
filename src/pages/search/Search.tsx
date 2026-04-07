@@ -10,6 +10,8 @@ import { useDetail } from "@/contexts/DetailContext";
 import DetailView from "@/widgets/DetailView";
 import Pagination from "@/widgets/Pagination";
 import Loading from "@/widgets/Loading";
+import { Views } from "react-big-calendar";
+import calendarEventMapper from "@/util/Calendar/calendarEventMapper";
 
 const SearchView = () => {
 	const {
@@ -37,26 +39,7 @@ const SearchView = () => {
 	const events: CalendarEvent[] = useMemo(() => {
 		if (!searchResults) return [];
 
-		return searchResults.items.map((event: Event) => {
-			const isPeriodEvent = !event.eventStart;
-			const startDate =
-				(isPeriodEvent ? event.applyStart : event.eventStart) ||
-				event.eventStart ||
-				event.applyStart;
-			const endDate =
-				(isPeriodEvent ? event.applyEnd : event.eventEnd) ||
-				event.eventEnd ||
-				event.applyEnd;
-			const isAllDay = isPeriodEvent;
-
-			return {
-				start: startDate,
-				end: endDate,
-				title: event.title,
-				allDay: isAllDay,
-				resource: { event, isPeriodEvent },
-			};
-		});
+		return searchResults.items.map((e: Event) => calendarEventMapper(e, Views.DAY));
 	}, [searchResults]);
 
 	/* pagination logic */

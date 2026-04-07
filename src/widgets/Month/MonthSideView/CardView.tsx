@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { addBookmark, removeBookmark } from "@api/user";
 import styles from "@styles/CardView.module.css";
-import { formatDateDotParsed } from "@calendarUtil/dateFormatter";
 import { getDDay } from "@calendarUtil/getDday";
 import { CATEGORY_COLORS, CATEGORY_LIST } from "@constants";
 import type { Event } from "@types";
+import { eventDateRenderer } from "@/util/Calendar/eventDateRenderer";
+import calendarEventMapper from "@/util/Calendar/calendarEventMapper";
+import { Views } from "react-big-calendar";
 
 const CardView = ({ event }: { event: Event }) => {
 	const [isBookmarked, setIsBookmarked] = useState<boolean>(
@@ -47,18 +49,7 @@ const CardView = ({ event }: { event: Event }) => {
 			</button>
 			<h1 className={styles.eventTitle}>{event.title}</h1>
 			<span className={styles.dateText}>
-				{
-					// !event.eventStart : 기간제 행사, yyyy.mm.dd ~ yyyy.mm.dd로 표시
-					event.eventStart && event.eventEnd
-						? // 단발성 행사
-							event.eventStart === event.eventEnd
-							? // yyyy.mm.dd만 표시
-								formatDateDotParsed(event.eventStart)
-							: // yyyy.mm.dd ~ yyyy.mm.dd
-								`${formatDateDotParsed(event.eventStart)} ~ ${formatDateDotParsed(event.eventEnd)}`
-						: // 기간제 행사
-							`${formatDateDotParsed(event.applyStart)} ~ ${formatDateDotParsed(event.applyEnd)}`
-				}
+				{eventDateRenderer(calendarEventMapper(event, Views.DAY))}
 			</span>
 			<ul className={styles.chipsList}>
 				<li className={styles.deadlineChip}>{getDDay(ddayTargetDate)}</li>
