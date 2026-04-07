@@ -174,7 +174,7 @@ export function PeriodBars({
 					>
 						<div className={styles.line} />
 
-						<div className={`${styles.label}`}>
+						<div className={styles.label}>
 							<span className={styles.title}>{displayTitle}</span>
 						</div>
 					</button>
