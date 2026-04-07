@@ -7,7 +7,7 @@
 .bar {
 	position: absolute;
 	border: none;
-	padding: 0;
+	padding: 20px;
 	margin: 0;
 	background: transparent;
 	cursor: pointer;
@@ -39,7 +39,8 @@
 	line-height: 1;
 	background-color: white;
 	transform: translateY(-6px);
-	max-width: 100%;
+	max-width: 80%;
+	left: 20px;
 }
 
 .title {
