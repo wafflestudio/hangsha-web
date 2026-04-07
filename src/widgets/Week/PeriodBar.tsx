@@ -61,7 +61,7 @@ function assignLanes(bars: Bar[]) {
 		while (true) {
 			const laneBars = lanes[lane] ?? [];
 			const conflict = laneBars.some(
-				(x) => !(bar.endIdx < x.startIdx || bar.startIdx > x.endIdx),
+				(x) => !(bar.endIdx + 1 < x.startIdx || bar.startIdx > x.endIdx + 1),
 			);
 			if (!conflict) {
 				if (!lanes[lane]) lanes[lane] = [];
@@ -81,11 +81,12 @@ export function PeriodBars({
 	items,
 	left,
 	width,
-	laneHeight = 22,
+	laneHeight = 25,
 	laneGap = 6,
 	bottomOffset = 8,
 	onSelectEvent,
 }: Props) {
+	console.log("render PeriodBars", { date, items, left, width });
 	const weekStart = useMemo(() => startOfWeekSunday(date), [date]);
 	const weekEnd = useMemo(() => endOfWeekSaturday(date), [date]);
 
