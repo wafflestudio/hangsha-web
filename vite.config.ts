@@ -3,15 +3,24 @@ import { defineConfig } from "vite";
 import tsconfigPaths from "vite-tsconfig-paths";
 
 // https://vite.dev/config/
-export default defineConfig({
-	plugins: [react(), tsconfigPaths()],
-	server: {
-		proxy: {
-			"/api": {
-				target: "http://13.125.246.220:8080",
-				changeOrigin: true,
-				secure: false,
+export default defineConfig(({ mode }) => {
+	const apiTarget =
+		mode === "production"
+			? "https://hangsha-api.wafflestudio.com"
+			: "https://hangsha-api-dev.wafflestudio.com";
+
+	console.log("mode", mode);
+
+	return {
+		plugins: [react(), tsconfigPaths()],
+		server: {
+			proxy: {
+				"/api": {
+					target: apiTarget,
+					changeOrigin: true,
+					secure: false,
+				},
 			},
 		},
-	},
+	};
 });
