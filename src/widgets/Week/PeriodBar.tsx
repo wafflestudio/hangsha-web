@@ -142,7 +142,6 @@ export function PeriodBars({
 			}}
 		>
 			{barsWithLane.map((b) => {
-				console.log(left);
 				const span = b.endIdx - b.startIdx + 1;
 
 				const leftPct = b.startIdx * ((width - 80) / 7) + 80;
@@ -150,8 +149,10 @@ export function PeriodBars({
 
 				const displayTitle = truncate20(b.title);
 
-				const categoryId = b.raw.resource.event.orgId;
+				const categoryId = b.raw.resource.event.eventTypeId;
 				const color = CATEGORY_COLORS[categoryId] ?? "#999";
+				console.log("color", { categoryId, color });
+
 
 				const style: CSSVarStyle = {
 					left: `${leftPct}px`,
