@@ -22,9 +22,13 @@ const Modal = ({
 		<div className={styles.modalContainer}>
 			<div className={styles.modalWrapper}>
 				{onClose && (
-				<button className={styles.closeButton} type="button" onClick={onClose}>
-					<IoIosClose size={25} color="gray" />
-				</button>
+					<button
+						className={styles.closeButton}
+						type="button"
+						onClick={onClose}
+					>
+						<IoIosClose size={25} color="gray" />
+					</button>
 				)}
 				<span className={styles.modalContent}>{content}</span>
 				<div className={styles.buttonsRow}>

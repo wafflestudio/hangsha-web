@@ -153,7 +153,6 @@ export function PeriodBars({
 				const color = CATEGORY_COLORS[categoryId] ?? "#999";
 				console.log("color", { categoryId, color });
 
-
 				const style: CSSVarStyle = {
 					left: `${leftPct}px`,
 					width: `${widthPct}px`,
