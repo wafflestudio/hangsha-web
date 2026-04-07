@@ -154,7 +154,7 @@ const DetailView = ({ eventId }: { eventId: number }) => {
 					// 		: // yyyy.mm.dd ~ yyyy.mm.dd
 					// 			`${formatDateDotParsed(calendarEvent.start)} ~ ${formatDateDotParsed(calendarEvent.end)}`
 					eventDateRenderer(calendarEvent)
-				)}
+				}
 			</span>
 			<ul className={styles.chipsList}>
 				<li className={styles.deadlineChip}>{getDDay(ddayTargetDate)}</li>
