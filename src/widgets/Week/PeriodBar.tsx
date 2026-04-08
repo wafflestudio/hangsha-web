@@ -86,7 +86,6 @@ export function PeriodBars({
 	bottomOffset = 8,
 	onSelectEvent,
 }: Props) {
-	console.log("render PeriodBars", { date, items, left, width });
 	const weekStart = useMemo(() => startOfWeekSunday(date), [date]);
 	const weekEnd = useMemo(() => endOfWeekSaturday(date), [date]);
 
@@ -151,7 +150,6 @@ export function PeriodBars({
 
 				const categoryId = b.raw.resource.event.eventTypeId;
 				const color = CATEGORY_COLORS[categoryId] ?? "#999";
-				console.log("color", { categoryId, color });
 
 				const style: CSSVarStyle = {
 					left: `${leftPct}px`,

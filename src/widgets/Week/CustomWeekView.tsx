@@ -81,6 +81,7 @@ function CustomWeekView({
 			.filter((cevent: CalendarEvent) => {
 				const eventStart = cevent.start;
 				const eventEnd = cevent.end;
+				console.log("filtering events", { cevent, eventStart, eventEnd});
 
 				return eventStart <= weekEnd && eventEnd >= weekStart;
 			})
