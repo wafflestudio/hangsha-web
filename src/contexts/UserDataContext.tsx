@@ -97,6 +97,11 @@ export const UserDataProvider = ({ children }: { children: ReactNode }) => {
 			} else {
 				await userService.addBookmark(event.id);
 			}
+
+			// 3. update total bookmarks
+			const newBookmarks = await userService.getBookmarks(1);
+			setBookmarkedEvents(newBookmarks);
+
 		} catch (error) {
 			// Revert on failure
 			fetchAll();

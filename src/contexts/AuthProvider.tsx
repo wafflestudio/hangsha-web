@@ -8,6 +8,7 @@ import {
 import * as auth from "@api/auth";
 import type { Provider, User } from "@types";
 import { TokenService } from "@/api/tokenService";
+import { useUserData } from "./UserDataContext";
 
 interface AuthContextType {
 	user: User | null;
@@ -33,6 +34,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 	const [user, setUser] = useState<User | null>(null);
 	const [isAuthenticated, setIsAuthenticated] = useState(false);
 	const [isLoading, setIsLoading] = useState(true);
+	const { refreshUserData } = useUserData();
 
 	/**
 	 * INIT : check for existing session on page load
@@ -102,6 +104,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 			const userData = await auth.getUser();
 			setUser(userData);
 			setIsAuthenticated(true);
+			refreshUserData();
 		} catch (err) {
 			console.error("Signup failed:", err);
 			throw err;
