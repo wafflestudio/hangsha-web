@@ -43,9 +43,9 @@ function endOfWeekSaturday(d: Date) {
 	return end;
 }
 
-function truncate20(s: string) {
+function truncate40(s: string) {
 	if (!s) return "";
-	return s.length > 20 ? `${s.slice(0, 20)}…` : s;
+	return s.length > 40 ? `${s.slice(0, 40)}…` : s;
 }
 
 function assignLanes(bars: Bar[]) {
@@ -147,7 +147,7 @@ export function PeriodBars({
 				const leftPct = b.startIdx * ((width - 80) / 7) + 80;
 				const widthPct = span * ((width - 80) / 7);
 
-				const displayTitle = truncate20(b.title);
+				const displayTitle = truncate40(b.title);
 
 				const categoryId = b.raw.resource.event.eventTypeId;
 				const color = CATEGORY_COLORS[categoryId] ?? "#999";
