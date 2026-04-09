@@ -43,9 +43,9 @@ function endOfWeekSaturday(d: Date) {
 	return end;
 }
 
-function truncate20(s: string) {
+function truncate40(s: string) {
 	if (!s) return "";
-	return s.length > 20 ? `${s.slice(0, 20)}…` : s;
+	return s.length > 40 ? `${s.slice(0, 40)}…` : s;
 }
 
 function assignLanes(bars: Bar[]) {
@@ -61,7 +61,7 @@ function assignLanes(bars: Bar[]) {
 		while (true) {
 			const laneBars = lanes[lane] ?? [];
 			const conflict = laneBars.some(
-				(x) => !(bar.endIdx < x.startIdx || bar.startIdx > x.endIdx),
+				(x) => !(bar.endIdx + 1 < x.startIdx || bar.startIdx > x.endIdx + 1),
 			);
 			if (!conflict) {
 				if (!lanes[lane]) lanes[lane] = [];
@@ -81,11 +81,12 @@ export function PeriodBars({
 	items,
 	left,
 	width,
-	laneHeight = 22,
+	laneHeight = 25,
 	laneGap = 6,
 	bottomOffset = 8,
 	onSelectEvent,
 }: Props) {
+	console.log("render PeriodBars", { date, items, left, width });
 	const weekStart = useMemo(() => startOfWeekSunday(date), [date]);
 	const weekEnd = useMemo(() => endOfWeekSaturday(date), [date]);
 
@@ -141,16 +142,16 @@ export function PeriodBars({
 			}}
 		>
 			{barsWithLane.map((b) => {
-				console.log(left);
 				const span = b.endIdx - b.startIdx + 1;
 
 				const leftPct = b.startIdx * ((width - 80) / 7) + 80;
 				const widthPct = span * ((width - 80) / 7);
 
-				const displayTitle = truncate20(b.title);
+				const displayTitle = truncate40(b.title);
 
-				const categoryId = b.raw.resource.event.orgId;
+				const categoryId = b.raw.resource.event.eventTypeId;
 				const color = CATEGORY_COLORS[categoryId] ?? "#999";
+				console.log("color", { categoryId, color });
 
 				const style: CSSVarStyle = {
 					left: `${leftPct}px`,
@@ -173,7 +174,7 @@ export function PeriodBars({
 					>
 						<div className={styles.line} />
 
-						<div className={`${styles.label}`}>
+						<div className={styles.label}>
 							<span className={styles.title}>{displayTitle}</span>
 						</div>
 					</button>

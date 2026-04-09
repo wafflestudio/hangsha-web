@@ -19,7 +19,7 @@ import { eventDateRenderer } from "@/util/Calendar/eventDateRenderer";
 const DetailView = ({ eventId }: { eventId: number }) => {
 	const [event, setEvent] = useState<EventDetail>();
 	const [calendarEvent, setCalendarEvent] = useState<CalendarEvent | null>(
-		event ? calendarEventMapper(event, 'day') : null
+		event ? calendarEventMapper(event, "day") : null,
 	);
 
 	const { fetchEventById, detailError, isLoadingDetail, clearError } =
@@ -57,7 +57,7 @@ const DetailView = ({ eventId }: { eventId: number }) => {
 		const loadEvent = async () => {
 			const event = await fetchEventById(eventId);
 			setEvent(event ?? undefined);
-			if (event) setCalendarEvent(calendarEventMapper(event, 'day'));
+			if (event) setCalendarEvent(calendarEventMapper(event, "day"));
 		};
 		loadEvent();
 		// scroll to top of component
@@ -67,7 +67,9 @@ const DetailView = ({ eventId }: { eventId: number }) => {
 	}, [eventId, fetchEventById]);
 
 	// 디데이 계산할 기준 날짜
-	const ddayTargetDate = calendarEvent?.resource.isPeriodEvent ? calendarEvent.end : calendarEvent?.start;
+	const ddayTargetDate = calendarEvent?.resource.isPeriodEvent
+		? calendarEvent.end
+		: calendarEvent?.start;
 	const [isBookmarked, setIsBookmarked] = useState<boolean>(
 		!!event?.isBookmarked,
 	);
@@ -78,10 +80,7 @@ const DetailView = ({ eventId }: { eventId: number }) => {
 		}
 	}, [event]);
 
-	if (!event)
-		return (
-			<Loading />
-		);
+	if (!event) return <Loading />;
 
 	const handleToggleBookmark = async () => {
 		const previousState = isBookmarked;
@@ -144,7 +143,7 @@ const DetailView = ({ eventId }: { eventId: number }) => {
 			</button>
 			<h1 className={styles.title}>{event.title}</h1>
 			<span className={styles.date}>
-				{calendarEvent && (
+				{calendarEvent &&
 					// !event.eventStart : 기간제 행사, yyyy.mm.dd ~ yyyy.mm.dd로 표시
 					// calendarEvent.resource.isPeriodEvent ? 
 					// 	`${formatDateDotParsed(calendarEvent.start)} ~ ${formatDateDotParsed(calendarEvent.end)}`
@@ -155,7 +154,7 @@ const DetailView = ({ eventId }: { eventId: number }) => {
 					// 		: // yyyy.mm.dd ~ yyyy.mm.dd
 					// 			`${formatDateDotParsed(calendarEvent.start)} ~ ${formatDateDotParsed(calendarEvent.end)}`
 					eventDateRenderer(calendarEvent)
-				)}
+				}
 			</span>
 			<ul className={styles.chipsList}>
 				<li className={styles.deadlineChip}>{getDDay(ddayTargetDate)}</li>

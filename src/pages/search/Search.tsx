@@ -22,7 +22,7 @@ const SearchView = () => {
 		setSize,
 		fetchSearchResult,
 		searchResults,
-		searchLoading
+		searchLoading,
 	} = useSearch();
 	const { showDetail, clickedEventId } = useDetail();
 	const [viewMode, setViewMode] = useState<"List" | "Grid">("Grid");
@@ -103,24 +103,26 @@ const SearchView = () => {
 						</select>
 					</div>
 				</div>
-				{(!searchResults || searchResults.total===0) ? (
+				{!searchResults || searchResults.total === 0 ? (
 					<div className={styles.noResult}>
 						<span>
-							{searchLoading ? 
-							<Loading /> 
-							:
-							query ? "검색 결과가 없습니다." : "검색어를 입력해보세요!"}
+							{searchLoading ? (
+								<Loading />
+							) : query ? (
+								"검색 결과가 없습니다."
+							) : (
+								"검색어를 입력해보세요!"
+							)}
 						</span>
 					</div>
-				) :
-				viewMode === "List" ? (
+				) : viewMode === "List" ? (
 					<Table
 						theadData={["찜", "제목", "D-day", "카테고리", "날짜", "주체기관"]}
 						tbodyData={events}
 					/>
-				) :
-				viewMode === "Grid" && <GalleryView events={events} />
-				}
+				) : (
+					viewMode === "Grid" && <GalleryView events={events} />
+				)}
 				{searchResults && searchResults.total > 0 && (
 					<Pagination
 						page={page}

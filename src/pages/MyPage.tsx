@@ -15,15 +15,15 @@ import Modal from "@/widgets/Modal";
 import Loading from "@/widgets/Loading";
 import defaultProfile from "/assets/defaultProfile.png";
 
-const ProfileCard = ({ onClickInterest } : { onClickInterest: () => void }) => {
+const ProfileCard = ({ onClickInterest }: { onClickInterest: () => void }) => {
 	const { user, updateUsername, setProfileImg } = useAuth();
 	const { interestCategories } = useUserData();
 	const { timetables } = useTimetable();
 	const [profilePreviewUrl, setProfilePreviewUrl] = useState<string>(
-        (user?.profileImageUrl && user.profileImageUrl !== "") 
-            ? user.profileImageUrl 
-            : defaultProfile
-    );	
+		user?.profileImageUrl && user.profileImageUrl !== ""
+			? user.profileImageUrl
+			: defaultProfile,
+	);
 	const [imgFile, setImgFile] = useState<File | null>(null);
 	const [, setIsDefaultProfile] = useState<boolean>(false);
 	const [username, setUsername] = useState<string>(
@@ -58,13 +58,12 @@ const ProfileCard = ({ onClickInterest } : { onClickInterest: () => void }) => {
 	};
 
 	useEffect(() => {
-        if (user?.profileImageUrl && user.profileImageUrl.trim() !== "") {
-            setProfilePreviewUrl(user.profileImageUrl);
-        } else {
-            setProfilePreviewUrl(defaultProfile);
-        }
-    }, [user?.profileImageUrl]);
-	
+		if (user?.profileImageUrl && user.profileImageUrl.trim() !== "") {
+			setProfilePreviewUrl(user.profileImageUrl);
+		} else {
+			setProfilePreviewUrl(defaultProfile);
+		}
+	}, [user?.profileImageUrl]);
 	// profile image preview url cleanup (cleanup callback is executed before next effect / component unmount)
 	useEffect(() => {
 		return () => {
@@ -137,25 +136,33 @@ const ProfileCard = ({ onClickInterest } : { onClickInterest: () => void }) => {
 					/>
 				)}
 			</div>
-			<button className={styles.preferenceCol} type='button' onClick={onClickInterest}>
+			<button
+				className={styles.preferenceCol}
+				type="button"
+				onClick={onClickInterest}
+			>
 				<div className={styles.preferenceHeader}>
-					<FaStar size={24} color="#828282" style={{ marginRight: 12 }}/>
+					<FaStar size={24} color="#828282" style={{ marginRight: 12 }} />
 					<span>행사 보기 우선순위</span>
 				</div>
-					{(interestCategories && interestCategories.length > 0) ? (
+				{interestCategories && interestCategories.length > 0 ? (
 					<div>
 						<ul className={styles.preferenceChips}>
-					{interestCategories.map((cat, idx) => (
-						<li className={`${styles.preferenceChip} ${cat.groupId === 3 && styles.category} ${cat.groupId === 2 && styles.organization}`} key={cat.id}>
-							{`${idx+1}순위: ${cat.name}`}
-						</li>
-					))}
-					</ul>
-				</div>
+							{interestCategories.map((cat, idx) => (
+								<li
+									className={`${styles.preferenceChip} ${cat.groupId === 3 && styles.category} ${cat.groupId === 2 && styles.organization}`}
+									key={cat.id}
+								>
+									{`${idx + 1}순위: ${cat.name}`}
+								</li>
+							))}
+						</ul>
+					</div>
 				) : (
-					<span className={styles.notYetText}>클릭해서 우선순위로 확인할 행사를 설정해보세요!</span>
-				)
-				}
+					<span className={styles.notYetText}>
+						클릭해서 우선순위로 확인할 행사를 설정해보세요!
+					</span>
+				)}
 			</button>
 			<button
 				type="button"
@@ -189,35 +196,34 @@ const MyPage = () => {
 	return (
 		<div className={styles.main}>
 			<Navigationbar />
-			{isLoading ?
-			(
-			<Loading />
-			)
-			: (
-			isEditingInterest ? (
-				<Onboarding isEditing={true} onFinishEdit={()=>setIsEditingInterest(false)} />
+			{isLoading ? (
+				<Loading />
+			) : isEditingInterest ? (
+				<Onboarding
+					isEditing={true}
+					onFinishEdit={() => setIsEditingInterest(false)}
+				/>
+			) : user ? (
+				<div className={styles.mypageContainer}>
+					<ProfileCard
+						onClickInterest={() => setIsEditingInterest(() => true)}
+					/>
+					<div className={styles.widgetsWrapper}>
+						<BookmarkWidget />
+						<MemoWidget />
+					</div>
+				</div>
 			) : (
-				user ? (
-					<div className={styles.mypageContainer}>
-						<ProfileCard onClickInterest={() => setIsEditingInterest(()=>true)}/>
-						<div className={styles.widgetsWrapper}>
-							<BookmarkWidget />
-							<MemoWidget />
-						</div>
-					</div>
-				) : (
-					<div className={styles.notFound}>
-						<Modal
-							content="마이페이지 이용을 위해서는 로그인을 해주세요."
-							leftText="로그인"
-							rightText="회원가입"
-							onLeftClick={()=>navigate('/auth/login')}
-							onRightClick={()=>navigate('/auth/signup')}
-							onClose={null}
-						/>
-					</div>
-				)
-			)
+				<div className={styles.notFound}>
+					<Modal
+						content="마이페이지 이용을 위해서는 로그인을 해주세요."
+						leftText="로그인"
+						rightText="회원가입"
+						onLeftClick={() => navigate("/auth/login")}
+						onRightClick={() => navigate("/auth/signup")}
+						onClose={null}
+					/>
+				</div>
 			)}
 		</div>
 	);
