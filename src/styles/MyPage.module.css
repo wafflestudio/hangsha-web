@@ -162,7 +162,6 @@
 }
 
 .preferenceCol {
-  display: flex;
   flex-direction: column;
   transition: none;
   height: fit-content;
@@ -195,7 +194,6 @@
 .preferenceChips {
   display: flex;
   flex-direction: row;
-  flex-wrap: wrap;
   align-items: center;
   gap: 8px;
   list-style: none;
