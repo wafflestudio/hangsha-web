@@ -58,10 +58,6 @@ function useAnchorRect<T extends HTMLElement>(
 	return rect;
 }
 
-// function isValidPeriodEvent(ev: Event): ev is PeriodEvent {
-// 	return ev.applyStart instanceof Date && ev.applyEnd instanceof Date;
-// }
-
 function CustomWeekView({
 	date,
 	localizer,
@@ -79,9 +75,9 @@ function CustomWeekView({
 
 		return events
 			.filter((cevent: CalendarEvent) => {
+				console.log("Filtering event:", cevent, cevent.start, cevent.end);
 				const eventStart = cevent.start;
 				const eventEnd = cevent.end;
-				console.log("filtering events", { cevent, eventStart, eventEnd});
 
 				return eventStart <= weekEnd && eventEnd >= weekStart;
 			})
@@ -102,7 +98,10 @@ function CustomWeekView({
 						cevent.end.getMonth(),
 						cevent.end.getDate(),
 					);
-					const differentDate = startDay.getTime() !== endDay.getTime();
+					const differentDate = (startDay.getFullYear() !== endDay.getFullYear() 
+						&& startDay.getMonth() !== endDay.getMonth() 
+						&& startDay.getDate() !== endDay.getDate());
+					
 					isAllDay = Boolean(cevent.allDay) || differentDate || sameMinute;
 				}
 
