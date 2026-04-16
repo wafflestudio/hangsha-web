@@ -1,4 +1,3 @@
-import { addBookmark, removeBookmark } from "@api/user";
 import { useEvents } from "@contexts/EventContext";
 import { useEffect, useRef, useState } from "react";
 import styles from "@styles/DetailView.module.css";
@@ -8,7 +7,7 @@ import { FaAnglesRight } from "react-icons/fa6";
 import type { CalendarEvent, EventDetail } from "@types";
 import DOMPurify from "isomorphic-dompurify";
 import parse from "html-react-parser";
-
+import { useUserData } from "@/contexts/UserDataContext";
 import { useDetail } from "@/contexts/DetailContext";
 import DetailMemo from "./DetailMemo";
 import { ErrorModal } from "../Modal";
@@ -21,7 +20,7 @@ const DetailView = ({ eventId }: { eventId: number }) => {
 	const [calendarEvent, setCalendarEvent] = useState<CalendarEvent | null>(
 		event ? calendarEventMapper(event, 'day') : null
 	);
-
+	const { toggleBookmark } = useUserData();
 	const { fetchEventById, detailError, isLoadingDetail, clearError } =
 		useEvents();
 	const { setShowDetail } = useDetail();
@@ -31,6 +30,7 @@ const DetailView = ({ eventId }: { eventId: number }) => {
 
 	const [isMemoExpanded, setIsMemoExpanded] = useState<boolean>(false);
 	const memoWrapperRef = useRef<HTMLDivElement>(null);
+	
 
 	// detect outside clicks - expand memo
 	useEffect(() => {
@@ -90,11 +90,7 @@ const DetailView = ({ eventId }: { eventId: number }) => {
 		setIsBookmarked(!previousState);
 
 		try {
-			if (previousState) {
-				await removeBookmark(event.id);
-			} else {
-				await addBookmark(event.id);
-			}
+			toggleBookmark(event);
 		} catch (e) {
 			console.error("Failed to toggle bookmark", e);
 			setIsBookmarked(previousState);
