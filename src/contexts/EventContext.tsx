@@ -3,22 +3,17 @@ import React, {
 	type ReactNode,
 	useCallback,
 	useContext,
-	useEffect,
 	useState,
 } from "react";
 import {
-	getCategoryGroups,
 	getDayEvents,
 	getEventDetail,
 	getEventSearch,
 	getMonthEvents,
-	getOrganizations,
 } from "@api/event";
 import { formatDateToYYYYMMDD } from "@calendarUtil/dateFormatter";
 import { getMonthRange } from "@calendarUtil/getMonthRange";
 import type {
-	Category,
-	CategoryGroupWithCategories,
 	DayViewParams,
 	Event,
 	EventDetail,
@@ -39,14 +34,10 @@ interface EventContextType {
 	setDayDate: React.Dispatch<React.SetStateAction<Date>>;
 	searchResults: SearchResult | null;
 
-	categoryGroups: CategoryGroupWithCategories[];
-	organizations: Category[];
-
 	isLoadingMonth: boolean;
 	isLoadingWeek: boolean;
 	isLoadingDay: boolean;
 	isLoadingSearch: boolean;
-	isLoadingMeta: boolean;
 	isLoadingDetail: boolean;
 
 	calendarError: string | null;
@@ -61,7 +52,6 @@ interface EventContextType {
 	clearSearch: () => void;
 
 	fetchEventById: (id: number) => Promise<EventDetail | null>;
-	refreshMetadata: () => Promise<void>;
 }
 const EventContext = createContext<EventContextType | undefined>(undefined);
 
@@ -78,44 +68,16 @@ export const EventProvider: React.FC<{ children: ReactNode }> = ({
 	const [dayViewEvents, setDayViewEvents] = useState<Event[]>([]);
 	const [searchResults, setSearchResults] = useState<SearchResult | null>(null);
 
-	const [categoryGroups, setCategoryGroups] = useState<
-		CategoryGroupWithCategories[]
-	>([]);
-	const [organizations, setOrganizations] = useState<Category[]>([]);
-
 	const [isLoadingMonth, setIsLoadingMonth] = useState(false);
 	const [isLoadingWeek, setIsLoadingWeek] = useState(false);
 	const [isLoadingDay, setIsLoadingDay] = useState(false);
 	const [isLoadingSearch, setIsLoadingSearch] = useState(false);
 	const [isLoadingDetail, setIsLoadingDetail] = useState(false);
-	const [isLoadingMeta, setIsLoadingMeta] = useState(false);
 
 	const [calendarError, setCalendarError] = useState<string | null>(null);
 	const [detailError, setDetailError] = useState<string | null>(null);
 	const [searchError, setSearchError] = useState<string | null>(null);
 
-	// Fetch category & organizations (metadata)
-	const refreshMetadata = useCallback(async () => {
-		setIsLoadingMeta(true);
-		try {
-			const [groupsData, orgsData] = await Promise.all([
-				getCategoryGroups(),
-				getOrganizations(),
-			]);
-			setCategoryGroups(groupsData);
-			setOrganizations(orgsData);
-		} catch (err) {
-			console.error("Failed to load metadata", err);
-			setCalendarError("Failed to load categories.");
-		} finally {
-			setIsLoadingMeta(false);
-		}
-	}, []);
-
-	// metadata initial load
-	useEffect(() => {
-		refreshMetadata();
-	}, [refreshMetadata]);
 
 	/* ACTIONS */
 	const fetchMonthEvents = useCallback(
@@ -260,14 +222,11 @@ export const EventProvider: React.FC<{ children: ReactNode }> = ({
 		setDayDate,
 
 		searchResults,
-		categoryGroups,
-		organizations,
 
 		isLoadingMonth,
 		isLoadingWeek,
 		isLoadingDay,
 		isLoadingSearch,
-		isLoadingMeta,
 		isLoadingDetail,
 
 		calendarError,
@@ -281,7 +240,6 @@ export const EventProvider: React.FC<{ children: ReactNode }> = ({
 		searchEvents,
 		clearSearch,
 		fetchEventById,
-		refreshMetadata,
 	};
 
 	return (
