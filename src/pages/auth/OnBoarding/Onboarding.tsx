@@ -73,9 +73,9 @@ export default function Onboarding({
 			}));
 
 			await addInterestCategories(items);
+			refreshUserData();
 
 			if (isEditing && onFinishEdit) {
-				refreshUserData();
 				onFinishEdit();
 			}
 			setSearchParams((prev) => {
