@@ -38,10 +38,19 @@ export const FilterContextProvider = ({
 	const [categoryGroups, setCategoryGroups] = useState<
 		CategoryGroupWithCategories[]
 	>([]);
+	// 모집중
+	const isApplying: Category = 
+		categoryGroups.find((g) => g.group.id===1)?.categories.find(c => c.id === 1) 
+		|| {
+          "id": 1,
+          "groupId": 1,
+          "name": "모집중",
+          "sortOrder": 1
+        };
 	const [organizations, setOrganizations] = useState<Category[]>([]);
 	const [isLoadingMeta, setIsLoadingMeta] = useState(false);
 
-	const [globalStatus, setGlobalStatus] = useState<Category[]>([]);
+	const [globalStatus, setGlobalStatus] = useState<Category[]>([isApplying]);
 	const [globalOrg, setGlobalOrg] = useState<Category[]>([]);
 	const [globalCategory, setGlobalCategory] = useState<Category[]>([]);
 
