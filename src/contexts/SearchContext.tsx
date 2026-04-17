@@ -20,7 +20,7 @@ interface SearchContextType {
 	setSize: Dispatch<SetStateAction<number>>;
 	fetchSearchResult: (q: string, page: number, size: number) => Promise<void>;
 	searchResults: SearchResult | null;
-	emptySearchResults: ()=>void;
+	emptySearchResults: () => void;
 	// fetchSearchResult: (q: string, page: number, size: number) => Promise<void>;
 	searchLoading: boolean;
 }
@@ -54,7 +54,7 @@ export const SearchProvider = ({ children }: { children: ReactNode }) => {
 
 	const emptySearchResults = () => {
 		setSearchResults(null);
-	}
+	};
 
 	// useEffect(() => {
 	//     fetchSearchResult(query, page, size);

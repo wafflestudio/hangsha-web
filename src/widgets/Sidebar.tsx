@@ -181,10 +181,13 @@ export const Sidebar = () => {
 				<div className={styles.topButtons}>
 					<button
 						type="button"
-						onClick={()=>navigate("/main")}
+						onClick={() => navigate("/main")}
 						className={styles.header}
 					>
-						<img src='/assets/logo.png' alt="calendar with sha on it, app logo" />
+						<img
+							src="/assets/logo.png"
+							alt="calendar with sha on it, app logo"
+						/>
 					</button>
 					<button
 						type="button"

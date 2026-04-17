@@ -1,105 +1,105 @@
 body {
-  overflow: hidden;
-  padding: 0;
-  margin: 0;
+	overflow: hidden;
+	padding: 0;
+	margin: 0;
 }
 
 .container {
-  display: flex;
-  flex-direction: row;
-  width: 100vw;
-  height: 100vh;
-  overflow: hidden;
-  background-color: #ffffff;
-  padding: 0;
+	display: flex;
+	flex-direction: row;
+	width: 100vw;
+	height: 100vh;
+	overflow: hidden;
+	background-color: #ffffff;
+	padding: 0;
 }
 
 .calendarContainer {
-  flex-grow: 1;
-  display: flex;
-  flex-direction: row;
-  height: 100%;
-  position: relative;
-  overflow: hidden;
+	flex-grow: 1;
+	display: flex;
+	flex-direction: row;
+	height: 100%;
+	position: relative;
+	overflow: hidden;
 }
 
 .calendarWrapper {
-  flex: 1;
-  height: 100%;
-  padding: 0 20px 200px 20px;
-  box-sizing: border-box;
-  overflow-y: auto;
-  transition: flex-basis 0.3s ease;
-  min-width: 0;
+	flex: 1;
+	height: 100%;
+	padding: 0 20px 200px 20px;
+	box-sizing: border-box;
+	overflow-y: auto;
+	transition: flex-basis 0.3s ease;
+	min-width: 0;
 
-  -ms-overflow-style: none;
-  scrollbar-width: none;
+	-ms-overflow-style: none;
+	scrollbar-width: none;
 }
 
 .calendarWrapper::-webkit-scrollbar {
-  display: none;
+	display: none;
 }
 
 .sidePanel {
-  position: absolute;
-  right: 0;
-  top: 0;
+	position: absolute;
+	right: 0;
+	top: 0;
 
-  max-width: 430px;
-  height: 100%;
-  border-left: 1px solid #e0e0e0;
-  background-color: #ffffff;
-  box-shadow: -4px 0 24px rgba(0, 0, 0, 0.05);
-  z-index: 100;
-  overflow-y: auto;
-  flex-shrink: 0;
-  animation: slideIn 0.3s ease-out;
+	max-width: 430px;
+	height: 100%;
+	border-left: 1px solid #e0e0e0;
+	background-color: #ffffff;
+	box-shadow: -4px 0 24px rgba(0, 0, 0, 0.05);
+	z-index: 100;
+	overflow-y: auto;
+	flex-shrink: 0;
+	animation: slideIn 0.3s ease-out;
 }
 
 .closing {
-  animation: slideOut 0.3s ease-in forwards;
+	animation: slideOut 0.3s ease-in forwards;
 }
 
 .detailPanel {
-  z-index: 300;
+	z-index: 300;
 }
 
 @keyframes slideIn {
-  from {
-    transform: translateX(100%);
-    opacity: 0;
-  }
-  to {
-    transform: translateX(0);
-    opacity: 1;
-  }
+	from {
+		transform: translateX(100%);
+		opacity: 0;
+	}
+	to {
+		transform: translateX(0);
+		opacity: 1;
+	}
 }
 
 @keyframes slideOut {
-  from {
-    transform: translateX(0);
-    opacity: 1;
-  }
-  to {
-    transform: translateX(100%);
-    opacity: 0;
-  }
+	from {
+		transform: translateX(0);
+		opacity: 1;
+	}
+	to {
+		transform: translateX(100%);
+		opacity: 0;
+	}
 }
 
 @media (max-width: 1024px) {
-  .sidePanel {
-    width: 340px;
-  }
-  .detailPanel {
-    width: 340px;
-  }
+	.sidePanel {
+		width: 340px;
+	}
+	.detailPanel {
+		width: 340px;
+	}
 }
 
 @media (max-width: 576px) {
-  .sidePanel {
-    width: 300px;
-  }
-  .detailPanel {
-    width: 250px;
-  }
+	.sidePanel {
+		width: 300px;
+	}
+	.detailPanel {
+		width: 250px;
+	}
 }

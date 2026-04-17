@@ -1,186 +1,182 @@
 .main {
-  height: calc(100vh - 3rem);
-  padding: 1.5rem;
+	height: calc(100vh - 3rem);
+	padding: 1.5rem;
 
-  background-color: #ffffff;
-  font-family:
-    "Pretendard",
-    -apple-system,
-    BlinkMacSystemFont,
-    system-ui,
-    Roboto,
-    sans-serif;
-  /* display: flex;
+	background-color: #ffffff;
+	font-family:
+		"Pretendard", -apple-system, BlinkMacSystemFont, system-ui, Roboto,
+		sans-serif;
+	/* display: flex;
   flex-direction: column; */
 }
 
 :global(.rbc-calendar) {
-  /* flex: 1;
+	/* flex: 1;
   min-height: 0; */
-  height: 100%;
-  display: flex;
-  flex-direction: column;
+	height: 100%;
+	display: flex;
+	flex-direction: column;
 }
 
 :global(.rbc-month-view) {
-  border: 1px solid #ffffff;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
+	border: 1px solid #ffffff;
+	height: 100%;
+	display: flex;
+	flex-direction: column;
 }
 
 :global(.rbc-month-header) {
-  display: flex;
-  border-bottom: 1px solid #ffffff;
+	display: flex;
+	border-bottom: 1px solid #ffffff;
 }
 
 /* Header cells (weekday names) */
 :global(.rbc-header) {
-  flex: 1;
-  border-bottom: none !important;
-  border-left: 1px solid #ffffff;
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: #6b7280;
-  padding: 0.75rem 0;
-  text-align: center;
+	flex: 1;
+	border-bottom: none !important;
+	border-left: 1px solid #ffffff;
+	font-size: 0.875rem;
+	font-weight: 500;
+	color: #6b7280;
+	padding: 0.75rem 0;
+	text-align: center;
 }
 
 :global(.rbc-header):first-child {
-  color: #ef4444 !important;
-  border-left: none;
+	color: #ef4444 !important;
+	border-left: none;
 }
 
 /* Each week row */
 :global(.rbc-month-row) {
-  display: flex;
-  flex: 1;
-  position: relative;
-  padding-bottom: 0px;
-  border-bottom: 5px solid #ffffff;
-  min-height: 124px;
+	display: flex;
+	flex: 1;
+	position: relative;
+	padding-bottom: 0px;
+	border-bottom: 5px solid #ffffff;
+	min-height: 124px;
 }
 
 :global(.rbc-month-row):last-child {
-  border-bottom: none;
+	border-bottom: none;
 }
 
 /* Background grid layer */
 :global(.rbc-row-bg) {
-  display: flex;
-  position: absolute; /* CRITICAL - sits behind content */
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+	display: flex;
+	position: absolute; /* CRITICAL - sits behind content */
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
 }
 
 :global(.rbc-day-bg) {
-  flex: 1;
-  border-left: 5px solid #ffffff;
-  border-radius: 7px;
-  background-color: #f7f7f7; /* Light gray background */
+	flex: 1;
+	border-left: 5px solid #ffffff;
+	border-radius: 7px;
+	background-color: #f7f7f7; /* Light gray background */
 }
 
 :global(.rbc-day-bg):first-child {
-  border-left: none;
+	border-left: none;
 }
 
 :global(.rbc-off-range-bg) {
-  background-color: #fafafa !important; /* Slightly different for off-range */
+	background-color: #fafafa !important; /* Slightly different for off-range */
 }
 
 /* Content layer (dates + events) */
 :global(.rbc-row-content) {
-  display: flex;
-  flex-direction: column; /* CRITICAL - stacks date row and event rows */
-  position: relative; /* CRITICAL - sits on top of background */
-  padding-bottom: 0px;
-  margin-bottom: 0px;
-  z-index: 1;
-  width: 100%;
+	display: flex;
+	flex-direction: column; /* CRITICAL - stacks date row and event rows */
+	position: relative; /* CRITICAL - sits on top of background */
+	padding-bottom: 0px;
+	margin-bottom: 0px;
+	z-index: 1;
+	width: 100%;
 }
 
 /* Each .rbc-row inside content */
 :global(.rbc-row-content > .rbc-row) {
-  display: flex;
-  flex-direction: row; /* CRITICAL - horizontal layout */
-  width: 100%;
+	display: flex;
+	flex-direction: row; /* CRITICAL - horizontal layout */
+	width: 100%;
 }
 
 :global(.rbc-event-content) {
-  padding: 1px 1px;
+	padding: 1px 1px;
 }
 
 /* Date number row */
 :global(.rbc-date-cell) {
-  flex: 1; /* CRITICAL - equal width columns */
-  padding: 4px 0.5rem;
-  font-size: 0.875rem;
-  font-weight: 500;
-  text-align: left; /* Align date to left */
+	flex: 1; /* CRITICAL - equal width columns */
+	padding: 4px 0.5rem;
+	font-size: 0.875rem;
+	font-weight: 500;
+	text-align: left; /* Align date to left */
 }
 
 :global(.rbc-button-link) {
-  background: none;
-  border: none;
-  color: inherit;
-  cursor: pointer;
-  padding: 0;
-  font: inherit;
+	background: none;
+	border: none;
+	color: inherit;
+	cursor: pointer;
+	padding: 0;
+	font: inherit;
 }
 
 /* Today's date styling */
 :global(.rbc-today) {
-  background-color: transparent !important;
+	background-color: transparent !important;
 }
 
 :global(.rbc-now .rbc-button-link) {
-  background-color: #1f2937;
-  color: white;
-  width: 24px;
-  height: 24px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
+	background-color: #1f2937;
+	color: white;
+	width: 24px;
+	height: 24px;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	border-radius: 50%;
 }
 
 :global(.rbc-off-range) {
-  color: #9ca3af; /* Gray out dates from other months */
+	color: #9ca3af; /* Gray out dates from other months */
 }
 
 /* Events container */
 :global(.rbc-event) {
-  border: none !important;
-  box-shadow: none !important;
-  padding: 0px 2px !important;
-  margin-bottom: 2px !important;
-  position: relative;
+	border: none !important;
+	box-shadow: none !important;
+	padding: 0px 2px !important;
+	margin-bottom: 2px !important;
+	position: relative;
 }
 
 :global(.rbc-event:hover) {
-  z-index: 1000 !important;
+	z-index: 1000 !important;
 }
 
 :global(.rbc-row-segment) {
-  position: relative;
+	position: relative;
 }
 
 /* Show more link */
 :global(.rbc-show-more) {
-  background-color: transparent;
-  color: #6b7280;
-  font-size: 0.75rem;
-  font-weight: 600;
-  cursor: pointer;
-  border: none;
-  padding: 2px 4px;
-  text-align: left;
-  align-self: flex-end;
+	background-color: transparent;
+	color: #6b7280;
+	font-size: 0.75rem;
+	font-weight: 600;
+	cursor: pointer;
+	border: none;
+	padding: 2px 4px;
+	text-align: left;
+	align-self: flex-end;
 }
 
 :global(.rbc-show-more):hover {
-  color: #374151;
-  text-decoration: underline;
+	color: #374151;
+	text-decoration: underline;
 }

@@ -58,10 +58,6 @@ function useAnchorRect<T extends HTMLElement>(
 	return rect;
 }
 
-// function isValidPeriodEvent(ev: Event): ev is PeriodEvent {
-// 	return ev.applyStart instanceof Date && ev.applyEnd instanceof Date;
-// }
-
 function CustomWeekView({
 	date,
 	localizer,
@@ -69,33 +65,52 @@ function CustomWeekView({
 	onSelectEvent,
 }: CustomWeekViewProps) {
 	const WEEK_EVENTS = useMemo(() => {
-		return events.map((cevent: CalendarEvent) => {
-			let isAllDay = false;
-			const sameMinute =
-				Math.floor(cevent.start.getTime() / 60000) ===
-				Math.floor(cevent.end.getTime() / 60000);
+		const weekStart = new Date(date);
+		weekStart.setHours(0, 0, 0, 0);
+		weekStart.setDate(weekStart.getDate() - weekStart.getDay());
 
-			if (cevent.start && cevent.end) {
-				const startDay = new Date(
-					cevent.start.getFullYear(),
-					cevent.start.getMonth(),
-					cevent.start.getDate(),
-				);
-				const endDay = new Date(
-					cevent.end.getFullYear(),
-					cevent.end.getMonth(),
-					cevent.end.getDate(),
-				);
-				const differentDate = startDay.getTime() !== endDay.getTime();
-				isAllDay = Boolean(cevent.allDay) || differentDate || sameMinute;
-			}
+		const weekEnd = new Date(weekStart);
+		weekEnd.setDate(weekEnd.getDate() + 6);
+		weekEnd.setHours(23, 59, 59, 999);
 
-			return {
-				...cevent,
-				allDay: isAllDay,
-			};
-		});
-	}, [events]);
+		return events
+			.filter((cevent: CalendarEvent) => {
+				console.log("Filtering event:", cevent, cevent.start, cevent.end);
+				const eventStart = cevent.start;
+				const eventEnd = cevent.end;
+
+				return eventStart <= weekEnd && eventEnd >= weekStart;
+			})
+			.map((cevent: CalendarEvent) => {
+				let isAllDay = false;
+				const sameMinute =
+					Math.floor(cevent.start.getTime() / 60000) ===
+					Math.floor(cevent.end.getTime() / 60000);
+
+				if (cevent.start && cevent.end) {
+					const startDay = new Date(
+						cevent.start.getFullYear(),
+						cevent.start.getMonth(),
+						cevent.start.getDate(),
+					);
+					const endDay = new Date(
+						cevent.end.getFullYear(),
+						cevent.end.getMonth(),
+						cevent.end.getDate(),
+					);
+					const differentDate = (startDay.getFullYear() !== endDay.getFullYear() 
+						&& startDay.getMonth() !== endDay.getMonth() 
+						&& startDay.getDate() !== endDay.getDate());
+					
+					isAllDay = Boolean(cevent.allDay) || differentDate || sameMinute;
+				}
+
+				return {
+					...cevent,
+					allDay: isAllDay,
+				};
+			});
+	}, [events, date]);
 
 	const { allDayCalendarEvents, timetableEvents, periodEvents } =
 		useMemo(() => {
