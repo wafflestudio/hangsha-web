@@ -1,10 +1,13 @@
+// 모집 현황 필터 개수
+export const STATUS_NUMBER = 3;
+// '기타' index
+export const CATEGORY_OTHER_INDEX = 7;
+// 카테고리 최소 index
+export const CATEGORY_MIN_INDEX = 4;
+// 카테고리 최대 index
+export const CATEGORY_MAX_INDEX = 10;
+
 export const CATEGORY_COLORS: Record<number, string> = {
-	// 1: "#DFD093",
-	// 2: "#69DEB1",
-	// 3: "#72D3FA",
-	// 4: "#62B4FB",
-	// 5: "#C398FB",
-	// 6: "#FB7D95",
 	1: "#FBB77A",
 	2: "#DFD093",
 	3: "#69DEB1",
@@ -15,12 +18,6 @@ export const CATEGORY_COLORS: Record<number, string> = {
 };
 
 export const CATEGORY_BUTTON_COLORS: Record<number, string> = {
-	// 1: "#ffeea962",
-	// 2: "#69deb15b",
-	// 3: "#72d3fa62",
-	// 4: "#629ffb5f",
-	// 5: "#c398fb62",
-	// 6: "#fb7d945e",
 	1: "#fbb67a5f",
 	2: "#ffeea962",
 	3: "#69deb15b",
@@ -28,6 +25,16 @@ export const CATEGORY_BUTTON_COLORS: Record<number, string> = {
 	5: "#629ffb5f",
 	6: "#c398fb62",
 	7: "#fb7d945e",
+};
+
+export const CATEGORY_TEXT_COLORS: Record<number, string> = {
+	1: "#b67d4b",
+	2: "#a0882a",
+	3: "#349570",
+	4: "#3a90b2",
+	5: "#3e6cb1",
+	6: "#7d50b9",
+	7: "#ac3a4f",
 };
 
 export const CATEGORY_LIST: Record<number, string> = {

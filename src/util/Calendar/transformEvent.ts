@@ -1,4 +1,5 @@
 import type { Event, EventDTO } from "@types";
+import { CATEGORY_MAX_INDEX, CATEGORY_MIN_INDEX } from "../constants";
 
 export const transformEvent = (dto: EventDTO): Event => {
 	const today = new Date();
@@ -9,7 +10,9 @@ export const transformEvent = (dto: EventDTO): Event => {
 			? "/assets/DefaultThumbnail.png"
 			: dto.imageUrl,
 		eventTypeId:
-			dto.eventTypeId && dto.eventTypeId <= 9 && dto.eventTypeId >= 4
+			dto.eventTypeId &&
+			dto.eventTypeId <= CATEGORY_MAX_INDEX &&
+			dto.eventTypeId >= CATEGORY_MIN_INDEX
 				? dto.eventTypeId - 3
 				: 6,
 		applyStart: new Date(dto.applyStart),
