@@ -13,7 +13,7 @@ import DetailMemo from "./DetailMemo";
 import { ErrorModal } from "../Modal";
 import Loading from "../Loading";
 import calendarEventMapper from "@/util/Calendar/calendarEventMapper";
-import { eventDateRenderer } from "@/util/Calendar/eventDateRenderer";
+import { applyStartEndRenderer, eventStartEndRenderer } from "@/util/Calendar/eventDateRenderer";
 
 const DetailView = ({ eventId }: { eventId: number }) => {
 	const [event, setEvent] = useState<EventDetail>();
@@ -138,20 +138,24 @@ const DetailView = ({ eventId }: { eventId: number }) => {
 				/>
 			</button>
 			<h1 className={styles.title}>{event.title}</h1>
-			<span className={styles.date}>
-				{calendarEvent &&
-					// !event.eventStart : 기간제 행사, yyyy.mm.dd ~ yyyy.mm.dd로 표시
-					// calendarEvent.resource.isPeriodEvent ? 
-					// 	`${formatDateDotParsed(calendarEvent.start)} ~ ${formatDateDotParsed(calendarEvent.end)}`
-					// 	: // 단발성 행사
-					// 		calendarEvent.start.toDateString() === calendarEvent.end.toDateString()
-					// 		? // yyyy.mm.dd만 표시
-					// 			formatDateDotParsed(calendarEvent.start)
-					// 		: // yyyy.mm.dd ~ yyyy.mm.dd
-					// 			`${formatDateDotParsed(calendarEvent.start)} ~ ${formatDateDotParsed(calendarEvent.end)}`
-					eventDateRenderer(calendarEvent)
+			<div className={styles.dateColumn}>
+				{(event.eventStart || event.eventEnd) &&
+					<div>
+						<span className={styles.dateLabel}>행사 날짜 </span>
+						<span className={styles.date}>
+							{`${eventStartEndRenderer(event.eventStart, event.eventEnd)}`}
+						</span>
+					</div>
 				}
-			</span>
+				{(event.applyStart || event.applyEnd) &&
+					<div>
+						<span className={styles.dateLabel}>지원 기간 </span>
+						<span className={styles.date}>
+							{`${applyStartEndRenderer(event.applyStart, event.applyEnd)}`}
+						</span>
+					</div>
+				}
+			</div>
 			<ul className={styles.chipsList}>
 				<li className={styles.deadlineChip}>{getDDay(ddayTargetDate)}</li>
 				<li
