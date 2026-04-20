@@ -3,10 +3,8 @@ import styles from "@styles/CardView.module.css";
 import { getDDay } from "@calendarUtil/getDday";
 import { CATEGORY_COLORS, CATEGORY_LIST } from "@constants";
 import type { Event } from "@types";
-import { eventDateRenderer } from "@/util/Calendar/eventDateRenderer";
-import calendarEventMapper from "@/util/Calendar/calendarEventMapper";
-import { Views } from "react-big-calendar";
 import { useUserData } from "@/contexts/UserDataContext";
+import EventDate from "@/widgets/EventDate";
 
 const CardView = ({ event }: { event: Event }) => {
 	const [isBookmarked, setIsBookmarked] = useState<boolean>(
@@ -45,9 +43,7 @@ const CardView = ({ event }: { event: Event }) => {
 				/>
 			</button>
 			<h1 className={styles.eventTitle}>{event.title}</h1>
-			<span className={styles.dateText}>
-				{eventDateRenderer(calendarEventMapper(event, Views.DAY))}
-			</span>
+			<EventDate event={event} />
 			<ul className={styles.chipsList}>
 				<li className={styles.deadlineChip}>{getDDay(ddayTargetDate)}</li>
 				<li
