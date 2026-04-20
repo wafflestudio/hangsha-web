@@ -13,7 +13,7 @@ import DetailMemo from "./DetailMemo";
 import { ErrorModal } from "../Modal";
 import Loading from "../Loading";
 import calendarEventMapper from "@/util/Calendar/calendarEventMapper";
-import { applyStartEndRenderer, eventStartEndRenderer } from "@/util/Calendar/eventDateRenderer";
+import EventDate from "../EventDate";
 
 const DetailView = ({ eventId }: { eventId: number }) => {
 	const [event, setEvent] = useState<EventDetail>();
@@ -138,24 +138,7 @@ const DetailView = ({ eventId }: { eventId: number }) => {
 				/>
 			</button>
 			<h1 className={styles.title}>{event.title}</h1>
-			<div className={styles.dateColumn}>
-				{(event.eventStart || event.eventEnd) &&
-					<div>
-						<span className={styles.dateLabel}>행사 날짜 </span>
-						<span className={styles.date}>
-							{`${eventStartEndRenderer(event.eventStart, event.eventEnd)}`}
-						</span>
-					</div>
-				}
-				{(event.applyStart || event.applyEnd) &&
-					<div>
-						<span className={styles.dateLabel}>지원 기간 </span>
-						<span className={styles.date}>
-							{`${applyStartEndRenderer(event.applyStart, event.applyEnd)}`}
-						</span>
-					</div>
-				}
-			</div>
+			<EventDate event={event} />
 			<ul className={styles.chipsList}>
 				<li className={styles.deadlineChip}>{getDDay(ddayTargetDate)}</li>
 				<li

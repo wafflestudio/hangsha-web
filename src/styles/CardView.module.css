@@ -1,91 +1,84 @@
 .cardWrapper {
-	display: flex;
-	flex-direction: column;
-	justify-content: flex-start;
-	align-items: flex-start;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
 
-	width: 100%;
-	max-width: 340px;
-	background-color: #ffffff;
+  width: 100%;
+  max-width: 340px;
+  background-color: #ffffff;
 
-	font-family:
-		-apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Pretendard",
-		Roboto, "Noto Sans KR", sans-serif;
-	text-align: left;
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Pretendard",
+    Roboto, "Noto Sans KR", sans-serif;
+  text-align: left;
 }
 
 .cardWrapper button {
-	background: none;
-	border: none;
-	padding: 0;
-	cursor: pointer;
-	margin-bottom: 8px;
-	display: flex;
-	align-items: center;
-	justify-content: center;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .cardWrapper button img {
-	width: 24px;
-	height: 24px;
+  width: 24px;
+  height: 24px;
 }
 
 .eventTitle {
-	font-size: 18px;
-	font-weight: 700;
-	color: #111111;
-	line-height: 1.4;
-	margin: 0 0 8px 0;
+  font-size: 18px;
+  font-weight: 700;
+  color: #111111;
+  line-height: 1.4;
+  margin: 0 0 8px 0;
 
-	display: -webkit-box;
-	-webkit-line-clamp: 2;
-	line-clamp: 2;
-	-webkit-box-orient: vertical;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	word-break: keep-all;
-}
-
-.dateText {
-	font-size: 14px;
-	font-weight: 400;
-	color: #555555;
-	margin-bottom: 12px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: keep-all;
 }
 
 .chipsList {
-	display: flex;
-	flex-direction: row;
-	align-items: center;
-	gap: 8px;
-	list-style: none;
-	padding: 0;
-	margin: 0 0 12px 0;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  list-style: none;
+  padding: 0;
+  margin: 0 0 12px 0;
 }
 
 .deadlineChip {
-	font-size: 13px;
-	font-weight: 600;
-	color: #333333;
-	padding: 4px 8px;
-	background-color: #ffffff;
-	border: 1px solid #e0e0e0;
-	border-radius: 6px;
-	white-space: nowrap;
+  font-size: 13px;
+  font-weight: 600;
+  color: #333333;
+  padding: 4px 8px;
+  background-color: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  white-space: nowrap;
 }
 
 .categoryChip {
-	font-size: 13px;
-	font-weight: 500;
-	color: #111111;
-	padding: 5px 10px;
-	border-radius: 6px;
-	white-space: nowrap;
+  font-size: 13px;
+  font-weight: 500;
+  color: #111111;
+  padding: 5px 10px;
+  border-radius: 6px;
+  white-space: nowrap;
 }
 
 .orgText {
-	font-size: 13px;
-	font-weight: 400;
-	color: #767676;
-	margin-top: auto;
+  font-size: 13px;
+  font-weight: 400;
+  color: #767676;
+  margin-top: auto;
 }

@@ -56,24 +56,6 @@
   word-break: keep-all;
 }
 
-.dateColumn {
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 10px;
-}
-.dateLabel {
-  font-size: 14px;
-  font-weight: 600;
-  color: #555555;
-}
-
-.date {
-  font-size: 14px;
-  font-weight: 400;
-  color: #555555;
-  margin-bottom: 16px;
-}
-
 .chipsList {
   display: flex;
   flex-direction: row;

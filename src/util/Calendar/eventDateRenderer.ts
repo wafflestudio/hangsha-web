@@ -1,6 +1,6 @@
 import { formatDateDotParsed } from "./dateFormatter";
 
-export const eventStartEndRenderer = (
+export const eventDateRenderer = (
 	eventStart: Date | null,
 	eventEnd: Date | null,
 ) =>
@@ -10,16 +10,4 @@ export const eventStartEndRenderer = (
 			: `${formatDateDotParsed(eventStart)} ~ ${formatDateDotParsed(eventEnd)}`
 		: eventEnd
 			? formatDateDotParsed(eventEnd)
-			: "";
-
-export const applyStartEndRenderer = (
-	applyStart: Date | null,
-	applyEnd: Date | null,
-) =>
-	applyStart && applyEnd
-		? applyStart.toDateString() === applyEnd.toDateString()
-			? formatDateDotParsed(applyStart)
-			: `${formatDateDotParsed(applyStart)} ~ ${formatDateDotParsed(applyEnd)}`
-		: applyEnd
-			? formatDateDotParsed(applyEnd)
 			: "";
