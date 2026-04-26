@@ -12,6 +12,9 @@ import { getCategoryGroups, getOrganizations } from "@api/event";
 import type { Category, CategoryGroupWithCategories } from "@types";
 
 interface FilterContextType {
+	filterSheetShowing: boolean;
+	setFilterSheetShowing: (value: boolean) => void;
+
 	categoryGroups: CategoryGroupWithCategories[];
 	organizations: Category[];
 	refreshMetadata: () => Promise<void>;
@@ -54,6 +57,7 @@ export const FilterContextProvider = ({
 	const [globalOrg, setGlobalOrg] = useState<Category[]>([]);
 	const [globalCategory, setGlobalCategory] = useState<Category[]>([]);
 
+	const [filterSheetShowing, setFilterSheetShowing] = useState<boolean>(false);
 	const [filterError, setFilterError] = useState<string | null>(null);
 
 	// Fetch category & organizations (metadata)
@@ -83,6 +87,8 @@ export const FilterContextProvider = ({
 	return (
 		<FilterContext.Provider
 			value={{
+				filterSheetShowing,
+				setFilterSheetShowing,
 				categoryGroups,
 				organizations,
 				isLoadingMeta,
