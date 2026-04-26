@@ -1,0 +1,55 @@
+.bottomNav {
+  display: none; /* Hide in desktop (> 576px) */
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+
+  width: 100%;
+  height: 64px;
+
+  background-color: #f5f5f5;
+  border-top: 1px solid #f0eff2;
+  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.04);
+
+  padding: 6px 0 8px 0;
+  box-sizing: border-box;
+
+  z-index: 100;
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Pretendard", "Apple SD Gothic Neo",
+    sans-serif;
+}
+
+.navItem {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px 0;
+}
+
+.icon {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+  transition: opacity 0.2s ease;
+}
+
+.navItem.active .icon {
+  opacity: 1;
+  /* TODO : 강조할 수 있는 방법? (색 있는 icon -> 색 없는 version 등) */
+}
+
+/* show only on mobile */
+@media (max-width: 576px) {
+  .bottomNav {
+    display: flex;
+  }
+}

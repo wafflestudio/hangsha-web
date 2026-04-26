@@ -1,17 +1,16 @@
 import { useState } from "react";
-import { addBookmark, removeBookmark } from "@api/user";
 import styles from "@styles/CardView.module.css";
 import { getDDay } from "@calendarUtil/getDday";
 import { CATEGORY_COLORS, CATEGORY_LIST } from "@constants";
 import type { Event } from "@types";
-import { eventDateRenderer } from "@/util/Calendar/eventDateRenderer";
-import calendarEventMapper from "@/util/Calendar/calendarEventMapper";
-import { Views } from "react-big-calendar";
+import { useUserData } from "@/contexts/UserDataContext";
+import EventDate from "@/widgets/EventDate";
 
 const CardView = ({ event }: { event: Event }) => {
 	const [isBookmarked, setIsBookmarked] = useState<boolean>(
 		event.isBookmarked || false,
 	);
+	const { toggleBookmark } = useUserData();
 	const ddayTargetDate = event.eventStart ? event.eventStart : event.applyEnd;
 
 	const handleToggleBookmark = async (
@@ -24,11 +23,7 @@ const CardView = ({ event }: { event: Event }) => {
 		setIsBookmarked(!previousState);
 
 		try {
-			if (previousState) {
-				await removeBookmark(event.id);
-			} else {
-				await addBookmark(event.id);
-			}
+			await toggleBookmark(event);
 		} catch (e) {
 			console.error("Failed to toggle bookmark", e);
 			setIsBookmarked(previousState);
@@ -48,9 +43,7 @@ const CardView = ({ event }: { event: Event }) => {
 				/>
 			</button>
 			<h1 className={styles.eventTitle}>{event.title}</h1>
-			<span className={styles.dateText}>
-				{eventDateRenderer(calendarEventMapper(event, Views.DAY))}
-			</span>
+			<EventDate event={event} />
 			<ul className={styles.chipsList}>
 				<li className={styles.deadlineChip}>{getDDay(ddayTargetDate)}</li>
 				<li

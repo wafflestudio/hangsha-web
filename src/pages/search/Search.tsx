@@ -12,6 +12,7 @@ import Pagination from "@/widgets/Pagination";
 import Loading from "@/widgets/Loading";
 import { Views } from "react-big-calendar";
 import calendarEventMapper from "@/util/Calendar/calendarEventMapper";
+import BottomNav from "@/widgets/BottomNav";
 
 const SearchView = () => {
 	const {
@@ -22,7 +23,7 @@ const SearchView = () => {
 		setSize,
 		fetchSearchResult,
 		searchResults,
-		searchLoading
+		searchLoading,
 	} = useSearch();
 	const { showDetail, clickedEventId } = useDetail();
 	const [viewMode, setViewMode] = useState<"List" | "Grid">("Grid");
@@ -83,9 +84,7 @@ const SearchView = () => {
 
 	return (
 		<div className={styles.container}>
-			<div className={styles.sidebarContainer}>
-				<Sidebar />
-			</div>
+			<Sidebar />
 			<div className={styles.restContainer}>
 				<SearchToolbar viewMode={viewMode} setViewMode={setViewMode} />
 				<div className={styles.dropdownRow}>
@@ -103,24 +102,26 @@ const SearchView = () => {
 						</select>
 					</div>
 				</div>
-				{(!searchResults || searchResults.total===0) ? (
+				{!searchResults || searchResults.total === 0 ? (
 					<div className={styles.noResult}>
 						<span>
-							{searchLoading ? 
-							<Loading /> 
-							:
-							query ? "검색 결과가 없습니다." : "검색어를 입력해보세요!"}
+							{searchLoading ? (
+								<Loading />
+							) : query ? (
+								"검색 결과가 없습니다."
+							) : (
+								"검색어를 입력해보세요!"
+							)}
 						</span>
 					</div>
-				) :
-				viewMode === "List" ? (
+				) : viewMode === "List" ? (
 					<Table
 						theadData={["찜", "제목", "D-day", "카테고리", "날짜", "주체기관"]}
 						tbodyData={events}
 					/>
-				) :
-				viewMode === "Grid" && <GalleryView events={events} />
-				}
+				) : (
+					viewMode === "Grid" && <GalleryView events={events} />
+				)}
 				{searchResults && searchResults.total > 0 && (
 					<Pagination
 						page={page}
@@ -139,6 +140,7 @@ const SearchView = () => {
 					<DetailView eventId={clickedEventId} />
 				</div>
 			)}
+			<BottomNav />
 		</div>
 	);
 };

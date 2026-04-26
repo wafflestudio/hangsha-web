@@ -1,129 +1,122 @@
 .container {
-	display: flex;
-	flex-direction: column;
-	width: 100%;
-	height: 100%;
-	padding: 24px;
-	background-color: #ffffff;
-	box-sizing: border-box;
-	font-family:
-		-apple-system, BlinkMacSystemFont, "Pretendard", "Apple SD Gothic Neo",
-		sans-serif;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  padding: 24px;
+  background-color: #ffffff;
+  box-sizing: border-box;
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Pretendard", "Apple SD Gothic Neo",
+    sans-serif;
 
-	overflow-y: auto;
+  overflow-y: auto;
 }
 
 .thumbnail {
-	width: 100%;
-	height: auto;
-	aspect-ratio: 16 / 9;
-	object-fit: cover;
-	border-radius: 12px;
-	margin-bottom: 16px;
-	border: 1px solid #f0f0f0;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  border-radius: 12px;
+  margin-bottom: 16px;
+  border: 1px solid #f0f0f0;
 }
 
 .foldBtn {
-	background: none;
-	border: none;
-	cursor: pointer;
-	align-self: flex-start;
-	margin-bottom: 10px;
-	display: flex;
+  background: none;
+  border: none;
+  cursor: pointer;
+  align-self: flex-start;
+  margin-bottom: 10px;
+  display: flex;
 }
 
 .bookmarkBtn {
-	background: none;
-	border: none;
-	padding: 0;
-	cursor: pointer;
-	align-self: flex-start;
-	margin-bottom: 12px;
-	display: flex;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  align-self: flex-start;
+  margin-bottom: 12px;
+  display: flex;
 }
 
 .bookmarkBtn img {
-	width: 24px;
-	height: 24px;
+  width: 24px;
+  height: 24px;
 }
 
 .title {
-	font-size: 20px;
-	font-weight: 700;
-	color: #111111;
-	line-height: 1.4;
-	margin: 0 0 8px 0;
-	word-break: keep-all;
-}
-
-.date {
-	font-size: 14px;
-	font-weight: 400;
-	color: #555555;
-	margin-bottom: 16px;
+  font-size: 20px;
+  font-weight: 700;
+  color: #111111;
+  line-height: 1.4;
+  margin: 0 0 8px 0;
+  word-break: keep-all;
 }
 
 .chipsList {
-	display: flex;
-	flex-direction: row;
-	align-items: center;
-	gap: 8px;
-	list-style: none;
-	padding: 0;
-	margin: 0 0 12px 0;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  list-style: none;
+  padding: 0;
+  margin: 0 0 12px 0;
 }
 
 .deadlineChip {
-	font-size: 13px;
-	font-weight: 600;
-	color: #333333;
-	padding: 4px 8px;
-	background-color: #ffffff;
-	border: 1px solid #e0e0e0;
-	border-radius: 6px;
-	white-space: nowrap;
+  font-size: 13px;
+  font-weight: 600;
+  color: #333333;
+  padding: 4px 8px;
+  background-color: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  white-space: nowrap;
 }
 
 .categoryChip {
-	font-size: 13px;
-	font-weight: 500;
-	color: #111111;
-	padding: 5px 10px;
-	border-radius: 6px;
-	white-space: nowrap;
-	/* background-color is set inline */
+  font-size: 13px;
+  font-weight: 500;
+  color: #111111;
+  padding: 5px 10px;
+  border-radius: 6px;
+  white-space: nowrap;
+  /* background-color is set inline */
 }
 
 .orgText {
-	font-size: 14px;
-	font-weight: 600;
-	color: #111111;
-	margin-bottom: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #111111;
+  margin-bottom: 8px;
 }
 
 .applyBtn {
-	background: none;
-	border: none;
-	padding: 0;
-	cursor: pointer;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
 
-	font-size: 13px;
-	font-weight: 500;
-	color: #999999;
-	text-align: left;
-	align-self: flex-start;
-	margin-bottom: 24px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #999999;
+  text-align: left;
+  align-self: flex-start;
+  margin-bottom: 24px;
 
-	text-decoration: none;
+  text-decoration: none;
 }
 .applyBtn:hover {
-	text-decoration: underline;
+  text-decoration: underline;
 }
 
 .contentText {
-	font-size: 15px;
-	line-height: 1.6;
-	color: #333333;
-	white-space: pre-wrap;
-	margin-bottom: 40px;
+  font-size: 15px;
+  line-height: 1.6;
+  color: #333333;
+  white-space: pre-wrap;
+  margin-bottom: 40px;
 }

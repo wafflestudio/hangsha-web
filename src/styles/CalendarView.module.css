@@ -93,13 +93,16 @@ body {
   .detailPanel {
     width: 340px;
   }
+  .calendarWrapper {
+    padding: 0 0px 200px 0px;
+  }
 }
 
 @media (max-width: 576px) {
   .sidePanel {
-    width: 300px;
+    width: 100%;
   }
   .detailPanel {
-    width: 250px;
+    width: 100%;
   }
 }

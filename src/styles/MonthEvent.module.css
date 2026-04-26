@@ -1,67 +1,91 @@
 .resetEventStyle {
-	background: none !important;
-	padding: 0 !important;
-	border: none !important;
-	opacity: 1 !important;
+  background: none !important;
+  padding: 0 !important;
+  border: none !important;
+  opacity: 1 !important;
 }
 
 .blockEventContainer {
-	padding: 1px 4px;
-	border-radius: 7px;
-	opacity: 1 !important;
-	font-size: 0.75rem;
-	color: #1f2937;
-	white-space: nowrap;
-	overflow: hidden;
-	text-align: center;
-	text-overflow: ellipsis;
-	line-height: 1.4;
-	font-weight: 500;
-	position: relative;
-	transition: all 0.2s ease;
+  padding: 1px 4px;
+  border-radius: 7px;
+  opacity: 1 !important;
+  font-size: 0.8rem;
+  color: #1f2937;
+  white-space: nowrap;
+  overflow: hidden;
+  text-align: center;
+  text-overflow: ellipsis;
+  line-height: 1.4;
+  font-weight: 500;
+  position: relative;
+  transition: all 0.2s ease;
 }
 
 .blockEventContainer:hover {
-	min-width: fit-content;
-	z-index: 1000;
-	position: relative;
-	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  min-width: fit-content;
+  z-index: 1000;
+  position: relative;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
 .arrowEventContainer {
-	display: flex;
-	flex-direction: column;
-	text-align: center;
-	position: relative;
-	width: 100%;
-	padding: 0;
+  display: flex;
+  padding: 0;
+  flex-direction: column;
+  text-align: center;
+  position: relative;
+  width: 100%;
+}
+
+.arrowText:hover {
+  /* width: fit-content; */
+  text-align: center;
+  background-color: #f7f7f7;
+  font-size: 0.85rem;
+  min-width: fit-content;
+  z-index: 1000;
+  position: relative;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  border-radius: 10px;
+  padding: 0.15rem 0.5rem;
+  margin-bottom: 2px;
 }
 
 .arrowText {
-	font-size: 0.7rem;
-	margin-bottom: -2px;
-	margin-left: 4px;
-	font-weight: 600;
-	white-space: nowrap;
-	overflow: hidden;
-	text-overflow: ellipsis;
+  font-size: 0.8rem;
+  margin: 0 1rem -2px 1rem;
+  /* margin-bottom: -2px;
+  margin-left: 4px; */
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  /* padding: 1px 4px; */
 }
 
 .arrowLine {
-	height: 3px;
-	width: 100%;
-	position: relative;
-	border-radius: 2px;
+  height: 3px;
+  width: 100%;
+  position: relative;
+  border-radius: 2px;
 }
 
 .arrowHead {
-	position: absolute;
-	right: -4px;
-	top: -4px;
-	width: 0;
-	height: 0;
-	border-top: 5px solid transparent;
-	border-bottom: 5px solid transparent;
-	border-left-width: 8px;
-	border-left-style: solid;
+  position: absolute;
+  right: -4px;
+  top: -4px;
+  width: 0;
+  height: 0;
+  border-top: 5px solid transparent;
+  border-bottom: 5px solid transparent;
+  border-left-width: 8px;
+  border-left-style: solid;
+}
+
+.arrowHead.left {
+  border-left-width: 0px;
+  border-right-width: 8px;
+  border-right-style: solid;
+  left: -4px;
+  bottom: -4px;
 }

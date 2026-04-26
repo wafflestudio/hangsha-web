@@ -12,6 +12,8 @@ import type { User } from "@/util/types";
 import { useState } from "react";
 import { useSearch } from "@contexts/SearchContext";
 import { useNavigate } from "react-router-dom";
+import FilterIcon from '/assets/filter.svg'
+import { useFilter } from "@/contexts/FilterContext";
 
 interface ToolbarProps {
 	view: View;
@@ -39,7 +41,7 @@ const SearchInput = () => {
 			type="button"
 			className={styles.searchContainer}
 			onMouseEnter={() => setActive(true)}
-			// onMouseLeave={()=>setActive(false)}
+			onMouseLeave={()=>setActive(false)}
 			onFocus={() => setActive(true)}
 			onBlur={() => setActive(false)}
 		>
@@ -48,7 +50,9 @@ const SearchInput = () => {
 				className={`${styles.searchInput} ${active ? styles.active : ""}`}
 				placeholder="검색어를 입력하세요"
 				value={searchText}
-				onKeyDown={(e)=>{if (e.key === 'Enter' && !e.nativeEvent.isComposing) handleSearch()}}
+				onKeyDown={(e) => {
+					if (e.key === "Enter" && !e.nativeEvent.isComposing) handleSearch();
+				}}
 				onChange={(e) => setSearchText(e.currentTarget.value)}
 			/>
 			<IoIosSearch
@@ -93,6 +97,7 @@ const Toolbar: React.FC<ToolbarProps> = ({
 }) => {
 	const { user } = useAuth();
 	const { dayViewMode, setDayViewMode } = useDayView();
+	const { setFilterSheetShowing } = useFilter();
 
 	return (
 		<div className={styles.toolbarContainer}>
@@ -130,6 +135,7 @@ const Toolbar: React.FC<ToolbarProps> = ({
 				<div className={styles.leftGroup}>
 					<h2 className={styles.dateTitle}>{label}</h2>
 					<div className={styles.navBtnGroup}>
+						{/* 오늘 버튼 */}
 						<button
 							type="button"
 							className={styles.todayBtn}
@@ -137,6 +143,8 @@ const Toolbar: React.FC<ToolbarProps> = ({
 						>
 							오늘
 						</button>
+						
+						{/* < > 전환 버튼 */}
 						<button
 							type="button"
 							className={styles.navIconBtn}
@@ -150,6 +158,14 @@ const Toolbar: React.FC<ToolbarProps> = ({
 							onClick={() => onNavigate(Navigate.NEXT)}
 						>
 							&gt;
+						</button>
+						{/** 모바일뷰 전용 필터 버튼 */}
+						<button
+							type="button"
+							className={styles.filterBtn}
+							onClick={() => { setFilterSheetShowing(true) }}
+						>
+							<img src={FilterIcon} alt="filter icon"/>
 						</button>
 					</div>
 				</div>
@@ -192,7 +208,7 @@ const Toolbar: React.FC<ToolbarProps> = ({
 					)}
 					<div className={styles.profileRow}>
 						<SearchInput />
-						{user && <ProfileButton user={user} />}
+						<span className={styles.profileBtn}>{user && <ProfileButton user={user} />}</span>
 					</div>
 				</div>
 			</div>
