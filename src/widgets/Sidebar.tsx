@@ -338,7 +338,6 @@ export const Sidebar = () => {
 				)}
 			</div>
 
-			{/* TODO : 찜한 행사 */}
 			<div className={styles.sectionTitle} style={{ marginTop: "20px" }}>
 				페이지
 			</div>
