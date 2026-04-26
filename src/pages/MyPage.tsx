@@ -14,6 +14,7 @@ import Onboarding from "./auth/OnBoarding/Onboarding";
 import Modal from "@/widgets/Modal";
 import Loading from "@/widgets/Loading";
 import defaultProfile from "/assets/defaultProfile.png";
+import BottomNav from "@/widgets/BottomNav";
 
 const ProfileCard = ({ onClickInterest }: { onClickInterest: () => void }) => {
 	const { user, updateUsername, setProfileImg } = useAuth();
@@ -146,7 +147,6 @@ const ProfileCard = ({ onClickInterest }: { onClickInterest: () => void }) => {
 					<span>행사 보기 우선순위</span>
 				</div>
 				{interestCategories && interestCategories.length > 0 ? (
-					<div>
 						<ul className={styles.preferenceChips}>
 							{interestCategories.map((cat, idx) => (
 								<li
@@ -157,7 +157,6 @@ const ProfileCard = ({ onClickInterest }: { onClickInterest: () => void }) => {
 								</li>
 							))}
 						</ul>
-					</div>
 				) : (
 					<span className={styles.notYetText}>
 						클릭해서 우선순위로 확인할 행사를 설정해보세요!
@@ -225,6 +224,7 @@ const MyPage = () => {
 					/>
 				</div>
 			)}
+			<BottomNav />
 		</div>
 	);
 };
