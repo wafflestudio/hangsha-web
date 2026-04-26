@@ -17,6 +17,8 @@ import { useEvents } from "@contexts/EventContext";
 import { useFilter } from "@contexts/FilterContext";
 import { formatDateToYYYYMMDD } from "@calendarUtil/dateFormatter";
 import { useUserData } from "@/contexts/UserDataContext";
+import BottomNav from "@/widgets/BottomNav";
+import { FilterSheet } from "@/widgets/FilterSheet/FilterSheet";
 
 const CalendarView = () => {
 	// EventContext
@@ -73,8 +75,7 @@ const CalendarView = () => {
 			const paramMonth: FetchMonthEventArgs = {
 				start: currentDate,
 			};
-			if (globalCategory)
-				paramMonth.eventTypeId = globalCategory.map((g) => g.id);
+			if (globalCategory) paramMonth.eventTypeId = globalCategory.map((g) => g.id);
 			if (globalOrg) paramMonth.orgId = globalOrg.map((g) => g.id);
 			if (globalStatus) paramMonth.statusId = globalStatus.map((g) => g.id);
 
@@ -184,9 +185,7 @@ const CalendarView = () => {
 
 	return (
 		<div className={styles.container}>
-			<div className={styles.sidebarContainer}>
-				<Sidebar />
-			</div>
+			<Sidebar />
 			<div className={styles.calendarContainer}>
 				<div className={styles.calendarWrapper}>
 					<MyCalendar
@@ -212,6 +211,8 @@ const CalendarView = () => {
 					</div>
 				)}
 			</div>
+			<FilterSheet />
+			<BottomNav />
 		</div>
 	);
 };
