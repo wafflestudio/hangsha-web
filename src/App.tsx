@@ -2,6 +2,7 @@ import { AuthProvider } from "@contexts/AuthProvider";
 import { EventProvider } from "@contexts/EventContext";
 import { FilterContextProvider } from "@contexts/FilterContext";
 import { UserDataProvider } from "@contexts/UserDataContext";
+import { UserPreferenceProvider } from "@contexts/UserPreferenceContext";
 import { DayViewContextProvider } from "@contexts/DayViewContext";
 import { DetailContextProvider } from "./contexts/DetailContext";
 
@@ -14,17 +15,19 @@ function App() {
 		<AuthProvider>
 			<EventProvider>
 				<UserDataProvider>
-					<FilterContextProvider>
-						<SearchProvider>
-							<DayViewContextProvider>
-								<DetailContextProvider>
-									<TimetableProvider>
-										<AppRoutes />
-									</TimetableProvider>
-								</DetailContextProvider>
-							</DayViewContextProvider>
-						</SearchProvider>
-					</FilterContextProvider>
+					<UserPreferenceProvider>
+						<FilterContextProvider>
+							<SearchProvider>
+								<DayViewContextProvider>
+									<DetailContextProvider>
+										<TimetableProvider>
+											<AppRoutes />
+										</TimetableProvider>
+									</DetailContextProvider>
+								</DayViewContextProvider>
+							</SearchProvider>
+						</FilterContextProvider>
+					</UserPreferenceProvider>
 				</UserDataProvider>
 			</EventProvider>
 		</AuthProvider>

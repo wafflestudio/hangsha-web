@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { getCategoryGroups, getOrganizations } from "@api/event";
-import { addInterestCategories } from "@api/user";
 import type { Category } from "@types";
 import styles from "@styles/Onboarding.module.css";
 import { useUserData } from "@/contexts/UserDataContext";
+import { useUserPreferences } from "@/contexts/UserPreferenceContext";
 
 export default function Onboarding({
 	isEditing = false,
@@ -13,34 +12,24 @@ export default function Onboarding({
 	isEditing?: boolean;
 	onFinishEdit?: () => void;
 }) {
-	const { refreshUserData, interestCategories } = useUserData();
+	const { interestCategories } = useUserData();
+	const {
+		programTypes,
+		organizations,
+		isLoading,
+		error,
+		saveInterestPreferences,
+	} = useUserPreferences();
 
 	const [, setSearchParams] = useSearchParams();
 
-	const [categories, setCategories] = useState<Category[]>([]);
 	const [selectedPreferences, setSelectedPreferences] = useState<Category[]>(
 		interestCategories || [],
 	);
-	const [organizations, setOrganizations] = useState<Category[] | null>(null);
 
 	useEffect(() => {
-		getCategoryGroups().then((categoryGroups) => {
-			const safe = Array.isArray(categoryGroups) ? categoryGroups : [];
-
-			// 프로그램 유형(groupId === 3)만 추출
-			const programTypes = safe
-				.flatMap((item) => item.categories ?? [])
-				.filter((c) => c.groupId === 3);
-
-			setCategories(programTypes);
-		});
-	}, []);
-
-	useEffect(() => {
-		getOrganizations().then((orgs) => {
-			setOrganizations(Array.isArray(orgs) ? orgs : []);
-		});
-	}, []);
+		setSelectedPreferences(interestCategories || []);
+	}, [interestCategories]);
 
 	const MAX_PREFERENCE = 3;
 
@@ -67,13 +56,7 @@ export default function Onboarding({
 
 	const handleSubmit = async () => {
 		try {
-			const items = selectedPreferences.map((p, index) => ({
-				categoryId: p.id,
-				priority: index + 1,
-			}));
-
-			await addInterestCategories(items);
-			refreshUserData();
+			await saveInterestPreferences(selectedPreferences);
 
 			if (isEditing && onFinishEdit) {
 				onFinishEdit();
@@ -119,7 +102,7 @@ export default function Onboarding({
 					</h2>
 
 					<div className={styles.onbOptions}>
-						{categories.map((category) => {
+						{programTypes.map((category) => {
 							const checked = selectedPreferences.some(
 								(p) => p.id === category.id,
 							);
@@ -177,7 +160,8 @@ export default function Onboarding({
 							);
 						})}
 
-						{!organizations && <div>로딩 중..</div>}
+						{isLoading && <div>로딩 중..</div>}
+						{error && <div>{error}</div>}
 					</div>
 				</section>
 
