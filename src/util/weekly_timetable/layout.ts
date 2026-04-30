@@ -31,6 +31,7 @@ export type TimetableGridBlock<T> = {
 	day: Day;
 	top: number;
 	height: number;
+	widthPct: number;
 	title: string;
 	startMin: number;
 	endMin: number;
@@ -78,6 +79,7 @@ export function flattenCoursesToBlocks(
 				endMin: slot.endAt,
 				top: minutesToTop(slot.startAt, cfg),
 				height: durationToHeight(slot.startAt, slot.endAt, cfg),
+				widthPct: 100,
 				raw: courseRes.course,
 			});
 		});

@@ -302,6 +302,8 @@
 
 .block {
 	position: absolute;
+	left: 0;
+	box-sizing: border-box;
 	display: grid;
 	grid-template-columns: 1fr;
 	padding: 8px;
