@@ -12,6 +12,7 @@ import Pagination from "@/widgets/Pagination";
 import Loading from "@/widgets/Loading";
 import { Views } from "react-big-calendar";
 import calendarEventMapper from "@/util/Calendar/calendarEventMapper";
+import BottomNav from "@/widgets/BottomNav";
 
 const SearchView = () => {
 	const {
@@ -83,9 +84,7 @@ const SearchView = () => {
 
 	return (
 		<div className={styles.container}>
-			<div className={styles.sidebarContainer}>
-				<Sidebar />
-			</div>
+			<Sidebar />
 			<div className={styles.restContainer}>
 				<SearchToolbar viewMode={viewMode} setViewMode={setViewMode} />
 				<div className={styles.dropdownRow}>
@@ -141,6 +140,7 @@ const SearchView = () => {
 					<DetailView eventId={clickedEventId} />
 				</div>
 			)}
+			<BottomNav />
 		</div>
 	);
 };

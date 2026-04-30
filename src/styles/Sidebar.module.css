@@ -1,548 +1,600 @@
+:root {
+  --fs-xxs: 10px;
+  --fs-xs: 11px;
+  --fs-tag: 0.8rem;
+  --fs-sm: 13px;
+  --fs-input: 0.9rem;
+  --fs-md: 14px;
+  --fs-label: 0.95rem;
+  --fs-lg: 15px;
+  --fs-section: 1rem;
+  --fs-header: 16px;
+  --fs-icon: 18px;
+  --fs-title: 1.2rem;
+  --fs-xl: 20px;
+}
+
 .body {
-	height: 100vh;
+  height: 100vh;
 }
 
 .sidebarContainer {
-	width: 256px;
-	height: 100vh;
-	overflow-y: auto;
+  flex-shrink: 0;
+  width: 256px;
+  height: 100vh;
+  overflow-y: auto;
 
-	scrollbar-width: none;
-	-ms-overflow-style: none;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 
-	display: flex;
-	flex-direction: column;
-	padding: 20px;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
 
-	background-color: #f9f9f9;
-	box-sizing: border-box;
-	border-right: 1px solid #eee;
-	font-family:
-		-apple-system, BlinkMacSystemFont, "Pretendard", "Apple SD Gothic Neo",
-		sans-serif;
+  background-color: #f9f9f9;
+  box-sizing: border-box;
+  border-right: 1px solid #eee;
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Pretendard", "Apple SD Gothic Neo",
+    sans-serif;
 }
 
 .sidebarContainer::-webkit-scrollbar {
-	display: none;
+  display: none;
 }
 
 body::-webkit-scrollbar {
-	display: none;
+  display: none;
 }
 
 /* -- for hidden state -- */
 .hiddenSidebar {
-	width: 40px;
-	height: 100vh;
-	background-color: #f8f9fa;
-	border-right: 1px solid #e0e0e0;
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	padding-top: 20px;
-	box-sizing: border-box;
+  width: 40px;
+  height: 100vh;
+  background-color: #f8f9fa;
+  border-right: 1px solid #e0e0e0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 20px;
+  box-sizing: border-box;
 }
 
 .expandBtn,
 .collapseBtn {
-	background: none;
-	border: none;
-	cursor: pointer;
+  background: none;
+  border: none;
+  cursor: pointer;
 
-	display: flex;
-	align-items: center;
-	justify-content: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
-	padding: 8px;
-	border-radius: 50%;
-	transition: background-color 0.2s ease;
+  padding: 8px;
+  border-radius: 50%;
+  transition: background-color 0.2s ease;
 }
 
 .expandBtn:hover,
 .collapseBtn:hover {
-	background-color: #e5e5e5;
+  background-color: #e5e5e5;
 }
 
 /* --- Header --- */
 .headerRow {
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	margin-bottom: 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
 }
 
 .topButtons {
-	display: flex;
-	align-items: center;
+  display: flex;
+  align-items: center;
 }
 
 .header {
-	font-size: 16px;
-	font-weight: 700;
-	background: none;
-	border: none;
-	cursor: pointer;
+  font-size: var(--fs-header);
+  font-weight: 700;
+  background: none;
+  border: none;
+  cursor: pointer;
 }
 
 .header > img {
-	width: 25px;
-	aspect-ratio: 1;
+  width: 25px;
+  aspect-ratio: 1;
 }
 
 .headerTitle {
-	font-size: 1.2rem;
-	font-weight: 800;
-	color: #000;
-	background: none;
-	border: none;
-	cursor: pointer;
-	padding: 0;
-	text-align: left;
+  font-size: var(--fs-title);
+  font-weight: 800;
+  color: #000;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  text-align: left;
 }
 
 /* --- Section Titles --- */
 .sectionTitle {
-	font-size: 1rem;
-	font-weight: 700;
-	color: #111;
-	margin-bottom: 15px;
+  font-size: var(--fs-section);
+  font-weight: 700;
+  color: #111;
+  margin-bottom: 15px;
 }
 
 /* --- Filter Groups --- */
 .filterGroup {
-	margin-bottom: 20px;
-	display: flex;
-	flex-direction: column;
-	gap: 8px;
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
 .labelText {
-	font-size: 0.95rem;
-	font-weight: 600;
-	color: #333;
+  font-size: var(--fs-label);
+  font-weight: 600;
+  color: #333;
 }
 
 .labelRow {
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-	padding-left: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-left: 4px;
 }
 
 .labelLeftBtn {
-	display: flex;
-	align-items: center;
-	gap: 8px;
-	background: none;
-	border: none;
-	cursor: pointer;
-	padding: 0;
-	color: inherit;
-	flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  color: inherit;
+  flex: 1;
 }
 
 .labelLeftBtn:hover .labelText {
-	color: #000;
+  color: #000;
 }
 
 .icon {
-	width: 18px;
-	height: 18px;
+  width: 18px;
+  height: 18px;
 }
 
 .iconBtn {
-	width: 30px;
-	height: 30px;
-	border-radius: 10px;
-	border: 0;
-	background: transparent;
-	cursor: pointer;
-	display: grid;
-	place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 10px;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
 }
 
 .iconBtn:hover {
-	background: #f6f6f6;
+  background: #f6f6f6;
 }
 
 .plus {
-	font-size: 20px;
-	line-height: 1;
-	color: #333;
-	transform: translateY(-1px);
+  font-size: var(--fs-xl);
+  line-height: 1;
+  color: #333;
+  transform: translateY(-1px);
 }
 
 .chevron {
-	font-size: 10px;
-	color: #999;
-	margin-left: 4px;
-	display: flex;
-	align-items: center;
+  font-size: var(--fs-xxs);
+  color: #999;
+  margin-left: 4px;
+  display: flex;
+  align-items: center;
 }
 
 .resetBtn {
-	background: none;
-	border: none;
-	cursor: pointer;
-	color: #999;
-	display: flex;
-	align-items: center;
-	padding: 4px;
-	border-radius: 50%;
-	transition: background-color 0.2s;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #999;
+  display: flex;
+  align-items: center;
+  padding: 4px;
+  border-radius: 50%;
+  transition: background-color 0.2s;
 }
 
 .resetBtn:hover {
-	background-color: #e5e5e5;
-	color: #555;
+  background-color: #e5e5e5;
+  color: #555;
 }
 
 /* --- Toggle --- */
 .toggleListWrapper {
-	display: flex;
-	flex-direction: column;
-	gap: 4px;
-	/* Optional: Limit height if lists are very long */
-	max-height: 200px;
-	overflow-y: auto;
-	padding-right: 4px; /* Space for scrollbar */
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  /* Optional: Limit height if lists are very long */
+  max-height: 200px;
+  overflow-y: auto;
+  padding-right: 4px; /* Space for scrollbar */
 }
 
 .toggleListWrapper::-webkit-scrollbar {
-	width: 4px;
+  width: 4px;
 }
 .toggleListWrapper::-webkit-scrollbar-thumb {
-	background-color: #ddd;
-	border-radius: 2px;
+  background-color: #ddd;
+  border-radius: 2px;
 }
 
 .toggleItem {
-	display: flex;
-	align-items: center;
-	gap: 8px;
-	padding: 6px 8px;
-	background: none;
-	border: none;
-	border-radius: 6px;
-	cursor: pointer;
-	text-align: left;
-	transition: background-color 0.2s;
-	width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  background: none;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  text-align: left;
+  transition: background-color 0.2s;
+  width: 100%;
 }
 
 .toggleItem:hover {
-	background-color: #eeeeee;
+  background-color: #eeeeee;
 }
 
 .toggleItem.active {
-	background-color: #eff6ff; /* Light blue bg */
+  background-color: #eff6ff; /* Light blue bg */
 }
 
 .checkIcon {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	font-size: 18px; /* Icon size */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--fs-icon); /* Icon size */
 }
 
 .toggleText {
-	font-size: 13px;
-	color: #444;
-	line-height: 1.4;
+  font-size: var(--fs-sm);
+  color: #444;
+  line-height: 1.4;
 }
 
 .toggleItem.active .toggleText {
-	color: #111;
-	font-weight: 500;
+  color: #111;
+  font-weight: 500;
 }
 
 /* --- Exclude Section --- */
 .inputContainer {
-	display: flex;
-	background-color: #ffffff;
-	border-radius: 20px;
-	padding: 5px 7px;
-	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.03);
-	align-items: center;
-	justify-content: center;
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  background-color: #ffffff;
+  border-radius: 20px;
+  padding: 5px 7px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.03);
+  align-items: center;
+  justify-content: center;
 }
 
 .explanationText {
-	font-size: 11px;
-	color: #757575;
+  font-size: var(--fs-xs);
+  color: #757575;
 }
 
 .excludeInput {
-	border: none;
-	background: transparent;
-	padding: 5px 10px;
-	outline: none;
-	font-size: 0.9rem;
+  width: 100%;
+  min-width: 0;
+  border: none;
+  background: transparent;
+  padding: 5px 10px;
+  outline: none;
+  font-size: var(--fs-input);
 }
 
 .applyBtn {
-	background: none;
-	border: none;
-	font-weight: 600;
-	color: #555;
-	cursor: pointer;
-	font-size: 0.9rem;
-	min-width: 50px;
+  background: none;
+  border: none;
+  font-weight: 600;
+  color: #555;
+  cursor: pointer;
+  font-size: var(--fs-input);
+  min-width: 50px;
+  padding: 0;
 }
 
 .tagContainer {
-	display: flex;
-	flex-wrap: wrap;
-	gap: 8px;
-	margin-top: 2px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 2px;
 }
 
 .tag {
-	background-color: #dcdcdc;
-	color: #1d1d1d;
-	font-weight: 500;
-	font-size: 0.8rem;
-	padding: 1px 4px 1px 10px;
-	border-radius: 12px;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	gap: 5px;
+  background-color: #dcdcdc;
+  color: #1d1d1d;
+  font-weight: 500;
+  font-size: var(--fs-tag);
+  padding: 1px 4px 1px 10px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
 }
 
 .tagClose {
-	background: none;
-	border: none;
-	color: #555;
-	cursor: pointer;
-	padding: 0;
-	font-size: 1rem;
-	line-height: 1;
+  background: none;
+  border: none;
+  color: #555;
+  cursor: pointer;
+  padding: 0;
+  font-size: var(--fs-section);
+  line-height: 1;
 }
 
 /* --- Page Links --- */
 .pageLink {
-	display: flex;
-	align-items: center;
-	gap: 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
 
-	background: none;
-	border: none;
+  background: none;
+  border: none;
 
-	padding: 8px 0;
-	cursor: pointer;
-	color: #111;
+  padding: 8px 0;
+  cursor: pointer;
+  color: #111;
 
-	font-size: 15px;
-	font-weight: 600;
+  font-size: var(--fs-lg);
+  font-weight: 600;
 }
 
 .pageLink:hover {
-	opacity: 0.7;
+  opacity: 0.7;
 }
 
 /* Placeholder for Page Icons (Grey square/flag) */
 .iconBox {
-	width: 20px;
-	height: 20px;
-	background-color: #999;
-	/* Replace background-color with generic mask or use img tag inside */
+  width: 20px;
+  height: 20px;
+  background-color: #999;
+  /* Replace background-color with generic mask or use img tag inside */
 }
 
 .list {
-	list-style: none;
-	margin: 6px 0 0;
-	padding: 0;
-	display: flex;
-	flex-direction: column;
-	gap: 6px;
+  list-style: none;
+  margin: 6px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 }
 
 .listItem {
-	position: relative;
-	display: flex;
-	align-items: center;
-	gap: 6px;
-	padding: 0 4px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 4px;
 }
 
 .rowBtn {
-	flex: 1;
-	border: 0;
-	background: transparent;
-	cursor: pointer;
-	text-align: left;
-	padding: 10px 10px;
-	border-radius: 12px;
-	display: flex;
-	align-items: center;
-	min-height: 40px;
+  flex: 1;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  text-align: left;
+  padding: 10px 10px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  min-height: 40px;
 }
 
 .rowBtn:hover {
-	background: #f6f6f6;
+  background: #f6f6f6;
 }
 
 .rowText {
-	display: inline-flex;
-	align-items: center;
-	gap: 8px;
-	min-width: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
 }
 
 .ttName {
-	font-size: 14px;
-	color: #111;
-	letter-spacing: -0.01em;
-	white-space: nowrap;
-	overflow: hidden;
-	text-overflow: ellipsis;
+  font-size: var(--fs-md);
+  color: #111;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .moreBtn {
-	position: relative;
-	width: 34px;
-	height: 34px;
-	border: 0;
-	background: transparent;
-	cursor: pointer;
-	border-radius: 10px;
-	display: grid;
-	place-items: center;
-	color: #777;
-	font-size: 18px;
+  position: relative;
+  width: 34px;
+  height: 34px;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  color: #777;
+  font-size: var(--fs-icon);
 }
 
 .moreBtn:hover {
-	background: #f6f6f6;
+  background: #f6f6f6;
 }
 
 .menu {
-	position: absolute;
-	right: 8px;
-	top: 100%;
-	margin-top: 8px;
+  position: absolute;
+  right: 8px;
+  top: 100%;
+  margin-top: 8px;
 
-	width: 160px;
-	padding: 6px;
+  width: 160px;
+  padding: 6px;
 
-	background: #ffffff;
-	border: 1px solid rgba(0, 0, 0, 0.08);
-	border-radius: 12px;
-	box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
 
-	display: flex;
-	flex-direction: column;
-	gap: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 
-	z-index: 50;
+  z-index: 50;
 }
 
 .menuItem {
-	width: 100%;
-	text-align: left;
+  width: 100%;
+  text-align: left;
 
-	padding: 10px 12px;
-	border: none;
-	border-radius: 10px;
+  padding: 10px 12px;
+  border: none;
+  border-radius: 10px;
 
-	background: transparent;
-	cursor: pointer;
+  background: transparent;
+  cursor: pointer;
 
-	font-size: 14px;
-	font-weight: 600;
-	color: #111;
+  font-size: var(--fs-md);
+  font-weight: 600;
+  color: #111;
 }
 
 .menuItem:hover {
-	background: rgba(0, 0, 0, 0.05);
+  background: rgba(0, 0, 0, 0.05);
 }
 
 .menuItem:active {
-	transform: translateY(0.5px);
+  transform: translateY(0.5px);
 }
 
 .menuItem:focus-visible {
-	outline: 2px solid rgba(0, 0, 0, 0.25);
-	outline-offset: 2px;
+  outline: 2px solid rgba(0, 0, 0, 0.25);
+  outline-offset: 2px;
 }
 
 /* 삭제 전용 */
 .danger {
-	color: #d92d20;
+  color: #d92d20;
 }
 
 .danger:hover {
-	background: rgba(217, 45, 32, 0.1);
+  background: rgba(217, 45, 32, 0.1);
 }
 
 .renameBox {
-	display: flex;
-	flex-direction: column;
-	gap: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 }
 
 /* 입력창 */
 .renameInput {
-	height: 32px;
-	padding: 0 10px;
+  height: 32px;
+  padding: 0 10px;
 
-	font-size: 14px;
-	border-radius: 8px;
-	border: 1px solid rgba(0, 0, 0, 0.15);
+  font-size: var(--fs-md);
+  border-radius: 8px;
+  border: 1px solid rgba(0, 0, 0, 0.15);
 
-	outline: none;
+  outline: none;
 }
 
 .renameInput:focus {
-	border-color: #111;
+  border-color: #111;
 }
 
 /* 적용 버튼 (입력 아래) */
 .applyButton {
-	height: 30px;
-	width: fit-content; /* 버튼이 입력 폭을 다 차지하지 않게 */
-	align-self: flex-end; /* 오른쪽 정렬 */
+  height: 30px;
+  width: fit-content; /* 버튼이 입력 폭을 다 차지하지 않게 */
+  align-self: flex-end; /* 오른쪽 정렬 */
 
-	padding: 0 12px;
-	border: none;
-	border-radius: 8px;
+  padding: 0 12px;
+  border: none;
+  border-radius: 8px;
 
-	font-size: 13px;
-	font-weight: 600;
+  font-size: var(--fs-sm);
+  font-weight: 600;
 
-	background: #111;
-	color: #fff;
-	cursor: pointer;
+  background: #111;
+  color: #fff;
+  cursor: pointer;
 }
 
 .applyButton:hover {
-	background: #000;
+  background: #000;
 }
 
 .applyButton:active {
-	transform: translateY(0.5px);
+  transform: translateY(0.5px);
 }
 
 .applyButton:focus-visible {
-	outline: 2px solid rgba(0, 0, 0, 0.3);
-	outline-offset: 2px;
+  outline: 2px solid rgba(0, 0, 0, 0.3);
+  outline-offset: 2px;
 }
 
 /* 선택: 비활성화 */
 .applyButton:disabled {
-	opacity: 0.4;
-	cursor: not-allowed;
+  opacity: 0.4;
+  cursor: not-allowed;
 }
 
 .logout {
-	width: 100%;
-	background: none;
-	border: none;
-	padding: 0;
-	margin-top: 20px;
-	font-size: 13px;
-	font-weight: 400;
-	color: #a1a1a1;
-	cursor: pointer;
+  width: 100%;
+  background: none;
+  border: none;
+  padding: 0;
+  margin-top: 20px;
+  font-size: var(--fs-sm);
+  font-weight: 400;
+  color: #a1a1a1;
+  cursor: pointer;
+}
+
+@media (max-width: 992px) {
+  .sidebarContainer {
+    width: 220px;
+  }
+  .header {
+    font-size: var(--fs-md);
+  }
+}
+
+@media (max-width: 870px) {
+  .sidebarContainer {
+    width: 210px;
+  }
+}
+
+@media (max-width: 768px) {
+  .sidebarContainer {
+    width: 186px;
+  }
+}
+
+@media (max-width: 576px) {
+  .sidebarContainer {
+    display: none;
+  }
+  .hiddenSidebar {
+    display: none;
+  }
 }

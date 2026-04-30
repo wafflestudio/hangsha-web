@@ -8,7 +8,6 @@ import {
 import { MdCheckBox, MdCheckBoxOutlineBlank, MdRefresh } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@contexts/AuthProvider";
-import { useEvents } from "@contexts/EventContext";
 import { useFilter } from "@contexts/FilterContext";
 import styles from "@styles/Sidebar.module.css";
 import type { Category } from "@types";
@@ -30,7 +29,7 @@ export const Sidebar = () => {
 	const { user, logout } = useAuth();
 	const { excludedKeywords, addExcludedKeyword, deleteExcludedKeyword } =
 		useUserData();
-	const { categoryGroups, isLoadingMeta } = useEvents();
+	const { categoryGroups, isLoadingMeta } = useFilter();
 	const {
 		globalCategory,
 		globalOrg,
@@ -339,7 +338,6 @@ export const Sidebar = () => {
 				)}
 			</div>
 
-			{/* TODO : 찜한 행사 */}
 			<div className={styles.sectionTitle} style={{ marginTop: "20px" }}>
 				페이지
 			</div>

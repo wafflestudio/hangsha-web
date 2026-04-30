@@ -16,6 +16,7 @@ interface UserDataContextType {
 	excludedKeywords: { id: number; keyword: string }[];
 	eventMemos: Memo[];
 	refreshUserData: () => void;
+	// fetchInterestCategories: () => void;
 	addExcludedKeyword: (keyword: string) => Promise<void>;
 	deleteExcludedKeyword: (id: number) => Promise<void>;
 	toggleBookmark: (event: Event) => Promise<void>;
@@ -79,29 +80,32 @@ export const UserDataProvider = ({ children }: { children: ReactNode }) => {
 		}
 	}, [isAuthenticated, fetchAll]);
 
-	// Optimistic UI Update for Bookmarking
+	// get interestCategories & update
+	/*		
+	const fetchInterestCategories = async () => {
+		try {
+			const newInterestCategories = await userService.getInterestCategories();
+			setInterestCategories(newInterestCategories);
+		} catch (e) {
+			console.error("error in fetching interest categories", e);
+		}
+	}
+		*/
+
 	const toggleBookmark = async (event: Event) => {
 		const isBookmarked = bookmarkedEvents.some((b) => b.id === event.id);
-
-		// 1. Optimistic Update
-		if (isBookmarked) {
-			setBookmarkedEvents((prev) => prev.filter((b) => b.id !== event.id));
-		} else {
-			setBookmarkedEvents((prev) => [...prev, event]);
-		}
-
-		// 2. API Call
 		try {
 			if (isBookmarked) {
 				await userService.removeBookmark(event.id);
 			} else {
 				await userService.addBookmark(event.id);
 			}
+
+			const newBookmarks = await userService.getBookmarks(1);
+			setBookmarkedEvents(newBookmarks);
+
 		} catch (error) {
-			// Revert on failure
-			fetchAll();
 			console.error(error);
-			alert("Failed to update bookmark");
 		}
 	};
 
@@ -185,6 +189,7 @@ export const UserDataProvider = ({ children }: { children: ReactNode }) => {
 				interestCategories,
 				eventMemos,
 				refreshUserData: fetchAll,
+				// fetchInterestCategories,
 				toggleBookmark,
 				getMemoByTag,
 				addMemo,

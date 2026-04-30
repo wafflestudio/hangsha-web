@@ -2,8 +2,9 @@ import type { CalendarEvent } from "@types";
 import { getDDay } from "@calendarUtil/getDday";
 import { CATEGORY_COLORS } from "@constants";
 import { CATEGORY_LIST } from "@constants";
-import { formatDateToMMDD } from "@calendarUtil/dateFormatter";
+// import { formatDateToMMDD } from "@calendarUtil/dateFormatter";
 import { useDetail } from "@contexts/DetailContext";
+import { ApplyDate, StartDate } from "@/widgets/EventDate";
 
 const TableRow = ({ data }: { data: CalendarEvent }) => {
 	const event = data.resource.event;
@@ -36,9 +37,13 @@ const TableRow = ({ data }: { data: CalendarEvent }) => {
 				</li>
 			</td>
 			<td>
-				{formatDateToMMDD(data.start) === formatDateToMMDD(data.end)
+				{/* {formatDateToMMDD(data.start) === formatDateToMMDD(data.end)
 					? formatDateToMMDD(data.start)
-					: `${formatDateToMMDD(data.start)} ~ ${formatDateToMMDD(data.end)}`}
+					: `${formatDateToMMDD(data.start)} ~ ${formatDateToMMDD(data.end)}`} */}
+				<StartDate label={null} eventStart={event.eventStart} eventEnd={event.eventEnd}/>
+			</td>
+			<td>
+				<ApplyDate label={null} applyStart={event.applyStart} applyEnd={event.applyEnd}/>
 			</td>
 			<td>{event.organization}</td>
 		</tr>
