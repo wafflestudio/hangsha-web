@@ -111,8 +111,8 @@ const DetailView = ({ eventId }: { eventId: number }) => {
 			)}
 			<button type="button" className={styles.foldBtn}>
 				<FaAnglesRight
-					width={18}
-					height={18}
+					width={25}
+					height={25}
 					color="rgba(171, 171, 171, 1)"
 					onClick={() => setShowDetail(false)}
 				/>
