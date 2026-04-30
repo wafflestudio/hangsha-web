@@ -22,8 +22,8 @@ export const transformEvent = (dto: EventDTO): Event => {
 
 		statusId: dto.statusId
 			? dto.statusId
-			: new Date(dto.applyEnd) < today
-				? 3
-				: 1,
+			: new Date(dto.applyEnd) < today // 모집 마감 날짜가 지남
+				? 2 // 모집 마감
+				: 1, // 모집 중
 	};
 };
