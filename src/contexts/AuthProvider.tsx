@@ -15,6 +15,7 @@ interface AuthContextType {
 	isLoading: boolean;
 	login: (email: string, password: string) => Promise<void>;
 	signup: (email: string, password: string) => Promise<void>;
+	completeSocialLogin: (accessToken: string) => Promise<void>;
 	socialLogin: (
 		provider: Provider,
 		code: string,
@@ -89,6 +90,19 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 			setIsAuthenticated(true);
 		} catch (err) {
 			console.error("Social Login failed:", err);
+			throw err;
+		}
+	};
+
+	const completeSocialLogin = async (accessToken: string) => {
+		try {
+			TokenService.setToken(accessToken);
+			const userData = await auth.getUser();
+			setUser(userData);
+			setIsAuthenticated(true);
+		} catch (err) {
+			TokenService.clearTokens();
+			console.error("Completing social login failed:", err);
 			throw err;
 		}
 	};
@@ -183,6 +197,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 				isLoading,
 				login,
 				signup,
+				completeSocialLogin,
 				socialLogin,
 				logout,
 				updateUsername,
