@@ -8,17 +8,24 @@ const LoginHandler = () => {
 
 	useEffect(() => {
 		const url = new URL(window.location.href);
-		const token = url.searchParams.get("token");
+		const accessToken =
+			url.searchParams.get("accessToken") ?? url.searchParams.get("token");
+		const isNewUser = url.searchParams.get("isNewUser") === "true";
 
-		if (!token) {
+		if (!accessToken) {
 			navigate("/auth/login", { replace: true });
 			return;
 		}
 
 		const run = async () => {
 			try {
-				await completeSocialLogin(token);
-				navigate("/auth/complete", { replace: true });
+				await completeSocialLogin(accessToken);
+				navigate(
+					isNewUser ? "/auth/signup?step=onboarding" : "/auth/complete",
+					{
+						replace: true,
+					},
+				);
 			} catch (e) {
 				console.error(e);
 				navigate("/auth/login", { replace: true });
