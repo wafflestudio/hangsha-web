@@ -5,6 +5,7 @@ import { localizer } from "@calendarUtil/calendarLocalizer";
 import type { CalendarEvent, Event } from "@types";
 import Toolbar from "./Toolbar";
 import MonthEvent from "./Month/MonthEvent";
+import { MonthEventPreviewProvider } from "./Month/MonthEventPreviewContext";
 import DayEvent from "./Day/DayEvent";
 import CustomDayView from "./Day/CustomDayView";
 import CustomWeekView from "./Week/CustomWeekView";
@@ -111,20 +112,22 @@ export const MyCalendar = ({
 		const checkIsMobile = () => {
 			setIsMobile(window.innerWidth <= 576);
 		};
-		
+
 		checkIsMobile();
 		window.addEventListener("resize", checkIsMobile);
 
 		return () => {
 			window.removeEventListener("resize", checkIsMobile);
-		}
+		};
 	}, []);
 
 	/** 날짜 클릭 핸들러 함수 - onDrillDown */
 	const handleDrillDown = useCallback(
 		(date: Date) => {
 			onShowMoreClick(date, Views.MONTH);
-		},[onShowMoreClick],);
+		},
+		[onShowMoreClick],
+	);
 
 	const handleSelectEvent = useCallback(
 		(event: CalendarEvent) => {
@@ -133,50 +136,54 @@ export const MyCalendar = ({
 				return;
 			}
 			onSelectEvent(event);
-		}, [isMobile, handleDrillDown, onSelectEvent]);
-		
+		},
+		[isMobile, handleDrillDown, onSelectEvent],
+	);
+
 	return (
-		<div className={styles.main}>
-			<Calendar
-				localizer={localizer}
-				events={CALENDER_EVENTS}
-				startAccessor="start"
-				endAccessor="end"
-				style={{ height: "100%" }}
-				// custom toolbar
-				components={{
-					toolbar: Toolbar,
-					// event: MonthEvent,
-					month: {
-						event: MonthEvent,
-					},
-					day: {
-						event: DayEvent,
-					},
-				}}
-				// style function
-				eventPropGetter={eventPropGetter}
-				date={dayDate}
-				// view setup
-				view={currentView}
-				onView={(view) => setCurrentView(view)}
-				views={{
-					month: true,
-					week: CustomWeekView,
-					day: CustomDayView,
-				}}
-				onNavigate={onNavigate}
-				defaultView={Views.MONTH}
-				// 한국어 형식
-				formats={formats}
-				// 더보기 눌렀을 때 popup 나타나기 X, 사이드뷰 나타남
-				popup={false}
-				onDrillDown={handleDrillDown}
-				// 더보기 미리보기
-				messages={messages}
-				// 행사 눌렀을 때 상세 뷰 나타나게 하기 :
-				onSelectEvent={handleSelectEvent}
-			/>
-		</div>
+		<MonthEventPreviewProvider>
+			<div className={styles.main}>
+				<Calendar
+					localizer={localizer}
+					events={CALENDER_EVENTS}
+					startAccessor="start"
+					endAccessor="end"
+					style={{ height: "100%" }}
+					// custom toolbar
+					components={{
+						toolbar: Toolbar,
+						// event: MonthEvent,
+						month: {
+							event: MonthEvent,
+						},
+						day: {
+							event: DayEvent,
+						},
+					}}
+					// style function
+					eventPropGetter={eventPropGetter}
+					date={dayDate}
+					// view setup
+					view={currentView}
+					onView={(view) => setCurrentView(view)}
+					views={{
+						month: true,
+						week: CustomWeekView,
+						day: CustomDayView,
+					}}
+					onNavigate={onNavigate}
+					defaultView={Views.MONTH}
+					// 한국어 형식
+					formats={formats}
+					// 더보기 눌렀을 때 popup 나타나기 X, 사이드뷰 나타남
+					popup={false}
+					onDrillDown={handleDrillDown}
+					// 더보기 미리보기
+					messages={messages}
+					// 행사 눌렀을 때 상세 뷰 나타나게 하기 :
+					onSelectEvent={handleSelectEvent}
+				/>
+			</div>
+		</MonthEventPreviewProvider>
 	);
 };
