@@ -131,6 +131,15 @@
 }
 
 @media (max-width: 576px) {
+  .dateRow h1 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    padding-bottom: 0px;
+  }
+  .todayBtn {
+    padding: 4px 10px;
+    border-radius: 13px;
+  }
   .foldBtn {
     display: none;
   }

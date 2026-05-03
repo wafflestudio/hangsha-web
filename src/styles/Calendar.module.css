@@ -1,6 +1,8 @@
 .main {
-  height: calc(100vh - 3rem);
+  /* height: calc(100vh - 3rem); */
+  min-height: 100dvh;
   padding: 1.5rem;
+  padding-bottom: calc(2rem + env(safe-area-inset-bottom));
 
   background-color: #ffffff;
   font-family:
@@ -12,12 +14,7 @@
     sans-serif;
   /* display: flex;
   flex-direction: column; */
-}
-
-@media (max-width: 576px) {
-  .main {
-    padding: 0.8rem;
-  }
+  margin-bottom: min(50px, 15vh); /* nav bar + a*/
 }
 
 :global(.rbc-calendar) {
@@ -68,7 +65,7 @@
 }
 
 :global(.rbc-month-row):last-child {
-  border-bottom: none;
+  border-bottom: 0;
 }
 
 /* Background grid layer */
@@ -193,7 +190,22 @@
 
 @media (max-width: 576px) {
   :global(.rbc-day-bg) {
-    border-left: 2.5px solid #ffffff;
-    border-radius: 5px;
+    border: 1px solid #ffffff;
+    border-radius: 3px;
+  }
+  :global(.rbc-event-content) {
+    padding: 0;
+  }
+  :global(.rbc-month-row) {
+    min-height: 110px;
+    border: 0.5px solid #ffffff;
+  }
+
+  .main {
+    padding-left: 0px;
+    padding-right: 0px;
+    padding-bottom: calc(2rem + env(safe-area-inset-bottom));
+    touch-action: pan-y; /* drop horizontal finger drag */
+    overscroll-behavior-x: none; /* block horizontal overscroll chaining */
   }
 }

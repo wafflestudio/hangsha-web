@@ -2,13 +2,18 @@ body {
   overflow: hidden;
   padding: 0;
   margin: 0;
+  overscroll-behavior: none;
+
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
 }
 
 .container {
   display: flex;
   flex-direction: row;
   width: 100vw;
-  height: 100vh;
+  height: 100dvh;
   overflow: hidden;
   background-color: #ffffff;
   padding: 0;
@@ -26,9 +31,10 @@ body {
 .calendarWrapper {
   flex: 1;
   height: 100%;
-  padding: 0 20px 200px 20px;
+  padding: 0 20px 0px 20px;
   box-sizing: border-box;
   overflow-y: auto;
+  overscroll-behavior-y: none;
   transition: flex-basis 0.3s ease;
   min-width: 0;
 
@@ -50,7 +56,7 @@ body {
   border-left: 1px solid #e0e0e0;
   background-color: #ffffff;
   box-shadow: -4px 0 24px rgba(0, 0, 0, 0.05);
-  z-index: 100;
+  z-index: 110;
   overflow-y: auto;
   flex-shrink: 0;
   animation: slideIn 0.3s ease-out;
@@ -94,7 +100,7 @@ body {
     width: 340px;
   }
   .calendarWrapper {
-    padding: 0 0px 200px 0px;
+    padding: 0;
   }
 }
 
