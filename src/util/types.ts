@@ -27,6 +27,7 @@ interface EventBase {
 
 	applyLink: string; // 지원 url
 	tags?: string;
+	isPeriodEvent: boolean;
 
 	// following properties are only on BlockEvents
 	capacity: number;
