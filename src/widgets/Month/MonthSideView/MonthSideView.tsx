@@ -1,4 +1,3 @@
-// 필요 : get events by day (get all)
 import { useEffect, useState } from "react";
 import { FaAngleLeft, FaAngleRight, FaAnglesRight } from "react-icons/fa6";
 import { useEvents } from "@contexts/EventContext";
@@ -69,7 +68,7 @@ const MonthSideView = ({
 	return (
 		<div className={styles.mainWrapper}>
 			<FaAnglesRight
-				width={18}
+				width={24}
 				color="rgba(171, 171, 171, 1)"
 				onClick={onClose}
 			/>

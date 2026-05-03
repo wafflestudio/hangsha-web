@@ -122,7 +122,8 @@
   margin-bottom: 40px;
 }
 .contentText :global(img) {
-  max-width: 100%;
-  height: auto;
-  display: block;
+  max-width: 100% !important;
+  width: auto !important;
+  height: auto !important;
+  display: block !important;
 }
