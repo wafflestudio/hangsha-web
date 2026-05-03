@@ -8,6 +8,7 @@ import calendarEventMapper from "@/util/Calendar/calendarEventMapper";
 import { Views } from "react-big-calendar";
 import type { CalendarEvent, Event } from "@/util/types";
 import { startOfDay, isWithinInterval } from 'date-fns';
+import { IoClose } from "react-icons/io5";
 
 const MonthSideView = ({
 	day,
@@ -67,22 +68,29 @@ const MonthSideView = ({
 
 	return (
 		<div className={styles.mainWrapper}>
-			<FaAnglesRight
-				width={24}
-				color="rgba(171, 171, 171, 1)"
-				onClick={onClose}
-			/>
-			<div className={styles.dateRow}>
+			<button type="button" className={styles.foldBtn} onClick={onClose}>
+				<FaAnglesRight
+					width={24}
+					color="rgba(171, 171, 171, 1)"
+				/>
+			</button>
+			<div className={styles.dateRow}>			
 				<h1>{`${date.getMonth() + 1}월 ${date.getDate()}일`}</h1>
-				<button type="button" onClick={handleClickToday}>
+				<button type="button" className={styles.todayBtn} onClick={handleClickToday}>
 					오늘
 				</button>
-				<button type="button" onClick={handleClickPrevday}>
-					<FaAngleLeft width={18} color="rgba(171, 171, 171, 1)" />
+				<button type="button" className={styles.dateChangeBtn} onClick={handleClickPrevday}>
+					<FaAngleLeft size={24} color="rgba(171, 171, 171, 1)" />
 				</button>
-				<button type="button" onClick={handleClickNextday}>
-					<FaAngleRight width={18} color="rgba(171, 171, 171, 1)" />
+				<button type="button" className={styles.dateChangeBtn} onClick={handleClickNextday}>
+					<FaAngleRight size={24} color="rgba(171, 171, 171, 1)" />
 				</button>
+				<button type="button" className={`${styles.mobileCloseBtn}`} onClick={onClose}>
+					<IoClose
+						size={24}
+						color="rgba(171, 171, 171, 1)"
+					/>
+				</button>	
 			</div>
 			<div className={styles.cardWrapper}>
 				{events.map((event) => (
