@@ -16,7 +16,6 @@ api.interceptors.request.use(
 		const url = config.url ?? "";
 
 		const isAuthApi =
-			url.includes("/auth/login/social") ||
 			url.includes("/auth/login") ||
 			url.includes("/auth/register") ||
 			url.includes("/auth/refresh");
@@ -45,7 +44,6 @@ api.interceptors.response.use(
 		const url = originalRequest?.url ?? "";
 
 		const isAuthApi =
-			url.includes("/auth/login/social") ||
 			url.includes("/auth/login") ||
 			url.includes("/auth/register") ||
 			url.includes("/auth/refresh");

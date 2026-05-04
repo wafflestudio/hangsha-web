@@ -6,7 +6,7 @@ import {
 	useState,
 } from "react";
 import * as auth from "@api/auth";
-import type { Provider, User } from "@types";
+import type { User } from "@types";
 import { TokenService } from "@/api/tokenService";
 
 interface AuthContextType {
@@ -16,11 +16,6 @@ interface AuthContextType {
 	login: (email: string, password: string) => Promise<void>;
 	signup: (email: string, password: string) => Promise<void>;
 	completeSocialLogin: (accessToken: string) => Promise<void>;
-	socialLogin: (
-		provider: Provider,
-		code: string,
-		codeVerifier?: string,
-	) => Promise<void>;
 	logout: () => Promise<void>;
 	updateUsername: (username: string) => Promise<void>;
 	clearProfileImg: () => Promise<void>;
@@ -71,25 +66,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 			setIsAuthenticated(true);
 		} catch (err) {
 			console.error("Login failed:", err);
-			throw err;
-		}
-	};
-
-	const socialLogin = async (
-		provider: Provider,
-		code: string,
-		codeVerifier?: string,
-	) => {
-		try {
-			await auth.socialLogin(provider, code, codeVerifier);
-			if (!TokenService.getToken()) {
-				throw new Error("Social login did not set access token");
-			}
-			const userData = await auth.getUser();
-			setUser(userData);
-			setIsAuthenticated(true);
-		} catch (err) {
-			console.error("Social Login failed:", err);
 			throw err;
 		}
 	};
@@ -198,7 +174,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 				login,
 				signup,
 				completeSocialLogin,
-				socialLogin,
 				logout,
 				updateUsername,
 				clearProfileImg,
