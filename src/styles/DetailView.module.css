@@ -29,6 +29,7 @@
   cursor: pointer;
   align-self: flex-start;
   margin-bottom: 10px;
+  padding: 10px;
   display: flex;
 }
 
@@ -119,4 +120,10 @@
   color: #333333;
   white-space: pre-wrap;
   margin-bottom: 40px;
+}
+.contentText :global(img) {
+  max-width: 100% !important;
+  width: auto !important;
+  height: auto !important;
+  display: block !important;
 }

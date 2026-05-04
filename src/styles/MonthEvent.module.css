@@ -21,12 +21,44 @@
   transition: all 0.2s ease;
 }
 
-.blockEventContainer:hover {
-  min-width: fit-content;
-  font-size: 0.85rem;
+@media (hover: hover) and (pointer: fine) {
+  .blockEventContainer:hover {
+    min-width: fit-content;
+    font-size: 0.85rem;
+    z-index: 1000;
+    position: relative;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  }
+}
+
+@media (hover: none) and (pointer: coarse) {
+  .blockEventContainer {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+    touch-action: none;
+  }
+}
+
+.preview {
+  position: fixed;
+  padding: 8px 12px;
+  border-radius: 8px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.18);
+  font-size: 0.9rem;
+  font-weight: 500;
+  line-height: 1.4;
+  color: #1f2937;
+  max-width: calc(100vw - 32px);
+  word-break: keep-all;
+  white-space: normal;
+  text-align: center;
+  pointer-events: none;
   z-index: 1000;
-  position: relative;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  transition:
+    top 0.15s ease,
+    left 0.15s ease,
+    transform 0.15s ease;
 }
 
 .arrowEventContainer {
@@ -96,4 +128,26 @@
   border-right-style: solid;
   left: -4px;
   bottom: -4px;
+}
+
+@media (max-width: 576px) {
+  .arrowText {
+    font-size: 0.65rem;
+  }
+  .arrowText:hover {
+    font-size: 0.7rem;
+  }
+
+  .blockEventContainer {
+    padding: 2.5px 2px;
+    border-radius: 3px;
+    font-size: 0.65rem;
+    text-overflow: clip;
+  }
+}
+
+@media (max-width: 576px) and (hover: hover) and (pointer: fine) {
+  .blockEventContainer:hover {
+    font-size: 0.7rem;
+  }
 }
