@@ -35,7 +35,7 @@ const CustomDayView = ({
 			date.getFullYear(),
 			date.getMonth(),
 			date.getDate(),
-			0,
+			7,
 			0,
 			0,
 		);
@@ -61,7 +61,7 @@ const CustomDayView = ({
 					range={range}
 					events={events}
 					eventOffset={15}
-					step={60}
+					step={30}
 					timeslots={2}
 					min={minTime}
 					max={maxTime}

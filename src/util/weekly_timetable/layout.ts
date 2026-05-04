@@ -136,7 +136,7 @@ export function hasOverlap(existing: TimeSlot[], next: TimeSlot) {
 }
 
 export const config: GridConfig = {
-	startHour: 0,
+	startHour: 7,
 	endHour: 24,
 	ppm: 0.9,
 };
