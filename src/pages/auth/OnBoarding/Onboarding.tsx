@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import type { Category } from "@types";
 import styles from "@styles/Onboarding.module.css";
+import { useFilter } from "@/contexts/FilterContext";
 import { useUserData } from "@/contexts/UserDataContext";
-import { useUserPreferences } from "@/contexts/UserPreferenceContext";
 
 export default function Onboarding({
 	isEditing = false,
@@ -12,14 +12,16 @@ export default function Onboarding({
 	isEditing?: boolean;
 	onFinishEdit?: () => void;
 }) {
-	const { interestCategories } = useUserData();
 	const {
-		programTypes,
-		organizations,
-		isLoading,
-		error,
+		interestCategories,
 		saveInterestPreferences,
-	} = useUserPreferences();
+	} = useUserData();
+	const {
+		categoryGroups,
+		organizations,
+		isLoadingMeta,
+		filterError,
+	} = useFilter();
 
 	const [, setSearchParams] = useSearchParams();
 
@@ -32,6 +34,14 @@ export default function Onboarding({
 	}, [interestCategories]);
 
 	const MAX_PREFERENCE = 3;
+	const programTypes =
+		categoryGroups.find((group) => group.group.id === 3)?.categories ?? [];
+
+	const isSelectedPreference = (target: Category) =>
+		selectedPreferences.some(
+			(preference) =>
+				preference.id === target.id && preference.groupId === target.groupId,
+		);
 
 	const togglePreference = (pref: Category) => {
 		setSelectedPreferences((prev) => {
@@ -103,9 +113,7 @@ export default function Onboarding({
 
 					<div className={styles.onbOptions}>
 						{programTypes.map((category) => {
-							const checked = selectedPreferences.some(
-								(p) => p.id === category.id,
-							);
+							const checked = isSelectedPreference(category);
 							const id = `category-${category.id}`;
 
 							return (
@@ -138,7 +146,7 @@ export default function Onboarding({
 
 					<div className={styles.onbOptions}>
 						{organizations?.map((org) => {
-							const checked = selectedPreferences.some((p) => p.id === org.id);
+							const checked = isSelectedPreference(org);
 							const id = `organization-${org.id}`;
 
 							return (
@@ -160,8 +168,8 @@ export default function Onboarding({
 							);
 						})}
 
-						{isLoading && <div>로딩 중..</div>}
-						{error && <div>{error}</div>}
+						{isLoadingMeta && <div>로딩 중..</div>}
+						{filterError && <div>{filterError}</div>}
 					</div>
 				</section>
 
