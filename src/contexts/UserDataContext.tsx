@@ -15,8 +15,9 @@ interface UserDataContextType {
 	interestCategories: Category[];
 	excludedKeywords: { id: number; keyword: string }[];
 	eventMemos: Memo[];
-	refreshUserData: () => void;
+	refreshUserData: () => Promise<void>;
 	// fetchInterestCategories: () => void;
+	saveInterestPreferences: (categories: Category[]) => Promise<void>;
 	addExcludedKeyword: (keyword: string) => Promise<void>;
 	deleteExcludedKeyword: (id: number) => Promise<void>;
 	toggleBookmark: (event: Event) => Promise<void>;
@@ -109,6 +110,16 @@ export const UserDataProvider = ({ children }: { children: ReactNode }) => {
 		}
 	};
 
+	const saveInterestPreferences = async (categories: Category[]) => {
+		const items = categories.map((category, index) => ({
+			categoryId: category.id,
+			priority: index + 1,
+		}));
+
+		await userService.addInterestCategories(items);
+		await fetchAll();
+	};
+
 	const addExcludedKeyword = async (keyword: string) => {
 		try {
 			await userService.addExcludedKeywords(keyword);
@@ -190,6 +201,7 @@ export const UserDataProvider = ({ children }: { children: ReactNode }) => {
 				eventMemos,
 				refreshUserData: fetchAll,
 				// fetchInterestCategories,
+				saveInterestPreferences,
 				toggleBookmark,
 				getMemoByTag,
 				addMemo,
