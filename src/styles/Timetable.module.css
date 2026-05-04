@@ -5,12 +5,39 @@
 	background: #fff;
 }
 
-.pageClosed {
+.AddClassPanelClosed {
 	grid-template-columns: 260px 1fr;
 }
 
-.pageOpen {
+.AddClassPanelOpen {
 	grid-template-columns: 260px 1fr 360px;
+}
+
+.sidebarOpen.AddClassPanelClosed {
+	grid-template-columns: 260px 1fr;
+}
+
+.sidebarOpen.AddClassPanelOpen {
+	grid-template-columns: 260px 1fr 360px;
+}
+
+.sidebarClosed.AddClassPanelClosed {
+	grid-template-columns: 48px 1fr;
+}
+
+.sidebarClosed.AddClassPanelOpen {
+	grid-template-columns: 48px 1fr 360px;
+}
+
+.sidebarClosed .main {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.sidebarClosed .main > * {
+	width: 100%;
+	max-width: 1100px;
 }
 
 .main {
@@ -275,6 +302,8 @@
 
 .block {
 	position: absolute;
+	left: 0;
+	box-sizing: border-box;
 	display: grid;
 	grid-template-columns: 1fr;
 	padding: 8px;

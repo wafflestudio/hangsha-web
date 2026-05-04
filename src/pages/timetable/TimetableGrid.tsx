@@ -132,7 +132,11 @@ function DayColumn<T>({
 				<button
 					key={b.id}
 					className={styles.block}
-					style={{ top: b.top, height: b.height }}
+					style={{
+						top: b.top,
+						height: b.height,
+						width: `${b.widthPct}%`,
+					}}
 					onClick={() => onSelectBlock?.(b.id, b.raw)}
 					type="button"
 				>
