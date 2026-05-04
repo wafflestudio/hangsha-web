@@ -16,6 +16,7 @@ export default function Home() {
 
 	const toLogin = () => navigate("/auth/login");
 	const toSignUp = () => navigate("/auth/signup");
+	const toGuestMain = () => navigate("/main");
 
 	const moveToSocialLogin = (provider: keyof typeof SOCIAL_LOGIN_ENTRY) => {
 		window.location.href = SOCIAL_LOGIN_ENTRY[provider];
@@ -67,6 +68,14 @@ export default function Home() {
 						onClick={toSignUp}
 					>
 						회원가입
+					</button>
+
+					<button
+						className={styles.guestLink}
+						type="button"
+						onClick={toGuestMain}
+					>
+						로그인 없이 게스트로 계속하기
 					</button>
 				</div>
 			</div>
