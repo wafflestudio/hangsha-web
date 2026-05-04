@@ -1,4 +1,3 @@
-import { addBookmark, removeBookmark } from "@api/user";
 import { useEvents } from "@contexts/EventContext";
 import { useEffect, useRef, useState } from "react";
 import styles from "@styles/DetailView.module.css";
@@ -8,20 +7,20 @@ import { FaAnglesRight } from "react-icons/fa6";
 import type { CalendarEvent, EventDetail } from "@types";
 import DOMPurify from "isomorphic-dompurify";
 import parse from "html-react-parser";
-
+import { useUserData } from "@/contexts/UserDataContext";
 import { useDetail } from "@/contexts/DetailContext";
 import DetailMemo from "./DetailMemo";
 import { ErrorModal } from "../Modal";
 import Loading from "../Loading";
 import calendarEventMapper from "@/util/Calendar/calendarEventMapper";
-import { eventDateRenderer } from "@/util/Calendar/eventDateRenderer";
+import EventDate from "../EventDate";
 
 const DetailView = ({ eventId }: { eventId: number }) => {
 	const [event, setEvent] = useState<EventDetail>();
 	const [calendarEvent, setCalendarEvent] = useState<CalendarEvent | null>(
 		event ? calendarEventMapper(event, "day") : null,
 	);
-
+	const { toggleBookmark } = useUserData();
 	const { fetchEventById, detailError, isLoadingDetail, clearError } =
 		useEvents();
 	const { setShowDetail } = useDetail();
@@ -31,6 +30,7 @@ const DetailView = ({ eventId }: { eventId: number }) => {
 
 	const [isMemoExpanded, setIsMemoExpanded] = useState<boolean>(false);
 	const memoWrapperRef = useRef<HTMLDivElement>(null);
+	
 
 	// detect outside clicks - expand memo
 	useEffect(() => {
@@ -89,11 +89,7 @@ const DetailView = ({ eventId }: { eventId: number }) => {
 		setIsBookmarked(!previousState);
 
 		try {
-			if (previousState) {
-				await removeBookmark(event.id);
-			} else {
-				await addBookmark(event.id);
-			}
+			toggleBookmark(event);
 		} catch (e) {
 			console.error("Failed to toggle bookmark", e);
 			setIsBookmarked(previousState);
@@ -113,12 +109,11 @@ const DetailView = ({ eventId }: { eventId: number }) => {
 				/* Loading spinner */
 				<Loading />
 			)}
-			<button type="button" className={styles.foldBtn}>
+			<button type="button" className={styles.foldBtn} onClick={() => setShowDetail(false)}>
 				<FaAnglesRight
-					width={18}
-					height={18}
+					width={28}
+					height={28}
 					color="rgba(171, 171, 171, 1)"
-					onClick={() => setShowDetail(false)}
 				/>
 			</button>
 
@@ -142,20 +137,7 @@ const DetailView = ({ eventId }: { eventId: number }) => {
 				/>
 			</button>
 			<h1 className={styles.title}>{event.title}</h1>
-			<span className={styles.date}>
-				{calendarEvent &&
-					// !event.eventStart : 기간제 행사, yyyy.mm.dd ~ yyyy.mm.dd로 표시
-					// calendarEvent.resource.isPeriodEvent ? 
-					// 	`${formatDateDotParsed(calendarEvent.start)} ~ ${formatDateDotParsed(calendarEvent.end)}`
-					// 	: // 단발성 행사
-					// 		calendarEvent.start.toDateString() === calendarEvent.end.toDateString()
-					// 		? // yyyy.mm.dd만 표시
-					// 			formatDateDotParsed(calendarEvent.start)
-					// 		: // yyyy.mm.dd ~ yyyy.mm.dd
-					// 			`${formatDateDotParsed(calendarEvent.start)} ~ ${formatDateDotParsed(calendarEvent.end)}`
-					eventDateRenderer(calendarEvent)
-				}
-			</span>
+			<EventDate event={event} />
 			<ul className={styles.chipsList}>
 				<li className={styles.deadlineChip}>{getDDay(ddayTargetDate)}</li>
 				<li

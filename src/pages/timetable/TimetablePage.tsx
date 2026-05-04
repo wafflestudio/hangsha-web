@@ -11,6 +11,7 @@ import styles from "@styles/Timetable.module.css";
 import { SlArrowLeft } from "react-icons/sl";
 import { TimeTableSidebar } from "./TimeTableSidebar";
 import TimeTableToolbar from "./TimeTableToolbar";
+import BottomNav from "@/widgets/BottomNav";
 
 export default function TimetablePage() {
 	const now = new Date();
@@ -146,6 +147,7 @@ export default function TimetablePage() {
 					setIsClicked={setIsAddClassPanelOpen}
 				/>
 			)}
+			<BottomNav />
 		</div>
 	);
 }
