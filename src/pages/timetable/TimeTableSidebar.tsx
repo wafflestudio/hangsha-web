@@ -7,6 +7,8 @@ import type { PatchTimetableRequest, Timetable } from "../../util/types";
 
 interface TimeTableSidebarProps {
 	timetables: Timetable[];
+	isOpen: boolean;
+	onOpenChange: (isOpen: boolean) => void;
 	onAddTimetable: () => Promise<void>;
 	onSelectTimetable: (timetable: Timetable) => void;
 	onRename: (timetableId: number, body: PatchTimetableRequest) => void;
@@ -15,14 +17,14 @@ interface TimeTableSidebarProps {
 
 export const TimeTableSidebar = ({
 	timetables,
+	isOpen,
+	onOpenChange,
 	onAddTimetable,
 	onSelectTimetable,
 	onRename,
 	onDelete,
 }: TimeTableSidebarProps) => {
 	const { user } = useAuth();
-	// if the category itself is hidden
-	const [isHidden, setIsHidden] = useState<boolean>(false);
 	const [editingId, setEditingId] = useState<number | null>(null);
 	const [newName, setNewName] = useState("");
 	const [nameChangeId, setNameChangeId] = useState<number | null>(null);
@@ -61,13 +63,13 @@ export const TimeTableSidebar = ({
 		setEditingId(null);
 	};
 
-	if (isHidden) {
+	if (!isOpen) {
 		return (
 			<div className={styles.hiddenSidebar}>
 				<button
 					className={styles.expandBtn}
 					type="button"
-					onClick={() => setIsHidden(false)}
+					onClick={() => onOpenChange(true)}
 				>
 					<FaAnglesRight width={20} color="rgba(171,171,171,1)" />
 				</button>
@@ -88,7 +90,7 @@ export const TimeTableSidebar = ({
 				<button
 					className={styles.collapseBtn}
 					type="button"
-					onClick={() => setIsHidden(true)}
+					onClick={() => onOpenChange(false)}
 				>
 					<FaAnglesLeft width={20} color="rgba(171,171,171,1)" />
 				</button>

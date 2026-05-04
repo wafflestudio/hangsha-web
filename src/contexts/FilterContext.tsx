@@ -43,12 +43,12 @@ export const FilterContextProvider = ({
 	>([]);
 	// 모집중
 	const isApplying: Category = 
-		categoryGroups.find((g) => g.group.id===1)?.categories.find(c => c.id === 1) 
+		categoryGroups.find((g) => g.group.id===1)?.categories.find(c => c.id === 2) 
 		|| {
-          "id": 1,
+          "id": 2,
           "groupId": 1,
           "name": "모집중",
-          "sortOrder": 1
+          "sortOrder": 2,
         };
 	const [organizations, setOrganizations] = useState<Category[]>([]);
 	const [isLoadingMeta, setIsLoadingMeta] = useState(false);

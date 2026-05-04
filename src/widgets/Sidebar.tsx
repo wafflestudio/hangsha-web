@@ -141,7 +141,7 @@ export const Sidebar = () => {
 			navigate("/main");
 		} else {
 			// else : go to login page
-			navigate("/auth/login");
+			navigate("/");
 		}
 	};
 

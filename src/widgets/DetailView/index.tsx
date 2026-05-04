@@ -109,12 +109,11 @@ const DetailView = ({ eventId }: { eventId: number }) => {
 				/* Loading spinner */
 				<Loading />
 			)}
-			<button type="button" className={styles.foldBtn}>
+			<button type="button" className={styles.foldBtn} onClick={() => setShowDetail(false)}>
 				<FaAnglesRight
-					width={18}
-					height={18}
+					width={28}
+					height={28}
 					color="rgba(171, 171, 171, 1)"
-					onClick={() => setShowDetail(false)}
 				/>
 			</button>
 
