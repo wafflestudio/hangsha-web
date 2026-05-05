@@ -37,6 +37,16 @@ const SearchView = () => {
 		fetchData();
 	}, [fetchSearchResult, query, page, size]);
 
+	useEffect(() => {
+		const mq = window.matchMedia("(max-width: 576px)");
+		const apply = () => {
+			if (mq.matches) setViewMode("Grid");
+		};
+		apply();
+		mq.addEventListener("change", apply);
+		return () => mq.removeEventListener("change", apply);
+	}, []);
+
 	const events: CalendarEvent[] = useMemo(() => {
 		if (!searchResults) return [];
 
