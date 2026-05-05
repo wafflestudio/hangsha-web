@@ -158,4 +158,9 @@
     width: 24px;
     height: 24px;
   }
+  .cardButton {
+    padding: 0px;
+    padding-top: 0px;
+    box-shadow: none;
+  }
 }

@@ -274,7 +274,7 @@
 
 @media (max-width: 576px) {
   .toolbarContainer {
-    padding: 10px 10px 0 10px;
+    padding: 10px 15px 0 10px;
   }
   .dateTitle {
     font-size: 1.1rem;

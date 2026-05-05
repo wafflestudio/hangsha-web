@@ -22,9 +22,9 @@ const SearchToolbar = ({ viewMode, setViewMode }: SearchToolbarProps) => {
 	return (
 		<div className={styles.toolbarContainer}>
 			<div className={styles.headerRow}>
-				<h2 className={styles.search}>
+				<span>
 					{query.trim() ? `'${query}' 검색 결과` : "검색"}
-				</h2>
+				</span>
 				<div className={styles.btnGroup}>
 					<button type="button" className={styles.calendarBtn}>
 						<FaCalendarAlt
