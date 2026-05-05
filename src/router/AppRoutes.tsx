@@ -10,6 +10,8 @@ import SearchView from "@/pages/search/Search";
 import BookmarksPage from "@/pages/bookmark/Bookmark";
 import MemoPage from "@/pages/memo/Memo";
 import MyPage from "@/pages/MyPage";
+import AdminRoute from "@/router/AdminRoute";
+import AdminEventsPage from "@/pages/AdminEvents";
 
 export default function AppRoutes() {
 	return (
@@ -20,18 +22,9 @@ export default function AppRoutes() {
 			<Route path="/auth/complete" element={<CompleteSignUp />} />
 
 			{/* OAuth Redirect */}
-			<Route
-				path="/login/callback/kakao"
-				element={<LoginHandler provider="KAKAO" />}
-			/>
-			<Route
-				path="/login/callback/google"
-				element={<LoginHandler provider="GOOGLE" />}
-			/>
-			<Route
-				path="/login/callback/naver"
-				element={<LoginHandler provider="NAVER" />}
-			/>
+			<Route path="/login/callback/kakao" element={<LoginHandler />} />
+			<Route path="/login/callback/google" element={<LoginHandler />} />
+			<Route path="/login/callback/naver" element={<LoginHandler />} />
 
 			{/* Main Feature page */}
 			<Route path="/main" element={<CalendarView />} />
@@ -46,6 +39,16 @@ export default function AppRoutes() {
 			<Route path="/my" element={<MyPage />} />
 			<Route path="/my/bookmark" element={<BookmarksPage />} />
 			<Route path="/my/memo" element={<MemoPage />} />
+
+			{/* Admin page */}
+			<Route
+				path="/sync"
+				element={
+					<AdminRoute>
+						<AdminEventsPage />
+					</AdminRoute>
+				}
+			/>
 		</Routes>
 	);
 }

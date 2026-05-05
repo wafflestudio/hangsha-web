@@ -6,7 +6,7 @@ import {
 	useState,
 } from "react";
 import * as auth from "@api/auth";
-import type { Provider, User } from "@types";
+import type { User } from "@types";
 import { TokenService } from "@/api/tokenService";
 
 interface AuthContextType {
@@ -15,11 +15,7 @@ interface AuthContextType {
 	isLoading: boolean;
 	login: (email: string, password: string) => Promise<void>;
 	signup: (email: string, password: string) => Promise<void>;
-	socialLogin: (
-		provider: Provider,
-		code: string,
-		codeVerifier?: string,
-	) => Promise<void>;
+	completeSocialLogin: (accessToken: string) => Promise<void>;
 	logout: () => Promise<void>;
 	updateUsername: (username: string) => Promise<void>;
 	clearProfileImg: () => Promise<void>;
@@ -74,21 +70,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 		}
 	};
 
-	const socialLogin = async (
-		provider: Provider,
-		code: string,
-		codeVerifier?: string,
-	) => {
+	const completeSocialLogin = async (accessToken: string) => {
 		try {
-			await auth.socialLogin(provider, code, codeVerifier);
-			if (!TokenService.getToken()) {
-				throw new Error("Social login did not set access token");
-			}
+			TokenService.setToken(accessToken);
 			const userData = await auth.getUser();
 			setUser(userData);
 			setIsAuthenticated(true);
 		} catch (err) {
-			console.error("Social Login failed:", err);
+			TokenService.clearTokens();
+			console.error("Completing social login failed:", err);
 			throw err;
 		}
 	};
@@ -183,7 +173,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 				isLoading,
 				login,
 				signup,
-				socialLogin,
+				completeSocialLogin,
 				logout,
 				updateUsername,
 				clearProfileImg,

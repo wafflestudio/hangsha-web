@@ -42,21 +42,22 @@ export default function TimetablePage() {
 	const [year, setYear] = useState<number>(now.getFullYear());
 	const [semester, setSemester] = useState<Semester>("SPRING");
 	const [tableName, setTableName] = useState<string>("");
+	const [isAddClassPanelOpen, setIsAddClassPanelOpen] = useState(false);
+	const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
 	useEffect(() => {
 		loadTimetable(year, semester);
 	}, [year, semester, loadTimetable]);
 
+	// 현재 등록된 시간표가 존재할 경우 첫 번째 시간표를 선택
 	useEffect(() => {
 		if (!currentTimetable) return;
 		loadCourses(currentTimetable.id);
 	}, [currentTimetable, loadCourses]);
 
-	const [isClicked, setIsClicked] = useState(false);
-
 	useEffect(() => {
 		if (!currentTimetable) {
-			setIsClicked(false);
+			setIsAddClassPanelOpen(false);
 			setTableName("");
 			return;
 		}
@@ -76,8 +77,8 @@ export default function TimetablePage() {
 	return (
 		<div
 			className={`${styles.page} ${
-				isClicked ? styles.pageOpen : styles.pageClosed
-			}`}
+				isAddClassPanelOpen ? styles.AddClassPanelOpen : styles.AddClassPanelClosed
+			} ${isSidebarOpen ? styles.sidebarOpen : styles.sidebarClosed}`}
 		>
 			<TimeTableSidebar
 				timetables={timetables}
@@ -91,6 +92,8 @@ export default function TimetablePage() {
 				onSelectTimetable={selectTimetable}
 				onRename={updateTimetableName}
 				onDelete={deleteTimetable}
+				isOpen={isSidebarOpen}
+				onOpenChange={setIsSidebarOpen}
 			/>
 
 			<main className={styles.main}>
@@ -124,24 +127,24 @@ export default function TimetablePage() {
 				)}
 			</main>
 
-			{hasTimetable && !isClicked && (
+			{hasTimetable && !isAddClassPanelOpen && (
 				<button
 					type="button"
 					className={styles.addButton}
-					onClick={() => setIsClicked(true)}
+					onClick={() => setIsAddClassPanelOpen(true)}
 				>
 					<SlArrowLeft /> 수업 추가
 				</button>
 			)}
 
-			{hasTimetable && isClicked && (
+			{hasTimetable && isAddClassPanelOpen && (
 				<AddClassPanel
 					timetableId={currentTimetable.id}
 					onAdd={addCustomCourse}
 					allSlots={allSlots}
 					year={year}
 					semester={semester}
-					setIsClicked={setIsClicked}
+					setIsClicked={setIsAddClassPanelOpen}
 				/>
 			)}
 			<BottomNav />
