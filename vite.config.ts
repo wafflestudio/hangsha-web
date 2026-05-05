@@ -20,6 +20,11 @@ export default defineConfig(({ mode }) => {
 					changeOrigin: true,
 					secure: false,
 				},
+				"/admin": {
+					target: apiTarget,
+					changeOrigin: true,
+					secure: false,
+				},
 			},
 		},
 	};
