@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
 	DAY_LABELS_KO,
 	type Day,
@@ -51,21 +51,35 @@ export function TimetableGrid({
 	onSelectEvent,
 	dayLabels = DAY_LABELS_KO,
 }: TimetableProps) {
+	const [isMobile, setIsMobile] = useState(false);
 	const blocks = useMemo(
 		() => toBlocks(items, config),
 		[items, config, toBlocks],
 	);
 	const totalHeight = (config.endHour - config.startHour) * 60 * config.ppm;
 
+	useEffect(() => {
+		const checkIsMobile = () => {
+			setIsMobile(window.innerWidth <= 576);
+		};
+
+		checkIsMobile();
+		window.addEventListener("resize", checkIsMobile);
+
+		return () => window.removeEventListener("resize", checkIsMobile);
+	}, []);
+
 	const hourMarks = useMemo(() => {
 		const list: { hour: number; top: number; label: string }[] = [];
 		for (let h = config.startHour; h <= config.endHour; h++) {
 			const top = (h * 60 - config.startHour * 60) * config.ppm;
-			const labelHour = formatAmPmFromMinutes(h * 60);
+			const labelHour = isMobile
+				? String(h % 12 || 12)
+				: formatAmPmFromMinutes(h * 60);
 			list.push({ hour: h, top, label: labelHour });
 		}
 		return list;
-	}, [config]);
+	}, [config, isMobile]);
 
 	const blocksByDay = useMemo(() => {
 		const map: Record<Day, TimetableGridBlock<Course>[]> = {
