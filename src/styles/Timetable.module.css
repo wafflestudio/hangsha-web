@@ -558,29 +558,8 @@
 	.block {
 		padding: 6px 4px;
 		border-radius: 0;
-		color: #ffffff;
-		background: #48c8dc;
 		font-size: 11px;
 		line-height: 1.25;
-	}
-
-	.block:nth-of-type(4n + 1) {
-		background: #e7c940;
-	}
-
-	.block:nth-of-type(4n + 2) {
-		background: #ae73ed;
-	}
-
-	.block:nth-of-type(4n + 3) {
-		background: #ff5b7d;
-	}
-
-	.simplifiedBlock,
-	.simplifiedBlock:nth-of-type(4n + 1),
-	.simplifiedBlock:nth-of-type(4n + 2),
-	.simplifiedBlock:nth-of-type(4n + 3) {
-		background: #d9d9d9;
 	}
 
 	.blockRemove {
