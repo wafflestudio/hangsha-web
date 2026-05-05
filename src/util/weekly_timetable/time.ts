@@ -31,7 +31,7 @@ export function formatAmPmFromMinutes(min: number) {
 	const { hh, mm } = minutesToHHMM(min);
 	const am = hh < 12;
 	const hour12 = hh % 12 === 0 ? 12 : hh % 12;
-	return `${hour12}"${pad2(mm)} ${am ? "AM" : "PM"}`;
+	return `${hour12}:${pad2(mm)} ${am ? "AM" : "PM"}`;
 }
 
 export function buildTimeOptions(step = STEP_MIN) {
