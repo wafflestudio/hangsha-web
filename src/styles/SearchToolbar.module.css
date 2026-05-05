@@ -1,109 +1,140 @@
 .toolbarContainer {
-	display: flex;
-	flex-direction: column;
-	margin-bottom: 1.5rem;
-	z-index: 1;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1.5rem;
+  z-index: 1;
 }
 
 .headerRow,
 .searchRow {
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-	gap: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+.headerRow span {
+  font-size: 1.5rem;
+  font-weight: 700;
 }
 
 .searchRow {
-	gap: 30px;
+  gap: 30px;
 }
 
 .searchBox {
-	display: flex;
-	align-items: center;
-	flex-grow: 1;
+  display: flex;
+  align-items: center;
+  flex-grow: 1;
 }
 
 .inputWrapper {
-	display: flex;
-	align-items: center;
-	flex-grow: 1;
-	background-color: #eaeaea;
-	border-radius: 15px;
-	overflow: hidden;
+  display: flex;
+  align-items: center;
+  flex-grow: 1;
+  background-color: #eaeaea;
+  border-radius: 15px;
+  overflow: hidden;
 }
 
 .searchInput {
-	flex-grow: 1;
-	padding: 8px 14px;
-	background-color: transparent;
-	border: 0px;
-	font-size: medium;
-	outline: none;
+  flex-grow: 1;
+  padding: 8px 14px;
+  background-color: transparent;
+  border: 0px;
+  font-size: medium;
+  outline: none;
 }
 
 .clearBtn {
-	background: none;
-	border: none;
-	cursor: pointer;
-	display: flex;
-	align-items: center;
-	padding: 0 8px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  padding: 0 8px;
 }
 
 .btnGroup {
-	display: flex;
-	flex-flow: row nowrap;
-	align-items: center;
-	justify-content: flex-end;
-	gap: 0.75rem;
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.75rem;
 }
 
 .calendarBtn,
 .searchBtn {
-	padding: 6px 6px 4px 6px;
-	border: 0;
-	border-radius: 20px;
-	background: none;
-	cursor: pointer;
+  padding: 6px 6px 4px 6px;
+  border: 0;
+  border-radius: 20px;
+  background: none;
+  cursor: pointer;
 }
 
 .viewToggleGroup {
-	background-color: #f3f4f6;
-	padding: 0.25rem;
-	border-radius: 9999px;
-	display: inline-flex;
-	gap: 0.25rem;
+  background-color: #f3f4f6;
+  padding: 0.25rem;
+  border-radius: 9999px;
+  display: inline-flex;
+  gap: 0.25rem;
 }
 
 .toggleBtn {
-	padding: 0.25em 1em;
-	border-radius: 9999px;
-	font-size: 0.875rem;
-	font-weight: 500;
-	border: none;
-	background: transparent;
-	color: #6b7280; /* gray-500 */
-	cursor: pointer;
-	transition: all 0.2s ease;
+  padding: 0.25em 1em;
+  border-radius: 9999px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  border: none;
+  background: transparent;
+  color: #6b7280; /* gray-500 */
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
 
 .toggleBtn:hover {
-	color: #374151;
+  color: #374151;
 }
 
 .toggleBtnActive {
-	background-color: #ffffff;
-	color: #000000;
-	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  background-color: #ffffff;
+  color: #000000;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 }
 
 .toggleBtn > img {
-	width: 20px;
-	aspect-ratio: 1;
+  width: 20px;
+  aspect-ratio: 1;
 }
 
 .profileButton > img {
-	width: 100%;
-	height: 100%;
-	object-fit: cover;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+@media (max-width: 576px) {
+  .calendarBtn {
+    display: none;
+  }
+  .toolbarContainer {
+    padding: 10px;
+    margin-bottom: 0;
+  }
+  .toggleBtn {
+    display: none;
+  }
+  .searchRow {
+    gap: 0;
+  }
+  .viewToggleGroup {
+    display: none;
+  }
+  .headerRow span {
+    font-size: 1.2rem;
+    margin: auto 0;
+  }
+  .headerRow {
+    padding: 10px;
+    align-items: center;
+  }
 }
