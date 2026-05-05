@@ -44,6 +44,7 @@ export default function TimetablePage() {
 	const [tableName, setTableName] = useState<string>("");
 	const [isAddClassPanelOpen, setIsAddClassPanelOpen] = useState(false);
 	const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+	const [isTimetableSimplified, setIsTimetableSimplified] = useState(true);
 
 	useEffect(() => {
 		loadTimetable(year, semester);
@@ -104,6 +105,8 @@ export default function TimetablePage() {
 					SEMESTER_LABEL={semesters}
 					onSemesterChange={setSemester}
 					onYearChange={setYear}
+					isToggleOn={isTimetableSimplified}
+					onToggleChange={setIsTimetableSimplified}
 					years={years}
 				/>
 
@@ -123,6 +126,7 @@ export default function TimetablePage() {
 						config={config}
 						toBlocks={flattenCoursesToBlocks}
 						onRemoveBlock={deleteCourse}
+						isSimplified={isTimetableSimplified}
 					/>
 				)}
 			</main>

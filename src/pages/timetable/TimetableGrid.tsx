@@ -24,6 +24,7 @@ export type TimetableProps = {
 	onSelectBlock?: (id: number, item: Course) => void;
 	onAddBlock?: (id: number, item: Course) => void;
 	onRemoveBlock?: (timetableId: number, enrollId: number) => Promise<void>;
+	isSimplified?: boolean;
 	dayLabels?: Record<Day, string>;
 };
 
@@ -35,6 +36,7 @@ export function TimetableGrid({
 	config,
 	toBlocks,
 	onRemoveBlock,
+	isSimplified = false,
 	dayLabels = DAY_LABELS_KO,
 }: TimetableProps) {
 	const blocks = useMemo(
@@ -101,6 +103,7 @@ export function TimetableGrid({
 							config={config}
 							// onSelectBlock={onSelectBlock}
 							onRemoveBlock={onRemoveBlock}
+							isSimplified={isSimplified}
 						/>
 					))}
 				</div>
@@ -116,6 +119,7 @@ function DayColumn<T>({
 	config,
 	onSelectBlock,
 	onRemoveBlock,
+	isSimplified,
 }: {
 	timetableId: number;
 	height: number;
@@ -123,6 +127,7 @@ function DayColumn<T>({
 	config: GridConfig;
 	onSelectBlock?: (id: number, item: T) => void;
 	onRemoveBlock?: (timetableId: number, enrollId: number) => Promise<void>;
+	isSimplified: boolean;
 }) {
 	return (
 		<div className={styles.dayCol} style={{ height }}>
@@ -131,7 +136,9 @@ function DayColumn<T>({
 			{blocks.map((b) => (
 				<button
 					key={b.id}
-					className={styles.block}
+					className={`${styles.block} ${
+						isSimplified ? styles.simplifiedBlock : ""
+					}`}
 					style={{
 						top: b.top,
 						height: b.height,
