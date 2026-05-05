@@ -55,7 +55,7 @@ export function TimetableGrid({
 		() => toBlocks(items, config),
 		[items, config, toBlocks],
 	);
-	const totalHeight = config.endHour * 60 * config.ppm;
+	const totalHeight = (config.endHour - config.startHour) * 60 * config.ppm;
 
 	const hourMarks = useMemo(() => {
 		const list: { hour: number; top: number; label: string }[] = [];
