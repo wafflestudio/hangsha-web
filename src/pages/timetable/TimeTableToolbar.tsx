@@ -36,47 +36,52 @@ const TimeTableToolbar = ({
 		<div className={styles.timetableToolbarContainer}>
 			<div className={styles.headerRow}>
 				<div className={styles.selectGroup}>
-					<span className={styles.selectWrap}>
-						<select
-							className={styles.select}
-							value={year}
-							onChange={(e) => onYearChange(Number(e.target.value))}
-							aria-label="년도 선택"
-						>
-							{yearOptions.map((y) => (
-								<option key={y} value={y}>
-									{y}학년도
-								</option>
-							))}
-						</select>
-					</span>
+					<div className={styles.semesterSelectGroup}>
+						<span className={styles.selectWrap}>
+							<select
+								className={styles.select}
+								value={year}
+								onChange={(e) => onYearChange(Number(e.target.value))}
+								aria-label="년도 선택"
+							>
+								{yearOptions.map((y) => (
+									<option key={y} value={y}>
+										{y}학년도
+									</option>
+								))}
+							</select>
+						</span>
 
-					<span className={styles.selectWrap}>
-						<select
-							className={styles.select}
-							value={semester}
-							onChange={(e) => onSemesterChange(e.target.value as Semester)}
-							aria-label="학기 선택"
-						>
-							{SEMESTER_LABEL.map((s) => (
-								<option key={s.id} value={s.id}>
-									{s.label}
-								</option>
-							))}
-						</select>
-					</span>
+						<span className={styles.selectWrap}>
+							<select
+								className={styles.select}
+								value={semester}
+								onChange={(e) => onSemesterChange(e.target.value as Semester)}
+								aria-label="학기 선택"
+							>
+								{SEMESTER_LABEL.map((s) => (
+									<option key={s.id} value={s.id}>
+										{s.label}
+									</option>
+								))}
+							</select>
+						</span>
+					</div>
 					<p className={styles.dateTitle}>{timetableName}</p>
-					<button
-						type="button"
-						className={`${styles.timetableToggle} ${
-							isToggleOn ? styles.timetableToggleOn : ""
-						}`}
-						aria-label="시간표 토글"
-						aria-pressed={isToggleOn}
-						onClick={() => onToggleChange(!isToggleOn)}
-					>
-						<span className={styles.timetableToggleThumb} />
-					</button>
+					<div className={styles.timetableToggleGroup}>
+						<span className={styles.timetableToggleLabel}>행사 함께 보기</span>
+						<button
+							type="button"
+							className={`${styles.timetableToggle} ${
+								isToggleOn ? styles.timetableToggleOn : ""
+							}`}
+							aria-label="행사 함께 보기"
+							aria-pressed={isToggleOn}
+							onClick={() => onToggleChange(!isToggleOn)}
+						>
+							<span className={styles.timetableToggleThumb} />
+						</button>
+					</div>
 				</div>
 
 				<div className={styles.profileRow}>
