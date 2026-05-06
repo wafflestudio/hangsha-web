@@ -224,8 +224,31 @@
 .selectGroup {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 25px;
   min-width: 0;
+}
+
+.semesterSelectGroup {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex: 0 0 auto;
+}
+
+.timetableToggleGroup {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  flex: 0 0 auto;
+}
+
+.timetableToggleLabel {
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1;
+  color: #6b7280;
+  white-space: nowrap;
 }
 
 .timetableToggle {
@@ -288,6 +311,12 @@
   background: #fafafa;
 }
 
+.select:disabled {
+  color: #8a8a8a;
+  cursor: wait;
+  background: #f7f7f7;
+}
+
 .select:focus {
   border-color: #d0d0d0;
   box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.04);
@@ -322,6 +351,9 @@
     flex: 1;
     gap: 8px;
   }
+  .timetableToolbarContainer .semesterSelectGroup {
+    display: none;
+  }
   .timetableToolbarContainer .selectWrap {
     display: none;
   }
@@ -334,6 +366,12 @@
     line-height: 1.25;
     text-overflow: ellipsis;
     white-space: nowrap;
+  }
+  .timetableToolbarContainer .timetableToggleGroup {
+    align-items: flex-start;
+  }
+  .timetableToolbarContainer .timetableToggleLabel {
+    display: none;
   }
   .timetableToolbarContainer .timetableToggle {
     width: 38px;

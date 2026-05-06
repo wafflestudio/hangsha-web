@@ -232,6 +232,12 @@
 
 .gridWrap {
 	min-width: 860px;
+	transition: opacity 0.18s ease;
+}
+
+.gridWrapLoading {
+	opacity: 0.48;
+	pointer-events: none;
 }
 
 .headerRow {
