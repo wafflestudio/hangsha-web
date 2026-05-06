@@ -311,6 +311,12 @@
   background: #fafafa;
 }
 
+.select:disabled {
+  color: #8a8a8a;
+  cursor: wait;
+  background: #f7f7f7;
+}
+
 .select:focus {
   border-color: #d0d0d0;
   box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.04);

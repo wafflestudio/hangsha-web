@@ -38,6 +38,7 @@ export default function TimetablePage() {
 		courses,
 		currentTimetable,
 		createTimetable,
+		isLoading,
 		loadTimetable,
 		selectTimetable,
 		updateTimetableName,
@@ -191,6 +192,7 @@ export default function TimetablePage() {
 					onYearChange={setYear}
 					isToggleOn={isTimetableSimplified}
 					onToggleChange={setIsTimetableSimplified}
+					isLoading={isLoading}
 					years={years}
 				/>
 
@@ -211,6 +213,7 @@ export default function TimetablePage() {
 						toBlocks={flattenCoursesToBlocks}
 						onRemoveBlock={deleteCourse}
 						isSimplified={isTimetableSimplified}
+						isLoading={isLoading}
 						weekEvents={isTimetableSimplified ? weekCalendarEvents : []}
 					/>
 				)}

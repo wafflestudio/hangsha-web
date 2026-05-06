@@ -13,6 +13,7 @@ interface TimeTableToolbarProps {
 	onSemesterChange: (semester: Semester) => void;
 	isToggleOn: boolean;
 	onToggleChange: (isToggleOn: boolean) => void;
+	isLoading?: boolean;
 	years?: number[];
 }
 
@@ -25,6 +26,7 @@ const TimeTableToolbar = ({
 	onSemesterChange,
 	isToggleOn,
 	onToggleChange,
+	isLoading = false,
 	years,
 }: TimeTableToolbarProps) => {
 	const { user } = useAuth();
@@ -41,6 +43,7 @@ const TimeTableToolbar = ({
 							<select
 								className={styles.select}
 								value={year}
+								disabled={isLoading}
 								onChange={(e) => {
 									onYearChange(Number(e.target.value));
 									e.currentTarget.blur();
@@ -59,6 +62,7 @@ const TimeTableToolbar = ({
 							<select
 								className={styles.select}
 								value={semester}
+								disabled={isLoading}
 								onChange={(e) => {
 									onSemesterChange(e.target.value as Semester);
 									e.currentTarget.blur();
