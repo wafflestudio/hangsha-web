@@ -41,7 +41,10 @@ const TimeTableToolbar = ({
 							<select
 								className={styles.select}
 								value={year}
-								onChange={(e) => onYearChange(Number(e.target.value))}
+								onChange={(e) => {
+									onYearChange(Number(e.target.value));
+									e.currentTarget.blur();
+								}}
 								aria-label="년도 선택"
 							>
 								{yearOptions.map((y) => (
@@ -56,7 +59,10 @@ const TimeTableToolbar = ({
 							<select
 								className={styles.select}
 								value={semester}
-								onChange={(e) => onSemesterChange(e.target.value as Semester)}
+								onChange={(e) => {
+									onSemesterChange(e.target.value as Semester);
+									e.currentTarget.blur();
+								}}
 								aria-label="학기 선택"
 							>
 								{SEMESTER_LABEL.map((s) => (
