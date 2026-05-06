@@ -38,7 +38,6 @@ export default function TimetablePage() {
 		courses,
 		currentTimetable,
 		createTimetable,
-		isLoading,
 		loadTimetable,
 		selectTimetable,
 		updateTimetableName,
@@ -157,8 +156,6 @@ export default function TimetablePage() {
 					calendarEvent.allDay === false,
 			);
 	}, [weekViewData]);
-
-	if (isLoading) return <div>로딩 중...</div>;
 
 	return (
 		<div
