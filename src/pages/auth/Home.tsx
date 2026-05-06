@@ -3,12 +3,10 @@ import { useNavigate } from "react-router-dom";
 import logo from "/assets/logo.png";
 import styles from "@styles/Home.module.css";
 
-const API_URL = import.meta.env.VITE_API_URL || "";
-
 const SOCIAL_LOGIN_ENTRY = {
-	google: `${API_URL}/auth/login/google`,
-	kakao: `${API_URL}/auth/login/kakao`,
-	naver: `${API_URL}/auth/login/naver`,
+	google: `/oauth2/authorization/google`,
+	kakao: `/oauth2/authorization/kakao`,
+	naver: `/oauth2/authorization/naver`,
 } as const;
 
 export default function Home() {

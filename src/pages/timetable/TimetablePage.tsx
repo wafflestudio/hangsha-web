@@ -1,11 +1,21 @@
 import { useEffect, useState, useMemo } from "react";
+import { Views } from "react-big-calendar";
 import { useTimetable } from "../../contexts/TimetableContext";
-import type { Semester } from "../../util/types";
+import { useEvents } from "../../contexts/EventContext";
+import { useFilter } from "../../contexts/FilterContext";
+import type {
+	CalendarEvent,
+	Event,
+	FetchWeekEventArgs,
+	Semester,
+} from "../../util/types";
 import { AddClassPanel } from "./AddClassPanel";
 import {
 	flattenCoursesToBlocks,
 	config,
 } from "../../util/weekly_timetable/layout";
+import calendarEventMapper from "../../util/Calendar/calendarEventMapper";
+import { formatDateToYYYYMMDD } from "../../util/Calendar/dateFormatter";
 import { TimetableGrid } from "./TimetableGrid";
 import styles from "@styles/Timetable.module.css";
 import { SlArrowLeft } from "react-icons/sl";
@@ -38,12 +48,15 @@ export default function TimetablePage() {
 		// updateCustomCourse,
 		deleteCourse,
 	} = useTimetable();
+	const { weekViewData, fetchWeekEvents } = useEvents();
+	const { globalCategory, globalOrg, globalStatus } = useFilter();
 
 	const [year, setYear] = useState<number>(now.getFullYear());
 	const [semester, setSemester] = useState<Semester>("SPRING");
 	const [tableName, setTableName] = useState<string>("");
 	const [isAddClassPanelOpen, setIsAddClassPanelOpen] = useState(false);
 	const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+	const [isTimetableSimplified, setIsTimetableSimplified] = useState(false);
 
 	useEffect(() => {
 		loadTimetable(year, semester);
@@ -72,12 +85,87 @@ export default function TimetablePage() {
 		[visibleCourses],
 	);
 
+	useEffect(() => {
+		const today = new Date();
+		const from = new Date(today);
+		from.setDate(from.getDate() - from.getDay());
+
+		const to = new Date(from);
+		to.setDate(to.getDate() + 6);
+
+		const params: FetchWeekEventArgs = {
+			from: formatDateToYYYYMMDD(from),
+			to: formatDateToYYYYMMDD(to),
+		};
+
+		if (globalCategory) params.eventTypeId = globalCategory.map((g) => g.id);
+		if (globalOrg) params.orgId = globalOrg.map((g) => g.id);
+		if (globalStatus) params.statusId = globalStatus.map((g) => g.id);
+
+		void fetchWeekEvents(params);
+	}, [fetchWeekEvents, globalCategory, globalOrg, globalStatus]);
+
+	const weekCalendarEvents = useMemo(() => {
+		const weekStart = new Date();
+		weekStart.setHours(0, 0, 0, 0);
+		weekStart.setDate(weekStart.getDate() - weekStart.getDay());
+
+		const weekEnd = new Date(weekStart);
+		weekEnd.setDate(weekEnd.getDate() + 6);
+		weekEnd.setHours(23, 59, 59, 999);
+
+		const rawWeekEvents = Object.values(weekViewData?.byDate || {}).flatMap(
+			(bucket) => bucket.events,
+		);
+		const uniqueWeekEvents = Array.from(
+			new Map(rawWeekEvents.map((event: Event) => [event.id, event])).values(),
+		);
+
+		return uniqueWeekEvents
+			.map((event) => calendarEventMapper(event, Views.WEEK) as CalendarEvent)
+			.filter(
+				(calendarEvent) =>
+					calendarEvent.start >= weekStart && calendarEvent.end <= weekEnd,
+			)
+			.map((calendarEvent) => {
+				const sameMinute =
+					Math.floor(calendarEvent.start.getTime() / 60000) ===
+					Math.floor(calendarEvent.end.getTime() / 60000);
+				const startDay = new Date(
+					calendarEvent.start.getFullYear(),
+					calendarEvent.start.getMonth(),
+					calendarEvent.start.getDate(),
+				);
+				const endDay = new Date(
+					calendarEvent.end.getFullYear(),
+					calendarEvent.end.getMonth(),
+					calendarEvent.end.getDate(),
+				);
+				const differentDate =
+					startDay.getFullYear() !== endDay.getFullYear() ||
+					startDay.getMonth() !== endDay.getMonth() ||
+					startDay.getDate() !== endDay.getDate();
+
+				return {
+					...calendarEvent,
+					allDay: Boolean(calendarEvent.allDay) || differentDate || sameMinute,
+				};
+			})
+			.filter(
+				(calendarEvent) =>
+					calendarEvent.resource.isPeriodEvent === false &&
+					calendarEvent.allDay === false,
+			);
+	}, [weekViewData]);
+
 	if (isLoading) return <div>로딩 중...</div>;
 
 	return (
 		<div
 			className={`${styles.page} ${
-				isAddClassPanelOpen ? styles.AddClassPanelOpen : styles.AddClassPanelClosed
+				isAddClassPanelOpen
+					? styles.AddClassPanelOpen
+					: styles.AddClassPanelClosed
 			} ${isSidebarOpen ? styles.sidebarOpen : styles.sidebarClosed}`}
 		>
 			<TimeTableSidebar
@@ -104,6 +192,8 @@ export default function TimetablePage() {
 					SEMESTER_LABEL={semesters}
 					onSemesterChange={setSemester}
 					onYearChange={setYear}
+					isToggleOn={isTimetableSimplified}
+					onToggleChange={setIsTimetableSimplified}
 					years={years}
 				/>
 
@@ -123,6 +213,8 @@ export default function TimetablePage() {
 						config={config}
 						toBlocks={flattenCoursesToBlocks}
 						onRemoveBlock={deleteCourse}
+						isSimplified={isTimetableSimplified}
+						weekEvents={isTimetableSimplified ? weekCalendarEvents : []}
 					/>
 				)}
 			</main>

@@ -11,6 +11,8 @@ interface TimeTableToolbarProps {
 	SEMESTER_LABEL: { id: Semester; label: string }[];
 	onYearChange: (year: number) => void;
 	onSemesterChange: (semester: Semester) => void;
+	isToggleOn: boolean;
+	onToggleChange: (isToggleOn: boolean) => void;
 	years?: number[];
 }
 
@@ -21,6 +23,8 @@ const TimeTableToolbar = ({
 	SEMESTER_LABEL,
 	onYearChange,
 	onSemesterChange,
+	isToggleOn,
+	onToggleChange,
 	years,
 }: TimeTableToolbarProps) => {
 	const { user } = useAuth();
@@ -62,6 +66,17 @@ const TimeTableToolbar = ({
 						</select>
 					</span>
 					<p className={styles.dateTitle}>{timetableName}</p>
+					<button
+						type="button"
+						className={`${styles.timetableToggle} ${
+							isToggleOn ? styles.timetableToggleOn : ""
+						}`}
+						aria-label="시간표 토글"
+						aria-pressed={isToggleOn}
+						onClick={() => onToggleChange(!isToggleOn)}
+					>
+						<span className={styles.timetableToggleThumb} />
+					</button>
 				</div>
 
 				<div className={styles.profileRow}>

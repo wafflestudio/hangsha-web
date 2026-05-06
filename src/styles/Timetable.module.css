@@ -297,7 +297,7 @@
 	left: 0;
 	right: 0;
 	height: 1px;
-	background: rgba(242, 242, 242, 0.2);
+	background: #e9e9e9;
 }
 
 .block {
@@ -308,7 +308,7 @@
 	grid-template-columns: 1fr;
 	padding: 8px;
 	border: none;
-	border-radius: 10px;
+	border-radius: 0;
 	background: #d9d9d9;
 	color: #111;
 	align-content: start;
@@ -316,6 +316,7 @@
 	text-align: left;
 	cursor: pointer;
 	overflow: hidden;
+	z-index: 1;
 }
 
 .blockRemove {
@@ -333,4 +334,261 @@
 	font-size: 11px;
 	color: #333;
 	opacity: 0.85;
+}
+
+.simplifiedBlock {
+	background: #000000;
+	opacity: 0.15;
+	pointer-events: none;
+	z-index: 10;
+}
+
+.simplifiedBlock .blockRemove,
+.simplifiedBlock .blockTitle,
+.simplifiedBlock .blockTime {
+	display: none;
+}
+
+.eventBlock {
+	position: absolute;
+	box-sizing: border-box;
+	padding: 8px;
+	border: none;
+	border-radius: 0;
+	color: #ffffff;
+	text-align: left;
+	cursor: pointer;
+	overflow: hidden;
+	background-clip: padding-box;
+	z-index: 2;
+}
+
+.eventBlockTitle {
+	display: -webkit-box;
+	-webkit-line-clamp: 2;
+	line-clamp: 2;
+	-webkit-box-orient: vertical;
+	overflow: hidden;
+	font-size: 13px;
+	font-weight: 600;
+	line-height: 1.25;
+}
+
+.eventBlockTime {
+	margin-top: 4px;
+	font-size: 11px;
+	color: inherit;
+	opacity: 0.9;
+}
+
+@media (max-width: 576px) {
+	.page,
+	.AddClassPanelClosed,
+	.AddClassPanelOpen,
+	.sidebarOpen.AddClassPanelClosed,
+	.sidebarOpen.AddClassPanelOpen,
+	.sidebarClosed.AddClassPanelClosed,
+	.sidebarClosed.AddClassPanelOpen {
+		display: block;
+		height: 100dvh;
+		overflow: hidden;
+		background: #ffffff;
+	}
+
+	.main {
+		height: 100%;
+		overflow-y: auto;
+		padding: 0 0 calc(78px + env(safe-area-inset-bottom));
+		touch-action: pan-y;
+		overscroll-behavior-x: none;
+	}
+
+	.sidebarClosed .main {
+		display: block;
+	}
+
+	.sidebarClosed .main > * {
+		width: auto;
+		max-width: none;
+	}
+
+	.addButton {
+		left: 50%;
+		right: auto;
+		top: auto;
+		bottom: calc(76px + env(safe-area-inset-bottom));
+		transform: translateX(-50%);
+		min-width: 132px;
+		justify-content: center;
+		padding: 10px 16px;
+		border-radius: 999px;
+		color: #ffffff;
+		background: #ff5b7d;
+		box-shadow: 0 8px 24px rgba(255, 91, 125, 0.28);
+	}
+
+	.addButton svg {
+		width: 13px;
+		height: 13px;
+	}
+
+	.panel {
+		position: fixed;
+		left: 0;
+		right: 0;
+		bottom: calc(64px + env(safe-area-inset-bottom));
+		z-index: 110;
+		max-height: min(72dvh, 620px);
+		overflow-y: auto;
+		padding: 18px 20px 22px;
+		border-left: 0;
+		border-top: 1px solid #f0eff2;
+		border-radius: 20px 20px 0 0;
+		background: #ffffff;
+		box-shadow: 0 -8px 28px rgba(0, 0, 0, 0.12);
+	}
+
+	.panel h2 {
+		margin: 8px 0 18px;
+		font-size: 18px;
+		font-weight: 700;
+	}
+
+	.field {
+		gap: 8px;
+		margin-bottom: 12px;
+		font-size: 13px;
+		font-weight: 600;
+	}
+
+	.field input,
+	.field select {
+		box-sizing: border-box;
+		width: 100%;
+		padding: 11px 12px;
+		border-radius: 8px;
+		font-size: 14px;
+	}
+
+	.dayButtons {
+		display: grid;
+		grid-template-columns: repeat(7, 1fr);
+		gap: 4px;
+	}
+
+	.dayBtn {
+		min-width: 0;
+		padding: 7px 0;
+		border-radius: 8px;
+		font-size: 12px;
+	}
+
+	.timeRange {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+		gap: 8px;
+	}
+
+	.timeRange select {
+		width: 100%;
+		min-width: 0;
+		padding: 9px 10px;
+		font-size: 13px;
+	}
+
+	.gridWrap {
+		width: 100%;
+		min-width: 0;
+		background: #ffffff;
+	}
+
+	.headerRow {
+		grid-template-columns: 24px repeat(5, 1fr);
+		top: 0;
+		border-bottom: 1px solid #ececec;
+	}
+
+	.timeGutterHeader,
+	.dayHeader {
+		height: 34px;
+	}
+
+	.dayHeader {
+		font-size: 13px;
+		font-weight: 500;
+		color: #111111;
+	}
+
+	.dayHeader:nth-child(2),
+	.dayHeader:nth-child(8) {
+		display: none;
+	}
+
+	.body {
+		grid-template-columns: 24px 1fr;
+	}
+
+	.timeGutter {
+		border-right: 0;
+	}
+
+	.hourLabel {
+		left: 6px;
+		font-size: 12px;
+		color: #8a8a8a;
+	}
+
+	.days {
+		grid-template-columns: repeat(5, 1fr);
+	}
+
+	.dayCol {
+		border-right: 1px solid #eeeeee;
+	}
+
+	.dayCol:nth-child(1),
+	.dayCol:nth-child(7) {
+		display: none;
+	}
+
+	.block {
+		padding: 6px 4px;
+		border-radius: 0;
+		font-size: 11px;
+		line-height: 1.25;
+	}
+
+	.blockRemove {
+		display: none;
+	}
+
+	.blockTitle {
+		margin-bottom: 3px;
+		font-size: 11px;
+		font-weight: 700;
+		word-break: keep-all;
+		overflow-wrap: anywhere;
+	}
+
+	.blockTime {
+		font-size: 10px;
+		color: inherit;
+		opacity: 0.9;
+	}
+
+	.eventBlock {
+		padding: 6px 4px;
+	}
+
+	.eventBlockTitle {
+		font-size: 11px;
+		font-weight: 700;
+		word-break: keep-all;
+		overflow-wrap: anywhere;
+	}
+
+	.eventBlockTime {
+		margin-top: 3px;
+		font-size: 10px;
+	}
 }

@@ -22,9 +22,7 @@ export default function AppRoutes() {
 			<Route path="/auth/complete" element={<CompleteSignUp />} />
 
 			{/* OAuth Redirect */}
-			<Route path="/login/callback/kakao" element={<LoginHandler />} />
-			<Route path="/login/callback/google" element={<LoginHandler />} />
-			<Route path="/login/callback/naver" element={<LoginHandler />} />
+			<Route path="/auth/callback" element={<LoginHandler />} />
 
 			{/* Main Feature page */}
 			<Route path="/main" element={<CalendarView />} />
