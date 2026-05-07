@@ -4,9 +4,9 @@ import logo from "/assets/logo.png";
 import styles from "@styles/Home.module.css";
 
 const SOCIAL_LOGIN_ENTRY = {
-	google: `/oauth2/authorization/google`,
-	kakao: `/oauth2/authorization/kakao`,
-	naver: `/oauth2/authorization/naver`,
+	google: `https://hangsha-api-dev.wafflestudio.com/oauth2/authorization/google`,
+	kakao: `https://hangsha-api-dev.wafflestudio.com/oauth2/authorization/kakao`,
+	naver: `https://hangsha-api-dev.wafflestudio.com/oauth2/authorization/naver`,
 } as const;
 
 export default function Home() {
