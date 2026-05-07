@@ -8,7 +8,25 @@ import { useMonthEventPreview } from "./MonthEventPreviewContext";
 const LONG_PRESS_DURATION = 250;
 const TOUCH_MOVE_THRESHOLD = 10;
 
-const MonthEvent = ({ event: calendarEvent }: { event: CalendarEvent }) => {
+interface MonthEventProps {
+	event: CalendarEvent;
+	/** For period events: whether this cell contains the event's applyStart. Defaults to true (single-cell rendering). */
+	isPeriodStart?: boolean;
+	/** For period events: whether this cell contains the event's applyEnd. Defaults to true. */
+	isPeriodEnd?: boolean;
+	/** Cell's 0-based offset within the arrow's week-local span. */
+	spanOffset?: number;
+	/** Total cells in the arrow's week-local span. */
+	spanTotal?: number;
+}
+
+const MonthEvent = ({
+	event: calendarEvent,
+	isPeriodStart = true,
+	isPeriodEnd = true,
+	spanOffset = 0,
+	spanTotal = 1,
+}: MonthEventProps) => {
 	const { isPeriodEvent, event } = calendarEvent.resource;
 	const backgroundColor =
 		CATEGORY_COLORS[event.eventTypeId] || CATEGORY_COLORS[CATEGORY_OTHER_INDEX];
@@ -111,19 +129,33 @@ const MonthEvent = ({ event: calendarEvent }: { event: CalendarEvent }) => {
 	if (isPeriodEvent) {
 		return (
 			<div className={styles.arrowEventContainer} style={{ color: color }}>
-				<span className={styles.arrowText}>{event.title}</span>
+				<div className={styles.arrowTitleClip}>
+					<span
+						className={styles.arrowText}
+						style={{
+							width: `${spanTotal * 100}%`,
+							marginLeft: `-${spanOffset * 100}%`,
+						}}
+					>
+						{event.title}
+					</span>
+				</div>
 				<div
 					className={styles.arrowLine}
 					style={{ backgroundColor: backgroundColor }}
 				>
-					<div
-						className={`${styles.arrowHead} ${styles.left}`}
-						style={{ borderRightColor: backgroundColor }}
-					/>
-					<div
-						className={styles.arrowHead}
-						style={{ borderLeftColor: backgroundColor }}
-					/>
+					{isPeriodStart && (
+						<div
+							className={`${styles.arrowHead} ${styles.left}`}
+							style={{ borderRightColor: backgroundColor }}
+						/>
+					)}
+					{isPeriodEnd && (
+						<div
+							className={styles.arrowHead}
+							style={{ borderLeftColor: backgroundColor }}
+						/>
+					)}
 				</div>
 			</div>
 		);

@@ -4,8 +4,8 @@ import styles from "@styles/Calendar.module.css";
 import { localizer } from "@calendarUtil/calendarLocalizer";
 import type { CalendarEvent, Event } from "@types";
 import Toolbar from "./Toolbar";
-import MonthEvent from "./Month/MonthEvent";
 import { MonthEventPreviewProvider } from "./Month/MonthEventPreviewContext";
+import CustomMonthView from "./Month/CustomMonthView";
 import DayEvent from "./Day/DayEvent";
 import CustomDayView from "./Day/CustomDayView";
 import CustomWeekView from "./Week/CustomWeekView";
@@ -152,10 +152,6 @@ export const MyCalendar = ({
 					// custom toolbar
 					components={{
 						toolbar: Toolbar,
-						// event: MonthEvent,
-						month: {
-							event: MonthEvent,
-						},
 						day: {
 							event: DayEvent,
 						},
@@ -167,7 +163,7 @@ export const MyCalendar = ({
 					view={currentView}
 					onView={(view) => setCurrentView(view)}
 					views={{
-						month: true,
+						month: CustomMonthView,
 						week: CustomWeekView,
 						day: CustomDayView,
 					}}

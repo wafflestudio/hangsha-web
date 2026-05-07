@@ -70,37 +70,28 @@
   width: 100%;
 }
 
+.arrowTitleClip {
+  width: 100%;
+  overflow: hidden;
+  margin-bottom: -2px;
+}
+
 .arrowText {
+  display: inline-block;
   font-size: 0.8rem;
-  margin: 0 1rem -2px 1rem;
+  margin: 0;
   font-weight: 600;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  padding: 0 0;
+  padding: 0;
   border-radius: 10px;
-  align-self: center;
-  max-width: calc(100% - 2rem);
+  text-align: center;
   transition:
     background-color 0.25s ease,
-    /* box-shadow 0.25s ease, */ padding 0.25s ease,
+    padding 0.25s ease,
     font-size 0.25s ease,
     transform 0.25s ease;
-}
-
-.arrowText:hover {
-  width: fit-content;
-  max-width: none;
-  text-align: center;
-  background-color: #f9f9f9;
-  font-size: 0.85rem;
-  z-index: 1000;
-  position: relative;
-  /* box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15); */
-  padding: 0.15rem 0.5rem;
-  margin-bottom: 2px;
-  overflow: visible;
-  text-overflow: clip;
 }
 
 .arrowLine {
@@ -133,9 +124,6 @@
 @media (max-width: 576px) {
   .arrowText {
     font-size: 0.65rem;
-  }
-  .arrowText:hover {
-    font-size: 0.7rem;
   }
 
   .blockEventContainer {
