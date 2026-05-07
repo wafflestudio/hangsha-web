@@ -23,6 +23,8 @@ const MonthSideView = ({
 
 	// list of day events
 	const dayCalendarEvents: CalendarEvent[] = dayViewEvents.map((e: Event) => calendarEventMapper(e, Views.DAY));
+	// filter : server puts events in the day slot if applyStart < day < applyEnd OR eventStart < day < eventEnd
+	// render differently for isPeriodEvent - put event in slot if 
 	const filteredCalendarEvents = dayCalendarEvents.filter((e) => {
 		if (!isWithinInterval(startOfDay(day), { start: startOfDay(e.start), end: startOfDay(e.end), })) {
 			console.log(`${startOfDay(day)} - ${e.resource.event.title} : filtered because START: ${startOfDay(e.start)} | END: ${startOfDay(e.end)}`);

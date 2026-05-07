@@ -3,6 +3,7 @@ import { Views } from "react-big-calendar";
 import styles from "@styles/CalendarView.module.css";
 import type {
 	CalendarEvent,
+	Event,
 	FetchDayEventArgs,
 	FetchMonthEventArgs,
 	FetchWeekEventArgs,
@@ -44,24 +45,22 @@ const CalendarView = () => {
 	const [showSideMonth, setShowSideMonth] = useState<boolean>(false);
 	const [clickedDate, setClickedDate] = useState<Date>(new Date());
 
-	// need to get month data from sidebar
-	// const MONTH_EVENTS = Object.values(monthViewData?.byDate || {}).flatMap(
-	// 	(bucket) => bucket.preview,
-	// );
-	const rawMonthEvents = Object.values(monthViewData?.byDate || {}).flatMap(
-		(bucket) => bucket.events,
-	);
-	const MONTH_EVENTS = Array.from(
-		new Map(rawMonthEvents.map((event) => [event.id, event])).values(),
-	);
+	// Flatten byDate buckets in chronological key order, preserving each
+	// bucket's internal sequence. Dedup keeps the first occurrence — so a
+	// multi-day event sits at the position of its earliest bucket.
+	const flattenByDate = (byDate: Record<string, { events: Event[] }> | undefined) => {
+		const seen = new Map<number, Event>();
+		const buckets = byDate ?? {};
+		for (const dateKey of Object.keys(buckets).sort()) {
+			for (const event of buckets[dateKey].events) {
+				if (!seen.has(event.id)) seen.set(event.id, event);
+			}
+		}
+		return Array.from(seen.values());
+	};
 
-	const rawWEEKEVENTS = Object.values(weekViewData?.byDate || {}).flatMap(
-		(bucket) => bucket.events,
-	);
-
-	const WEEK_EVENTS = Array.from(
-		new Map(rawWEEKEVENTS.map((event) => [event.id, event])).values(),
-	);
+	const MONTH_EVENTS = flattenByDate(monthViewData?.byDate);
+	const WEEK_EVENTS = flattenByDate(weekViewData?.byDate);
 
 	// Day context data doesn't need additional transformation; it is returned as Event[]
 	useEffect(() => {

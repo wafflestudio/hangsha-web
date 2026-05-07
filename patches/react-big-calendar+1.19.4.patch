@@ -1,0 +1,33 @@
+diff --git a/node_modules/react-big-calendar/lib/utils/eventLevels.js b/node_modules/react-big-calendar/lib/utils/eventLevels.js
+index e3ee1e1..012d91a 100644
+--- a/node_modules/react-big-calendar/lib/utils/eventLevels.js
++++ b/node_modules/react-big-calendar/lib/utils/eventLevels.js
+@@ -97,26 +97,8 @@ function segsOverlap(seg, otherSegs) {
+     return otherSeg.left <= seg.right && otherSeg.right >= seg.left;
+   });
+ }
+-function sortWeekEvents(events, accessors, localizer) {
+-  var base = (0, _toConsumableArray2.default)(events);
+-  var multiDayEvents = [];
+-  var standardEvents = [];
+-  base.forEach(function (event) {
+-    var startCheck = accessors.start(event);
+-    var endCheck = accessors.end(event);
+-    if (localizer.daySpan(startCheck, endCheck) > 1) {
+-      multiDayEvents.push(event);
+-    } else {
+-      standardEvents.push(event);
+-    }
+-  });
+-  var multiSorted = multiDayEvents.sort(function (a, b) {
+-    return sortEvents(a, b, accessors, localizer);
+-  });
+-  var standardSorted = standardEvents.sort(function (a, b) {
+-    return sortEvents(a, b, accessors, localizer);
+-  });
+-  return [].concat((0, _toConsumableArray2.default)(multiSorted), (0, _toConsumableArray2.default)(standardSorted));
++function sortWeekEvents(events) {
++  return events;
+ }
+ function sortEvents(eventA, eventB, accessors, localizer) {
+   var evtA = {
