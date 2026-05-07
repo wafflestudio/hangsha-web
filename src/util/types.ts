@@ -3,6 +3,7 @@ export interface AuthTokens {
 }
 
 export interface User {
+	id?: number | string;
 	username: string;
 	email: string;
 	profileImageUrl: string;
