@@ -8,6 +8,11 @@ import {
 import * as auth from "@api/auth";
 import type { User } from "@types";
 import { TokenService } from "@/api/tokenService";
+import {
+	clearAnalyticsUserId,
+	setAnalyticsUserId,
+	setSignedInState,
+} from "@/lib/ga4";
 
 interface AuthContextType {
 	user: User | null;
@@ -29,6 +34,23 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 	const [user, setUser] = useState<User | null>(null);
 	const [isAuthenticated, setIsAuthenticated] = useState(false);
 	const [isLoading, setIsLoading] = useState(true);
+
+	useEffect(() => {
+		if (!isAuthenticated || user === null) {
+			clearAnalyticsUserId();
+			setSignedInState(false);
+			return;
+		}
+
+		setSignedInState(true);
+
+		if (user.id !== undefined && user.id !== null) {
+			setAnalyticsUserId(String(user.id));
+			return;
+		}
+
+		clearAnalyticsUserId();
+	}, [isAuthenticated, user]);
 
 	/**
 	 * INIT : check for existing session on page load
