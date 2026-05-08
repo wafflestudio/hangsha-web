@@ -158,8 +158,6 @@ export default function TimetablePage() {
 			);
 	}, [weekViewData]);
 
-	if (isLoading) return <div>로딩 중...</div>;
-
 	return (
 		<div
 			className={`${styles.page} ${
@@ -194,6 +192,7 @@ export default function TimetablePage() {
 					onYearChange={setYear}
 					isToggleOn={isTimetableSimplified}
 					onToggleChange={setIsTimetableSimplified}
+					isLoading={isLoading}
 					years={years}
 				/>
 
@@ -214,6 +213,7 @@ export default function TimetablePage() {
 						toBlocks={flattenCoursesToBlocks}
 						onRemoveBlock={deleteCourse}
 						isSimplified={isTimetableSimplified}
+						isLoading={isLoading}
 						weekEvents={isTimetableSimplified ? weekCalendarEvents : []}
 					/>
 				)}

@@ -33,6 +33,7 @@ export type TimetableProps = {
 	onAddBlock?: (id: number, item: Course) => void;
 	onRemoveBlock?: (timetableId: number, enrollId: number) => Promise<void>;
 	isSimplified?: boolean;
+	isLoading?: boolean;
 	weekEvents?: CalendarEvent[];
 	onSelectEvent?: (event: Event) => void;
 	dayLabels?: Record<Day, string>;
@@ -47,6 +48,7 @@ export function TimetableGrid({
 	toBlocks,
 	onRemoveBlock,
 	isSimplified = false,
+	isLoading = false,
 	weekEvents = [],
 	onSelectEvent,
 	dayLabels = DAY_LABELS_KO,
@@ -118,7 +120,9 @@ export function TimetableGrid({
 	}, [weekEvents, config]);
 
 	return (
-		<div className={styles.gridWrap}>
+		<div
+			className={`${styles.gridWrap} ${isLoading ? styles.gridWrapLoading : ""}`}
+		>
 			<div className={styles.headerRow}>
 				<div className={styles.timeGutterHeader} />
 				{Days.map((d) => (
