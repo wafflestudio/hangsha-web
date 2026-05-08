@@ -1,8 +1,0 @@
-{
-  "permissions": {
-    "allow": [
-      "Bash(yarn add *)",
-      "Bash(grep -v \".map$\")"
-    ]
-  }
-}
