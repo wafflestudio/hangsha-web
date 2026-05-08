@@ -25,6 +25,23 @@ import MonthEvent from "./MonthEvent";
 const WEEKDAYS = ["일", "월", "화", "수", "목", "금", "토"];
 const MAX_VISIBLE_EVENTS = 3;
 
+const isPeriod = (ev: Event) =>
+	ev.isPeriodEvent || (!ev.eventStart && !ev.eventEnd);
+
+// Server places an event on a day when EITHER [applyStart, applyEnd] OR
+// [eventStart, eventEnd] covers it. For the month grid we only want the
+// range that matches each event's render style: applyStart..applyEnd for
+// period (arrow), eventStart..eventEnd for block.
+const eventOnDay = (ev: Event, d: Date) => {
+	const ce = calendarEventMapper(ev, Views.MONTH) as CalendarEvent;
+	if (!ce.start || !ce.end) return false;
+	const dayKey = formatDateToYYYYMMDD(d);
+	return (
+		dayKey >= formatDateToYYYYMMDD(ce.start) &&
+		dayKey <= formatDateToYYYYMMDD(ce.end)
+	);
+};
+
 interface Props {
 	date: Date;
 	localizer: DateLocalizer;
@@ -82,7 +99,8 @@ function CustomMonthView({ date, onSelectEvent, onDrillDown }: Props) {
 				for (let i = 0; i < week.length; i++) {
 					const dk = formatDateToYYYYMMDD(week[i]);
 					for (const ev of byDate[dk]?.events ?? []) {
-						if (!ev.isPeriodEvent) continue;
+						if (!isPeriod(ev)) continue;
+						if (!eventOnDay(ev, week[i])) continue;
 						const existing = arrowSpans.get(ev.id);
 						if (existing) existing.endCellIdx = i;
 						else arrowSpans.set(ev.id, { startCellIdx: i, endCellIdx: i });
@@ -96,7 +114,9 @@ function CustomMonthView({ date, onSelectEvent, onDrillDown }: Props) {
 							const isToday = isSameDay(d, today);
 							const isSunday = d.getDay() === 0;
 							const dateKey = formatDateToYYYYMMDD(d);
-							const cellEvents: Event[] = byDate[dateKey]?.events ?? [];
+							const cellEvents: Event[] = (
+								byDate[dateKey]?.events ?? []
+							).filter((ev) => eventOnDay(ev, d));
 							const visible = cellEvents.slice(0, MAX_VISIBLE_EVENTS);
 							const overflow = cellEvents.length - visible.length;
 
@@ -128,7 +148,7 @@ function CustomMonthView({ date, onSelectEvent, onDrillDown }: Props) {
 												Views.MONTH,
 											) as CalendarEvent;
 											let arrowProps = {};
-											if (ev.isPeriodEvent) {
+											if (isPeriod(ev)) {
 												const span = arrowSpans.get(ev.id);
 												const startCellIdx = span?.startCellIdx ?? cellIdx;
 												const endCellIdx = span?.endCellIdx ?? cellIdx;
