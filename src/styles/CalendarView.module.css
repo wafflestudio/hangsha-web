@@ -19,6 +19,10 @@ body {
   padding: 0;
 }
 
+.mainDay.container {
+  padding-bottom: 64px;
+}
+
 .calendarContainer {
   flex-grow: 1;
   display: flex;

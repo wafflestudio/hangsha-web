@@ -131,10 +131,16 @@
 }
 
 @media (max-width: 576px) {
+  .mainWrapper {
+    padding-bottom: 0;
+  }
   .dateRow h1 {
     font-size: 1.2rem;
     font-weight: 600;
     padding-bottom: 0px;
+  }
+  .dateRow {
+    margin-bottom: 15px;
   }
   .todayBtn {
     padding: 4px 10px;
@@ -162,5 +168,8 @@
     padding: 0px;
     padding-top: 0px;
     box-shadow: none;
+  }
+  .cardWrapper {
+    margin-bottom: 0px;
   }
 }

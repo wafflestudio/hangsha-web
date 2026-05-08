@@ -24,6 +24,7 @@ interface MyCalendarProps {
 	dayEvents: Event[];
 	onShowMoreClick: (date: Date, view: string) => void;
 	onSelectEvent: (event: CalendarEvent) => void;
+	onViewChange?: (view: View) => void;
 }
 
 export const MyCalendar = ({
@@ -32,6 +33,7 @@ export const MyCalendar = ({
 	dayEvents,
 	onShowMoreClick,
 	onSelectEvent,
+	onViewChange,
 }: MyCalendarProps) => {
 	const { dayDate, setDayDate } = useEvents();
 	const [currentView, setCurrentView] = useState<View>(Views.MONTH);
@@ -165,7 +167,10 @@ export const MyCalendar = ({
 					date={dayDate}
 					// view setup
 					view={currentView}
-					onView={(view) => setCurrentView(view)}
+					onView={(view) => {
+						setCurrentView(view);
+						onViewChange?.(view);
+					}}
 					views={{
 						month: true,
 						week: CustomWeekView,

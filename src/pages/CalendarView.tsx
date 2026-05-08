@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-import { Views } from "react-big-calendar";
+import { useNavigate } from "react-router-dom";
+import { Views, type View } from "react-big-calendar";
 import styles from "@styles/CalendarView.module.css";
 import type {
 	CalendarEvent,
@@ -31,6 +32,7 @@ const CalendarView = () => {
 		dayViewEvents,
 		fetchDayEvents,
 		dayDate,
+		setDayDate,
 	} = useEvents();
 	const { globalCategory, globalOrg, globalStatus } = useFilter();
 	// detail 보이는 뷰 조정
@@ -41,9 +43,14 @@ const CalendarView = () => {
 	// 현재 기준점이 되는 날짜
 	const [currentDate, setCurrentDate] = useState<Date>(new Date());
 
+	// 캘린더 뷰 모드 추적 (월/주/일)
+	const [currentView, setCurrentView] = useState<View>(Views.MONTH);
+
 	// 월별 뷰 - 날짜 사이드 뷰
 	const [showSideMonth, setShowSideMonth] = useState<boolean>(false);
 	const [clickedDate, setClickedDate] = useState<Date>(new Date());
+
+	const navigate = useNavigate();
 
 	// Flatten byDate buckets in chronological key order, preserving each
 	// bucket's internal sequence. Dedup keeps the first occurrence — so a
@@ -147,6 +154,7 @@ const CalendarView = () => {
 		}
 		setShowDetail(false);
 		setClickedDate(date);
+		setDayDate(date);
 	};
 	const onSelectEvent = (event: CalendarEvent) => {
 		// showSideMonth off, showDetailView on
@@ -158,6 +166,24 @@ const CalendarView = () => {
 	const handleCloseSideMonth = () => {
 		setShowSideMonth(false);
 	};
+
+	// 모바일 너비일 때 일별/사이드뷰/디테일뷰가 보이면 /main/day로 redirect
+	const [isMobile, setIsMobile] = useState<boolean>(
+		typeof window !== "undefined" && window.innerWidth <= 576,
+	);
+	useEffect(() => {
+		const checkIsMobile = () => setIsMobile(window.innerWidth <= 576);
+		window.addEventListener("resize", checkIsMobile);
+		return () => window.removeEventListener("resize", checkIsMobile);
+	}, []);
+	useEffect(() => {
+		if (
+			isMobile &&
+			(currentView === Views.DAY || showSideMonth || showDetail)
+		) {
+			navigate("/main/day");
+		}
+	}, [isMobile, currentView, showSideMonth, showDetail, navigate]);
 
 	// clicking outside of sideview (that is not event or anything else) created
 	const sidePanelRef = useRef<HTMLDivElement>(null);
@@ -193,6 +219,7 @@ const CalendarView = () => {
 						dayEvents={dayViewEvents}
 						onShowMoreClick={onShowMoreClick}
 						onSelectEvent={onSelectEvent}
+						onViewChange={setCurrentView}
 					/>
 				</div>
 				{showSideMonth && (

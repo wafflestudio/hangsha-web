@@ -9,6 +9,8 @@ import { Views } from "react-big-calendar";
 import type { CalendarEvent, Event } from "@/util/types";
 import { startOfDay, isWithinInterval } from 'date-fns';
 import { IoClose } from "react-icons/io5";
+import { useFilter } from "@/contexts/FilterContext";
+import { FilterButton } from "@/widgets/Toolbar";
 
 const MonthSideView = ({
 	day,
@@ -20,6 +22,7 @@ const MonthSideView = ({
 	const { fetchDayEvents, dayViewEvents } = useEvents();
 	const { setShowDetail, setClickedEventId } = useDetail();
 	const [date, setDate] = useState<Date>(day);
+	const { setFilterSheetShowing } = useFilter();
 
 	// list of day events
 	const dayCalendarEvents: CalendarEvent[] = dayViewEvents.map((e: Event) => calendarEventMapper(e, Views.DAY));
@@ -87,6 +90,7 @@ const MonthSideView = ({
 				<button type="button" className={styles.dateChangeBtn} onClick={handleClickNextday}>
 					<FaAngleRight size={24} color="rgba(171, 171, 171, 1)" />
 				</button>
+				<FilterButton onFilterSet={() => setFilterSheetShowing(true)}/>
 				<button type="button" className={`${styles.mobileCloseBtn}`} onClick={onClose}>
 					<IoClose
 						size={24}
