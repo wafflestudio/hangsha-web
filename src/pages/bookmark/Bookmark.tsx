@@ -22,7 +22,7 @@ export const BookmarkWidget = () => {
 					className={styles.backBtn}
 					color="ABABAB"
 					size={18}
-					onClick={() => navigate("/my/bookmark")}
+					onClick={() => navigate("/bookmark")}
 				/>
 			</div>
 			<div className={styles.cardsRow}>
