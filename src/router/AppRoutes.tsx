@@ -35,8 +35,8 @@ export default function AppRoutes() {
 
 			{/* Mypage & bookmark & memo */}
 			<Route path="/my" element={<MyPage />} />
-			<Route path="/my/bookmark" element={<BookmarksPage />} />
-			<Route path="/my/memo" element={<MemoPage />} />
+			<Route path="/bookmark" element={<BookmarksPage />} />
+			<Route path="/memo" element={<MemoPage />} />
 
 			{/* Admin page */}
 			<Route
