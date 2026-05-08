@@ -193,7 +193,7 @@ body {
   overflow-x: auto;
   scroll-behavior: smooth;
 
-  padding: 10px 20px 10px 0;
+  padding: 10px 20px;
 
   -ms-overflow-style: none;
   scrollbar-width: none;
@@ -262,5 +262,8 @@ body {
   }
   .cardsColumn {
     gap: 0;
+  }
+  .cardsRow {
+    padding-left: 0;
   }
 }
