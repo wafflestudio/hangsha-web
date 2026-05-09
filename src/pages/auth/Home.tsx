@@ -3,10 +3,14 @@ import { useNavigate } from "react-router-dom";
 import logo from "/assets/logo.png";
 import styles from "@styles/Home.module.css";
 
+const SOCIAL_LOGIN_BASE_URL =
+	import.meta.env.VITE_SOCIAL_LOGIN_BASE_URL ||
+	"https://hangsha-api-dev.wafflestudio.com";
+
 const SOCIAL_LOGIN_ENTRY = {
-	google: `https://hangsha-api-dev.wafflestudio.com/oauth2/authorization/google`,
-	kakao: `https://hangsha-api-dev.wafflestudio.com/oauth2/authorization/kakao`,
-	naver: `https://hangsha-api-dev.wafflestudio.com/oauth2/authorization/naver`,
+	google: `${SOCIAL_LOGIN_BASE_URL}/oauth2/authorization/google`,
+	kakao: `${SOCIAL_LOGIN_BASE_URL}/oauth2/authorization/kakao`,
+	naver: `${SOCIAL_LOGIN_BASE_URL}/oauth2/authorization/naver`,
 } as const;
 
 export default function Home() {
