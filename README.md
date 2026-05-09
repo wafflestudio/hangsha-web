@@ -88,13 +88,7 @@ Create a `.env.development` file (one is already included) or set these variable
 | Variable | Description |
 |----------|-------------|
 | `VITE_API_URL` | Base path for API requests (default: `/api/v1`) |
-| `VITE_KAKAO_REST_API_KEY` | Kakao OAuth API key |
-| `VITE_GOOGLE_CLIENT_ID` | Google OAuth client ID |
-| `VITE_NAVER_CLIENT_ID` | Naver OAuth client ID |
-| `VITE_KAKAO_REDIRECT_URI` | Kakao OAuth callback URL |
-| `VITE_GOOGLE_REDIRECT_URI` | Google OAuth callback URL |
-| `VITE_NAVER_REDIRECT_URI` | Naver OAuth callback URL |
-| `VITE_REST_REQUEST_URL` | Production API endpoint |
+| `VITE_SOCIAL_LOGIN_BASE_URL` | Social OAuth authorization server base URL |
 
 ### Build for Production
 

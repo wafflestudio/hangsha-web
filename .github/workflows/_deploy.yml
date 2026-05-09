@@ -35,13 +35,7 @@ jobs:
         env:
           VITE_GA_MEASUREMENT_ID: ${{ inputs.ga_measurement_id }}
           VITE_API_URL: ${{ vars.VITE_API_URL }}
-          VITE_KAKAO_REDIRECT_URI: ${{ vars.VITE_KAKAO_REDIRECT_URI }}
-          VITE_GOOGLE_REDIRECT_URI: ${{ vars.VITE_GOOGLE_REDIRECT_URI }}
-          VITE_NAVER_REDIRECT_URI: ${{ vars.VITE_NAVER_REDIRECT_URI }}
-          VITE_KAKAO_REST_API_KEY: ${{ secrets.VITE_KAKAO_REST_API_KEY }}
-          VITE_GOOGLE_CLIENT_ID: ${{ secrets.VITE_GOOGLE_CLIENT_ID }}
-          VITE_NAVER_CLIENT_ID: ${{ secrets.VITE_NAVER_CLIENT_ID }}
-          VITE_REST_REQUEST_URL: ${{ secrets.VITE_REST_REQUEST_URL }}
+          VITE_SOCIAL_LOGIN_BASE_URL: ${{ vars.VITE_SOCIAL_LOGIN_BASE_URL }}
 
       - name: Deploy to S3 and Invalidate Cloudfront
         env:
