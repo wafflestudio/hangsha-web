@@ -1,4 +1,4 @@
-import { Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 import Home from "../pages/auth/Home";
 import Login from "../pages/auth/Login/Login";
 import LoginHandler from "../pages/auth/Login/SocialLoginHandler";
@@ -47,6 +47,8 @@ export default function AppRoutes() {
 					</AdminRoute>
 				}
 			/>
+
+			<Route path="*" element={<Navigate to="/" replace />} />
 		</Routes>
 	);
 }
