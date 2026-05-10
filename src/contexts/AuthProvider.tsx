@@ -1,6 +1,7 @@
 import {
 	createContext,
 	type ReactNode,
+	useCallback,
 	useContext,
 	useEffect,
 	useState,
@@ -70,18 +71,18 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 		}
 	};
 
-	const completeSocialLogin = async (accessToken: string) => {
-		try {
-			TokenService.setToken(accessToken);
-			const userData = await auth.getUser();
-			setUser(userData);
-			setIsAuthenticated(true);
-		} catch (err) {
-			TokenService.clearTokens();
-			console.error("Completing social login failed:", err);
-			throw err;
-		}
-	};
+  	const completeSocialLogin = useCallback(async (accessToken: string) => {
+    	try {
+    	  	TokenService.setToken(accessToken);
+      		const userData = await auth.getUser();
+      		setUser(userData);
+      		setIsAuthenticated(true);
+    	} catch (err) {
+      		TokenService.clearTokens();
+      		console.error("Completing social login failed:", err);
+      		throw err;
+    	}
+	  }, []);
 
 	/**
 	 * Signup Function
