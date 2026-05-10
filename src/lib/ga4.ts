@@ -18,12 +18,16 @@ const ensureDataLayer = () => {
 
 const ensureGtag = () => {
 	if (typeof window.gtag === "function") {
-		return;
+		return window.gtag;
 	}
 
-	window.gtag = function gtag(...args: unknown[]) {
-		window.dataLayer?.push(args);
+	window.gtag = function gtag(_command, _target, _params) {
+		// gtag.js requires Arguments objects (not plain arrays) to recognize commands.
+		// eslint-disable-next-line prefer-rest-params
+		window.dataLayer?.push(arguments);
 	};
+
+	return window.gtag;
 };
 
 const loadGtagScript = (measurementId: string) => {
@@ -48,14 +52,14 @@ export const initGA4 = () => {
 	const measurementId = getMeasurementId();
 
 	ensureDataLayer();
-	ensureGtag();
+	const gtag = ensureGtag();
 	loadGtagScript(measurementId);
 
-	window.gtag("js", new Date());
-	window.gtag("config", measurementId, {
+	gtag("js", new Date());
+	gtag("config", measurementId, {
 		send_page_view: false,
 	});
-	window.gtag("set", "user_properties", DEFAULT_USER_PROPERTIES);
+	gtag("set", "user_properties", DEFAULT_USER_PROPERTIES);
 
 	initialized = true;
 };
