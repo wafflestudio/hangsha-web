@@ -5,6 +5,7 @@ import LoginHandler from "../pages/auth/Login/SocialLoginHandler";
 import CompleteSignUp from "../pages/auth/OnBoarding/CompleteSignUp";
 import EmailSignUp from "../pages/auth/Signup/EmailSignUp";
 import CalendarView from "../pages/CalendarView";
+import MainDay from "../pages/MainDay";
 import TimetablePage from "../pages/timetable/TimetablePage";
 import SearchView from "@/pages/search/Search";
 import BookmarksPage from "@/pages/bookmark/Bookmark";
@@ -27,8 +28,9 @@ export default function AppRoutes() {
 				{/* OAuth Redirect */}
 				<Route path="/auth/callback" element={<LoginHandler />} />
 
-				{/* Main Feature page */}
-				<Route path="/main" element={<CalendarView />} />
+			{/* Main Feature page */}
+			<Route path="/main" element={<CalendarView />} />
+			<Route path="/main/day" element={<MainDay />} />
 
 				{/* Timetable page */}
 				<Route path="/timetable" element={<TimetablePage />} />
@@ -36,10 +38,10 @@ export default function AppRoutes() {
 				{/* Search page */}
 				<Route path="/search" element={<SearchView />} />
 
-				{/* Mypage & bookmark & memo */}
-				<Route path="/my" element={<MyPage />} />
-				<Route path="/my/bookmark" element={<BookmarksPage />} />
-				<Route path="/my/memo" element={<MemoPage />} />
+			{/* Mypage & bookmark & memo */}
+			<Route path="/my" element={<MyPage />} />
+			<Route path="/bookmark" element={<BookmarksPage />} />
+			<Route path="/memo" element={<MemoPage />} />
 
 				{/* Admin page */}
 				<Route

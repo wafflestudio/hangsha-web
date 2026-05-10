@@ -344,7 +344,7 @@ export const Sidebar = () => {
 			<button
 				className={styles.pageLink}
 				type="button"
-				onClick={() => navigate("/my/bookmark")}
+				onClick={() => navigate("/bookmark")}
 			>
 				<img
 					className={styles.icon}

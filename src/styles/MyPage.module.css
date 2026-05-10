@@ -256,4 +256,8 @@
   .preferenceChips {
     margin-left: 8px;
   }
+  .widgetsWrapper {
+    width: 100%;
+    padding: 24px 20px;
+  }
 }

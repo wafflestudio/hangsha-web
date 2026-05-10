@@ -30,10 +30,17 @@ const MemoPageCard = ({
 	const [newTag, setNewTag] = useState<string>("");
 	const { updateMemo } = useUserData();
 	const inputRef = useRef<HTMLInputElement>(null);
+	const textareaRef = useRef<HTMLTextAreaElement>(null);
 
 	useEffect(() => {
 		setContent(memo.content);
 		setTagNames(memo.tags.map((m) => m.name));
+		requestAnimationFrame(() => {
+			const el = textareaRef.current;
+			if (!el) return;
+			el.style.height = "auto";
+			el.style.height = `${Math.min(el.scrollHeight, 150)}px`;
+		});
 	}, [memo]);
 
 	/* on clicking '+' button, set focus on tag input */
@@ -91,9 +98,14 @@ const MemoPageCard = ({
 			</span>
 			<div className={styles.cardWrapper}>
 				<textarea
+					ref={textareaRef}
 					className={`${styles.memoTextarea} ${editMode ? styles.activeTextarea : ""}`}
 					value={content}
-					onChange={(e) => setContent(e.currentTarget.value)}
+					onChange={(e) => {
+						setContent(e.currentTarget.value);
+						e.currentTarget.style.height = "auto";
+						e.currentTarget.style.height = `${Math.min(e.currentTarget.scrollHeight, 150)}px`;
+					}}
 					disabled={!editMode}
 				/>
 				<span className={styles.memoTitle}>{memo.eventTitle}</span>

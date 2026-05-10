@@ -30,19 +30,16 @@ const CustomDayView = ({
 		return CustomDayView.range(date);
 	}, [date]);
 
-	const minTime = useMemo(() => {
-		return new Date(
+	const { minTime, maxTime } = useMemo(() => {
+		const dayStart = new Date(
 			date.getFullYear(),
 			date.getMonth(),
 			date.getDate(),
-			7,
+			0,
 			0,
 			0,
 		);
-	}, [date]);
-
-	const maxTime = useMemo(() => {
-		return new Date(
+		const dayEnd = new Date(
 			date.getFullYear(),
 			date.getMonth(),
 			date.getDate(),
@@ -50,7 +47,65 @@ const CustomDayView = ({
 			59,
 			59,
 		);
-	}, [date]);
+
+		const timedOnDay = events.filter(
+			(e) => !e.allDay && e.end > dayStart && e.start < dayEnd,
+		);
+
+		const defaultMin = new Date(
+			date.getFullYear(),
+			date.getMonth(),
+			date.getDate(),
+			7,
+			0,
+			0,
+		);
+
+		if (timedOnDay.length === 0) {
+			return { minTime: defaultMin, maxTime: dayEnd };
+		}
+
+		const earliestMs = Math.min(
+			...timedOnDay.map((e) => Math.max(e.start.getTime(), dayStart.getTime())),
+		);
+		const latestMs = Math.max(
+			...timedOnDay.map((e) => Math.min(e.end.getTime(), dayEnd.getTime())),
+		);
+
+		const earliest = new Date(earliestMs);
+		const latest = new Date(latestMs);
+
+		const minHour = Math.max(earliest.getHours() - 2, 7);
+		const minTime = new Date(
+			date.getFullYear(),
+			date.getMonth(),
+			date.getDate(),
+			minHour,
+			0,
+			0,
+		);
+
+		const maxHour = Math.min(
+			latest.getMinutes() === 0 && latest.getSeconds() === 0
+				? latest.getHours() + 2 // 1 padding by default
+				: latest.getHours() + 3
+			, 23);
+		
+			
+		const maxTime =
+			maxHour >= 24
+				? dayEnd
+				: new Date(
+						date.getFullYear(),
+						date.getMonth(),
+						date.getDate(),
+						maxHour,
+						0,
+						0,
+					);
+
+		return { minTime, maxTime };
+	}, [date, events]);
 
 	return (
 		<div className={styles.dayViewWrapper}>
@@ -66,6 +121,7 @@ const CustomDayView = ({
 					min={minTime}
 					max={maxTime}
 					{...props}
+					dayLayoutAlgorithm="no-overlap"
 				/>
 			)}
 			{dayViewMode === "List" && (
