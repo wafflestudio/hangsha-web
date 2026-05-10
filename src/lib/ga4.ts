@@ -21,8 +21,10 @@ const ensureGtag = () => {
 		return window.gtag;
 	}
 
-	window.gtag = function gtag(...args: unknown[]) {
-		window.dataLayer?.push(args);
+	window.gtag = function gtag(_command, _target, _params) {
+		// gtag.js requires Arguments objects (not plain arrays) to recognize commands.
+		// eslint-disable-next-line prefer-rest-params
+		window.dataLayer?.push(arguments);
 	};
 
 	return window.gtag;
