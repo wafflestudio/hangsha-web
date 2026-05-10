@@ -32,35 +32,55 @@ export interface AdminEventDetailResponse {
 	detail?: string | null;
 }
 
-export interface AdminEventPatchRequest {
+export interface AdminEventRequest {
 	title?: string | null;
 	imageUrl?: string | null;
 	operationMode?: string | null;
-
-	tags?: string[] | null;
-	mainContentHtml?: string | null;
-
 	statusId?: number | null;
 	eventTypeId?: number | null;
 	orgId?: number | null;
-
 	applyStart?: string | null;
 	applyEnd?: string | null;
 	eventStart?: string | null;
 	eventEnd?: string | null;
-
 	capacity?: number | null;
 	applyCount?: number | null;
-
+	applyLink?: string | null;
 	organization?: string | null;
 	location?: string | null;
-	applyLink?: string | null;
+	tags?: string[];
+	mainContentHtml?: string | null;
 }
 
 export const getAdminEvent = async (
 	eventId: number,
 ): Promise<AdminEventDetailResponse> => {
 	const res = await api.get<AdminEventDetailResponse>(`/events/${eventId}`);
+	return res.data;
+};
+
+export interface AdminEventCreateRequest extends AdminEventRequest {
+	title: string;
+}
+
+export type AdminEventPatchRequest = AdminEventRequest;
+
+export interface AdminEventOverrideUpdateRequest {
+	lockFields?: string[];
+	unlockFields?: string[];
+}
+
+export interface AdminEventOverrideUpdateResponse extends AdminActionResponse {
+	eventId: number;
+	adminOverriddenFields: string[];
+}
+
+export const createAdminEvent = async (
+	body: AdminEventCreateRequest,
+): Promise<AdminActionResponse> => {
+	const res = await api.post<AdminActionResponse>("/admin/events", body, {
+		baseURL: "",
+	});
 	return res.data;
 };
 
@@ -104,5 +124,17 @@ export const syncAdminEventsFile = async (
 		{ baseURL: "" },
 	);
 
+	return res.data;
+};
+
+export const updateAdminEventOverrides = async (
+	eventId: number,
+	body: AdminEventOverrideUpdateRequest,
+): Promise<AdminEventOverrideUpdateResponse> => {
+	const res = await api.patch<AdminEventOverrideUpdateResponse>(
+		`/admin/events/${eventId}/overrides`,
+		body,
+		{ baseURL: "" },
+	);
 	return res.data;
 };
