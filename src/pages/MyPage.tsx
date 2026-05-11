@@ -1,4 +1,5 @@
 import { useAuth } from "@/contexts/AuthProvider";
+import { createBugReport } from "@/api/bugReport";
 import Navigationbar from "@/widgets/Navigationbar";
 import styles from "@styles/MyPage.module.css";
 import { BookmarkWidget } from "./bookmark/Bookmark";
@@ -7,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { useTimetable } from "@/contexts/TimetableContext";
 import { useEffect, useState } from "react";
 import { RiPencilFill } from "react-icons/ri";
-import { FaCamera, FaStar, FaTrashCan } from "react-icons/fa6";
+import { FaBug, FaCamera, FaStar, FaTrashCan } from "react-icons/fa6";
 import { IoMdDoneAll } from "react-icons/io";
 import { useUserData } from "@/contexts/UserDataContext";
 import Onboarding from "./auth/OnBoarding/Onboarding";
@@ -147,16 +148,16 @@ const ProfileCard = ({ onClickInterest }: { onClickInterest: () => void }) => {
 					<span>행사 보기 우선순위</span>
 				</div>
 				{interestCategories && interestCategories.length > 0 ? (
-						<ul className={styles.preferenceChips}>
-							{interestCategories.map((cat, idx) => (
-								<li
-									className={`${styles.preferenceChip} ${cat.groupId === 3 && styles.category} ${cat.groupId === 2 && styles.organization}`}
-									key={cat.id}
-								>
-									{`${idx + 1}순위: ${cat.name}`}
-								</li>
-							))}
-						</ul>
+					<ul className={styles.preferenceChips}>
+						{interestCategories.map((cat, idx) => (
+							<li
+								className={`${styles.preferenceChip} ${cat.groupId === 3 && styles.category} ${cat.groupId === 2 && styles.organization}`}
+								key={cat.id}
+							>
+								{`${idx + 1}순위: ${cat.name}`}
+							</li>
+						))}
+					</ul>
 				) : (
 					<span className={styles.notYetText}>
 						클릭해서 우선순위로 확인할 행사를 설정해보세요!
@@ -184,6 +185,81 @@ const ProfileCard = ({ onClickInterest }: { onClickInterest: () => void }) => {
 				)}
 			</button>
 		</div>
+	);
+};
+
+const BugReportSection = () => {
+	const [title, setTitle] = useState("");
+	const [content, setContent] = useState("");
+	const [isSubmitting, setIsSubmitting] = useState(false);
+
+	const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+		event.preventDefault();
+
+		const trimmedTitle = title.trim();
+		const trimmedContent = content.trim();
+
+		if (!trimmedTitle || !trimmedContent) {
+			alert("제목과 내용을 모두 입력해주세요.");
+			return;
+		}
+
+		if (isSubmitting) return;
+
+		try {
+			setIsSubmitting(true);
+			await createBugReport({
+				title: trimmedTitle,
+				content: trimmedContent,
+			});
+			setTitle("");
+			setContent("");
+			alert("버그 신고가 접수되었습니다.");
+		} catch (error) {
+			console.error("Bug report submission failed:", error);
+			alert("버그 신고 접수에 실패했습니다. 잠시 후 다시 시도해주세요.");
+		} finally {
+			setIsSubmitting(false);
+		}
+	};
+
+	return (
+		<section className={styles.bugReportSection}>
+			<div className={styles.bugReportHeader}>
+				<div className={styles.bugReportTitle}>
+					<FaBug size={18} />
+					<strong>버그 신고</strong>
+				</div>
+				<span>이용 중 발견한 문제를 알려주세요.</span>
+			</div>
+			<form className={styles.bugReportForm} onSubmit={handleSubmit}>
+				<input
+					className={styles.bugReportInput}
+					type="text"
+					value={title}
+					placeholder="제목"
+					maxLength={100}
+					onChange={(event) => setTitle(event.currentTarget.value)}
+					disabled={isSubmitting}
+				/>
+				<textarea
+					className={styles.bugReportTextarea}
+					value={content}
+					placeholder="문제가 발생한 상황을 자세히 적어주세요."
+					rows={5}
+					maxLength={1000}
+					onChange={(event) => setContent(event.currentTarget.value)}
+					disabled={isSubmitting}
+				/>
+				<button
+					className={styles.bugReportSubmitButton}
+					type="submit"
+					disabled={isSubmitting}
+				>
+					{isSubmitting ? "접수 중" : "신고하기"}
+				</button>
+			</form>
+		</section>
 	);
 };
 
@@ -262,6 +338,7 @@ const MyPage = () => {
 						<BookmarkWidget />
 						<MemoWidget />
 					</div>
+					<BugReportSection />
 					<AccountDeletionSection />
 				</div>
 			) : (
