@@ -154,6 +154,68 @@
 	opacity: 0.6;
 }
 
+.logoutSection {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 16px;
+	width: 80%;
+	margin-top: 24px;
+	padding: 20px;
+	border-top: 1px solid #eeeeee;
+}
+
+.logoutText {
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+	min-width: 0;
+}
+
+.logoutText strong {
+	color: #222222;
+	font-size: 16px;
+	font-weight: 700;
+}
+
+.logoutText span {
+	color: #777777;
+	font-size: 13px;
+	font-weight: 500;
+	line-height: 1.4;
+	word-break: keep-all;
+}
+
+.logoutButton {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 8px;
+	flex-shrink: 0;
+	min-height: 40px;
+	padding: 0 14px;
+	border: 1px solid #d9d9d9;
+	border-radius: 8px;
+	background-color: #ffffff;
+	color: #494949;
+	font-size: 14px;
+	font-weight: 700;
+	cursor: pointer;
+	transition:
+		background-color 0.2s,
+		border-color 0.2s;
+}
+
+.logoutButton:hover {
+	background-color: #f7f7f7;
+	border-color: #bdbdbd;
+}
+
+.logoutButton:disabled {
+	cursor: not-allowed;
+	opacity: 0.6;
+}
+
 .accountDeletionSection {
 	display: flex;
 	align-items: center;
@@ -437,6 +499,16 @@
 		margin-top: 8px;
 	}
 	.bugReportSubmitButton {
+		width: 100%;
+	}
+	.logoutSection {
+		width: 100%;
+		align-items: flex-start;
+		flex-direction: column;
+		padding: 20px;
+		margin-top: 8px;
+	}
+	.logoutButton {
 		width: 100%;
 	}
 	.accountDeletionSection {

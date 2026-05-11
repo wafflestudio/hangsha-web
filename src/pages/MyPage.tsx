@@ -8,7 +8,13 @@ import { useNavigate } from "react-router-dom";
 import { useTimetable } from "@/contexts/TimetableContext";
 import { useEffect, useState } from "react";
 import { RiPencilFill } from "react-icons/ri";
-import { FaBug, FaCamera, FaStar, FaTrashCan } from "react-icons/fa6";
+import {
+	FaBug,
+	FaCamera,
+	FaRightFromBracket,
+	FaStar,
+	FaTrashCan,
+} from "react-icons/fa6";
 import { IoMdDoneAll } from "react-icons/io";
 import { useUserData } from "@/contexts/UserDataContext";
 import Onboarding from "./auth/OnBoarding/Onboarding";
@@ -263,6 +269,45 @@ const BugReportSection = () => {
 	);
 };
 
+const LogoutSection = () => {
+	const { logout } = useAuth();
+	const [isLoggingOut, setIsLoggingOut] = useState(false);
+	const navigate = useNavigate();
+
+	const handleLogout = async () => {
+		if (isLoggingOut) return;
+
+		try {
+			setIsLoggingOut(true);
+			await logout();
+			navigate("/", { replace: true });
+		} catch (error) {
+			console.error("Logout failed:", error);
+			alert("로그아웃에 실패했습니다. 잠시 후 다시 시도해주세요.");
+		} finally {
+			setIsLoggingOut(false);
+		}
+	};
+
+	return (
+		<section className={styles.logoutSection}>
+			<div className={styles.logoutText}>
+				<strong>로그아웃</strong>
+				<span>현재 계정에서 로그아웃합니다.</span>
+			</div>
+			<button
+				className={styles.logoutButton}
+				type="button"
+				onClick={handleLogout}
+				disabled={isLoggingOut}
+			>
+				<FaRightFromBracket size={14} />
+				<span>{isLoggingOut ? "로그아웃 중" : "로그아웃"}</span>
+			</button>
+		</section>
+	);
+};
+
 const AccountDeletionSection = () => {
 	const { deleteAccount } = useAuth();
 	const [isConfirmOpen, setIsConfirmOpen] = useState(false);
@@ -339,6 +384,7 @@ const MyPage = () => {
 						<MemoWidget />
 					</div>
 					<BugReportSection />
+					<LogoutSection />
 					<AccountDeletionSection />
 				</div>
 			) : (
