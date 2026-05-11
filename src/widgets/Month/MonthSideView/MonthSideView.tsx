@@ -1,6 +1,5 @@
-import { useEffect, useState } from "react";
+import { useMemo, useState } from "react";
 import { FaAngleLeft, FaAngleRight, FaAnglesRight } from "react-icons/fa6";
-import { useEvents } from "@contexts/EventContext";
 import styles from "@styles/MonthSideView.module.css";
 import CardView from "./CardView";
 import { useDetail } from "@/contexts/DetailContext";
@@ -10,6 +9,8 @@ import type { CalendarEvent, Event } from "@/util/types";
 import { startOfDay, isWithinInterval } from 'date-fns';
 import { IoClose } from "react-icons/io5";
 import { useFilter } from "@/contexts/FilterContext";
+import { useUserData } from "@/contexts/UserDataContext";
+import { useDayEvents } from "@/contexts/useCalendarEvents";
 import { FilterButton } from "@/widgets/Toolbar";
 
 const MonthSideView = ({
@@ -19,38 +20,38 @@ const MonthSideView = ({
 	day: Date;
 	onClose: () => void;
 }) => {
-	const { fetchDayEvents, dayViewEvents } = useEvents();
 	const { setShowDetail, setClickedEventId } = useDetail();
 	const [date, setDate] = useState<Date>(day);
-	const { setFilterSheetShowing } = useFilter();
+	const { globalCategory, globalOrg, globalStatus, setFilterSheetShowing } = useFilter();
+	const { excludedKeywords, interestCategories } = useUserData();
+
+	const filters = useMemo(
+		() => ({
+			eventTypeId: globalCategory?.map((g) => g.id),
+			orgId: globalOrg?.map((g) => g.id),
+			statusId: globalStatus?.map((g) => g.id),
+		}),
+		[globalCategory, globalOrg, globalStatus],
+	);
+
+	const { data: dayViewEvents = [] } = useDayEvents(
+		date,
+		filters,
+		excludedKeywords,
+		interestCategories,
+	);
 
 	// list of day events
 	const dayCalendarEvents: CalendarEvent[] = dayViewEvents.map((e: Event) => calendarEventMapper(e, Views.DAY));
 	// filter : server puts events in the day slot if applyStart < day < applyEnd OR eventStart < day < eventEnd
-	// render differently for isPeriodEvent - put event in slot if 
-	const filteredCalendarEvents = dayCalendarEvents.filter((e) => {
-		if (!isWithinInterval(startOfDay(day), { start: startOfDay(e.start), end: startOfDay(e.end), })) {
-			console.log(`${startOfDay(day)} - ${e.resource.event.title} : filtered because START: ${startOfDay(e.start)} | END: ${startOfDay(e.end)}`);
-		}
-		return (isWithinInterval(startOfDay(day), {
-			start: startOfDay(e.start), 
-			end: startOfDay(e.end), 
-		}));
-	});
+	// render differently for isPeriodEvent - put event in slot if
+	const filteredCalendarEvents = dayCalendarEvents.filter((e) =>
+		isWithinInterval(startOfDay(date), {
+			start: startOfDay(e.start),
+			end: startOfDay(e.end),
+		}),
+	);
 	const events = filteredCalendarEvents.map(e => e.resource.event);
-	// const events = dayCalendarEvents.map(e => e.resource.event);
-
-
-	useEffect(() => {
-		const loadEvents = async () => {
-			await fetchDayEvents({
-				date,
-				page: 1,
-				size: 100,
-			});
-		};
-		loadEvents();
-	}, [fetchDayEvents, date]);
 
 	const handleClickToday = () => {
 		setDate(new Date());

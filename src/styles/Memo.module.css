@@ -231,22 +231,6 @@ body {
   }
 }
 
-@media (max-width: 476px) {
-  .memosHeader {
-    width: 100%;
-  }
-  .cardsColumn {
-    width: 92%;
-  }
-
-  .cardsColumn {
-    grid-template-columns: 1fr;
-  }
-  .cardWrapper {
-    width: 200px;
-  }
-}
-
 @media (max-width: 576px) {
   .memoContent {
     font-size: 14px;
@@ -265,5 +249,21 @@ body {
   }
   .cardsRow {
     padding-left: 0;
+  }
+}
+
+@media (max-width: 476px) {
+  .memosHeader {
+    width: 100%;
+  }
+  .cardsColumn {
+    width: 92%;
+  }
+
+  .cardsColumn {
+    grid-template-columns: 1fr;
+  }
+  .cardWrapper {
+    width: 200px;
   }
 }

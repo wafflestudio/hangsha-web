@@ -2,6 +2,7 @@
   display: flex;
   flex-direction: column;
   margin-bottom: 1.5rem;
+  gap: 10px;
   z-index: 1;
 }
 
@@ -119,6 +120,7 @@
   .toolbarContainer {
     padding: 10px;
     margin-bottom: 0;
+    gap: 0;
   }
   .toggleBtn {
     display: none;

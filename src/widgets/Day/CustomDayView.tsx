@@ -126,7 +126,7 @@ const CustomDayView = ({
 			)}
 			{dayViewMode === "List" && (
 				<Table
-					theadData={["찜", "제목", "D-day", "카테고리", "행사 날짜", "지원 기간", "주체기관"]}
+					theadData={["찜", "제목", "D-day", "카테고리", "행사 날짜", "지원 기간", "주최기관"]}
 					tbodyData={events}
 				/>
 			)}

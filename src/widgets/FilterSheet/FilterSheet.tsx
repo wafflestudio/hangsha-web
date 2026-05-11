@@ -1,13 +1,16 @@
-import { useEffect, useRef, useState, useCallback, useMemo } from "react";
+import { useEffect, useRef, useState, useCallback, /*useMemo*/ } from "react";
 import { MdRefresh } from "react-icons/md";
 import { IoIosClose } from "react-icons/io";
 import { FiPlus } from "react-icons/fi";
-import { useEvents } from "@/contexts/EventContext";
+// import { useEvents } from "@/contexts/EventContext";
 import { useFilter } from "@contexts/FilterContext";
 import { useUserData } from "@/contexts/UserDataContext";
 import styles from "@styles/FilterSheet.module.css";
 import type { Category } from "@types";
 import { CATEGORY_BUTTON_COLORS } from "@/util/constants";
+import { ClipLoader } from "react-spinners";
+import { useAuth } from "@/contexts/AuthProvider";
+import { useNavigate } from "react-router-dom";
 
 type TabKey = "category" | "org" | "status" | "exclude";
 
@@ -19,7 +22,7 @@ interface TabDef {
  
 const TABS: TabDef[] = [
 	{ key: "category", label: "행사 종류" },
-	{ key: "org", label: "주체 기관" },
+	{ key: "org", label: "주최 기관" },
 	{ key: "status", label: "모집 현황" },
 	{ key: "exclude", label: "제외" },
 ];
@@ -40,10 +43,12 @@ export const FilterSheet = () => {
 		setGlobalOrg,
 		setGlobalStatus,
 	} = useFilter();
-    const { excludedKeywords, addExcludedKeyword, deleteExcludedKeyword } = useUserData();
-    const { monthViewData } = useEvents();
+    const { excludedKeywords, addExcludedKeyword, deleteExcludedKeyword, excludedKeywordLoading } = useUserData();
+    // const { monthViewData } = useEvents();
     const [activeTab, setActiveTab] = useState<TabKey>("category");
 	const [excludeInput, setExcludeInput] = useState<string>("");
+	const { user } = useAuth();
+	const navigate = useNavigate();
 
 	// Drag-to-dismiss state
 	const [dragY, setDragY] = useState<number>(0);
@@ -128,6 +133,7 @@ export const FilterSheet = () => {
 		setGlobalCategory([]);
 		setGlobalOrg([]);
 		setGlobalStatus([]);
+		
 	};
 
 	const handleAddKeyword = (e: React.KeyboardEvent | React.MouseEvent) => {
@@ -141,18 +147,18 @@ export const FilterSheet = () => {
 		setExcludeInput("");
 	};
 
-    const MONTH_EVENTS = useMemo(
-    () => [
-        ...new Map(
-        Object.values(monthViewData?.byDate ?? {})
-            .flatMap((b) => b.events)
-            .map((e) => [e.id, e] as const),
-        ).values(),
-    ],
-    [monthViewData],
-    );
+    // const MONTH_EVENTS = useMemo(
+    // () => [
+    //     ...new Map(
+    //     Object.values(monthViewData?.byDate ?? {})
+    //         .flatMap((b) => b.events)
+    //         .map((e) => [e.id, e] as const),
+    //     ).values(),
+    // ],
+    // [monthViewData],
+    // );
 
-    const totalEventsLabel = `${MONTH_EVENTS.length}개의 행사 보기`;
+    const totalEventsLabel = /*`${MONTH_EVENTS.length}개의 행사 보기`*/ '적용';
 
 	// --- Drag handlers (touch + mouse) -------------------------------------
 	const onDragStart = useCallback((clientY: number) => {
@@ -217,7 +223,7 @@ export const FilterSheet = () => {
 			activeTab === "category"
 				? "행사 전체"
 				: activeTab === "org"
-					? "주체 기관 전체"
+					? "주최 기관 전체"
 					: "모집 현황 전체";
 
 		const allSelected = list.length > 0 && state.length === list.length;
@@ -270,11 +276,13 @@ export const FilterSheet = () => {
     
 	const renderExclude = () => (
 		<div className={styles.excludePanel}>
+		{user ?
+			<>
 			<p className={styles.excludeHelp}>
 				해당 단어를 포함하는 행사는 표시되지 않습니다.
 			</p>
 			<div className={styles.excludeInputRow}>
-				<FiPlus className={styles.excludeInputIcon} />
+				{excludedKeywordLoading ? <ClipLoader size={20} /> : <FiPlus className={styles.excludeInputIcon} onClick={handleAddKeyword}/>}
 				<input
 					type="text"
 					className={styles.excludeInput}
@@ -299,6 +307,36 @@ export const FilterSheet = () => {
 					</li>
 				))}
 			</ul>
+			</>
+		:
+				<div className={styles.authPrompt}>
+					<p className={styles.authPromptText}>
+						제외 키워드 기능을 이용하려면 로그인을 해주세요.
+					</p>
+					<div className={styles.authButtons}>
+						<button
+							type="button"
+							className={`${styles.authButton} ${styles.authButtonPrimary}`}
+							onClick={() => {
+								setFilterSheetShowing(false);
+								navigate("/auth/login");
+							}}
+						>
+							로그인
+						</button>
+						<button
+							type="button"
+							className={styles.authButton}
+							onClick={() => {
+								setFilterSheetShowing(false);
+								navigate("/auth/signup");
+							}}
+						>
+							회원가입
+						</button>
+					</div>
+				</div>
+		}
 		</div>
 	);
  

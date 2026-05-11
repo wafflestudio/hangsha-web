@@ -1,7 +1,7 @@
 import { useAuth } from "@/contexts/AuthProvider";
-import { useFilter } from "@/contexts/FilterContext";
+// import { useFilter } from "@/contexts/FilterContext";
 import { useSearch } from "@/contexts/SearchContext";
-import { FilterButton, ProfileButton } from "@/widgets/Toolbar";
+import { ProfileButton } from "@/widgets/Toolbar";
 import styles from "@styles/SearchToolbar.module.css";
 import { useState } from "react";
 import { FaCalendarAlt } from "react-icons/fa";
@@ -17,7 +17,7 @@ const SearchToolbar = ({ viewMode, setViewMode }: SearchToolbarProps) => {
 	const { user } = useAuth();
 	const { query, setQuery } = useSearch();
 	const [queryState, setQueryState] = useState<string>(query);
-	const { setFilterSheetShowing } = useFilter();
+	// const { setFilterSheetShowing } = useFilter();
 
 	const navigate = useNavigate();
 
@@ -35,7 +35,7 @@ const SearchToolbar = ({ viewMode, setViewMode }: SearchToolbarProps) => {
 							color="rgba(130, 130, 130, 1)"
 						/>
 					</button>
-					<FilterButton onFilterSet={() => setFilterSheetShowing(true)} />
+					{/* <FilterButton onFilterSet={() => setFilterSheetShowing(true)} /> */}
 					{user && <ProfileButton user={user} />}
 				</div>
 			</div>

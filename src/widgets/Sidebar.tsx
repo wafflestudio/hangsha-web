@@ -27,7 +27,7 @@ export const Sidebar = () => {
 	}
 
 	const { user, logout } = useAuth();
-	const { excludedKeywords, addExcludedKeyword, deleteExcludedKeyword } =
+	const { excludedKeywords, addExcludedKeyword, deleteExcludedKeyword, excludedKeywordLoading } =
 		useUserData();
 	const { categoryGroups, isLoadingMeta } = useFilter();
 	const {
@@ -82,7 +82,7 @@ export const Sidebar = () => {
 		},
 		{
 			name: "org",
-			label: "주체 기관",
+			label: "주최 기관",
 			list: ORG_LIST,
 			state: org,
 			setter: setOrg,
@@ -313,6 +313,7 @@ export const Sidebar = () => {
 								type="button"
 								className={styles.applyBtn}
 								onClick={handleAddKeyword}
+								disabled={excludedKeywordLoading}
 							>
 								적용
 							</button>

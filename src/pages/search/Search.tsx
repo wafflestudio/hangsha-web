@@ -1,4 +1,3 @@
-import { useSearch } from "@/contexts/SearchContext";
 import { useEffect, useMemo, useState } from "react";
 import SearchToolbar from "./SearchToolbar";
 import { Sidebar } from "@widgets/Sidebar";
@@ -6,7 +5,6 @@ import GalleryView from "@/widgets/Day/Gallery/GalleryView";
 import type { CalendarEvent, Event } from "@/util/types";
 import Table from "@/widgets/Day/Table";
 import styles from "@styles/Search.module.css";
-import { useDetail } from "@/contexts/DetailContext";
 import DetailView from "@/widgets/DetailView";
 import Pagination from "@/widgets/Pagination";
 import Loading from "@/widgets/Loading";
@@ -14,6 +12,9 @@ import { Views } from "react-big-calendar";
 import calendarEventMapper from "@/util/Calendar/calendarEventMapper";
 import BottomNav from "@/widgets/BottomNav";
 import { FilterSheet } from "@/widgets/FilterSheet/FilterSheet";
+
+import { useSearch } from "@/contexts/SearchContext";
+import { useDetail } from "@/contexts/DetailContext";
 
 const SearchView = () => {
 	const {
@@ -127,7 +128,7 @@ const SearchView = () => {
 					</div>
 				) : viewMode === "List" ? (
 					<Table
-						theadData={["찜", "제목", "D-day", "카테고리", "날짜", "주체기관"]}
+						theadData={["찜", "제목", "D-day", "카테고리", "날짜", "주최기관"]}
 						tbodyData={events}
 					/>
 				) : (

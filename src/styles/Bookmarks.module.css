@@ -13,7 +13,8 @@ body {
 .container {
   display: flex;
   flex-direction: row;
-  width: 100vw;
+  width: 70%;
+  justify-self: center;
   height: 100vh;
   overflow: hidden;
   background-color: #ffffff;
@@ -38,7 +39,7 @@ body {
   width: 100%;
   justify-content: space-between;
   align-items: center;
-  padding: 0 20px;
+  padding: 0px;
   margin-bottom: 16px;
 }
 
@@ -129,12 +130,16 @@ body {
 }
 
 .sidePanel {
-  width: 340px;
+  position: absolute;
+  right: 0;
+  top: 0;
+
+  max-width: 430px;
   height: 100vh;
   border-left: 1px solid #e0e0e0;
   background-color: #ffffff;
   box-shadow: -4px 0 24px rgba(0, 0, 0, 0.05);
-  z-index: 20;
+  z-index: 110;
   overflow-y: auto;
   flex-shrink: 0;
   animation: slideIn 0.3s ease-out;
@@ -151,31 +156,34 @@ body {
   }
 }
 
-@media (max-width: 300px) {
-  .cardsColumn div {
-    width: 100%;
+@media (max-width: 1200px) {
+  .container {
+    width: 80%;
   }
 }
 
-@media (max-width: 455px) {
-  .bookmarksHeader {
-    width: 100%;
+@media (max-width: 1024px) {
+  .sidePanel {
+    width: 340px;
   }
+}
 
-  .cardsColumn {
-    display: flex;
-    gap: 15px 0px;
-    flex-direction: column;
-    align-items: center;
-  }
-  .cardsColumn div {
+@media (max-width: 768px) {
+  .container {
     width: 90%;
+  }
+  .cardsColumn {
+    gap: 25px 30px;
   }
 }
 
 @media (max-width: 576px) {
+  .container {
+    width: 100%;
+  }
+
   .bookmarksHeader {
-    padding: 0 0 0 10px;
+    padding: 0px;
   }
 
   .cardsRow {
@@ -190,13 +198,21 @@ body {
   .sidePanel {
     width: 100%;
   }
+
   .cardsColumn {
     gap: 15px 5px;
   }
 }
 
-@media (max-width: 1024px) {
-  .sidePanel {
-    width: 340px;
+@media (max-width: 455px) {
+  .bookmarksHeader {
+    width: 100%;
+  }
+
+  .cardsColumn {
+    display: flex;
+    gap: 25px 0px;
+    flex-direction: column;
+    align-items: center;
   }
 }

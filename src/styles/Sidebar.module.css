@@ -312,6 +312,10 @@ body::-webkit-scrollbar {
   padding: 0;
 }
 
+.applyBtn:disabled {
+  color: #b6b6b6;
+}
+
 .tagContainer {
   display: flex;
   flex-wrap: wrap;

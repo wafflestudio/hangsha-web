@@ -219,7 +219,7 @@
     border-radius: 5px;
   }
   :global(.rbc-button-link) {
-    opacity: 50%;
+    opacity: 40%;
   }
   :global(.rbc-now .rbc-button-link) {
     background-color: transparent;
