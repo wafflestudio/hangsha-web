@@ -28,32 +28,33 @@ export default function AppRoutes() {
 				{/* OAuth Redirect */}
 				<Route path="/auth/callback" element={<LoginHandler />} />
 
-			{/* Main Feature page */}
-			<Route path="/main" element={<CalendarView />} />
-			<Route path="/main/day" element={<MainDay />} />
+				{/* Main Feature page */}
+				<Route path="/main" element={<CalendarView />} />
+				<Route path="/main/day" element={<MainDay />} />
 
-				{/* Timetable page */}
-				<Route path="/timetable" element={<TimetablePage />} />
+					{/* Timetable page */}
+					<Route path="/timetable" element={<TimetablePage />} />
 
-				{/* Search page */}
-				<Route path="/search" element={<SearchView />} />
+					{/* Search page */}
+					<Route path="/search" element={<SearchView />} />
 
-			{/* Mypage & bookmark & memo */}
-			<Route path="/my" element={<MyPage />} />
-			<Route path="/bookmark" element={<BookmarksPage />} />
-			<Route path="/memo" element={<MemoPage />} />
+				{/* Mypage & bookmark & memo */}
+				<Route path="/my" element={<MyPage />} />
+				<Route path="/bookmark" element={<BookmarksPage />} />
+				<Route path="/memo" element={<MemoPage />} />
 
-			{/* Admin page */}
-			<Route
-				path="/sync"
-				element={
-					<AdminRoute>
-						<AdminEventsPage />
-					</AdminRoute>
-				}
-			/>
+				{/* Admin page */}
+				<Route
+					path="/sync"
+					element={
+						<AdminRoute>
+							<AdminEventsPage />
+						</AdminRoute>
+					}
+				/>
 
-			<Route path="*" element={<Navigate to="/" replace />} />
-		</Routes>
+				<Route path="*" element={<Navigate to="/" replace />} />
+			</Routes>
+		</>
 	);
 }
