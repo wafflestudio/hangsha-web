@@ -1,5 +1,6 @@
 import { useEvents } from "@contexts/EventContext";
 import { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import styles from "@styles/DetailView.module.css";
 import { getDDay } from "../../util/Calendar/getDday";
 import { CATEGORY_COLORS, CATEGORY_LIST } from "@constants";
@@ -9,8 +10,9 @@ import DOMPurify from "isomorphic-dompurify";
 import parse from "html-react-parser";
 import { useUserData } from "@/contexts/UserDataContext";
 import { useDetail } from "@/contexts/DetailContext";
+import { useAuth } from "@/contexts/AuthProvider";
 import DetailMemo from "./DetailMemo";
-import { ErrorModal } from "../Modal";
+import Modal, { ErrorModal } from "../Modal";
 import Loading from "../Loading";
 import calendarEventMapper from "@/util/Calendar/calendarEventMapper";
 import EventDate from "../EventDate";
@@ -24,13 +26,15 @@ const DetailView = ({ eventId }: { eventId: number }) => {
 	const { fetchEventById, detailError, isLoadingDetail, clearError } =
 		useEvents();
 	const { setShowDetail } = useDetail();
+	const { user } = useAuth();
+	const navigate = useNavigate();
 
 	// for scrolling to top on re-render
 	const scrollRef = useRef<HTMLDivElement>(null);
 
 	const [isMemoExpanded, setIsMemoExpanded] = useState<boolean>(false);
+	const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 	const memoWrapperRef = useRef<HTMLDivElement>(null);
-	
 
 	// detect outside clicks - expand memo
 	useEffect(() => {
@@ -83,13 +87,18 @@ const DetailView = ({ eventId }: { eventId: number }) => {
 	if (!event) return <Loading />;
 
 	const handleToggleBookmark = async () => {
+		if (!user) {
+			setIsLoginModalOpen(true);
+			return;
+		}
+
 		const previousState = isBookmarked;
 
 		// optimistic update
 		setIsBookmarked(!previousState);
 
 		try {
-			toggleBookmark(event);
+			await toggleBookmark(event);
 		} catch (e) {
 			console.error("Failed to toggle bookmark", e);
 			setIsBookmarked(previousState);
@@ -109,12 +118,22 @@ const DetailView = ({ eventId }: { eventId: number }) => {
 				/* Loading spinner */
 				<Loading />
 			)}
-			<button type="button" className={styles.foldBtn} onClick={() => setShowDetail(false)}>
-				<FaAnglesRight
-					width={28}
-					height={28}
-					color="rgba(171, 171, 171, 1)"
+			{isLoginModalOpen && (
+				<Modal
+					content="로그인 이후 이용해주세요"
+					leftText="로그인"
+					rightText="닫기"
+					onLeftClick={() => navigate("/")}
+					onRightClick={() => setIsLoginModalOpen(false)}
+					onClose={() => setIsLoginModalOpen(false)}
 				/>
+			)}
+			<button
+				type="button"
+				className={styles.foldBtn}
+				onClick={() => setShowDetail(false)}
+			>
+				<FaAnglesRight width={28} height={28} color="rgba(171, 171, 171, 1)" />
 			</button>
 
 			<img

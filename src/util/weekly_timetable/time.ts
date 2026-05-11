@@ -17,8 +17,10 @@ export function clampDate(d: Date, min: Date, max: Date) {
 // }
 
 function minutesToHHMM(min: number) {
-	const hh = Math.floor(min / 60);
-	const mm = min % 60;
+	const minutesInDay = 24 * 60;
+	const normalizedMin = ((min % minutesInDay) + minutesInDay) % minutesInDay;
+	const hh = Math.floor(normalizedMin / 60);
+	const mm = normalizedMin % 60;
 	return { hh, mm };
 }
 

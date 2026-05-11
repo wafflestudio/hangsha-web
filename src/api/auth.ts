@@ -55,6 +55,11 @@ export const logout = async () => {
 	TokenService.clearTokens();
 };
 
+export const deleteAccount = async () => {
+	await api.delete("/users/me");
+	TokenService.clearTokens();
+};
+
 export const refresh = async () => {
 	const res = await api.post<AuthTokens>("/auth/refresh");
 	TokenService.setToken(res.data.accessToken);

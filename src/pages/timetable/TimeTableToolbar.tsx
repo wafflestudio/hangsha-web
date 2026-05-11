@@ -1,8 +1,8 @@
 import type { Semester } from "../../util/types";
-import { IoIosSearch } from "react-icons/io";
 import { useAuth } from "../../contexts/AuthProvider";
 import styles from "../../styles/Toolbar.module.css";
 import { useNavigate } from "react-router-dom";
+import SearchButton from "../../widgets/SearchButton";
 
 interface TimeTableToolbarProps {
 	timetableName: string;
@@ -95,7 +95,7 @@ const TimeTableToolbar = ({
 				</div>
 
 				<div className={styles.profileRow}>
-					<IoIosSearch size={20} color="rgba(130, 130, 130, 1)" />
+					<SearchButton />
 					<button
 						type="button"
 						className={styles.profileButton}

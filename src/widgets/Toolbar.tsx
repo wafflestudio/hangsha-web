@@ -4,16 +4,15 @@ import {
 	type View,
 	Views,
 } from "react-big-calendar";
-import { IoIosSearch } from "react-icons/io";
 import { useAuth } from "@contexts/AuthProvider";
 import styles from "@styles/Toolbar.module.css";
 import { useDayView } from "@contexts/DayViewContext";
 import type { User } from "@/util/types";
 import { useState } from "react";
-import { useSearch } from "@contexts/SearchContext";
 import { useNavigate } from "react-router-dom";
 import FilterIcon from '/assets/filter.svg'
 import { useFilter } from "@/contexts/FilterContext";
+import SearchButton from "./SearchButton";
 
 interface ToolbarProps {
 	view: View;
@@ -22,47 +21,6 @@ interface ToolbarProps {
 	label: string;
 	date: Date;
 }
-
-const SearchInput = () => {
-	const [active, setActive] = useState<boolean>(false);
-	const [searchText, setSearchText] = useState<string>("");
-	const { setQuery } = useSearch();
-	const navigate = useNavigate();
-
-	const handleSearch = () => {
-		if (searchText.trim()) {
-			setQuery(searchText);
-		}
-		navigate("/search");
-	};
-
-	return (
-		<button
-			type="button"
-			className={styles.searchContainer}
-			onMouseEnter={() => setActive(true)}
-			onMouseLeave={()=>setActive(false)}
-			onFocus={() => setActive(true)}
-			onBlur={() => setActive(false)}
-		>
-			<input
-				type="text"
-				className={`${styles.searchInput} ${active ? styles.active : ""}`}
-				placeholder="검색어를 입력하세요"
-				value={searchText}
-				onKeyDown={(e) => {
-					if (e.key === "Enter" && !e.nativeEvent.isComposing) handleSearch();
-				}}
-				onChange={(e) => setSearchText(e.currentTarget.value)}
-			/>
-			<IoIosSearch
-				onClick={handleSearch}
-				size={20}
-				color="rgba(130, 130, 130, 1)"
-			/>
-		</button>
-	);
-};
 
 export const ProfileButton = ({ user }: { user: User | null }) => {
 	const navigate = useNavigate();
@@ -211,7 +169,7 @@ const Toolbar: React.FC<ToolbarProps> = ({
 						</div>
 					)}
 					<div className={styles.profileRow}>
-						<SearchInput />
+						<SearchButton />
 						<span className={styles.profileBtn}>{user && <ProfileButton user={user} />}</span>
 					</div>
 				</div>

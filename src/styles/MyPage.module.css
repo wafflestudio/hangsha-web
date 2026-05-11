@@ -1,263 +1,452 @@
 * {
-  font-family:
-    -apple-system, BlinkMacSystemFont, "Pretendard", "Apple SD Gothic Neo",
-    sans-serif;
+	font-family:
+		-apple-system, BlinkMacSystemFont, "Pretendard", "Apple SD Gothic Neo",
+		sans-serif;
 }
 
 .main {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100vw;
-  height: 100vh;
-  overflow: hidden;
-  background-color: #ffffff;
-  padding: 0;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	width: 100vw;
+	height: 100vh;
+	overflow: hidden;
+	background-color: #ffffff;
+	padding: 0;
 }
 
 .mypageContainer {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  max-width: 800px;
-  padding-bottom: 80px;
-  overflow-y: auto;
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-  align-items: center;
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	max-width: 800px;
+	padding-bottom: 80px;
+	overflow-y: auto;
+	-ms-overflow-style: none;
+	scrollbar-width: none;
+	align-items: center;
 }
 
 .mypageContainer::-webkit-scrollbar {
-  display: none;
+	display: none;
 }
 
 .notFound {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  height: 60vh;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 100%;
+	height: 60vh;
 }
 
 .widgetsWrapper {
-  display: flex;
-  flex-direction: column;
-  width: 80%;
+	display: flex;
+	flex-direction: column;
+	width: 80%;
+}
+
+.bugReportSection {
+	display: flex;
+	flex-direction: column;
+	gap: 14px;
+	width: 80%;
+	margin-top: 24px;
+	padding: 20px;
+	border-top: 1px solid #eeeeee;
+}
+
+.bugReportHeader {
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+}
+
+.bugReportTitle {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	color: #222222;
+}
+
+.bugReportTitle strong {
+	font-size: 16px;
+	font-weight: 700;
+}
+
+.bugReportHeader span {
+	color: #777777;
+	font-size: 13px;
+	font-weight: 500;
+	line-height: 1.4;
+	word-break: keep-all;
+}
+
+.bugReportForm {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+
+.bugReportInput,
+.bugReportTextarea {
+	width: 100%;
+	border: 1px solid #e1e1e1;
+	border-radius: 8px;
+	background-color: #ffffff;
+	color: #222222;
+	font-size: 14px;
+	font-weight: 500;
+	outline: none;
+}
+
+.bugReportInput {
+	height: 42px;
+	padding: 0 12px;
+}
+
+.bugReportTextarea {
+	min-height: 120px;
+	padding: 12px;
+	resize: vertical;
+	line-height: 1.5;
+}
+
+.bugReportInput::placeholder,
+.bugReportTextarea::placeholder {
+	color: #9b9b9b;
+}
+
+.bugReportInput:focus,
+.bugReportTextarea:focus {
+	border-color: #9a9a9a;
+}
+
+.bugReportInput:disabled,
+.bugReportTextarea:disabled {
+	background-color: #f8f8f8;
+	cursor: not-allowed;
+}
+
+.bugReportSubmitButton {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	align-self: flex-end;
+	min-width: 96px;
+	min-height: 40px;
+	padding: 0 16px;
+	border: none;
+	border-radius: 8px;
+	background-color: #494949;
+	color: #ffffff;
+	font-size: 14px;
+	font-weight: 700;
+	cursor: pointer;
+	transition: background-color 0.2s;
+}
+
+.bugReportSubmitButton:hover {
+	background-color: #303030;
+}
+
+.bugReportSubmitButton:disabled {
+	cursor: not-allowed;
+	opacity: 0.6;
+}
+
+.accountDeletionSection {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 16px;
+	width: 80%;
+	margin-top: 24px;
+	padding: 20px;
+	border-top: 1px solid #eeeeee;
+}
+
+.accountDeletionText {
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+	min-width: 0;
+}
+
+.accountDeletionText strong {
+	color: #222222;
+	font-size: 16px;
+	font-weight: 700;
+}
+
+.accountDeletionText span {
+	color: #777777;
+	font-size: 13px;
+	font-weight: 500;
+	line-height: 1.4;
+	word-break: keep-all;
+}
+
+.deleteAccountButton {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 8px;
+	flex-shrink: 0;
+	min-height: 40px;
+	padding: 0 14px;
+	border: 1px solid #f1b8b8;
+	border-radius: 8px;
+	background-color: #ffffff;
+	color: #d33b3b;
+	font-size: 14px;
+	font-weight: 700;
+	cursor: pointer;
+	transition:
+		background-color 0.2s,
+		border-color 0.2s;
+}
+
+.deleteAccountButton:hover {
+	background-color: #fff5f5;
+	border-color: #df8f8f;
+}
+
+.deleteAccountButton:disabled {
+	cursor: not-allowed;
+	opacity: 0.6;
 }
 
 .profileContainer {
-  display: flex;
-  flex-direction: column;
-  width: 80%;
-  padding: 24px 20px;
-  background-color: #ffffff;
+	display: flex;
+	flex-direction: column;
+	width: 80%;
+	padding: 24px 20px;
+	background-color: #ffffff;
 }
 
 .profileRow {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  width: 100%;
-  margin-bottom: 30px;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	width: 100%;
+	margin-bottom: 30px;
 }
 
 .profileImgWrapper {
-  position: relative;
-  width: 100px;
-  height: 100px;
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+	position: relative;
+	width: 100px;
+	height: 100px;
+	margin: 0 auto;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
 }
 
 .profileImgWrapper img {
-  width: 100%;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 1px solid #f0f0f0;
-  aspect-ratio: 1 / 1;
+	width: 100%;
+	border-radius: 50%;
+	object-fit: cover;
+	border: 1px solid #f0f0f0;
+	aspect-ratio: 1 / 1;
 }
 
 .editInput {
-  display: none;
+	display: none;
 }
 
 .editButton {
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  background-color: white;
-  border: 0.5px solid #bebebe;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+	position: absolute;
+	bottom: 0;
+	right: 0;
+	width: 24px;
+	height: 24px;
+	border-radius: 50%;
+	background-color: white;
+	border: 0.5px solid #bebebe;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 
-  cursor: pointer;
-  transition: all 0.2s ease;
+	cursor: pointer;
+	transition: all 0.2s ease;
 }
 
 .nameEmailCol {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  margin-left: 16px;
-  flex-grow: 1;
-  padding: 0 10px;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	margin-left: 16px;
+	flex-grow: 1;
+	padding: 0 10px;
 }
 
 .nameText {
-  font-size: 25px;
-  font-weight: 700;
-  color: #111111;
-  margin-bottom: 4px;
-  line-height: 1.2;
+	font-size: 25px;
+	font-weight: 700;
+	color: #111111;
+	margin-bottom: 4px;
+	line-height: 1.2;
 }
 
 .emailText {
-  font-size: 16px;
-  font-weight: 400;
-  color: #393939;
-  line-height: 1.2;
+	font-size: 16px;
+	font-weight: 400;
+	color: #393939;
+	line-height: 1.2;
 }
 
 .edit.emailText {
-  margin-left: 10px;
+	margin-left: 10px;
 }
 
 .editBtn {
-  cursor: pointer;
-  margin-left: auto;
+	cursor: pointer;
+	margin-left: auto;
 }
 
 .nameInput {
-  width: min(440px, 100%);
-  border-radius: 10px;
-  border: 1px solid #e6e6e6;
-  background: #fff;
-  padding: 10px;
-  font-size: 15px;
-  margin-bottom: 6px;
-  outline: none;
+	width: min(440px, 100%);
+	border-radius: 10px;
+	border: 1px solid #e6e6e6;
+	background: #fff;
+	padding: 10px;
+	font-size: 15px;
+	margin-bottom: 6px;
+	outline: none;
 }
 
 .nameInput::placeholder {
-  color: #8f8f8f;
-  font-weight: 700;
+	color: #8f8f8f;
+	font-weight: 700;
 }
 
 .timeTableBtn,
 .preferenceCol {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  width: 100%;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	width: 100%;
 
-  padding: 10px 20px;
+	padding: 10px 20px;
 
-  background-color: #ffffff;
-  border: 1px solid #d0d0d0;
-  border-radius: 16px;
-  transition: background-color 0.2s;
+	background-color: #ffffff;
+	border: 1px solid #d0d0d0;
+	border-radius: 16px;
+	transition: background-color 0.2s;
 }
 
 .preferenceCol {
-  flex-direction: column;
-  transition: none;
-  height: fit-content;
-  align-items: start;
-  gap: 12px;
-  margin-bottom: 8px;
+	flex-direction: column;
+	transition: none;
+	height: fit-content;
+	align-items: start;
+	gap: 12px;
+	margin-bottom: 8px;
 }
 
 .preferenceCol > span.notYetText {
-  align-self: center;
-  font-size: 13px;
-  font-weight: 600;
-  color: #6a6a6a;
-  margin-right: 12px;
+	align-self: center;
+	font-size: 13px;
+	font-weight: 600;
+	color: #6a6a6a;
+	margin-right: 12px;
 }
 
 .preferenceHeader {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
 }
 
 .preferenceHeader span {
-  font-size: 16px;
-  font-weight: 500;
+	font-size: 16px;
+	font-weight: 500;
 }
 
 .preferenceChips {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 8px;
-  list-style: none;
-  padding: 0;
-  margin: 0;
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 8px;
+	list-style: none;
+	padding: 0;
+	margin: 0;
 }
 
 .preferenceChip {
-  font-size: 13px;
-  font-weight: 600;
-  color: #ffffff;
-  padding: 6px 12px;
-  border-radius: 999px;
-  white-space: nowrap;
+	font-size: 13px;
+	font-weight: 600;
+	color: #ffffff;
+	padding: 6px 12px;
+	border-radius: 999px;
+	white-space: nowrap;
 }
 
 .category {
-  background-color: #6fd2ff;
+	background-color: #6fd2ff;
 }
 .organization {
-  background-color: #36c986;
+	background-color: #36c986;
 }
 
 .timeTableBtn:active {
-  background-color: #f5f5f5;
+	background-color: #f5f5f5;
 }
 
 .timeTableBtn img {
-  width: 24px;
-  height: 24px;
-  margin-right: 12px;
+	width: 24px;
+	height: 24px;
+	margin-right: 12px;
 }
 
 .timeTableBtn span {
-  font-size: 16px;
-  font-weight: 500;
-  color: #111111;
+	font-size: 16px;
+	font-weight: 500;
+	color: #111111;
 }
 
 @media (max-width: 576px) {
-  .profileContainer {
-    width: 100%;
-  }
-  .nameText {
-    font-size: 18px;
-  }
-  .emailText {
-    font-size: 14px;
-  }
-  .preferenceChip {
-    font-size: 12px;
-  }
-  .preferenceCol {
-    padding: 10px 10px;
-  }
-  .preferenceChips {
-    margin-left: 8px;
-  }
-  .widgetsWrapper {
-    width: 100%;
-    padding: 24px 20px;
-  }
+	.profileContainer {
+		width: 100%;
+	}
+	.nameText {
+		font-size: 18px;
+	}
+	.emailText {
+		font-size: 14px;
+	}
+	.preferenceChip {
+		font-size: 12px;
+	}
+	.preferenceCol {
+		padding: 10px 10px;
+	}
+	.preferenceChips {
+		margin-left: 8px;
+	}
+	.widgetsWrapper {
+		width: 100%;
+		padding: 24px 20px;
+	}
+	.bugReportSection {
+		width: 100%;
+		padding: 20px;
+		margin-top: 8px;
+	}
+	.bugReportSubmitButton {
+		width: 100%;
+	}
+	.accountDeletionSection {
+		width: 100%;
+		align-items: flex-start;
+		flex-direction: column;
+		padding: 20px;
+		margin-top: 8px;
+	}
+	.deleteAccountButton {
+		width: 100%;
+	}
 }
