@@ -164,8 +164,9 @@
     gap: 8px;
   }
   .mobileDateOrg {
+    width: 100%;
     align-items: center;
-    justify-content: center;
+    justify-content: space-between;
     gap: 12px;
   }
   .mobileChipsList .categoryCircle {
@@ -259,5 +260,17 @@
     flex: 0 0 180px;
     min-width: 0;
     width: 180px;
+  }
+}
+
+@media (max-width: 455px) {
+  .galleryCardWrapper {
+    width: 90%;
+  }
+}
+
+@media (max-width: 300px) {
+  .galleryCardWrapper {
+    width: 100%;
   }
 }

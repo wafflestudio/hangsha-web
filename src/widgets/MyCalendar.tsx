@@ -61,7 +61,19 @@ export const MyCalendar = ({
 	}, [currentView, monthEvents, weekEvents, dayEvents]);
 
 	const CALENDER_EVENTS = useMemo(() => {
-		return currentEvents.map((e: Event) => calendarEventMapper(e, currentView));
+		const mapped = currentEvents.map((e: Event) =>
+			calendarEventMapper(e, currentView),
+		);
+		if (currentView !== Views.MONTH) return mapped;
+		// Single-day events first so they win the lower row slots in the
+		// month-view layout; multi-day strips push down into "+N more".
+		const isSingleDay = (e: (typeof mapped)[number]) =>
+			e.start instanceof Date &&
+			e.end instanceof Date &&
+			e.start.toDateString() === e.end.toDateString();
+		return [...mapped].sort(
+			(a, b) => Number(!isSingleDay(a)) - Number(!isSingleDay(b)),
+		);
 	}, [currentEvents, currentView]);
 
 	/** Calendar format */

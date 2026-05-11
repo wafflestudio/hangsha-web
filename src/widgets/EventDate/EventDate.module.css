@@ -17,5 +17,6 @@
 .dateRow {
   display: flex;
   flex-direction: row;
+  width: min-content;
   gap: 6px;
 }
