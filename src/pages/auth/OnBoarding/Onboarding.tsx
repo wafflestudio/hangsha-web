@@ -87,7 +87,7 @@ export default function Onboarding({
 			<header className={styles.onbHeader}>
 				<h1 className={styles.onbTitle}>관심사 설정</h1>
 				<p className={styles.onbSubtitle}>
-					먼저 보고 싶은 행사의 카테고리 또는 주체기관을 선택해주세요.
+					먼저 보고 싶은 행사의 카테고리 또는 주최기관을 선택해주세요.
 				</p>
 			</header>
 

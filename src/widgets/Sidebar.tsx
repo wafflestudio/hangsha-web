@@ -82,7 +82,7 @@ export const Sidebar = () => {
 		},
 		{
 			name: "org",
-			label: "주체 기관",
+			label: "주최 기관",
 			list: ORG_LIST,
 			state: org,
 			setter: setOrg,

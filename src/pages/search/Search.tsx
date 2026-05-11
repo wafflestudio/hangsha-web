@@ -128,7 +128,7 @@ const SearchView = () => {
 					</div>
 				) : viewMode === "List" ? (
 					<Table
-						theadData={["찜", "제목", "D-day", "카테고리", "날짜", "주체기관"]}
+						theadData={["찜", "제목", "D-day", "카테고리", "날짜", "주최기관"]}
 						tbodyData={events}
 					/>
 				) : (
