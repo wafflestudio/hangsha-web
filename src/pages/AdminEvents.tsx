@@ -70,11 +70,6 @@ function toNullableNumber(value: string): number | null {
 	return Number.isFinite(parsed) ? parsed : null;
 }
 
-function toDateTime(value: string): string | null {
-	const trimmed = value.trim();
-	return trimmed.length === 0 ? null : trimmed;
-}
-
 function toDateTimeInputValue(value?: string | null): string {
 	if (!value) return "";
 	return value.slice(0, 16);
