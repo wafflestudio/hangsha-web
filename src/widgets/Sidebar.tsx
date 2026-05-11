@@ -27,7 +27,7 @@ export const Sidebar = () => {
 	}
 
 	const { user, logout } = useAuth();
-	const { excludedKeywords, addExcludedKeyword, deleteExcludedKeyword } =
+	const { excludedKeywords, addExcludedKeyword, deleteExcludedKeyword, excludedKeywordLoading } =
 		useUserData();
 	const { categoryGroups, isLoadingMeta } = useFilter();
 	const {
@@ -313,6 +313,7 @@ export const Sidebar = () => {
 								type="button"
 								className={styles.applyBtn}
 								onClick={handleAddKeyword}
+								disabled={excludedKeywordLoading}
 							>
 								적용
 							</button>

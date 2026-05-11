@@ -15,7 +15,10 @@ interface UserDataContextType {
 	interestCategories: Category[];
 	excludedKeywords: { id: number; keyword: string }[];
 	eventMemos: Memo[];
+
 	memoLoading: boolean;
+	excludedKeywordLoading: boolean;
+	
 	refreshUserData: () => Promise<void>;
 	// fetchInterestCategories: () => void;
 	saveInterestPreferences: (categories: Category[]) => Promise<void>;
@@ -51,6 +54,7 @@ export const UserDataProvider = ({ children }: { children: ReactNode }) => {
 	const [interestCategories, setInterestCategories] = useState<Category[]>([]);
 	const [eventMemos, setEventMemos] = useState<Memo[]>([]);
 	const [memoLoading, setMemoLoading] = useState<boolean>(false);
+	const [excludedKeywordLoading, setExcludedKeywordLoading] = useState<boolean>(false);
 
 	const fetchAll = useCallback(async () => {
 		if (!isAuthenticated) return;
@@ -68,9 +72,10 @@ export const UserDataProvider = ({ children }: { children: ReactNode }) => {
 			setBookmarkedEvents(bookmarksData);
 			setInterestCategories(interestsData);
 			setEventMemos(memoData);
-			setMemoLoading(false);
 		} catch (error) {
 			console.error("Failed to load user data", error);
+		} finally {
+			setMemoLoading(false);
 		}
 	}, [isAuthenticated]);
 
@@ -126,12 +131,16 @@ export const UserDataProvider = ({ children }: { children: ReactNode }) => {
 
 	const addExcludedKeyword = async (keyword: string) => {
 		try {
+			setExcludedKeywordLoading(true);
+
 			await userService.addExcludedKeywords(keyword);
 			const excludedData: { id: number; keyword: string }[] =
 				await userService.getExcludedKeywords();
 			setExcludedKeywords(excludedData);
 		} catch (error) {
 			console.error("error in adding excluded keyword", error);
+		} finally {
+			setExcludedKeywordLoading(false);
 		}
 	};
 
@@ -204,6 +213,7 @@ export const UserDataProvider = ({ children }: { children: ReactNode }) => {
 				interestCategories,
 				eventMemos,
 				memoLoading,
+				excludedKeywordLoading,
 				refreshUserData: fetchAll,
 				// fetchInterestCategories,
 				saveInterestPreferences,

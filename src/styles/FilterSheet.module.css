@@ -221,7 +221,7 @@
   border: none;
   outline: none;
   background: transparent;
-  font-size: 14px;
+  font-size: 16px; /* mobile: prevents iOS zoom-on-focus */
   padding: 6px 0;
   color: #222222;
 }
@@ -261,6 +261,59 @@
 
 .excludeRemove:hover {
   color: #444444;
+}
+
+/* --- Auth prompt (shown when user is not logged in) ---------------------- */
+.authPrompt {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 24px 12px 8px;
+  text-align: center;
+}
+
+.authPromptText {
+  margin: 0;
+  color: #3a3a3a;
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.authButtons {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  max-width: 240px;
+}
+
+.authButton {
+  padding: 12px 20px;
+  border: 1px solid #e4e4e4;
+  background-color: #ffffff;
+  border-radius: 999px;
+  color: #111111;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 120ms ease;
+  box-shadow: 0 3px 2px 0 rgba(0, 0, 0, 0.1);
+}
+
+.authButton:hover {
+  background-color: #f5f5f5;
+}
+
+.authButtonPrimary {
+  background-color: #494949;
+  border-color: #494949;
+  color: #ffffff;
+}
+
+.authButtonPrimary:hover {
+  background-color: #303030;
 }
 
 /* --- Footer --------------------------------------------------------------- */
