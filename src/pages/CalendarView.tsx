@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Views, type View } from "react-big-calendar";
+import { useQueryClient } from "@tanstack/react-query";
+import PullToRefresh from "react-simple-pull-to-refresh";
 import styles from "@styles/CalendarView.module.css";
 import type {
 	CalendarEvent,
@@ -60,6 +62,15 @@ const CalendarView = () => {
 	const { data: monthViewData } = useMonthEvents(currentDate, filters, excludedKeywords, interestCategories);
 	const { data: weekViewData} = useWeekEvents(currentDate, filters, excludedKeywords, interestCategories);
 	const { data: dayViewEvents = [] } = useDayEvents(currentDate, filters, excludedKeywords, interestCategories);
+
+	const queryClient = useQueryClient();
+	const handleRefresh = async () => {
+		await Promise.all([
+			queryClient.invalidateQueries({ queryKey: ["monthEvents"] }),
+			queryClient.invalidateQueries({ queryKey: ["weekEvents"] }),
+			queryClient.invalidateQueries({ queryKey: ["dayEvents"] }),
+		]);
+	};
 
 
 
@@ -152,14 +163,27 @@ const CalendarView = () => {
 			<Sidebar />
 			<div className={styles.calendarContainer}>
 				<div className={styles.calendarWrapper}>
-					<MyCalendar
-						monthEvents={MONTH_EVENTS}
-						weekEvents={WEEK_EVENTS}
-						dayEvents={dayViewEvents}
-						onShowMoreClick={onShowMoreClick}
-						onSelectEvent={onSelectEvent}
-						onViewChange={setCurrentView}
-					/>
+					{isMobile ? (
+						<PullToRefresh onRefresh={handleRefresh} pullDownThreshold={70}>
+							<MyCalendar
+								monthEvents={MONTH_EVENTS}
+								weekEvents={WEEK_EVENTS}
+								dayEvents={dayViewEvents}
+								onShowMoreClick={onShowMoreClick}
+								onSelectEvent={onSelectEvent}
+								onViewChange={setCurrentView}
+							/>
+						</PullToRefresh>
+					) : (
+						<MyCalendar
+							monthEvents={MONTH_EVENTS}
+							weekEvents={WEEK_EVENTS}
+							dayEvents={dayViewEvents}
+							onShowMoreClick={onShowMoreClick}
+							onSelectEvent={onSelectEvent}
+							onViewChange={setCurrentView}
+						/>
+					)}
 				</div>
 				{showSideMonth && (
 					<div className={styles.sidePanel} ref={sidePanelRef}>
