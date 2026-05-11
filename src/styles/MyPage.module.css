@@ -45,6 +45,68 @@
   width: 80%;
 }
 
+.accountDeletionSection {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  width: 80%;
+  margin-top: 24px;
+  padding: 20px;
+  border-top: 1px solid #eeeeee;
+}
+
+.accountDeletionText {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.accountDeletionText strong {
+  color: #222222;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.accountDeletionText span {
+  color: #777777;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.4;
+  word-break: keep-all;
+}
+
+.deleteAccountButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  flex-shrink: 0;
+  min-height: 40px;
+  padding: 0 14px;
+  border: 1px solid #f1b8b8;
+  border-radius: 8px;
+  background-color: #ffffff;
+  color: #d33b3b;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    background-color 0.2s,
+    border-color 0.2s;
+}
+
+.deleteAccountButton:hover {
+  background-color: #fff5f5;
+  border-color: #df8f8f;
+}
+
+.deleteAccountButton:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
 .profileContainer {
   display: flex;
   flex-direction: column;
@@ -259,5 +321,15 @@
   .widgetsWrapper {
     width: 100%;
     padding: 24px 20px;
+  }
+  .accountDeletionSection {
+    width: 100%;
+    align-items: flex-start;
+    flex-direction: column;
+    padding: 20px;
+    margin-top: 8px;
+  }
+  .deleteAccountButton {
+    width: 100%;
   }
 }

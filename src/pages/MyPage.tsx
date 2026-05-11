@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { useTimetable } from "@/contexts/TimetableContext";
 import { useEffect, useState } from "react";
 import { RiPencilFill } from "react-icons/ri";
-import { FaCamera, FaStar } from "react-icons/fa6";
+import { FaCamera, FaStar, FaTrashCan } from "react-icons/fa6";
 import { IoMdDoneAll } from "react-icons/io";
 import { useUserData } from "@/contexts/UserDataContext";
 import Onboarding from "./auth/OnBoarding/Onboarding";
@@ -187,6 +187,57 @@ const ProfileCard = ({ onClickInterest }: { onClickInterest: () => void }) => {
 	);
 };
 
+const AccountDeletionSection = () => {
+	const { deleteAccount } = useAuth();
+	const [isConfirmOpen, setIsConfirmOpen] = useState(false);
+	const [isDeleting, setIsDeleting] = useState(false);
+	const navigate = useNavigate();
+
+	const handleDeleteAccount = async () => {
+		if (isDeleting) return;
+
+		try {
+			setIsDeleting(true);
+			await deleteAccount();
+			navigate("/", { replace: true });
+		} catch (error) {
+			console.error("Account deletion failed:", error);
+			alert("회원탈퇴에 실패했습니다. 잠시 후 다시 시도해주세요.");
+		} finally {
+			setIsDeleting(false);
+			setIsConfirmOpen(false);
+		}
+	};
+
+	return (
+		<section className={styles.accountDeletionSection}>
+			<div className={styles.accountDeletionText}>
+				<strong>회원탈퇴</strong>
+				<span>계정을 삭제하면 저장된 정보가 복구되지 않습니다.</span>
+			</div>
+			<button
+				className={styles.deleteAccountButton}
+				type="button"
+				onClick={() => setIsConfirmOpen(true)}
+				disabled={isDeleting}
+			>
+				<FaTrashCan size={14} />
+				<span>{isDeleting ? "탈퇴 처리 중" : "회원탈퇴"}</span>
+			</button>
+			{isConfirmOpen && (
+				<Modal
+					content="정말 회원탈퇴를 진행하시겠어요? 삭제된 계정은 복구할 수 없습니다."
+					leftText={isDeleting ? "처리 중" : "탈퇴하기"}
+					rightText="취소"
+					onLeftClick={handleDeleteAccount}
+					onRightClick={() => setIsConfirmOpen(false)}
+					onClose={() => setIsConfirmOpen(false)}
+				/>
+			)}
+		</section>
+	);
+};
+
 const MyPage = () => {
 	const { user, isLoading } = useAuth();
 	const [isEditingInterest, setIsEditingInterest] = useState<boolean>(false);
@@ -211,6 +262,7 @@ const MyPage = () => {
 						<BookmarkWidget />
 						<MemoWidget />
 					</div>
+					<AccountDeletionSection />
 				</div>
 			) : (
 				<div className={styles.notFound}>
