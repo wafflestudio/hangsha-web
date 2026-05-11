@@ -1,6 +1,7 @@
 import {
 	createContext,
 	type ReactNode,
+	useCallback,
 	useContext,
 	useEffect,
 	useState,
@@ -22,6 +23,7 @@ interface AuthContextType {
 	signup: (email: string, password: string) => Promise<void>;
 	completeSocialLogin: (accessToken: string) => Promise<void>;
 	logout: () => Promise<void>;
+	deleteAccount: () => Promise<void>;
 	updateUsername: (username: string) => Promise<void>;
 	clearProfileImg: () => Promise<void>;
 	setProfileImg: (file: File) => Promise<void>;
@@ -96,18 +98,18 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 		}
 	};
 
-	const completeSocialLogin = async (accessToken: string) => {
-		try {
-			TokenService.setToken(accessToken);
-			const userData = await auth.getUser();
-			setUser(userData);
-			setIsAuthenticated(true);
-		} catch (err) {
-			TokenService.clearTokens();
-			console.error("Completing social login failed:", err);
-			throw err;
-		}
-	};
+  	const completeSocialLogin = useCallback(async (accessToken: string) => {
+    	try {
+    	  	TokenService.setToken(accessToken);
+      		const userData = await auth.getUser();
+      		setUser(userData);
+      		setIsAuthenticated(true);
+    	} catch (err) {
+      		TokenService.clearTokens();
+      		console.error("Completing social login failed:", err);
+      		throw err;
+    	}
+	  }, []);
 
 	/**
 	 * Signup Function
@@ -136,6 +138,17 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 			setUser(null);
 			setIsAuthenticated(false);
 			// logoout function already clears the TokenService
+		}
+	};
+
+	const deleteAccount = async () => {
+		try {
+			await auth.deleteAccount();
+			setUser(null);
+			setIsAuthenticated(false);
+		} catch (error) {
+			console.error("Server error at account deletion", error);
+			throw error;
 		}
 	};
 
@@ -201,6 +214,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 				signup,
 				completeSocialLogin,
 				logout,
+				deleteAccount,
 				updateUsername,
 				clearProfileImg,
 				setProfileImg,

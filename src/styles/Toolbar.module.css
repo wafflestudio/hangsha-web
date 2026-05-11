@@ -191,6 +191,18 @@
   background: transparent;
 }
 
+.searchIconButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+}
+
 .searchInput {
   width: 0;
   opacity: 0;
