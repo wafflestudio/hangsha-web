@@ -1,13 +1,10 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Views, type View } from "react-big-calendar";
 import styles from "@styles/CalendarView.module.css";
 import type {
 	CalendarEvent,
 	Event,
-	FetchDayEventArgs,
-	FetchMonthEventArgs,
-	FetchWeekEventArgs,
 } from "@types";
 import DetailView from "@/widgets/DetailView";
 import MonthSideView from "@widgets/Month/MonthSideView/MonthSideView";
@@ -17,23 +14,21 @@ import { Sidebar } from "@widgets/Sidebar";
 import { useDetail } from "@contexts/DetailContext";
 import { useEvents } from "@contexts/EventContext";
 import { useFilter } from "@contexts/FilterContext";
-import { formatDateToYYYYMMDD } from "@calendarUtil/dateFormatter";
 import { useUserData } from "@/contexts/UserDataContext";
 import BottomNav from "@/widgets/BottomNav";
 import { FilterSheet } from "@/widgets/FilterSheet/FilterSheet";
+import { useMonthEvents, useWeekEvents, useDayEvents } from "@/contexts/useCalendarEvents";
 
 const CalendarView = () => {
 	// EventContext
 	const {
-		monthViewData,
-		fetchMonthEvents,
-		weekViewData,
-		fetchWeekEvents,
-		dayViewEvents,
-		fetchDayEvents,
+		// monthViewData,
+		// weekViewData,
+		// dayViewEvents,
 		dayDate,
 		setDayDate,
 	} = useEvents();
+
 	const { globalCategory, globalOrg, globalStatus } = useFilter();
 	// detail 보이는 뷰 조정
 	const { showDetail, setShowDetail, clickedEventId, setClickedEventId } =
@@ -50,11 +45,26 @@ const CalendarView = () => {
 	const [showSideMonth, setShowSideMonth] = useState<boolean>(false);
 	const [clickedDate, setClickedDate] = useState<Date>(new Date());
 
+	/** ----------------------  FETCH MONTH / WEEK / DAY data -------------------- */ 
+
 	const navigate = useNavigate();
 
-	// Flatten byDate buckets in chronological key order, preserving each
-	// bucket's internal sequence. Dedup keeps the first occurrence — so a
-	// multi-day event sits at the position of its earliest bucket.
+	const filters = useMemo(
+		() => ({
+			eventTypeId: globalCategory?.map((g) => g.id),
+			orgId: globalOrg?.map((g) => g.id),
+			statusId: globalStatus?.map((g) => g.id),
+		}), [globalCategory, globalOrg, globalStatus],
+	)
+	
+	const { data: monthViewData } = useMonthEvents(currentDate, filters, excludedKeywords, interestCategories);
+	const { data: weekViewData} = useWeekEvents(currentDate, filters, excludedKeywords, interestCategories);
+	const { data: dayViewEvents = [] } = useDayEvents(currentDate, filters, excludedKeywords, interestCategories);
+
+
+
+	// Flatten byDate buckets in chronological key order : preserve each date bucket's internal sequence 
+	// 중복 시 첫 event만 keep : multi-day event sits at the position of its earliest bucket
 	const flattenByDate = (byDate: Record<string, { events: Event[] }> | undefined) => {
 		const seen = new Map<number, Event>();
 		const buckets = byDate ?? {};
@@ -74,77 +84,6 @@ const CalendarView = () => {
 		setCurrentDate(dayDate);
 	}, [dayDate]);
 
-	/** ----------------------  FETCH MONTH / WEEK / DAY data -------------------- */ 
-	// biome-ignore lint/correctness/useExhaustiveDependencies: excludedKeywords and interestCategories change server data although not explicitly used in FE
-	useEffect(() => {
-		const loadMonthEvents = async () => {
-			const paramMonth: FetchMonthEventArgs = {
-				start: currentDate,
-			};
-			if (globalCategory) paramMonth.eventTypeId = globalCategory.map((g) => g.id);
-			if (globalOrg) paramMonth.orgId = globalOrg.map((g) => g.id);
-			if (globalStatus) paramMonth.statusId = globalStatus.map((g) => g.id);
-
-			await fetchMonthEvents(paramMonth);
-		};
-		loadMonthEvents();
-	}, [
-		currentDate,
-		fetchMonthEvents,
-		globalCategory,
-		globalOrg,
-		globalStatus,
-		excludedKeywords,
-		interestCategories,
-	]);
-
-	useEffect(() => {
-		const getWeekRangeByDate = (date: Date) => {
-			const from = new Date(date);
-			const day = from.getDay();
-			from.setDate(from.getDate() - day);
-
-			const to = new Date(from);
-			to.setDate(to.getDate() + 6);
-
-			return {
-				from: formatDateToYYYYMMDD(from),
-				to: formatDateToYYYYMMDD(to),
-			};
-		};
-		const loadWeekEvents = async () => {
-			const { from, to } = getWeekRangeByDate(currentDate);
-			const paramWeek: FetchWeekEventArgs = {
-				from: from,
-				to: to,
-			};
-
-			if (globalCategory)
-				paramWeek.eventTypeId = globalCategory.map((g) => g.id);
-			if (globalOrg) paramWeek.orgId = globalOrg.map((g) => g.id);
-			if (globalStatus) paramWeek.statusId = globalStatus.map((g) => g.id);
-
-			await fetchWeekEvents(paramWeek);
-		};
-		loadWeekEvents();
-	}, [currentDate, fetchWeekEvents, globalCategory, globalOrg, globalStatus]);
-	
-	// DAY
-	useEffect(() => {
-		const loadDayEvents = async () => {
-			const paramDay: FetchDayEventArgs = {
-				date: currentDate,
-			};
-
-			if (globalCategory)
-				paramDay.eventTypeId = globalCategory.map((g) => g.id);
-			if (globalOrg) paramDay.orgId = globalOrg.map((g) => g.id);
-			if (globalStatus) paramDay.statusId = globalStatus.map((g) => g.id);
-
-			await fetchDayEvents(paramDay);
-		};
-		loadDayEvents();
-	}, [currentDate, fetchDayEvents, globalCategory, globalOrg, globalStatus]);
 
 	// click handler
 	const onShowMoreClick = (date: Date, view: string) => {
