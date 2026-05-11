@@ -12,4 +12,5 @@ jobs:
     with:
       bucket_name: hangsha-web-dev
       distribution_id: E3FWQLYH2W4XLU
+      ga_measurement_id: ${{ vars.VITE_GA_MEASUREMENT_ID_DEV }}
     secrets: inherit

@@ -24,6 +24,12 @@
   flex-wrap: nowrap; */
 }
 
+.dayViewWrapper :global(.rbc-time-column) {
+	display: flex;
+	flex-direction: column;
+	min-height: 100%;
+}
+
 :global(.rbc-time-gutter) {
 	min-width: fit-content;
 }
@@ -31,6 +37,7 @@
 .dayViewWrapper :global(.rbc-time-gutter .rbc-timeslot-group) {
 	border-bottom: 1px solid #f3f4f6;
 	min-height: 40px;
+	flex: 1;
 }
 
 .dayViewWrapper :global(.rbc-day-slot) {
@@ -42,11 +49,18 @@
 :global(.rbc-day-slot .rbc-timeslot-group) {
 	min-height: 40px;
 	border-bottom: 1px solid #f3f4f6;
+	flex: 1;
 }
 
 :global(.rbc-time-slot .rbc-label) {
 	color: #696969;
 	font-size: 12px;
+}
+
+.dayViewWrapper :global(.rbc-day-slot .rbc-event) {
+	position: absolute;
+	overflow: hidden;
+	box-sizing: border-box;
 }
 
 .dayViewWrapper :global(.rbc-event) {

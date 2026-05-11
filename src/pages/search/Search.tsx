@@ -13,6 +13,7 @@ import Loading from "@/widgets/Loading";
 import { Views } from "react-big-calendar";
 import calendarEventMapper from "@/util/Calendar/calendarEventMapper";
 import BottomNav from "@/widgets/BottomNav";
+import { FilterSheet } from "@/widgets/FilterSheet/FilterSheet";
 
 const SearchView = () => {
 	const {
@@ -150,6 +151,7 @@ const SearchView = () => {
 					<DetailView eventId={clickedEventId} />
 				</div>
 			)}
+			<FilterSheet />
 			<BottomNav />
 		</div>
 	);

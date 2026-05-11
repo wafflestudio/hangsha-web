@@ -9,6 +9,9 @@ on:
       distribution_id:
         required: true
         type: string
+      ga_measurement_id:
+        required: true
+        type: string
 
 jobs:
   deploy:
@@ -30,6 +33,7 @@ jobs:
       - name: Build & Export
         run: yarn build
         env:
+          VITE_GA_MEASUREMENT_ID: ${{ inputs.ga_measurement_id }}
           VITE_API_URL: ${{ vars.VITE_API_URL }}
           VITE_SOCIAL_LOGIN_BASE_URL: ${{ vars.VITE_SOCIAL_LOGIN_BASE_URL }}
 

@@ -25,3 +25,7 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+.claude/*
+.cluade/settings.json
+settings.json

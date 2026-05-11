@@ -47,6 +47,16 @@ export const ProfileButton = ({ user }: { user: User | null }) => {
 	);
 };
 
+export const FilterButton = ({ onFilterSet }: { onFilterSet: () => void }) => 
+	<button
+		type="button"
+		className={styles.filterBtn}
+		onClick={onFilterSet}
+	>
+		<img src={FilterIcon} alt="filter icon"/>
+	</button>
+
+
 const Toolbar: React.FC<ToolbarProps> = ({
 	view,
 	onNavigate,
@@ -118,13 +128,7 @@ const Toolbar: React.FC<ToolbarProps> = ({
 							&gt;
 						</button>
 						{/** 모바일뷰 전용 필터 버튼 */}
-						<button
-							type="button"
-							className={styles.filterBtn}
-							onClick={() => { setFilterSheetShowing(true) }}
-						>
-							<img src={FilterIcon} alt="filter icon"/>
-						</button>
+						<FilterButton onFilterSet={() => setFilterSheetShowing(true)} />
 					</div>
 				</div>
 

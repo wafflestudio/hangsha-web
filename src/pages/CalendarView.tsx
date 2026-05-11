@@ -1,8 +1,10 @@
 import { useEffect, useRef, useState } from "react";
-import { Views } from "react-big-calendar";
+import { useNavigate } from "react-router-dom";
+import { Views, type View } from "react-big-calendar";
 import styles from "@styles/CalendarView.module.css";
 import type {
 	CalendarEvent,
+	Event,
 	FetchDayEventArgs,
 	FetchMonthEventArgs,
 	FetchWeekEventArgs,
@@ -30,6 +32,7 @@ const CalendarView = () => {
 		dayViewEvents,
 		fetchDayEvents,
 		dayDate,
+		setDayDate,
 	} = useEvents();
 	const { globalCategory, globalOrg, globalStatus } = useFilter();
 	// detail 보이는 뷰 조정
@@ -40,28 +43,31 @@ const CalendarView = () => {
 	// 현재 기준점이 되는 날짜
 	const [currentDate, setCurrentDate] = useState<Date>(new Date());
 
+	// 캘린더 뷰 모드 추적 (월/주/일)
+	const [currentView, setCurrentView] = useState<View>(Views.MONTH);
+
 	// 월별 뷰 - 날짜 사이드 뷰
 	const [showSideMonth, setShowSideMonth] = useState<boolean>(false);
 	const [clickedDate, setClickedDate] = useState<Date>(new Date());
 
-	// need to get month data from sidebar
-	// const MONTH_EVENTS = Object.values(monthViewData?.byDate || {}).flatMap(
-	// 	(bucket) => bucket.preview,
-	// );
-	const rawMonthEvents = Object.values(monthViewData?.byDate || {}).flatMap(
-		(bucket) => bucket.events,
-	);
-	const MONTH_EVENTS = Array.from(
-		new Map(rawMonthEvents.map((event) => [event.id, event])).values(),
-	);
+	const navigate = useNavigate();
 
-	const rawWEEKEVENTS = Object.values(weekViewData?.byDate || {}).flatMap(
-		(bucket) => bucket.events,
-	);
+	// Flatten byDate buckets in chronological key order, preserving each
+	// bucket's internal sequence. Dedup keeps the first occurrence — so a
+	// multi-day event sits at the position of its earliest bucket.
+	const flattenByDate = (byDate: Record<string, { events: Event[] }> | undefined) => {
+		const seen = new Map<number, Event>();
+		const buckets = byDate ?? {};
+		for (const dateKey of Object.keys(buckets).sort()) {
+			for (const event of buckets[dateKey].events) {
+				if (!seen.has(event.id)) seen.set(event.id, event);
+			}
+		}
+		return Array.from(seen.values());
+	};
 
-	const WEEK_EVENTS = Array.from(
-		new Map(rawWEEKEVENTS.map((event) => [event.id, event])).values(),
-	);
+	const MONTH_EVENTS = flattenByDate(monthViewData?.byDate);
+	const WEEK_EVENTS = flattenByDate(weekViewData?.byDate);
 
 	// Day context data doesn't need additional transformation; it is returned as Event[]
 	useEffect(() => {
@@ -148,6 +154,7 @@ const CalendarView = () => {
 		}
 		setShowDetail(false);
 		setClickedDate(date);
+		setDayDate(date);
 	};
 	const onSelectEvent = (event: CalendarEvent) => {
 		// showSideMonth off, showDetailView on
@@ -159,6 +166,24 @@ const CalendarView = () => {
 	const handleCloseSideMonth = () => {
 		setShowSideMonth(false);
 	};
+
+	// 모바일 너비일 때 일별/사이드뷰/디테일뷰가 보이면 /main/day로 redirect
+	const [isMobile, setIsMobile] = useState<boolean>(
+		typeof window !== "undefined" && window.innerWidth <= 576,
+	);
+	useEffect(() => {
+		const checkIsMobile = () => setIsMobile(window.innerWidth <= 576);
+		window.addEventListener("resize", checkIsMobile);
+		return () => window.removeEventListener("resize", checkIsMobile);
+	}, []);
+	useEffect(() => {
+		if (
+			isMobile &&
+			(currentView === Views.DAY || showSideMonth || showDetail)
+		) {
+			navigate("/main/day");
+		}
+	}, [isMobile, currentView, showSideMonth, showDetail, navigate]);
 
 	// clicking outside of sideview (that is not event or anything else) created
 	const sidePanelRef = useRef<HTMLDivElement>(null);
@@ -194,6 +219,7 @@ const CalendarView = () => {
 						dayEvents={dayViewEvents}
 						onShowMoreClick={onShowMoreClick}
 						onSelectEvent={onSelectEvent}
+						onViewChange={setCurrentView}
 					/>
 				</div>
 				{showSideMonth && (

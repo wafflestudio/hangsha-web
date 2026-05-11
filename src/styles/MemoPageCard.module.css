@@ -1,182 +1,196 @@
 .cardContainer {
-	display: flex;
-	flex-direction: column;
-	width: 100%;
-	min-width: fit-content;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-width: fit-content;
 
-	margin-bottom: 24px;
+  margin-bottom: 24px;
 }
 
 .memoDate {
-	font-size: 14px;
-	color: #888888;
-	margin-bottom: 8px;
-	margin-left: 4px;
+  font-size: 14px;
+  color: #888888;
+  margin-bottom: 8px;
+  margin-left: 4px;
 }
 
 .cardWrapper {
-	position: relative; /* Needed for absolute positioning of the icon */
-	display: flex;
-	flex-direction: column;
-	background-color: #ffffff;
-	border-radius: 16px;
-	padding: 15px 25px;
+  position: relative; /* Needed for absolute positioning of the icon */
+  display: flex;
+  flex-direction: column;
+  background-color: #ffffff;
+  border-radius: 16px;
+  padding: 15px 25px;
 
-	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-	border: 1px solid #f0f0f0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  border: 1px solid #f0f0f0;
 }
 
 .memoTextarea {
-	align-self: center;
-	width: 100%;
-	min-height: 120px;
+  align-self: center;
+  width: 100%;
+  max-height: 150px;
+  overflow-y: auto;
 
-	font-family: inherit;
-	font-size: 16px;
-	line-height: 1.6;
-	color: #111111;
+  font-family: inherit;
+  font-size: 16px;
+  line-height: 1.6;
+  color: #111111;
 
-	resize: none;
-	outline: none;
-	transition: all 0.2s ease;
+  resize: none;
+  outline: none;
+  transition: all 0.2s ease;
 
-	/* DEFAULT STATE  */
-	background-color: transparent;
-	border: 1px solid transparent;
-	padding: 10px;
-	margin-bottom: 16px;
+  /* DEFAULT STATE  */
+  background-color: transparent;
+  border: 1px solid transparent;
+  padding: 10px;
+  margin-bottom: 16px;
 }
 
 .memoTextarea:disabled {
-	color: #111111;
-	opacity: 1;
-	cursor: default;
-	-webkit-text-fill-color: #111111;
+  color: #111111;
+  opacity: 1;
+  cursor: default;
+  -webkit-text-fill-color: #111111;
 }
 
 .activeTextarea {
-	width: 100%;
-	border: 1px solid #bbbbbb;
-	border-radius: 8px;
+  width: 100%;
+  border: 1px solid #bbbbbb;
+  border-radius: 8px;
 }
 
 .tagsContainer {
-	display: flex;
-	align-items: center;
-	flex-flow: row wrap;
-	gap: 8px;
-	padding: 0;
+  display: flex;
+  align-items: center;
+  flex-flow: row wrap;
+  gap: 8px;
+  padding: 0;
 }
 
 .memoTitle {
-	font-size: 16px;
-	font-weight: 600;
-	color: #8b8b8b;
-	margin-bottom: 12px;
-
-	white-space: nowrap;
-	overflow: hidden;
-	text-overflow: ellipsis;
+  font-size: 16px;
+  font-weight: 600;
+  color: #8b8b8b;
+  margin-bottom: 12px;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .chips {
-	display: flex;
-	flex-wrap: wrap;
-	gap: 8px;
-	list-style: none;
-	padding: 0;
-	margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
 }
 
 .chip,
 .addLabel {
-	display: flex;
-	align-items: center;
-	gap: 4px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
 
-	padding: 6px 12px;
-	background-color: #eaeaea;
-	border-radius: 6px;
-	font-size: 13px;
-	color: #666666;
+  padding: 6px 12px;
+  background-color: #eaeaea;
+  border-radius: 6px;
+  font-size: 13px;
+  color: #666666;
 }
 
 .addLabel {
-	padding: 5px 12px;
+  padding: 5px 12px;
 }
 
 .addInput {
-	background: none;
-	border: 0px;
-	outline: none;
-	field-sizing: content;
-	max-width: 400px;
-	resize: none;
+  background: none;
+  border: 0px;
+  outline: none;
+  field-sizing: content;
+  max-width: 400px;
+  resize: none;
 }
 .addIcon {
-	cursor: pointer;
-	outline: none;
+  cursor: pointer;
+  outline: none;
 }
 
 .deleteTagIcon {
-	cursor: pointer;
-	color: #999999;
-	font-size: 14px;
-	transition: color 0.2s;
+  cursor: pointer;
+  color: #999999;
+  font-size: 14px;
+  transition: color 0.2s;
 }
 
 .deleteTagIcon:hover {
-	color: #ff5555;
+  color: #ff5555;
 }
 
 .buttonsRow {
-	position: absolute;
-	bottom: 20px;
-	right: 20px;
-	display: flex;
-	flex-flow: row nowrap;
-	justify-content: end;
-	align-items: center;
-	gap: 6px;
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: end;
+  align-items: center;
+  gap: 6px;
 }
 
 .deleteBtn {
-	cursor: pointer;
-	transition: transform 0.1s;
+  cursor: pointer;
+  transition: transform 0.1s;
 }
 
 .editIcon {
-	cursor: pointer;
-	transition: transform 0.1s;
+  cursor: pointer;
+  transition: transform 0.1s;
 }
 
 .editIcon:active {
-	transform: scale(0.9);
+  transform: scale(0.9);
 }
 
 .checkIcon {
-	position: absolute;
-	bottom: 20px;
-	right: 20px;
-	cursor: pointer;
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  cursor: pointer;
 }
 
 .addTagBtn {
-	display: flex;
-	justify-content: center;
-	align-items: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
-	width: 28px;
-	height: 28px;
+  width: 28px;
+  height: 28px;
 
-	background-color: #eaeaea;
-	border-radius: 50%;
-	border: none;
-	cursor: pointer;
-	transition: background-color 0.2s;
-	padding: 0;
+  background-color: #eaeaea;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  padding: 0;
 }
 
 .addTagBtn:active {
-	background-color: #d0d0d0;
+  background-color: #d0d0d0;
+}
+
+@media (max-width: 576px) {
+  .memoTitle {
+    font-size: 15px;
+  }
+  .memoTextarea {
+    font-size: 15px;
+  }
+  .cardWrapper {
+    padding: 10px 10px;
+  }
+  .tagsContainer {
+    margin-right: 60px;
+  }
 }

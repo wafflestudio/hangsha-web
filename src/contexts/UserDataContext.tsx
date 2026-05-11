@@ -15,6 +15,7 @@ interface UserDataContextType {
 	interestCategories: Category[];
 	excludedKeywords: { id: number; keyword: string }[];
 	eventMemos: Memo[];
+	memoLoading: boolean;
 	refreshUserData: () => Promise<void>;
 	// fetchInterestCategories: () => void;
 	saveInterestPreferences: (categories: Category[]) => Promise<void>;
@@ -49,10 +50,12 @@ export const UserDataProvider = ({ children }: { children: ReactNode }) => {
 	const [bookmarkedEvents, setBookmarkedEvents] = useState<Event[]>([]);
 	const [interestCategories, setInterestCategories] = useState<Category[]>([]);
 	const [eventMemos, setEventMemos] = useState<Memo[]>([]);
+	const [memoLoading, setMemoLoading] = useState<boolean>(false);
 
 	const fetchAll = useCallback(async () => {
 		if (!isAuthenticated) return;
 		try {
+			setMemoLoading(true);
 			// Parallel fetch
 			const [excludedData, bookmarksData, interestsData, memoData] =
 				await Promise.all([
@@ -65,6 +68,7 @@ export const UserDataProvider = ({ children }: { children: ReactNode }) => {
 			setBookmarkedEvents(bookmarksData);
 			setInterestCategories(interestsData);
 			setEventMemos(memoData);
+			setMemoLoading(false);
 		} catch (error) {
 			console.error("Failed to load user data", error);
 		}
@@ -199,6 +203,7 @@ export const UserDataProvider = ({ children }: { children: ReactNode }) => {
 				bookmarkedEvents,
 				interestCategories,
 				eventMemos,
+				memoLoading,
 				refreshUserData: fetchAll,
 				// fetchInterestCategories,
 				saveInterestPreferences,

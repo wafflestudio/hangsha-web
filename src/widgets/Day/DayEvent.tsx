@@ -1,7 +1,13 @@
 import { CATEGORY_COLORS } from "@constants";
 import type { CalendarEvent } from "@types";
 import styles from "@styles/DayEvent.module.css";
-import EventDate from "../EventDate";
+
+const formatTime = (d: Date) =>
+	d.toLocaleTimeString("ko-KR", {
+		hour: "2-digit",
+		minute: "2-digit",
+		hour12: false,
+	});
 
 const DayEvent = ({ event: calendarEvent }: { event: CalendarEvent }) => {
 	const { event } = calendarEvent.resource;
@@ -17,7 +23,9 @@ const DayEvent = ({ event: calendarEvent }: { event: CalendarEvent }) => {
 			<div className={`${styles.eventContent} ${styles.eventTitle}`}>
 				{event.title}
 			</div>
-			<EventDate event={event} />
+			<div className={styles.eventContent}>
+				{formatTime(calendarEvent.start)} - {formatTime(calendarEvent.end)}
+			</div>
 			<div className={`${styles.eventContent} ${styles.eventMeta}`}>
 				{event.location === "-" ? "" : event.location}
 			</div>

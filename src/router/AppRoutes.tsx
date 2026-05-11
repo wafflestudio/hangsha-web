@@ -5,6 +5,7 @@ import LoginHandler from "../pages/auth/Login/SocialLoginHandler";
 import CompleteSignUp from "../pages/auth/OnBoarding/CompleteSignUp";
 import EmailSignUp from "../pages/auth/Signup/EmailSignUp";
 import CalendarView from "../pages/CalendarView";
+import MainDay from "../pages/MainDay";
 import TimetablePage from "../pages/timetable/TimetablePage";
 import SearchView from "@/pages/search/Search";
 import BookmarksPage from "@/pages/bookmark/Bookmark";
@@ -12,31 +13,35 @@ import MemoPage from "@/pages/memo/Memo";
 import MyPage from "@/pages/MyPage";
 import AdminRoute from "@/router/AdminRoute";
 import AdminEventsPage from "@/pages/AdminEvents";
+import PageViewTracker from "@/router/PageViewTracker";
 
 export default function AppRoutes() {
 	return (
-		<Routes>
-			<Route path="/" element={<Home />} />
-			<Route path="/auth/login" element={<Login />} />
-			<Route path="/auth/signup" element={<EmailSignUp />} />
-			<Route path="/auth/complete" element={<CompleteSignUp />} />
+		<>
+			<PageViewTracker />
+			<Routes>
+				<Route path="/" element={<Home />} />
+				<Route path="/auth/login" element={<Login />} />
+				<Route path="/auth/signup" element={<EmailSignUp />} />
+				<Route path="/auth/complete" element={<CompleteSignUp />} />
 
-			{/* OAuth Redirect */}
-			<Route path="/auth/callback" element={<LoginHandler />} />
+				{/* OAuth Redirect */}
+				<Route path="/auth/callback" element={<LoginHandler />} />
 
 			{/* Main Feature page */}
 			<Route path="/main" element={<CalendarView />} />
+			<Route path="/main/day" element={<MainDay />} />
 
-			{/* Timetable page */}
-			<Route path="/timetable" element={<TimetablePage />} />
+				{/* Timetable page */}
+				<Route path="/timetable" element={<TimetablePage />} />
 
-			{/* Search page */}
-			<Route path="/search" element={<SearchView />} />
+				{/* Search page */}
+				<Route path="/search" element={<SearchView />} />
 
 			{/* Mypage & bookmark & memo */}
 			<Route path="/my" element={<MyPage />} />
-			<Route path="/my/bookmark" element={<BookmarksPage />} />
-			<Route path="/my/memo" element={<MemoPage />} />
+			<Route path="/bookmark" element={<BookmarksPage />} />
+			<Route path="/memo" element={<MemoPage />} />
 
 			{/* Admin page */}
 			<Route
