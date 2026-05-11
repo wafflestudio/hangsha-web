@@ -42,6 +42,12 @@
 	background: #f6f6f6;
 }
 
+.memoIconBtn:disabled,
+.memoTriggerText:disabled {
+	cursor: default;
+	opacity: 0.6;
+}
+
 .memoTriggerText {
 	background: transparent;
 	border: none;
@@ -165,6 +171,11 @@ textarea.memoInput {
 .tagAddBtn:disabled {
 	cursor: default;
 	opacity: 0.8;
+}
+
+.tagInput:disabled {
+	background: #fafafa;
+	cursor: not-allowed;
 }
 
 /* chips */
