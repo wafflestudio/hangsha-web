@@ -74,7 +74,7 @@ export function TimetableGrid({
 	const hourMarks = useMemo(() => {
 		const list: { hour: number; top: number; label: string }[] = [];
 		for (let h = config.startHour; h <= config.endHour; h++) {
-			const top = (h * 60 - config.startHour * 60) * config.ppm;
+			const top = (h * 60 - config.startHour * 60) * config.ppm + config.ppm*15;
 			const labelHour = isMobile
 				? String(h % 12 || 12)
 				: formatAmPmFromMinutes(h * 60);
