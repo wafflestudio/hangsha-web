@@ -23,6 +23,7 @@ interface AuthContextType {
 	signup: (email: string, password: string) => Promise<void>;
 	completeSocialLogin: (accessToken: string) => Promise<void>;
 	logout: () => Promise<void>;
+	deleteAccount: () => Promise<void>;
 	updateUsername: (username: string) => Promise<void>;
 	clearProfileImg: () => Promise<void>;
 	setProfileImg: (file: File) => Promise<void>;
@@ -140,6 +141,17 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 		}
 	};
 
+	const deleteAccount = async () => {
+		try {
+			await auth.deleteAccount();
+			setUser(null);
+			setIsAuthenticated(false);
+		} catch (error) {
+			console.error("Server error at account deletion", error);
+			throw error;
+		}
+	};
+
 	/**
 	 * Update username
 	 */
@@ -202,6 +214,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 				signup,
 				completeSocialLogin,
 				logout,
+				deleteAccount,
 				updateUsername,
 				clearProfileImg,
 				setProfileImg,
