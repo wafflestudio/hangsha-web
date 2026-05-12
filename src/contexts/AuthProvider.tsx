@@ -57,12 +57,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 	/**
 	 * INIT : check for existing session on page load
 	 */
+	const isInitRunning = useRef(false);
 	useEffect(() => {
 		if (window.location.pathname === '/auth/callback') {
         	setIsLoading(false);
         	return;
     	}
 		const initAuth = async () => {
+			if (isInitRunning.current) return;
+            isInitRunning.current = true;
 			try {
 				const restoredUser = await auth.refresh();
 
