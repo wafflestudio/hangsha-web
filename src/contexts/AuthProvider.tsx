@@ -5,6 +5,7 @@ import {
 	useContext,
 	useEffect,
 	useState,
+	useRef,
 } from "react";
 import * as auth from "@api/auth";
 import type { User } from "@types";
