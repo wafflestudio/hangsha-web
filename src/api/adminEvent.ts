@@ -78,9 +78,7 @@ export interface AdminEventOverrideUpdateResponse extends AdminActionResponse {
 export const createAdminEvent = async (
 	body: AdminEventCreateRequest,
 ): Promise<AdminActionResponse> => {
-	const res = await api.post<AdminActionResponse>("/admin/events", body, {
-		baseURL: "",
-	});
+	const res = await api.post<AdminActionResponse>("/admin/events", body);
 	return res.data;
 };
 
@@ -91,7 +89,6 @@ export const patchAdminEvent = async (
 	const res = await api.patch<AdminActionResponse>(
 		`/admin/events/${eventId}`,
 		body,
-		{ baseURL: "" },
 	);
 	return res.data;
 };
@@ -99,16 +96,12 @@ export const patchAdminEvent = async (
 export const deleteAdminEvent = async (
 	eventId: number,
 ): Promise<AdminActionResponse> => {
-	const res = await api.delete<AdminActionResponse>(`/admin/events/${eventId}`, {
-		baseURL: "",
-	});
+	const res = await api.delete<AdminActionResponse>(`/admin/events/${eventId}`);
 	return res.data;
 };
 
 export const deleteAllAdminEvents = async (): Promise<AdminActionResponse> => {
-	const res = await api.delete<AdminActionResponse>("/admin/events/delete", {
-		baseURL: "",
-	});
+	const res = await api.delete<AdminActionResponse>("/admin/events/delete");
 	return res.data;
 };
 
@@ -121,7 +114,6 @@ export const syncAdminEventsFile = async (
 	const res = await api.post<AdminActionResponse>(
 		"/admin/events/sync-file",
 		formData,
-		{ baseURL: "" },
 	);
 
 	return res.data;
@@ -134,7 +126,6 @@ export const updateAdminEventOverrides = async (
 	const res = await api.patch<AdminEventOverrideUpdateResponse>(
 		`/admin/events/${eventId}/overrides`,
 		body,
-		{ baseURL: "" },
 	);
 	return res.data;
 };
