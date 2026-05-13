@@ -22,6 +22,9 @@ import { SlArrowLeft } from "react-icons/sl";
 import { TimeTableSidebar } from "./TimeTableSidebar";
 import TimeTableToolbar from "./TimeTableToolbar";
 import BottomNav from "@/widgets/BottomNav";
+import { useAuth } from "@/contexts/AuthProvider";
+import { useNavigate } from "react-router-dom";
+import Modal from "@/widgets/Modal";
 
 export default function TimetablePage() {
 	const now = new Date();
@@ -57,6 +60,9 @@ export default function TimetablePage() {
 	const [isAddClassPanelOpen, setIsAddClassPanelOpen] = useState(false);
 	const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 	const [isTimetableSimplified, setIsTimetableSimplified] = useState(false);
+
+	const { user } = useAuth();
+	const navigate = useNavigate();
 
 	useEffect(() => {
 		loadTimetable(year, semester);
@@ -239,6 +245,20 @@ export default function TimetablePage() {
 					setIsClicked={setIsAddClassPanelOpen}
 				/>
 			)}
+
+			{!user &&
+				<div className={styles.notFound}>
+					<Modal
+						content="시간표 페이지 이용을 위해서는 로그인을 해주세요."
+						leftText="로그인"
+						rightText="회원가입"
+						onLeftClick={() => navigate("/auth/login")}
+						onRightClick={() => navigate("/auth/signup")}
+						onClose={null}
+					/>
+				</div>
+			}
+
 			<BottomNav />
 		</div>
 	);
