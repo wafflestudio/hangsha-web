@@ -1,168 +1,218 @@
 * {
-	font-family:
-		-apple-system, BlinkMacSystemFont, "Pretendard", "Apple SD Gothic Neo",
-		sans-serif;
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Pretendard", "Apple SD Gothic Neo",
+    sans-serif;
 }
 
 body {
-	overflow: hidden;
-	padding: 0;
-	margin: 0;
+  overflow: hidden;
+  padding: 0;
+  margin: 0;
 }
 
 .container {
-	display: flex;
-	flex-direction: row;
-	width: 100vw;
-	height: 100vh;
-	overflow: hidden;
-	background-color: #ffffff;
-	padding: 0;
+  display: flex;
+  flex-direction: row;
+  width: 70%;
+  justify-self: center;
+  height: 100vh;
+  overflow: hidden;
+  background-color: #ffffff;
+  padding: 0;
 }
 
 .bookmarksContainer {
-	display: flex;
-	flex-direction: column;
-	width: 100%;
-	padding-top: 24px;
-	padding-bottom: 24px;
-	background-color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding-top: 24px;
+  padding-bottom: 24px;
+  background-color: #ffffff;
 }
 
 .backBtn {
-	cursor: pointer;
+  cursor: pointer;
 }
 
 .bookmarksHeader {
-	display: flex;
-	width: 100%;
-	justify-content: space-between;
-	align-items: center;
-	padding: 0 20px;
-	margin-bottom: 16px;
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0px;
+  margin-bottom: 16px;
 }
 
 .bookmarksPage {
-	display: flex;
-	flex-direction: column;
-	flex-grow: 1;
-	min-width: 0;
-	height: 100vh;
-	align-items: center;
-	background-color: #ffffff;
-	overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  min-width: 0;
+  height: 100vh;
+  align-items: center;
+  background-color: #ffffff;
+  overflow: hidden;
 }
 
 .bookmarksPage .bookmarksHeader {
-	width: 80%;
-	justify-content: center;
+  width: 80%;
+  justify-content: center;
 }
 
 .headerLeft {
-	display: flex;
-	align-items: center;
-	gap: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .bookmarksHeader span {
-	font-size: 20px;
-	font-weight: 700;
-	color: #111111;
-	line-height: 1.2;
+  font-size: 20px;
+  font-weight: 700;
+  color: #111111;
+  line-height: 1.2;
 }
 
 .bookmarksHeader img {
-	width: 20px;
-	height: 20px;
+  width: 20px;
+  height: 20px;
 }
 
 .row {
-	display: flex;
-	flex-grow: 1;
-	flex-direction: row;
-	align-items: center;
-	justify-content: center;
-	gap: 14px;
+  display: flex;
+  flex-grow: 1;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
 }
 
 .cardsColumn {
-	display: grid;
-	width: 80%;
-	grid-template-columns: 1fr 1fr;
-	/* grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); */
-	gap: 40px 45px;
-	padding: 30px 0 60px 0;
-	overflow-y: auto;
-	-ms-overflow-style: none;
-	scrollbar-width: none;
+  display: grid;
+  width: 80%;
+  grid-template-columns: 1fr 1fr;
+  /* grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); */
+  gap: 40px 45px;
+  padding: 30px 0 60px 0;
+  overflow-y: auto;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
 .cardsColumn::-webkit-scrollbar {
-	display: none;
+  display: none;
 }
 
 .noneText {
-	font-size: 14px;
-	font-weight: 400;
-	color: #888888;
-	align-self: center;
-	white-space: pre-line;
+  font-size: 14px;
+  font-weight: 400;
+  color: #888888;
+  align-self: center;
+  white-space: pre-line;
 }
 
 .cardsRow {
-	display: flex;
-	flex-direction: row;
-	gap: 14px;
+  display: flex;
+  flex-direction: row;
+  gap: 14px;
 
-	/* Horizontal Scrolling Logic */
-	overflow-x: auto;
-	scroll-behavior: smooth;
+  /* Horizontal Scrolling Logic */
+  overflow-x: auto;
+  scroll-behavior: smooth;
 
-	padding: 10px 20px;
+  padding: 10px 20px;
 
-	-ms-overflow-style: none;
-	scrollbar-width: none;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
 .cardsRow::-webkit-scrollbar {
-	display: none;
-}
-
-@media (max-width: 476px) {
-	.bookmarksHeader,
-	.cardsColumn {
-		width: 92%;
-	}
-
-	.cardsColumn {
-		grid-template-columns: 1fr;
-	}
+  display: none;
 }
 
 .sidePanel {
-	width: 340px;
-	height: 100vh;
-	border-left: 1px solid #e0e0e0;
-	background-color: #ffffff;
-	box-shadow: -4px 0 24px rgba(0, 0, 0, 0.05);
-	z-index: 20;
-	overflow-y: auto;
-	flex-shrink: 0;
-	animation: slideIn 0.3s ease-out;
+  position: absolute;
+  right: 0;
+  top: 0;
+
+  max-width: 430px;
+  height: 100vh;
+  border-left: 1px solid #e0e0e0;
+  background-color: #ffffff;
+  box-shadow: -4px 0 24px rgba(0, 0, 0, 0.05);
+  z-index: 110;
+  overflow-y: auto;
+  flex-shrink: 0;
+  animation: slideIn 0.3s ease-out;
 }
 
 @keyframes slideIn {
-	from {
-		transform: translateX(100%);
-		opacity: 0;
-	}
-	to {
-		transform: translateX(0);
-		opacity: 1;
-	}
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
 }
+
+@media (max-width: 1200px) {
+  .container {
+    width: 80%;
+  }
+}
+
 @media (max-width: 1024px) {
-	.sidePanel {
-		width: 340px;
-	}
+  .sidePanel {
+    width: 340px;
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    width: 90%;
+  }
+  .cardsColumn {
+    gap: 25px 30px;
+  }
+}
+
+@media (max-width: 576px) {
+  .container {
+    width: 100%;
+  }
+
+  .bookmarksHeader {
+    padding: 0px;
+  }
+
+  .cardsRow {
+    gap: 5px;
+    padding: 0;
+  }
+
+  .bookmarksHeader span {
+    font-size: 17px;
+  }
+
+  .sidePanel {
+    width: 100%;
+  }
+
+  .cardsColumn {
+    gap: 15px 5px;
+  }
+}
+
+@media (max-width: 455px) {
+  .bookmarksHeader {
+    width: 100%;
+  }
+
+  .cardsColumn {
+    display: flex;
+    gap: 25px 0px;
+    flex-direction: column;
+    align-items: center;
+  }
 }

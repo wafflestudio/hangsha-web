@@ -1,15 +1,23 @@
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
 	DAY_LABELS_KO,
 	type Day,
 	type GetCoursesResponse,
 	type Course,
+	type CalendarEvent,
+	type Event,
 } from "../../util/types";
 import type {
 	GridConfig,
 	TimetableGridBlock,
+	LayoutedBlock,
+} from "../../util/weekly_timetable/layout";
+import {
+	flattenEventsToBlocks,
+	layoutDayBlocksLane,
 } from "../../util/weekly_timetable/layout";
 import { formatAmPmFromMinutes } from "../../util/weekly_timetable/time";
+import { CATEGORY_COLORS } from "../../util/constants";
 import { MdCancel } from "react-icons/md";
 import styles from "@styles/Timetable.module.css";
 
@@ -24,6 +32,10 @@ export type TimetableProps = {
 	onSelectBlock?: (id: number, item: Course) => void;
 	onAddBlock?: (id: number, item: Course) => void;
 	onRemoveBlock?: (timetableId: number, enrollId: number) => Promise<void>;
+	isSimplified?: boolean;
+	isLoading?: boolean;
+	weekEvents?: CalendarEvent[];
+	onSelectEvent?: (event: Event) => void;
 	dayLabels?: Record<Day, string>;
 };
 
@@ -35,23 +47,41 @@ export function TimetableGrid({
 	config,
 	toBlocks,
 	onRemoveBlock,
+	isSimplified = false,
+	isLoading = false,
+	weekEvents = [],
+	onSelectEvent,
 	dayLabels = DAY_LABELS_KO,
 }: TimetableProps) {
+	const [isMobile, setIsMobile] = useState(false);
 	const blocks = useMemo(
 		() => toBlocks(items, config),
 		[items, config, toBlocks],
 	);
-	const totalHeight = config.endHour * 60 * config.ppm;
+	const totalHeight = (config.endHour - config.startHour) * 60 * config.ppm;
+
+	useEffect(() => {
+		const checkIsMobile = () => {
+			setIsMobile(window.innerWidth <= 576);
+		};
+
+		checkIsMobile();
+		window.addEventListener("resize", checkIsMobile);
+
+		return () => window.removeEventListener("resize", checkIsMobile);
+	}, []);
 
 	const hourMarks = useMemo(() => {
 		const list: { hour: number; top: number; label: string }[] = [];
 		for (let h = config.startHour; h <= config.endHour; h++) {
-			const top = (h * 60 - config.startHour * 60) * config.ppm;
-			const labelHour = formatAmPmFromMinutes(h * 60);
+			const top = (h * 60 - config.startHour * 60) * config.ppm + config.ppm*15;
+			const labelHour = isMobile
+				? String(h % 12 || 12)
+				: formatAmPmFromMinutes(h * 60);
 			list.push({ hour: h, top, label: labelHour });
 		}
 		return list;
-	}, [config]);
+	}, [config, isMobile]);
 
 	const blocksByDay = useMemo(() => {
 		const map: Record<Day, TimetableGridBlock<Course>[]> = {
@@ -67,8 +97,32 @@ export function TimetableGrid({
 		return map;
 	}, [blocks]);
 
+	const eventBlocksByDay = useMemo(() => {
+		const eventBlocks = flattenEventsToBlocks(
+			weekEvents.filter((event) => event.allDay !== true),
+			config,
+		);
+		const map: Record<Day, LayoutedBlock[]> = {
+			0: [],
+			1: [],
+			2: [],
+			3: [],
+			4: [],
+			5: [],
+			6: [],
+		};
+
+		for (const day of Days) {
+			map[day] = layoutDayBlocksLane(eventBlocks.filter((b) => b.day === day));
+		}
+
+		return map;
+	}, [weekEvents, config]);
+
 	return (
-		<div className={styles.gridWrap}>
+		<div
+			className={`${styles.gridWrap} ${isLoading ? styles.gridWrapLoading : ""}`}
+		>
 			<div className={styles.headerRow}>
 				<div className={styles.timeGutterHeader} />
 				{Days.map((d) => (
@@ -101,6 +155,9 @@ export function TimetableGrid({
 							config={config}
 							// onSelectBlock={onSelectBlock}
 							onRemoveBlock={onRemoveBlock}
+							isSimplified={isSimplified}
+							eventBlocks={isSimplified ? eventBlocksByDay[d] : []}
+							onSelectEvent={onSelectEvent}
 						/>
 					))}
 				</div>
@@ -116,6 +173,9 @@ function DayColumn<T>({
 	config,
 	onSelectBlock,
 	onRemoveBlock,
+	isSimplified,
+	eventBlocks,
+	onSelectEvent,
 }: {
 	timetableId: number;
 	height: number;
@@ -123,6 +183,9 @@ function DayColumn<T>({
 	config: GridConfig;
 	onSelectBlock?: (id: number, item: T) => void;
 	onRemoveBlock?: (timetableId: number, enrollId: number) => Promise<void>;
+	isSimplified: boolean;
+	eventBlocks: LayoutedBlock[];
+	onSelectEvent?: (event: Event) => void;
 }) {
 	return (
 		<div className={styles.dayCol} style={{ height }}>
@@ -131,8 +194,14 @@ function DayColumn<T>({
 			{blocks.map((b) => (
 				<button
 					key={b.id}
-					className={styles.block}
-					style={{ top: b.top, height: b.height }}
+					className={`${styles.block} ${
+						isSimplified ? styles.simplifiedBlock : ""
+					}`}
+					style={{
+						top: b.top,
+						height: b.height,
+						width: `${b.widthPct}%`,
+					}}
 					onClick={() => onSelectBlock?.(b.id, b.raw)}
 					type="button"
 				>
@@ -154,6 +223,35 @@ function DayColumn<T>({
 					</div>
 				</button>
 			))}
+
+			{eventBlocks.map((b) => {
+				const { event } = b.raw.resource;
+				const color = CATEGORY_COLORS[event.eventTypeId] || CATEGORY_COLORS[6];
+
+				return (
+					<button
+						key={`event-${b.blockId}-${b.sourceId}`}
+						className={styles.eventBlock}
+						style={{
+							top: b.top,
+							height: b.height,
+							left: `${b.leftPct}%`,
+							width: `${b.widthPct}%`,
+							backgroundColor: color,
+							opacity: b.opacity,
+							zIndex: b.zIndex,
+						}}
+						onClick={() => onSelectEvent?.(event)}
+						type="button"
+					>
+						<div className={styles.eventBlockTitle}>{b.title}</div>
+						<div className={styles.eventBlockTime}>
+							{formatAmPmFromMinutes(b.startMin)} -{" "}
+							{formatAmPmFromMinutes(b.endMin)}
+						</div>
+					</button>
+				);
+			})}
 		</div>
 	);
 }

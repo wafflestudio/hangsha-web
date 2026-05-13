@@ -3,9 +3,22 @@ import { TokenService } from "./tokenService";
 
 const API_URL = import.meta.env.VITE_API_URL || "";
 
+let isRefreshing = false;
+let refreshSubscribers: ((token: string) => void)[] = [];
+
+const onRefreshed = (accessToken: string) => {
+    refreshSubscribers.forEach((callback) => callback(accessToken));
+    refreshSubscribers = [];
+};
+
+const addRefreshSubscriber = (callback: (token: string) => void) => {
+    refreshSubscribers.push(callback);
+};
+
 const api = axios.create({
 	baseURL: API_URL,
 	withCredentials: true,
+	paramsSerializer: { indexes: null },
 	// headers: {
 	// 	"Content-Type": "application/json",
 	// },
@@ -16,7 +29,6 @@ api.interceptors.request.use(
 		const url = config.url ?? "";
 
 		const isAuthApi =
-			url.includes("/auth/login/social") ||
 			url.includes("/auth/login") ||
 			url.includes("/auth/register") ||
 			url.includes("/auth/refresh");
@@ -45,7 +57,6 @@ api.interceptors.response.use(
 		const url = originalRequest?.url ?? "";
 
 		const isAuthApi =
-			url.includes("/auth/login/social") ||
 			url.includes("/auth/login") ||
 			url.includes("/auth/register") ||
 			url.includes("/auth/refresh");
@@ -55,7 +66,17 @@ api.interceptors.response.use(
 		}
 
 		if (error.response?.status === 401 && !originalRequest._retry) {
+			if (isRefreshing) {
+                return new Promise((resolve) => {
+                    addRefreshSubscriber((token: string) => {
+                        originalRequest.headers.Authorization = `Bearer ${token}`;
+                        resolve(api(originalRequest));
+                    });
+                });
+            }
+			
 			originalRequest._retry = true;
+			isRefreshing = true;
 
 			try {
 				const { data } = await axios.post<{ accessToken: string }>(
@@ -66,7 +87,10 @@ api.interceptors.response.use(
 
 				// update storage
 				TokenService.setToken(data.accessToken);
-
+				
+				isRefreshing = false;
+				onRefreshed(data.accessToken);
+				
 				// update header
 				originalRequest.headers.Authorization = `Bearer ${data.accessToken}`;
 
@@ -74,6 +98,8 @@ api.interceptors.response.use(
 				return api(originalRequest);
 			} catch (refreshError) {
 				// refresh failed :
+				isRefreshing = false;
+                refreshSubscribers = [];
 				TokenService.clearTokens();
 				console.error("Session expired. Please sign in again");
 				return Promise.reject(refreshError);

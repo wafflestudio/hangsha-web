@@ -34,12 +34,12 @@ export const WeekGrid = forwardRef<HTMLDivElement, WeekGridProps>(
 			[items, config, toBlocks],
 		);
 
-		const totalHeight = config.endHour * 60 * config.ppm;
+		const totalHeight = (config.endHour - config.startHour) * 60 * config.ppm;
 
 		const hourMarks = useMemo(() => {
 			const list: { hour: number; top: number; label: string }[] = [];
 			for (let h = config.startHour; h <= config.endHour; h++) {
-				const top = (h * 60 - config.startHour * 60) * config.ppm;
+				const top = (h * 60 - config.startHour * 60) * config.ppm + config.ppm*15;
 				const labelHour = formatAmPmFromMinutes(h * 60);
 				list.push({ hour: h, top, label: labelHour });
 			}

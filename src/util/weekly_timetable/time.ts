@@ -17,8 +17,10 @@ export function clampDate(d: Date, min: Date, max: Date) {
 // }
 
 function minutesToHHMM(min: number) {
-	const hh = Math.floor(min / 60);
-	const mm = min % 60;
+	const minutesInDay = 24 * 60;
+	const normalizedMin = ((min % minutesInDay) + minutesInDay) % minutesInDay;
+	const hh = Math.floor(normalizedMin / 60);
+	const mm = normalizedMin % 60;
 	return { hh, mm };
 }
 
@@ -31,7 +33,7 @@ export function formatAmPmFromMinutes(min: number) {
 	const { hh, mm } = minutesToHHMM(min);
 	const am = hh < 12;
 	const hour12 = hh % 12 === 0 ? 12 : hh % 12;
-	return `${hour12}"${pad2(mm)} ${am ? "AM" : "PM"}`;
+	return `${hour12}:${pad2(mm)} ${am ? "AM" : "PM"}`;
 }
 
 export function buildTimeOptions(step = STEP_MIN) {

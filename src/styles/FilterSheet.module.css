@@ -1,0 +1,369 @@
+/* ============================================================
+ * FilterSheet.module.css
+ * Bottom-sheet filter UI that slides up from the bottom, and
+ * dismisses by sliding back down (either via the backdrop, the
+ * footer button, or a swipe-down gesture on the drag handle).
+ * ========================================================== */
+
+/* --- Overlay (backdrop) --------------------------------------------------- */
+.overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  z-index: 1000;
+  transition: background-color 260ms ease;
+  pointer-events: none;
+}
+
+.overlayVisible {
+  background-color: rgba(0, 0, 0, 0.35);
+  pointer-events: auto;
+}
+
+/* --- Sheet container ------------------------------------------------------ */
+.sheet {
+  width: 100%;
+  max-width: 576px;
+  background-color: #ffffff;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+  box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.12);
+  display: flex;
+  flex-direction: column;
+  max-height: 75vh;
+  /* Start off-screen; transform animates in */
+  transform: translateY(100%);
+  transition: transform 280ms cubic-bezier(0.22, 1, 0.36, 1);
+  /* Respect iOS home indicator */
+  padding-bottom: env(safe-area-inset-bottom);
+  will-change: transform;
+}
+
+.sheetVisible {
+  transform: translateY(0);
+}
+
+/* --- Drag handle ---------------------------------------------------------- */
+.handleArea {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px 0 6px;
+  cursor: grab;
+  touch-action: none; /* lets us own the vertical drag */
+}
+
+.handleArea:active {
+  cursor: grabbing;
+}
+
+.handle {
+  width: 40px;
+  height: 4px;
+  border-radius: 2px;
+  background-color: #d9d9d9;
+}
+
+/* --- Tab bar -------------------------------------------------------------- */
+.tabBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 20px 0;
+}
+
+.tab {
+  flex: 1;
+  background: none;
+  border: none;
+  padding: 12px 4px;
+  font-size: 15px;
+  color: #9a9a9a;
+  cursor: pointer;
+  font-weight: 500;
+  transition: color 150ms ease;
+}
+
+.tabActive {
+  color: #111111;
+  font-weight: 700;
+}
+
+.tabDivider {
+  height: 1px;
+  width: 80%;
+  background-color: #cacaca;
+  margin: 0 auto 4px;
+}
+
+/* --- Body (scrollable area) ----------------------------------------------- */
+.body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 12px 20px 16px;
+  -webkit-overflow-scrolling: touch;
+}
+
+.loading {
+  padding: 24px 4px;
+  color: #9a9a9a;
+  font-size: 14px;
+}
+
+/* --- Option list (checkbox rows) ----------------------------------------- */
+.optionList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.optionRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 12px 14px;
+  background: #ffffff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  text-align: left;
+  font-size: 14px;
+  color: #222222;
+  transition: background-color 120ms ease;
+}
+
+.optionRow:hover {
+  background-color: #f7f7f7;
+}
+
+/* "All" row always stays white regardless of tab */
+.allRow {
+  background-color: #ffffff;
+}
+
+.allRow:hover {
+  background-color: #f7f7f7;
+}
+
+/* Colored rows (category tab) keep their background on hover */
+.coloredRow:hover {
+  filter: brightness(0.97);
+  background-color: inherit;
+}
+
+.optionText {
+  flex: 1;
+  font-size: 14px;
+  line-height: 1.3;
+}
+
+/* Custom checkbox square */
+.checkbox {
+  width: 18px;
+  height: 18px;
+  border-radius: 4px;
+  border: 1.5px solid #c4c4c4;
+  background-color: #ffffff;
+  flex-shrink: 0;
+  position: relative;
+  transition: all 120ms ease;
+}
+
+.checkboxChecked {
+  background-color: #3b82f6;
+  border-color: #3b82f6;
+}
+
+.checkboxChecked::after {
+  content: "";
+  position: absolute;
+  left: 5px;
+  top: 1px;
+  width: 4px;
+  height: 9px;
+  border: solid #ffffff;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+/* --- Exclude panel -------------------------------------------------------- */
+.excludePanel {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.excludeHelp {
+  margin: 0;
+  color: #6b6b6b;
+  font-size: 13px;
+}
+
+.excludeInputRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-bottom: 1px solid #e4e4e4;
+  padding: 6px 2px;
+}
+
+.excludeInputIcon {
+  color: #9a9a9a;
+  flex-shrink: 0;
+}
+
+.excludeInput {
+  flex: 1;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 16px; /* mobile: prevents iOS zoom-on-focus */
+  padding: 6px 0;
+  color: #222222;
+}
+
+.excludeInput::placeholder {
+  color: #b5b5b5;
+}
+
+.excludeList {
+  list-style: none;
+  padding: 0;
+  margin: 4px 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.excludeItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 2px;
+  font-size: 14px;
+  color: #222222;
+}
+
+.excludeRemove {
+  background: none;
+  border: none;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #8a8a8a;
+  cursor: pointer;
+}
+
+.excludeRemove:hover {
+  color: #444444;
+}
+
+/* --- Auth prompt (shown when user is not logged in) ---------------------- */
+.authPrompt {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 24px 12px 8px;
+  text-align: center;
+}
+
+.authPromptText {
+  margin: 0;
+  color: #3a3a3a;
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.authButtons {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  max-width: 240px;
+}
+
+.authButton {
+  padding: 12px 20px;
+  border: 1px solid #e4e4e4;
+  background-color: #ffffff;
+  border-radius: 999px;
+  color: #111111;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 120ms ease;
+  box-shadow: 0 3px 2px 0 rgba(0, 0, 0, 0.1);
+}
+
+.authButton:hover {
+  background-color: #f5f5f5;
+}
+
+.authButtonPrimary {
+  background-color: #494949;
+  border-color: #494949;
+  color: #ffffff;
+}
+
+.authButtonPrimary:hover {
+  background-color: #303030;
+}
+
+/* --- Footer --------------------------------------------------------------- */
+.footer {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 20px 16px;
+  background-color: #ffffff;
+}
+
+.resetButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 12px 18px;
+  border: 1px solid #e4e4e4;
+  background-color: #dddddd;
+  border-radius: 999px;
+  color: #3a3a3a;
+  font-size: 15px;
+  cursor: pointer;
+  box-shadow: 0 3px 2px 0 rgba(0, 0, 0, 0.1);
+  transition: background-color 120ms ease;
+}
+
+.resetButton:hover {
+  background-color: #f5f5f5;
+}
+
+.applyButton {
+  flex: 1;
+  padding: 14px 20px;
+  border: 1px solid #f5f5f5;
+  background-color: #ffffff;
+  border-radius: 999px;
+  color: #111111;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 120ms ease;
+  box-shadow: 0 3px 2px 0 rgba(0, 0, 0, 0.1);
+}
+
+.applyButton:hover {
+  background-color: #f5f5f5;
+}
+
+@media (min-width: 576px) {
+  .overlay {
+    display: none;
+  }
+}

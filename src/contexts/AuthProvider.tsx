@@ -1,13 +1,20 @@
 import {
 	createContext,
 	type ReactNode,
+	useCallback,
 	useContext,
 	useEffect,
 	useState,
+	useRef,
 } from "react";
 import * as auth from "@api/auth";
-import type { Provider, User } from "@types";
+import type { User } from "@types";
 import { TokenService } from "@/api/tokenService";
+import {
+	clearAnalyticsUserId,
+	setAnalyticsUserId,
+	setSignedInState,
+} from "@/lib/ga4";
 
 interface AuthContextType {
 	user: User | null;
@@ -15,12 +22,9 @@ interface AuthContextType {
 	isLoading: boolean;
 	login: (email: string, password: string) => Promise<void>;
 	signup: (email: string, password: string) => Promise<void>;
-	socialLogin: (
-		provider: Provider,
-		code: string,
-		codeVerifier?: string,
-	) => Promise<void>;
+	completeSocialLogin: (accessToken: string) => Promise<void>;
 	logout: () => Promise<void>;
+	deleteAccount: () => Promise<void>;
 	updateUsername: (username: string) => Promise<void>;
 	clearProfileImg: () => Promise<void>;
 	setProfileImg: (file: File) => Promise<void>;
@@ -34,11 +38,35 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 	const [isAuthenticated, setIsAuthenticated] = useState(false);
 	const [isLoading, setIsLoading] = useState(true);
 
+	useEffect(() => {
+		if (!isAuthenticated || user === null) {
+			clearAnalyticsUserId();
+			setSignedInState(false);
+			return;
+		}
+
+		setSignedInState(true);
+
+		if (user.id !== undefined && user.id !== null) {
+			setAnalyticsUserId(String(user.id));
+			return;
+		}
+
+		clearAnalyticsUserId();
+	}, [isAuthenticated, user]);
+
 	/**
 	 * INIT : check for existing session on page load
 	 */
+	const isInitRunning = useRef(false);
 	useEffect(() => {
+		if (window.location.pathname === '/auth/callback') {
+        	setIsLoading(false);
+        	return;
+    	}
 		const initAuth = async () => {
+			if (isInitRunning.current) return;
+            isInitRunning.current = true;
 			try {
 				const restoredUser = await auth.refresh();
 
@@ -74,24 +102,18 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 		}
 	};
 
-	const socialLogin = async (
-		provider: Provider,
-		code: string,
-		codeVerifier?: string,
-	) => {
-		try {
-			await auth.socialLogin(provider, code, codeVerifier);
-			if (!TokenService.getToken()) {
-				throw new Error("Social login did not set access token");
-			}
-			const userData = await auth.getUser();
-			setUser(userData);
-			setIsAuthenticated(true);
-		} catch (err) {
-			console.error("Social Login failed:", err);
-			throw err;
-		}
-	};
+  	const completeSocialLogin = useCallback(async (accessToken: string) => {
+    	try {
+    	  	TokenService.setToken(accessToken);
+      		const userData = await auth.getUser();
+      		setUser(userData);
+      		setIsAuthenticated(true);
+    	} catch (err) {
+      		TokenService.clearTokens();
+      		console.error("Completing social login failed:", err);
+      		throw err;
+    	}
+	  }, []);
 
 	/**
 	 * Signup Function
@@ -120,6 +142,17 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 			setUser(null);
 			setIsAuthenticated(false);
 			// logoout function already clears the TokenService
+		}
+	};
+
+	const deleteAccount = async () => {
+		try {
+			await auth.deleteAccount();
+			setUser(null);
+			setIsAuthenticated(false);
+		} catch (error) {
+			console.error("Server error at account deletion", error);
+			throw error;
 		}
 	};
 
@@ -183,8 +216,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 				isLoading,
 				login,
 				signup,
-				socialLogin,
+				completeSocialLogin,
 				logout,
+				deleteAccount,
 				updateUsername,
 				clearProfileImg,
 				setProfileImg,

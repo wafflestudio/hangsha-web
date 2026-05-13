@@ -1,4 +1,5 @@
 import { useUserData } from "@/contexts/UserDataContext";
+import { useAuth } from "@/contexts/AuthProvider";
 import styles from "@styles/Memo.module.css";
 import type { Memo } from "@/util/types";
 import { formatDateDotParsed } from "@/util/Calendar/dateFormatter";
@@ -8,6 +9,8 @@ import { useNavigate } from "react-router-dom";
 import MemoPageCard from "./MemoPageCard";
 import { useState } from "react";
 import Modal from "@/widgets/Modal";
+import Loading from "@/widgets/Loading";
+import BottomNav from "@/widgets/BottomNav";
 
 const MemoWidgetCard = ({ memo }: { memo: Memo }) => {
 	return (
@@ -42,7 +45,7 @@ export const MemoWidget = () => {
 					className={styles.backBtn}
 					color="ABABAB"
 					size={18}
-					onClick={() => navigate("/my/memo")}
+					onClick={() => navigate("/memo")}
 				/>
 			</div>
 			<div className={styles.cardsRow}>
@@ -60,14 +63,30 @@ export const MemoWidget = () => {
 };
 
 const MemoPage = () => {
-	const { eventMemos, deleteMemo } = useUserData();
+	const { eventMemos, deleteMemo, memoLoading } = useUserData();
 	const [deletingMemoId, setDeletingMemoId] = useState<number | null>(null);
+	const { user } = useAuth();
 	const navigate = useNavigate();
 
 	const handleDelete = async () => {
 		if (deletingMemoId) await deleteMemo(deletingMemoId);
 		setDeletingMemoId(null);
 	};
+	if (memoLoading) return <Loading />;
+	if (!user) {
+		return (<div className={styles.notFound}>
+			<Navigationbar />
+			<Modal
+				content="메모 이용을 위해서는 로그인을 해주세요."
+				leftText="로그인"
+				rightText="회원가입"
+				onLeftClick={() => navigate("/auth/login")}
+				onRightClick={() => navigate("/auth/signup")}
+				onClose={null}
+			/>
+			<BottomNav />
+		</div>);
+	}
 
 	return (
 		<div className={styles.main}>
@@ -78,7 +97,8 @@ const MemoPage = () => {
 						className={styles.backBtn}
 						color="ABABAB"
 						size={18}
-						onClick={() => navigate("/my")}
+						onClick={() => (window.history.length > 1 ? navigate(-1) : navigate("/my"))}
+
 					/>
 					<div className={styles.row}>
 						<span>내 메모 목록</span>
@@ -106,6 +126,7 @@ const MemoPage = () => {
 					onClose={() => setDeletingMemoId(null)}
 				/>
 			)}
+			<BottomNav />
 		</div>
 	);
 };

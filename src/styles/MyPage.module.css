@@ -45,6 +45,239 @@
 	width: 80%;
 }
 
+.bugReportSection {
+	display: flex;
+	flex-direction: column;
+	gap: 14px;
+	width: 80%;
+	margin-top: 24px;
+	padding: 20px;
+	border-top: 1px solid #eeeeee;
+}
+
+.bugReportHeader {
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+}
+
+.bugReportTitle {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	color: #222222;
+}
+
+.bugReportTitle strong {
+	font-size: 16px;
+	font-weight: 700;
+}
+
+.bugReportHeader span {
+	color: #777777;
+	font-size: 13px;
+	font-weight: 500;
+	line-height: 1.4;
+	word-break: keep-all;
+}
+
+.bugReportForm {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+
+.bugReportInput,
+.bugReportTextarea {
+	width: 100%;
+	border: 1px solid #e1e1e1;
+	border-radius: 8px;
+	background-color: #ffffff;
+	color: #222222;
+	font-size: 14px;
+	font-weight: 500;
+	outline: none;
+}
+
+.bugReportInput {
+	height: 42px;
+	padding: 0 12px;
+}
+
+.bugReportTextarea {
+	min-height: 120px;
+	padding: 12px;
+	resize: vertical;
+	line-height: 1.5;
+}
+
+.bugReportInput::placeholder,
+.bugReportTextarea::placeholder {
+	color: #9b9b9b;
+}
+
+.bugReportInput:focus,
+.bugReportTextarea:focus {
+	border-color: #9a9a9a;
+}
+
+.bugReportInput:disabled,
+.bugReportTextarea:disabled {
+	background-color: #f8f8f8;
+	cursor: not-allowed;
+}
+
+.bugReportSubmitButton {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	align-self: flex-end;
+	min-width: 96px;
+	min-height: 40px;
+	padding: 0 16px;
+	border: none;
+	border-radius: 8px;
+	background-color: #494949;
+	color: #ffffff;
+	font-size: 14px;
+	font-weight: 700;
+	cursor: pointer;
+	transition: background-color 0.2s;
+}
+
+.bugReportSubmitButton:hover {
+	background-color: #303030;
+}
+
+.bugReportSubmitButton:disabled {
+	cursor: not-allowed;
+	opacity: 0.6;
+}
+
+.logoutSection {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 16px;
+	width: 80%;
+	margin-top: 24px;
+	padding: 20px;
+	border-top: 1px solid #eeeeee;
+}
+
+.logoutText {
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+	min-width: 0;
+}
+
+.logoutText strong {
+	color: #222222;
+	font-size: 16px;
+	font-weight: 700;
+}
+
+.logoutText span {
+	color: #777777;
+	font-size: 13px;
+	font-weight: 500;
+	line-height: 1.4;
+	word-break: keep-all;
+}
+
+.logoutButton {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 8px;
+	flex-shrink: 0;
+	min-height: 40px;
+	padding: 0 14px;
+	border: 1px solid #d9d9d9;
+	border-radius: 8px;
+	background-color: #ffffff;
+	color: #494949;
+	font-size: 14px;
+	font-weight: 700;
+	cursor: pointer;
+	transition:
+		background-color 0.2s,
+		border-color 0.2s;
+}
+
+.logoutButton:hover {
+	background-color: #f7f7f7;
+	border-color: #bdbdbd;
+}
+
+.logoutButton:disabled {
+	cursor: not-allowed;
+	opacity: 0.6;
+}
+
+.accountDeletionSection {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 16px;
+	width: 80%;
+	margin-top: 24px;
+	padding: 20px;
+	border-top: 1px solid #eeeeee;
+}
+
+.accountDeletionText {
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+	min-width: 0;
+}
+
+.accountDeletionText strong {
+	color: #222222;
+	font-size: 16px;
+	font-weight: 700;
+}
+
+.accountDeletionText span {
+	color: #777777;
+	font-size: 13px;
+	font-weight: 500;
+	line-height: 1.4;
+	word-break: keep-all;
+}
+
+.deleteAccountButton {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 8px;
+	flex-shrink: 0;
+	min-height: 40px;
+	padding: 0 14px;
+	border: 1px solid #f1b8b8;
+	border-radius: 8px;
+	background-color: #ffffff;
+	color: #d33b3b;
+	font-size: 14px;
+	font-weight: 700;
+	cursor: pointer;
+	transition:
+		background-color 0.2s,
+		border-color 0.2s;
+}
+
+.deleteAccountButton:hover {
+	background-color: #fff5f5;
+	border-color: #df8f8f;
+}
+
+.deleteAccountButton:disabled {
+	cursor: not-allowed;
+	opacity: 0.6;
+}
+
 .profileContainer {
 	display: flex;
 	flex-direction: column;
@@ -66,14 +299,18 @@
 	width: 100px;
 	height: 100px;
 	margin: 0 auto;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
 }
 
 .profileImgWrapper img {
 	width: 100%;
-	height: 100%;
 	border-radius: 50%;
 	object-fit: cover;
 	border: 1px solid #f0f0f0;
+	aspect-ratio: 1 / 1;
 }
 
 .editInput {
@@ -148,74 +385,73 @@
 
 .timeTableBtn,
 .preferenceCol {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  width: 100%;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	width: 100%;
 
 	padding: 10px 20px;
 
-  background-color: #ffffff;
-  border: 1px solid #d0d0d0;
-  border-radius: 16px;
-  transition: background-color 0.2s;
+	background-color: #ffffff;
+	border: 1px solid #d0d0d0;
+	border-radius: 16px;
+	transition: background-color 0.2s;
 }
 
 .preferenceCol {
-  flex-direction: column;
-  transition: none;
-  height: fit-content;
-  align-items: start;
-  gap: 8px;
-  margin-bottom: 8px;
-}
-.preferenceCol > span {
-  font-size: 16px;
-  font-weight: 500;
-  color: #111111;
-  margin-right: 12px;
+	flex-direction: column;
+	transition: none;
+	height: fit-content;
+	align-items: start;
+	gap: 12px;
+	margin-bottom: 8px;
 }
 
 .preferenceCol > span.notYetText {
-  align-self: center;
-  font-size: 13px;
-  font-weight: 600;
-  color: #6a6a6a;
-  margin-right: 12px;
+	align-self: center;
+	font-size: 13px;
+	font-weight: 600;
+	color: #6a6a6a;
+	margin-right: 12px;
 }
 
 .preferenceHeader {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+}
+
+.preferenceHeader span {
+	font-size: 16px;
+	font-weight: 500;
 }
 
 .preferenceChips {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 8px;
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  margin-left: 16px;
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 8px;
+	list-style: none;
+	padding: 0;
+	margin: 0;
 }
 
 .preferenceChip {
-  font-size: 13px;
-  font-weight: 600;
-  color: #ffffff;
-  padding: 6px 12px;
-  border-radius: 999px;
-  white-space: nowrap;
+	font-size: 13px;
+	font-weight: 600;
+	color: #ffffff;
+	padding: 6px 12px;
+	border-radius: 999px;
+	white-space: nowrap;
 }
 
 .category {
-  background-color: #6fd2ff;
+	background-color: #6fd2ff;
 }
 .organization {
-  background-color: #36c986;
+	background-color: #36c986;
 }
 
 .timeTableBtn:active {
@@ -232,4 +468,57 @@
 	font-size: 16px;
 	font-weight: 500;
 	color: #111111;
+}
+
+@media (max-width: 576px) {
+	.profileContainer {
+		width: 100%;
+	}
+	.nameText {
+		font-size: 18px;
+	}
+	.emailText {
+		font-size: 14px;
+	}
+	.preferenceChip {
+		font-size: 12px;
+	}
+	.preferenceCol {
+		padding: 10px 10px;
+	}
+	.preferenceChips {
+		margin-left: 8px;
+	}
+	.widgetsWrapper {
+		width: 100%;
+		padding: 24px 20px;
+	}
+	.bugReportSection {
+		width: 100%;
+		padding: 20px;
+		margin-top: 8px;
+	}
+	.bugReportSubmitButton {
+		width: 100%;
+	}
+	.logoutSection {
+		width: 100%;
+		align-items: flex-start;
+		flex-direction: column;
+		padding: 20px;
+		margin-top: 8px;
+	}
+	.logoutButton {
+		width: 100%;
+	}
+	.accountDeletionSection {
+		width: 100%;
+		align-items: flex-start;
+		flex-direction: column;
+		padding: 20px;
+		margin-top: 8px;
+	}
+	.deleteAccountButton {
+		width: 100%;
+	}
 }

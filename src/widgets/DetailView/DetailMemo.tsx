@@ -1,5 +1,6 @@
 import styles from "@styles/DetailMemo.module.css";
 import { useUserData } from "@/contexts/UserDataContext";
+import { useAuth } from "@/contexts/AuthProvider";
 import { useEffect, useRef, useState, type SetStateAction } from "react";
 import { TiPencil } from "react-icons/ti";
 import type { Memo, MemoTag } from "@/util/types";
@@ -16,6 +17,8 @@ const DetailMemo = ({
 	setIsMemoExpanded,
 }: DetailMemoProps) => {
 	const { eventMemos, addMemo, updateMemo } = useUserData();
+	const { user } = useAuth();
+	const isLoggedIn = !!user;
 	// events that user has written memos
 	const CURRENT_MEMO: Memo | undefined = eventMemos.find(
 		(m: Memo) => m.eventId === eventId,
@@ -36,6 +39,9 @@ const DetailMemo = ({
 	const currentTagNames = CURRENT_MEMO
 		? CURRENT_MEMO.tags.map((t) => t.name)
 		: [];
+	const memoPlaceholder = isLoggedIn
+		? "메모를 입력하세요"
+		: "로그인 이후 작성 가능합니다.";
 
 	const tagsChanged =
 		JSON.stringify(tagNames.sort()) !== JSON.stringify(currentTagNames.sort());
@@ -69,6 +75,7 @@ const DetailMemo = ({
 
 	// 메모 입력 영역 확장 함수
 	const expandMemo = () => {
+		if (!isLoggedIn) return;
 		if (!isMemoExpanded) setIsMemoExpanded(true);
 		// 다음 tick에 포커스
 		setTimeout(() => memoInputRef.current?.focus(), 0);
@@ -99,6 +106,7 @@ const DetailMemo = ({
 
 	// 메모 저장 기능 - if null is inputted, contents are deleted.
 	const handleMemoSave = async () => {
+		if (!isLoggedIn) return;
 		// is it a new memoContent or not?
 		setIsSavingMemo(true);
 		if (CURRENT_MEMO) {
@@ -137,6 +145,7 @@ const DetailMemo = ({
 					onClick={expandMemo}
 					className={styles.memoIconBtn}
 					aria-label="메모 입력 열기"
+					disabled={!isLoggedIn}
 				>
 					<TiPencil size={18} color="rgba(130, 130, 130, 1)" />
 				</button>
@@ -159,6 +168,7 @@ const DetailMemo = ({
 						type="button"
 						onClick={expandMemo}
 						className={styles.memoTriggerText}
+						disabled={!isLoggedIn}
 					>
 						메모하기
 					</button>
@@ -174,9 +184,9 @@ const DetailMemo = ({
 						onChange={(e) => {
 							setMemoContent(e.target.value);
 						}}
-						disabled={isSavingMemo}
+						disabled={!isLoggedIn || isSavingMemo}
 						className={styles.memoInput}
-						placeholder="메모를 입력하세요"
+						placeholder={memoPlaceholder}
 						rows={4}
 					/>
 				) : (
@@ -187,8 +197,8 @@ const DetailMemo = ({
 						}}
 						className={styles.memoInput}
 						type="text"
-						placeholder="메모를 입력하세요"
-						disabled={isSavingMemo}
+						placeholder={memoPlaceholder}
+						disabled={!isLoggedIn || isSavingMemo}
 						onFocus={expandMemo}
 						onClick={(e) => {
 							e.stopPropagation();
@@ -208,6 +218,7 @@ const DetailMemo = ({
 							placeholder="태그 추가…"
 							type="text"
 							className={styles.tagInput}
+							disabled={!isLoggedIn || isSavingMemo}
 							onKeyDown={(e) => {
 								if (e.key === "Enter" && !e.nativeEvent.isComposing) {
 									e.preventDefault();
@@ -227,7 +238,11 @@ const DetailMemo = ({
 							type="button"
 							onClick={() => addTag()}
 							className={styles.tagAddBtn}
-							disabled={normalizeTag(tagInput).length === 0}
+							disabled={
+								!isLoggedIn ||
+								isSavingMemo ||
+								normalizeTag(tagInput).length === 0
+							}
 						>
 							추가
 						</button>

@@ -3,6 +3,7 @@ export interface AuthTokens {
 }
 
 export interface User {
+	id?: number | string;
 	username: string;
 	email: string;
 	profileImageUrl: string;
@@ -20,13 +21,14 @@ interface EventBase {
 
 	operationMode: string; // 온라인 오프라인 온오프라인 병행
 
-	statusId: number; // 1 : 모집중, 2 : 마감 임박, 3 : 마감
-	eventTypeId: number; // 1: 교육(특강/세미나) 2:공모전/경진대회 3:현장학습/인턴 4:사회공헌/봉사 5:학습/진로상담 6:레크리에이션 6:기타
+	statusId: number; // 1 : 모집 대기, 2 : 모집 중, 3: 모집 마감
+	eventTypeId: number; // 1: 교육(특강/세미나) 2:공모전/경진대회 3:현장학습/인턴 4:사회공헌/봉사 5:학습/진로상담 6:OpenLnL 7:기타
 	orgId: number; // 주체기관 id - FE에서는 사용 X
 	organization: string; // 주체기관 id
 
 	applyLink: string; // 지원 url
 	tags?: string;
+	isPeriodEvent: boolean;
 
 	// following properties are only on BlockEvents
 	capacity: number;
@@ -280,20 +282,3 @@ export interface ApiErrorResponse {
 	code: string;
 	message: string;
 }
-
-export type Provider = "GOOGLE" | "KAKAO" | "NAVER";
-
-type GoogleSocialLoginBody = {
-	provider: "GOOGLE";
-	code: string;
-	codeVerifier: string;
-};
-
-type OtherSocialLoginBody = {
-	provider: "KAKAO" | "NAVER";
-	code: string;
-};
-
-export type SocialLoginRequestBody =
-	| GoogleSocialLoginBody
-	| OtherSocialLoginBody;

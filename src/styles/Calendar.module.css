@@ -1,6 +1,8 @@
 .main {
-  height: calc(100vh - 3rem);
+  /* height: calc(100vh - 3rem); */
+  min-height: 100dvh;
   padding: 1.5rem;
+  padding-bottom: calc(2rem + env(safe-area-inset-bottom));
 
   background-color: #ffffff;
   font-family:
@@ -12,6 +14,7 @@
     sans-serif;
   /* display: flex;
   flex-direction: column; */
+  margin-bottom: min(50px, 15vh); /* nav bar + a*/
 }
 
 :global(.rbc-calendar) {
@@ -62,7 +65,7 @@
 }
 
 :global(.rbc-month-row):last-child {
-  border-bottom: none;
+  border-bottom: 0;
 }
 
 /* Background grid layer */
@@ -87,7 +90,7 @@
 }
 
 :global(.rbc-off-range-bg) {
-  background-color: #fafafa !important; /* Slightly different for off-range */
+  background-color: #fafafa; /* Slightly different for off-range */
 }
 
 /* Content layer (dates + events) */
@@ -106,6 +109,10 @@
   display: flex;
   flex-direction: row; /* CRITICAL - horizontal layout */
   width: 100%;
+}
+
+:global(.rbc-row-content > .rbc-row):has(:global(.rbc-show-more)) {
+  margin-top: auto;
 }
 
 :global(.rbc-event-content) {
@@ -128,6 +135,10 @@
   cursor: pointer;
   padding: 0;
   font: inherit;
+}
+
+:global(.rbc-date-cell):first-child:not(.rbc-now) :global(.rbc-button-link) {
+  color: #ef4444;
 }
 
 /* Today's date styling */
@@ -165,7 +176,16 @@
 
 :global(.rbc-row-segment) {
   position: relative;
+  box-sizing: border-box;
+  padding: 0;
 }
+
+/* :global(.rbc-row-segment):not(:first-child) {
+  padding-left: 5px;
+} */
+/* :global(.rbc-row-segment):first-child {
+  padding-left: 0;
+} */
 
 /* Show more link */
 :global(.rbc-show-more) {
@@ -183,4 +203,60 @@
 :global(.rbc-show-more):hover {
   color: #374151;
   text-decoration: underline;
+}
+
+@media (max-width: 576px) {
+  :global(.rbc-row-bg) {
+    gap: 2px;
+  }
+  :global(.rbc-off-range-bg) {
+    background-color: #ffffff;
+  }
+  :global(.rbc-day-bg) {
+    background-color: #ffffff;
+    /* border: 1px solid #ffffff; */
+    box-shadow: 2px 2px 4px 0 rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+  }
+  :global(.rbc-button-link) {
+    opacity: 40%;
+  }
+  :global(.rbc-now .rbc-button-link) {
+    background-color: transparent;
+    color: inherit;
+    width: auto;
+    height: auto;
+    display: inline;
+    border-radius: 0;
+    opacity: 100%;
+  }
+  :global(.rbc-date-cell.rbc-off-range .rbc-button-link) {
+    display: none;
+  }
+  :global(.rbc-event) {
+    padding: 0;
+  }
+  :global(.rbc-event-content) {
+    padding: 0;
+  }
+  :global(.rbc-month-row) {
+    min-height: 110px;
+    /* border: 0.5px solid #ffffff; */
+    gap: 2px;
+  }
+  :global(.rbc-show-more) {
+    opacity: 100%;
+  }
+
+  :global(.rbc-day-bg) {
+    border-left: 0px;
+  }
+
+  .main {
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-bottom: calc(2rem + env(safe-area-inset-bottom));
+    touch-action: pan-y; /* drop horizontal finger drag */
+    overscroll-behavior-x: none; /* block horizontal overscroll chaining */
+  }
 }

@@ -5,15 +5,20 @@
 	"type": "module",
 	"scripts": {
 		"dev": "vite",
+		"devM": "vite --host",
 		"build": "tsc -b && vite build",
 		"lint": "biome lint .",
 		"preview": "vite preview",
 		"check:format": "biome check .",
 		"check:unused": "knip",
 		"check:types": "biome check .",
-		"check-all": "biome check . && yarn check:unused"
+		"check-all": "biome check . && yarn check:unused",
+		"postinstall": "patch-package"
 	},
 	"dependencies": {
+		"@tanstack/query-async-storage-persister": "^5.100.9",
+		"@tanstack/react-query": "^5.100.9",
+		"@tanstack/react-query-persist-client": "^5.100.9",
 		"axios": "^1.13.2",
 		"date-fns": "^4.1.0",
 		"html-react-parser": "^5.2.11",
@@ -24,6 +29,7 @@
 		"react-dom": "^19.2.0",
 		"react-icons": "^5.5.0",
 		"react-router-dom": "^7.11.0",
+		"react-simple-pull-to-refresh": "^1.3.4",
 		"react-spinners": "^0.17.0"
 	},
 	"devDependencies": {
@@ -33,6 +39,8 @@
 		"@types/react-big-calendar": "^1.16.3",
 		"@types/react-dom": "^19.2.3",
 		"@vitejs/plugin-react": "^5.1.1",
+		"patch-package": "^8.0.1",
+		"postinstall-postinstall": "^2.1.0",
 		"typescript": "~5.9.3",
 		"vite": "^7.2.4",
 		"vite-tsconfig-paths": "^6.0.4"

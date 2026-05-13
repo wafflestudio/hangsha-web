@@ -1,91 +1,276 @@
 .cardWrapper {
-	display: flex;
-	flex-direction: column;
-	justify-content: flex-start;
-	align-items: flex-start;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
 
-	width: 100%;
-	max-width: 340px;
-	background-color: #ffffff;
+  width: 100%;
+  max-width: 340px;
+  background-color: #ffffff;
 
-	font-family:
-		-apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Pretendard",
-		Roboto, "Noto Sans KR", sans-serif;
-	text-align: left;
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Pretendard",
+    Roboto, "Noto Sans KR", sans-serif;
+  text-align: left;
+}
+.mobileDateOrg,
+.mobileRow {
+  padding: 0px;
+  margin: 0px;
+  display: flex;
+  flex-direction: row;
+}
+
+.ddayTargetDate,
+.categoryCircle {
+  display: none;
 }
 
 .cardWrapper button {
-	background: none;
-	border: none;
-	padding: 0;
-	cursor: pointer;
-	margin-bottom: 8px;
-	display: flex;
-	align-items: center;
-	justify-content: center;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .cardWrapper button img {
-	width: 24px;
-	height: 24px;
+  width: 24px;
+  height: 24px;
 }
 
 .eventTitle {
-	font-size: 18px;
-	font-weight: 700;
-	color: #111111;
-	line-height: 1.4;
-	margin: 0 0 8px 0;
+  font-size: 18px;
+  font-weight: 700;
+  color: #111111;
+  line-height: 1.4;
+  margin: 0 0 8px 0;
 
-	display: -webkit-box;
-	-webkit-line-clamp: 2;
-	line-clamp: 2;
-	-webkit-box-orient: vertical;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	word-break: keep-all;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: keep-all;
 }
 
-.dateText {
-	font-size: 14px;
-	font-weight: 400;
-	color: #555555;
-	margin-bottom: 12px;
-}
-
+.mobileChipsList,
 .chipsList {
-	display: flex;
-	flex-direction: row;
-	align-items: center;
-	gap: 8px;
-	list-style: none;
-	padding: 0;
-	margin: 0 0 12px 0;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  list-style: none;
+  padding: 0;
+  margin: 8px 0 12px 0;
+}
+.mobileChipsList {
+  display: none;
 }
 
 .deadlineChip {
-	font-size: 13px;
-	font-weight: 600;
-	color: #333333;
-	padding: 4px 8px;
-	background-color: #ffffff;
-	border: 1px solid #e0e0e0;
-	border-radius: 6px;
-	white-space: nowrap;
+  font-size: 13px;
+  font-weight: 600;
+  color: #333333;
+  padding: 4px 8px;
+  background-color: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  white-space: nowrap;
 }
 
 .categoryChip {
-	font-size: 13px;
-	font-weight: 500;
-	color: #111111;
-	padding: 5px 10px;
-	border-radius: 6px;
-	white-space: nowrap;
+  font-size: 13px;
+  font-weight: 500;
+  color: #111111;
+  padding: 5px 10px;
+  border-radius: 6px;
+  white-space: nowrap;
 }
 
 .orgText {
-	font-size: 13px;
-	font-weight: 400;
-	color: #767676;
-	margin-top: auto;
+  font-size: 13px;
+  font-weight: 400;
+  color: #767676;
+  margin-top: auto;
+}
+
+.mobileDateOrg .orgText {
+  display: none;
+}
+
+/* ---- GalleryCard -------*/
+.galleryCardWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.thumbnail {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: 12px;
+  margin-bottom: 16px;
+  overflow: hidden;
+  border: 1px solid #f0f0f0;
+  background-color: #f9f9f9;
+  position: relative;
+}
+
+.thumbnailImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+@media (max-width: 576px) {
+  .cardWrapper {
+    max-width: 100%;
+  }
+
+  .thumbnail {
+    margin-bottom: 12px;
+    border-radius: 8px;
+  }
+
+  .eventTitle {
+    font-size: 16px;
+    margin-bottom: 6px;
+  }
+
+  .chipsList {
+    gap: 6px;
+    margin-top: 8px;
+    margin-bottom: 8px;
+  }
+
+  .deadlineChip,
+  .categoryChip {
+    font-size: 12px;
+    padding: 3px 8px;
+  }
+
+  .mobileRow {
+    width: 100%;
+    align-items: center;
+    gap: 8px;
+  }
+  .mobileDateOrg {
+    width: 100%;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .mobileChipsList .categoryCircle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 26.5px;
+    min-width: 26.5px;
+    max-width: 26.5px;
+    border-radius: 100px;
+    flex-shrink: 0;
+    padding: 0;
+    margin: 0;
+    border: none;
+    cursor: pointer;
+    user-select: none;
+    -webkit-touch-callout: none;
+    overflow: hidden;
+    white-space: nowrap;
+    font-size: 13px;
+    font-weight: 500;
+    color: #111111;
+    transition:
+      max-width 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+      padding 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+      border-radius 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .mobileChipsList .categoryCircleLabel {
+    opacity: 0;
+    transform: translateX(-4px);
+    transition:
+      opacity 0.2s ease,
+      transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .mobileChipsList .categoryCircleExpanded {
+    max-width: 200px;
+    border-radius: 15px;
+    padding: 0 10px;
+  }
+  .mobileChipsList .categoryCircleExpanded .categoryCircleLabel {
+    opacity: 1;
+    transform: translateX(0);
+    transition:
+      opacity 0.25s ease 0.12s,
+      transform 0.35s cubic-bezier(0.4, 0, 0.2, 1) 0.05s;
+  }
+  .ddayTargetDate {
+    display: inline;
+    font-size: 14px;
+    color: #111111;
+  }
+  .bookmarkBtn {
+    margin-left: auto;
+    margin-right: 10px;
+    margin-bottom: 0;
+  }
+  .chipsList {
+    display: none;
+  }
+  .mobileChipsList {
+    display: flex;
+    gap: 12px;
+  }
+
+  /* .categoryChip {
+    border-radius: 10px;
+    font-size: 13px;
+  }
+  .deadlineChip {
+    border: none;
+    font-size: 13px;
+    font-weight: 500;
+  } */
+
+  .orgText {
+    display: none;
+    margin-top: 0;
+  }
+
+  .mobileDateOrg > .orgText {
+    display: inline-block;
+    font-size: 13px;
+    color: #555555;
+    font-weight: 500;
+  }
+  .mobileDateOrg {
+    margin-bottom: 0;
+  }
+  .galleryCardWrapper {
+    padding: 0;
+    flex: 0 0 180px;
+    min-width: 0;
+    width: 180px;
+  }
+}
+
+@media (max-width: 455px) {
+  .galleryCardWrapper {
+    width: 90%;
+  }
+}
+
+@media (max-width: 300px) {
+  .galleryCardWrapper {
+    width: 100%;
+  }
 }

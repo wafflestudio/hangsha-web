@@ -1,32 +1,152 @@
-import { CATEGORY_COLORS } from "@constants";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { CATEGORY_COLORS, CATEGORY_TEXT_COLORS } from "@constants";
 import type { CalendarEvent } from "@types";
 import styles from "@styles/MonthEvent.module.css";
+import { CATEGORY_OTHER_INDEX } from "@constants";
+import { useMonthEventPreview } from "./MonthEventPreviewContext";
+
+const LONG_PRESS_DURATION = 250;
+const TOUCH_MOVE_THRESHOLD = 10;
 
 const MonthEvent = ({ event: calendarEvent }: { event: CalendarEvent }) => {
 	const { isPeriodEvent, event } = calendarEvent.resource;
-	const color = CATEGORY_COLORS[event.eventTypeId] || CATEGORY_COLORS[6];
+	const backgroundColor =
+		CATEGORY_COLORS[event.eventTypeId] || CATEGORY_COLORS[CATEGORY_OTHER_INDEX];
+	const color =
+		CATEGORY_TEXT_COLORS[event.eventTypeId] ||
+		CATEGORY_TEXT_COLORS[CATEGORY_OTHER_INDEX];
+
+	const containerRef = useRef<HTMLDivElement | null>(null);
+	const timerRef = useRef<number | null>(null);
+	const longPressedRef = useRef(false);
+	const touchStartPos = useRef<{ x: number; y: number } | null>(null);
+	const [isTouchDevice, setIsTouchDevice] = useState(false);
+	const { openPreview } = useMonthEventPreview();
+
+	useEffect(() => {
+		const mq = window.matchMedia("(hover: none) and (pointer: coarse)");
+		const update = () => setIsTouchDevice(mq.matches);
+		update();
+		mq.addEventListener("change", update);
+		return () => mq.removeEventListener("change", update);
+	}, []);
+
+	useEffect(() => {
+		return () => {
+			if (timerRef.current !== null) {
+				window.clearTimeout(timerRef.current);
+			}
+		};
+	}, []);
+
+	const clearTimer = useCallback(() => {
+		if (timerRef.current !== null) {
+			window.clearTimeout(timerRef.current);
+			timerRef.current = null;
+		}
+	}, []);
+
+	const handleTouchStart = useCallback(
+		(e: React.TouchEvent<HTMLDivElement>) => {
+			if (!isTouchDevice) return;
+			longPressedRef.current = false;
+			clearTimer();
+			const touch = e.touches[0];
+			touchStartPos.current = { x: touch.clientX, y: touch.clientY };
+			timerRef.current = window.setTimeout(() => {
+				const el = containerRef.current;
+				if (!el) return;
+				const rect = el.getBoundingClientRect();
+				const placement = rect.top < window.innerHeight / 2 ? "below" : "above";
+				const top = placement === "below" ? rect.bottom + 8 : rect.top - 8;
+				const left = rect.left + rect.width / 2;
+				longPressedRef.current = true;
+				openPreview({
+					id: event.id,
+					title: event.title,
+					top,
+					left,
+					placement,
+					backgroundColor,
+				});
+			}, LONG_PRESS_DURATION);
+		},
+		[
+			isTouchDevice,
+			clearTimer,
+			event.id,
+			event.title,
+			backgroundColor,
+			openPreview,
+		],
+	);
+
+	const handleTouchMove = useCallback(
+		(e: React.TouchEvent<HTMLDivElement>) => {
+			if (!touchStartPos.current) return;
+			const touch = e.touches[0];
+			const dx = touch.clientX - touchStartPos.current.x;
+			const dy = touch.clientY - touchStartPos.current.y;
+			if (Math.hypot(dx, dy) > TOUCH_MOVE_THRESHOLD) {
+				clearTimer();
+			}
+		},
+		[clearTimer],
+	);
+
+	const handleTouchEnd = useCallback(() => {
+		clearTimer();
+		touchStartPos.current = null;
+	}, [clearTimer]);
+
+	const handleClick = useCallback((e: React.MouseEvent) => {
+		if (longPressedRef.current) {
+			e.stopPropagation();
+			e.preventDefault();
+			longPressedRef.current = false;
+		}
+	}, []);
 
 	// 기간제 행사 : 화살표
 	if (isPeriodEvent) {
 		return (
 			<div className={styles.arrowEventContainer} style={{ color: color }}>
 				<span className={styles.arrowText}>{event.title}</span>
-				<div className={styles.arrowLine} style={{ backgroundColor: color }}>
+				<div
+					className={styles.arrowLine}
+					style={{ backgroundColor: backgroundColor }}
+				>
+					<div
+						className={`${styles.arrowHead} ${styles.left}`}
+						style={{ borderRightColor: backgroundColor }}
+					/>
 					<div
 						className={styles.arrowHead}
-						style={{ borderLeftColor: color }}
+						style={{ borderLeftColor: backgroundColor }}
 					/>
 				</div>
 			</div>
 		);
 	}
+
 	// 단발성 행사 : 블록
 	return (
+		// biome-ignore lint/a11y/noStaticElementInteractions: onClick suppresses synthesized click after long-press; click handling for the event itself stays on react-big-calendar's wrapper
+		// biome-ignore lint/a11y/useKeyWithClickEvents: keyboard activation is handled by the parent calendar wrapper
 		<div
+			ref={containerRef}
 			className={styles.blockEventContainer}
 			style={{
-				backgroundColor: color,
+				backgroundColor: backgroundColor,
 			}}
+			data-month-event-id={event.id}
+			data-event-title={event.title}
+			data-event-bg={backgroundColor}
+			onTouchStart={handleTouchStart}
+			onTouchMove={handleTouchMove}
+			onTouchEnd={handleTouchEnd}
+			onTouchCancel={handleTouchEnd}
+			onClick={handleClick}
 		>
 			{event.title}
 		</div>

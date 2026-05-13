@@ -1,6 +1,6 @@
-import { addBookmark, removeBookmark } from "@api/user";
 import { useEvents } from "@contexts/EventContext";
 import { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import styles from "@styles/DetailView.module.css";
 import { getDDay } from "../../util/Calendar/getDday";
 import { CATEGORY_COLORS, CATEGORY_LIST } from "@constants";
@@ -8,28 +8,32 @@ import { FaAnglesRight } from "react-icons/fa6";
 import type { CalendarEvent, EventDetail } from "@types";
 import DOMPurify from "isomorphic-dompurify";
 import parse from "html-react-parser";
-
+import { useUserData } from "@/contexts/UserDataContext";
 import { useDetail } from "@/contexts/DetailContext";
+import { useAuth } from "@/contexts/AuthProvider";
 import DetailMemo from "./DetailMemo";
-import { ErrorModal } from "../Modal";
+import Modal, { ErrorModal } from "../Modal";
 import Loading from "../Loading";
 import calendarEventMapper from "@/util/Calendar/calendarEventMapper";
-import { eventDateRenderer } from "@/util/Calendar/eventDateRenderer";
+import EventDate from "../EventDate";
 
 const DetailView = ({ eventId }: { eventId: number }) => {
 	const [event, setEvent] = useState<EventDetail>();
 	const [calendarEvent, setCalendarEvent] = useState<CalendarEvent | null>(
-		event ? calendarEventMapper(event, 'day') : null
+		event ? calendarEventMapper(event, "day") : null,
 	);
-
+	const { toggleBookmark } = useUserData();
 	const { fetchEventById, detailError, isLoadingDetail, clearError } =
 		useEvents();
 	const { setShowDetail } = useDetail();
+	const { user } = useAuth();
+	const navigate = useNavigate();
 
 	// for scrolling to top on re-render
 	const scrollRef = useRef<HTMLDivElement>(null);
 
 	const [isMemoExpanded, setIsMemoExpanded] = useState<boolean>(false);
+	const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 	const memoWrapperRef = useRef<HTMLDivElement>(null);
 
 	// detect outside clicks - expand memo
@@ -57,7 +61,7 @@ const DetailView = ({ eventId }: { eventId: number }) => {
 		const loadEvent = async () => {
 			const event = await fetchEventById(eventId);
 			setEvent(event ?? undefined);
-			if (event) setCalendarEvent(calendarEventMapper(event, 'day'));
+			if (event) setCalendarEvent(calendarEventMapper(event, "day"));
 		};
 		loadEvent();
 		// scroll to top of component
@@ -67,7 +71,9 @@ const DetailView = ({ eventId }: { eventId: number }) => {
 	}, [eventId, fetchEventById]);
 
 	// 디데이 계산할 기준 날짜
-	const ddayTargetDate = calendarEvent?.resource.isPeriodEvent ? calendarEvent.end : calendarEvent?.start;
+	const ddayTargetDate = calendarEvent?.resource.isPeriodEvent
+		? calendarEvent.end
+		: calendarEvent?.start;
 	const [isBookmarked, setIsBookmarked] = useState<boolean>(
 		!!event?.isBookmarked,
 	);
@@ -78,23 +84,21 @@ const DetailView = ({ eventId }: { eventId: number }) => {
 		}
 	}, [event]);
 
-	if (!event)
-		return (
-			<Loading />
-		);
+	if (!event) return <Loading />;
 
 	const handleToggleBookmark = async () => {
+		if (!user) {
+			setIsLoginModalOpen(true);
+			return;
+		}
+
 		const previousState = isBookmarked;
 
 		// optimistic update
 		setIsBookmarked(!previousState);
 
 		try {
-			if (previousState) {
-				await removeBookmark(event.id);
-			} else {
-				await addBookmark(event.id);
-			}
+			await toggleBookmark(event);
 		} catch (e) {
 			console.error("Failed to toggle bookmark", e);
 			setIsBookmarked(previousState);
@@ -114,13 +118,22 @@ const DetailView = ({ eventId }: { eventId: number }) => {
 				/* Loading spinner */
 				<Loading />
 			)}
-			<button type="button" className={styles.foldBtn}>
-				<FaAnglesRight
-					width={18}
-					height={18}
-					color="rgba(171, 171, 171, 1)"
-					onClick={() => setShowDetail(false)}
+			{isLoginModalOpen && (
+				<Modal
+					content="로그인 이후 이용해주세요"
+					leftText="로그인"
+					rightText="닫기"
+					onLeftClick={() => navigate("/")}
+					onRightClick={() => setIsLoginModalOpen(false)}
+					onClose={() => setIsLoginModalOpen(false)}
 				/>
+			)}
+			<button
+				type="button"
+				className={styles.foldBtn}
+				onClick={() => setShowDetail(false)}
+			>
+				<FaAnglesRight width={28} height={28} color="rgba(171, 171, 171, 1)" />
 			</button>
 
 			<img
@@ -143,20 +156,7 @@ const DetailView = ({ eventId }: { eventId: number }) => {
 				/>
 			</button>
 			<h1 className={styles.title}>{event.title}</h1>
-			<span className={styles.date}>
-				{calendarEvent && (
-					// !event.eventStart : 기간제 행사, yyyy.mm.dd ~ yyyy.mm.dd로 표시
-					// calendarEvent.resource.isPeriodEvent ? 
-					// 	`${formatDateDotParsed(calendarEvent.start)} ~ ${formatDateDotParsed(calendarEvent.end)}`
-					// 	: // 단발성 행사
-					// 		calendarEvent.start.toDateString() === calendarEvent.end.toDateString()
-					// 		? // yyyy.mm.dd만 표시
-					// 			formatDateDotParsed(calendarEvent.start)
-					// 		: // yyyy.mm.dd ~ yyyy.mm.dd
-					// 			`${formatDateDotParsed(calendarEvent.start)} ~ ${formatDateDotParsed(calendarEvent.end)}`
-					eventDateRenderer(calendarEvent)
-				)}
-			</span>
+			<EventDate event={event} />
 			<ul className={styles.chipsList}>
 				<li className={styles.deadlineChip}>{getDDay(ddayTargetDate)}</li>
 				<li

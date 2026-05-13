@@ -1,9 +1,4 @@
-import type {
-	AuthTokens,
-	Provider,
-	SocialLoginRequestBody,
-	User,
-} from "@types";
+import type { AuthTokens, User } from "@types";
 import api from "./axios";
 import { TokenService } from "./tokenService";
 
@@ -54,36 +49,14 @@ export const login = async (email: string, password: string) => {
 	TokenService.setToken(response.data.accessToken);
 };
 
-export const socialLogin = async (
-	provider: Provider,
-	code: string,
-	codeVerifier?: string,
-) => {
-	TokenService.clearTokens();
-
-	let body: SocialLoginRequestBody;
-	if (provider === "GOOGLE") {
-		if (!codeVerifier) {
-			throw new Error("codeVerifier is required for Google login");
-		}
-		body = {
-			provider: "GOOGLE",
-			code,
-			codeVerifier,
-		};
-	} else {
-		body = {
-			provider,
-			code,
-		};
-	}
-	const res = await api.post<AuthTokens>("/auth/login/social", body);
-	TokenService.setToken(res.data.accessToken);
-};
-
 export const logout = async () => {
 	// delete tokens
 	await api.post("/auth/logout");
+	TokenService.clearTokens();
+};
+
+export const deleteAccount = async () => {
+	await api.delete("/users/me");
 	TokenService.clearTokens();
 };
 

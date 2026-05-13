@@ -1,4 +1,5 @@
 import { useAuth } from "@/contexts/AuthProvider";
+// import { useFilter } from "@/contexts/FilterContext";
 import { useSearch } from "@/contexts/SearchContext";
 import { ProfileButton } from "@/widgets/Toolbar";
 import styles from "@styles/SearchToolbar.module.css";
@@ -16,15 +17,16 @@ const SearchToolbar = ({ viewMode, setViewMode }: SearchToolbarProps) => {
 	const { user } = useAuth();
 	const { query, setQuery } = useSearch();
 	const [queryState, setQueryState] = useState<string>(query);
+	// const { setFilterSheetShowing } = useFilter();
 
 	const navigate = useNavigate();
 
 	return (
 		<div className={styles.toolbarContainer}>
 			<div className={styles.headerRow}>
-				<h2 className={styles.search}>
+				<span>
 					{query.trim() ? `'${query}' 검색 결과` : "검색"}
-				</h2>
+				</span>
 				<div className={styles.btnGroup}>
 					<button type="button" className={styles.calendarBtn}>
 						<FaCalendarAlt
@@ -33,6 +35,7 @@ const SearchToolbar = ({ viewMode, setViewMode }: SearchToolbarProps) => {
 							color="rgba(130, 130, 130, 1)"
 						/>
 					</button>
+					{/* <FilterButton onFilterSet={() => setFilterSheetShowing(true)} /> */}
 					{user && <ProfileButton user={user} />}
 				</div>
 			</div>

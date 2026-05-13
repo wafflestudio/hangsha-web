@@ -1,257 +1,440 @@
 .toolbarContainer {
-	display: flex;
-	flex-direction: column;
-	margin-bottom: 1.5rem;
-	z-index: 1;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1.5rem;
+  z-index: 1;
 }
 
 .timetableToolbarContainer {
-	display: flex;
-	margin-top: 70px;
-	margin-left: 30px;
-	margin-right: 30px;
-	flex-direction: column;
-	margin-bottom: 1.5rem;
-	z-index: 1;
+  display: flex;
+  margin-top: 70px;
+  margin-left: 30px;
+  margin-right: 30px;
+  flex-direction: column;
+  margin-bottom: 1.5rem;
+  z-index: 1;
 }
 
 .centerControl {
-	display: flex;
-	width: 100%;
-	justify-content: center;
-	margin-bottom: 1rem;
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  margin-bottom: 1rem;
 }
 
 .centerControl.dayView {
-	position: relative;
+  position: relative;
 }
 
 .viewToggleGroup {
-	background-color: #f3f4f6;
-	padding: 0.25rem;
-	border-radius: 9999px;
-	display: inline-flex;
-	gap: 0.25rem;
+  background-color: #f3f4f6;
+  padding: 0.25rem;
+  border-radius: 9999px;
+  display: inline-flex;
+  gap: 0.25rem;
 }
 
 .toggleBtn {
-	padding: 0.25em 1em;
-	border-radius: 9999px;
-	font-size: 0.875rem;
-	font-weight: 500;
-	border: none;
-	background: transparent;
-	color: #6b7280; /* gray-500 */
-	cursor: pointer;
-	transition: all 0.2s ease;
+  padding: 0.25em 1em;
+  border-radius: 9999px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  border: none;
+  background: transparent;
+  color: #6b7280; /* gray-500 */
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
 
 .profileButton > img {
-	width: 100%;
-	height: 100%;
-	object-fit: cover;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .rightGroup .viewToggleGroup {
-	width: min-content;
-	border-radius: 16px;
+  width: min-content;
+  border-radius: 16px;
 }
 
 .rightGroup .toggleBtn {
-	padding: 0.15em 0.5em;
-	border-radius: 13px;
+  padding: 0.15em 0.5em;
+  border-radius: 13px;
 }
 .rightGroup .toggleBtn > img {
-	width: 20px;
-	aspect-ratio: 1;
+  width: 20px;
+  aspect-ratio: 1;
 }
 
 .toggleBtn:hover {
-	color: #374151;
+  color: #374151;
 }
 
 .toggleBtnActive {
-	background-color: #ffffff;
-	color: #000000;
-	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  background-color: #ffffff;
+  color: #000000;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 }
 
 .headerRow {
-	display: flex;
-	align-items: flex-end;
-	justify-content: space-between;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
 }
 
 .rightGroup {
-	display: flex;
-	flex-direction: column;
-	align-items: flex-end;
-	gap: 6px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
 }
 
 .rightGroup svg {
-	width: 20px;
-	height: 20px;
+  width: 20px;
+  height: 20px;
 }
 
 .leftGroup {
-	display: flex;
-	flex-direction: column;
-	align-items: flex-start;
-	gap: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.5rem;
 }
 
 .dateTitle {
-	font-size: 1.5rem;
-	font-weight: 700;
-	color: #111827;
-	margin: 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #111827;
+  margin: 0;
+  padding-left: 5px;
 }
 
 .navBtnGroup {
-	display: flex;
-	align-items: center;
-	gap: 0.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
 }
 
 .todayBtn {
-	padding: 0.25rem 0.75rem;
-	border: 1px solid #e5e7eb;
-	border-radius: 9999px;
-	background-color: white;
-	font-size: 0.875rem;
-	cursor: pointer;
-	transition: background-color 0.2s;
+  padding: 0.25rem 0.75rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 9999px;
+  background-color: white;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
 }
 
 .todayBtn:hover {
-	background-color: #f9fafb;
+  background-color: #f9fafb;
 }
 
 .navIconBtn {
-	padding: 0.25rem 0.5rem;
-	border: none;
-	background: transparent;
-	border-radius: 9999px;
-	cursor: pointer;
-	font-size: 1.2rem;
-	color: #374151;
+  padding: 0.25rem 0.5rem;
+  border: none;
+  background: transparent;
+  border-radius: 9999px;
+  cursor: pointer;
+  font-size: 1.2rem;
+  color: #374151;
 }
 
 .navIconBtn:hover {
-	background-color: #f3f4f6;
+  background-color: #f3f4f6;
+}
+
+.filterBtn {
+  display: none;
+  padding: 4px;
+  background-color: #ffffff;
+  border-radius: 5px;
+  border: 1px solid white;
+  box-shadow: 0px 3px 2px 0px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  margin-left: 5px;
 }
 
 .profileRow {
-	display: flex;
-	flex-flow: row nowrap;
-	align-items: center;
-	justify-content: flex-end;
-	gap: 0.75rem;
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.75rem;
 }
 
 .profileRow.dayView {
-	position: absolute;
-	right: 0;
+  position: absolute;
+  right: 0;
+}
+
+.profileBtn {
+  padding: 0;
 }
 
 .profileButton {
-	width: 35px;
-	height: 35px;
-	border: none;
-	background: transparent;
-	padding: 0;
-	cursor: pointer;
-	border-radius: 50%;
-	overflow: hidden;
+  width: 35px;
+  height: 35px;
+  border: none;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+  border-radius: 50%;
+  overflow: hidden;
 }
 
 .searchContainer {
-	display: flex;
-	align-items: center;
-	height: 40px;
-	padding: 0;
-	border: none;
-	background: transparent;
+  display: flex;
+  align-items: center;
+  height: 40px;
+  padding: 0;
+  border: none;
+  background: transparent;
+}
+
+.searchIconButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
 }
 
 .searchInput {
-	width: 0;
-	opacity: 0;
-	padding: 0;
-	border: none;
-	outline: none;
-	background: transparent;
+  width: 0;
+  opacity: 0;
+  padding: 0;
+  border: none;
+  outline: none;
+  background: transparent;
 
-	transition: all 0.3s ease-in-out;
-	visibility: hidden;
+  transition: all 0.3s ease-in-out;
+  visibility: hidden;
 }
 
-.active {
-	min-width: fit-content;
-	max-width: 200px;
-	opacity: 1;
-	padding: 8px;
-	border: 1px solid rgb(202, 202, 202);
-	border-radius: 15px;
-	visibility: visible;
-	margin-right: 8px;
-	z-index: 1;
+.searchInput.active {
+  min-width: fit-content;
+  max-width: 200px;
+  opacity: 1;
+  padding: 8px;
+  border: 1px solid rgb(202, 202, 202);
+  border-radius: 15px;
+  visibility: visible;
+  margin-right: 8px;
+  z-index: 1;
 }
 
 .profileButton img {
-	width: 100%;
-	height: 100%;
-	object-fit: cover;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .selectGroup {
-	display: flex;
-	align-items: center;
-	gap: 14px;
-	min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 25px;
+  min-width: 0;
+}
+
+.semesterSelectGroup {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex: 0 0 auto;
+}
+
+.timetableToggleGroup {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  flex: 0 0 auto;
+}
+
+.timetableToggleLabel {
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1;
+  color: #6b7280;
+  white-space: nowrap;
+}
+
+.timetableToggle {
+  position: relative;
+  flex: 0 0 auto;
+  width: 42px;
+  height: 24px;
+  padding: 0;
+  border: none;
+  border-radius: 999px;
+  background: #d8d8d8;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.timetableToggleThumb {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.18);
+  transition: transform 0.2s ease;
+}
+
+.timetableToggleOn {
+  background: #20c4dd;
+}
+
+.timetableToggleOn .timetableToggleThumb {
+  transform: translateX(18px);
 }
 
 .selectWrap {
-	position: relative;
-	display: inline-flex;
-	align-items: center;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
 }
 
 .select {
-	appearance: none;
-	-webkit-appearance: none;
-	-moz-appearance: none;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
 
-	height: 36px;
-	padding: 0 34px 0 12px;
-	border-radius: 12px;
-	border: 1px solid #e6e6e6;
-	background: #fff;
-	color: #111;
-	font-size: 14px;
-	font-weight: 600;
-	cursor: pointer;
-	outline: none;
+  height: 36px;
+  padding: 0 34px 0 12px;
+  border-radius: 12px;
+  border: 1px solid #e6e6e6;
+  background: #fff;
+  color: #111;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  outline: none;
 }
 
 .select:hover {
-	background: #fafafa;
+  background: #fafafa;
+}
+
+.select:disabled {
+  color: #8a8a8a;
+  cursor: wait;
+  background: #f7f7f7;
 }
 
 .select:focus {
-	border-color: #d0d0d0;
-	box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.04);
+  border-color: #d0d0d0;
+  box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.04);
 }
 
 .selectWrap::after {
-	content: "";
-	position: absolute;
-	right: 12px;
-	width: 8px;
-	height: 8px;
-	border-right: 2px solid #8a8a8a;
-	border-bottom: 2px solid #8a8a8a;
-	transform: rotate(45deg);
-	pointer-events: none;
+  content: "";
+  position: absolute;
+  right: 12px;
+  width: 8px;
+  height: 8px;
+  border-right: 2px solid #8a8a8a;
+  border-bottom: 2px solid #8a8a8a;
+  transform: rotate(45deg);
+  pointer-events: none;
+}
+
+@media (max-width: 576px) {
+  .toolbarContainer {
+    padding: 10px 15px 0 10px;
+  }
+  .timetableToolbarContainer {
+    margin: 0;
+    padding: 82px 20px 0;
+    margin-bottom: 0;
+    background: #ffffff;
+  }
+  .timetableToolbarContainer .headerRow {
+    align-items: center;
+  }
+  .timetableToolbarContainer .selectGroup {
+    flex: 1;
+    gap: 8px;
+  }
+  .timetableToolbarContainer .semesterSelectGroup {
+    display: none;
+  }
+  .timetableToolbarContainer .selectWrap {
+    display: none;
+  }
+  .timetableToolbarContainer .dateTitle {
+    min-width: 0;
+    padding-left: 0;
+    overflow: hidden;
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1.25;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .timetableToolbarContainer .timetableToggleGroup {
+    align-items: flex-start;
+  }
+  .timetableToolbarContainer .timetableToggleLabel {
+    display: none;
+  }
+  .timetableToolbarContainer .timetableToggle {
+    width: 38px;
+    height: 22px;
+  }
+  .timetableToolbarContainer .timetableToggleThumb {
+    top: 3px;
+    left: 3px;
+    width: 16px;
+    height: 16px;
+  }
+  .timetableToolbarContainer .timetableToggleOn .timetableToggleThumb {
+    transform: translateX(16px);
+  }
+  .timetableToolbarContainer .profileRow {
+    display: none;
+  }
+  .dateTitle {
+    font-size: 1.1rem;
+    font-weight: 600;
+    padding-bottom: 0px;
+  }
+  .navIconBtn {
+    padding-bottom: 8px;
+    color: #ababab;
+    font-weight: 600;
+  }
+  .navBtnGroup {
+    gap: 0;
+  }
+  .todayBtn {
+    display: none;
+  }
+  .leftGroup {
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+  }
+  .centerControl {
+    display: none;
+  }
+  .profileBtn {
+    display: none;
+  }
+  .searchContainer {
+    height: 30px;
+  }
+  .searchInput.active {
+    display: none;
+  }
+  .filterBtn {
+    display: flex;
+  }
 }

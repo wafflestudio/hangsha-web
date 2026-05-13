@@ -1,26 +1,23 @@
-import type { CalendarEvent } from "@types";
 import { formatDateDotParsed } from "./dateFormatter";
 
-export const eventDateRenderer = (
-	calendarEvent: CalendarEvent,
-	// eventStart: Date,
-	// eventEnd: Date,
-	// applyStart: Date,
-	// applyEnd: Date,
-) =>
-	// !event.eventStart : 기간제 행사, yyyy.mm.dd ~ yyyy.mm.dd로 표시
-	// eventStart && eventEnd
-	// 	? // 단발성 행사
-	// 		eventStart === eventEnd
-	// 		? // yyyy.mm.dd만 표시
-	// 			formatDateDotParsed(eventStart)
-	// 		: // yyyy.mm.dd ~ yyyy.mm.dd
-	// 			`${formatDateDotParsed(eventStart)} ~ ${formatDateDotParsed(eventEnd)}`
-	// 	: // 기간제 행사
-	// 		`${formatDateDotParsed(applyStart)} ~ ${formatDateDotParsed(applyEnd)}`;
+const pad = (n: number) => String(n).padStart(2, "0");
 
-	calendarEvent.start.toDateString() === calendarEvent.end.toDateString()
-		? // yyyy.mm.dd만 표시
-			formatDateDotParsed(calendarEvent.start)
-		: // yyyy.mm.dd ~ yyyy.mm.dd
-			`${formatDateDotParsed(calendarEvent.start)} ~ ${formatDateDotParsed(calendarEvent.end)}`;
+const formatRangeEnd = (start: Date, end: Date) => {
+	const sameYear = start.getFullYear() === end.getFullYear();
+	const sameMonth = sameYear && start.getMonth() === end.getMonth();
+	if (sameMonth) return pad(end.getDate());
+	if (sameYear) return `${pad(end.getMonth() + 1)}.${pad(end.getDate())}`;
+	return formatDateDotParsed(end);
+};
+
+export const eventDateRenderer = (
+	eventStart: Date | null,
+	eventEnd: Date | null,
+) =>
+	eventStart && eventEnd
+		? eventStart.toDateString() === eventEnd.toDateString()
+			? formatDateDotParsed(eventStart)
+			: `${formatDateDotParsed(eventStart)}~${formatRangeEnd(eventStart, eventEnd)}`
+		: eventEnd
+			? formatDateDotParsed(eventEnd)
+			: "";
