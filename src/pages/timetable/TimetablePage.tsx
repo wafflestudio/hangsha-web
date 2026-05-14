@@ -208,8 +208,14 @@ export default function TimetablePage() {
 							선택된 시간표가 없어요
 						</div>
 						<div style={{ opacity: 0.7, lineHeight: 1.5 }}>
-							왼쪽 사이드바에서 시간표를 추가하거나 선택해 주세요.
+							<span className={styles.emptyDesktop}>
+								왼쪽 사이드바에서 시간표를 추가하거나 선택해 주세요.
+							</span>
+							<span className={styles.emptyMobile}>
+								시간표는 데스크탑 뷰에서 설정해주세요!
+							</span>
 						</div>
+						
 					</div>
 				) : (
 					<TimetableGrid

@@ -395,6 +395,13 @@
   height: 60vh;
 }
 
+.emptyDesktop {
+  display: block;
+}
+.emptyMobile {
+  display: none;
+}
+
 @media (max-width: 576px) {
   .page,
   .AddClassPanelClosed,
@@ -608,5 +615,12 @@
 
   .notFound {
     display: flex;
+  }
+
+  .emptyDesktop {
+    display: none;
+  }
+  .emptyMobile {
+    display: block;
   }
 }
