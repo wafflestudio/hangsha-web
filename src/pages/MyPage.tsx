@@ -233,7 +233,7 @@ const BugReportSection = () => {
 		<section className={styles.bugReportSection}>
 			<div className={styles.bugReportHeader}>
 				<div className={styles.bugReportTitle}>
-					<FaBug size={18} />
+					<FaBug size={20} />
 					<strong>버그 신고</strong>
 				</div>
 				<span>이용 중 발견한 문제를 알려주세요.</span>
@@ -382,10 +382,10 @@ const MyPage = () => {
 					<div className={styles.widgetsWrapper}>
 						<BookmarkWidget />
 						<MemoWidget />
+						<BugReportSection />
+						<LogoutSection />
+						<AccountDeletionSection />
 					</div>
-					<BugReportSection />
-					<LogoutSection />
-					<AccountDeletionSection />
 				</div>
 			) : (
 				<div className={styles.notFound}>

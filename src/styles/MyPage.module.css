@@ -43,16 +43,17 @@
 	display: flex;
 	flex-direction: column;
 	width: 80%;
+	box-sizing: border-box;
 }
 
 .bugReportSection {
 	display: flex;
 	flex-direction: column;
 	gap: 14px;
-	width: 80%;
-	margin-top: 24px;
-	padding: 20px;
+	width: 100%;
+	padding: 24px 20px;
 	border-top: 1px solid #eeeeee;
+	box-sizing: border-box;
 }
 
 .bugReportHeader {
@@ -69,8 +70,9 @@
 }
 
 .bugReportTitle strong {
-	font-size: 16px;
+	font-size: 20px;
 	font-weight: 700;
+	line-height: 1.2;
 }
 
 .bugReportHeader span {
@@ -159,10 +161,10 @@
 	align-items: center;
 	justify-content: space-between;
 	gap: 16px;
-	width: 80%;
-	margin-top: 24px;
-	padding: 20px;
+	width: 100%;
+	padding: 24px 20px;
 	border-top: 1px solid #eeeeee;
+	box-sizing: border-box;
 }
 
 .logoutText {
@@ -174,8 +176,9 @@
 
 .logoutText strong {
 	color: #222222;
-	font-size: 16px;
+	font-size: 20px;
 	font-weight: 700;
+	line-height: 1.2;
 }
 
 .logoutText span {
@@ -221,10 +224,10 @@
 	align-items: center;
 	justify-content: space-between;
 	gap: 16px;
-	width: 80%;
-	margin-top: 24px;
-	padding: 20px;
+	width: 100%;
+	padding: 24px 20px;
 	border-top: 1px solid #eeeeee;
+	box-sizing: border-box;
 }
 
 .accountDeletionText {
@@ -236,8 +239,9 @@
 
 .accountDeletionText strong {
 	color: #222222;
-	font-size: 16px;
+	font-size: 20px;
 	font-weight: 700;
+	line-height: 1.2;
 }
 
 .accountDeletionText span {
@@ -494,29 +498,28 @@
 		padding: 24px 20px;
 	}
 	.bugReportSection {
-		width: 100%;
-		padding: 20px;
-		margin-top: 8px;
+		padding: 24px 0;
+	}
+	.bugReportTitle strong,
+	.logoutText strong,
+	.accountDeletionText strong {
+		font-size: 17px;
 	}
 	.bugReportSubmitButton {
 		width: 100%;
 	}
 	.logoutSection {
-		width: 100%;
 		align-items: flex-start;
 		flex-direction: column;
-		padding: 20px;
-		margin-top: 8px;
+		padding: 24px 0;
 	}
 	.logoutButton {
 		width: 100%;
 	}
 	.accountDeletionSection {
-		width: 100%;
 		align-items: flex-start;
 		flex-direction: column;
-		padding: 20px;
-		margin-top: 8px;
+		padding: 24px 0;
 	}
 	.deleteAccountButton {
 		width: 100%;
