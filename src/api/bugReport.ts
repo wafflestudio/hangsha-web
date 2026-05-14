@@ -6,5 +6,5 @@ export interface CreateBugReportRequest {
 }
 
 export const createBugReport = async (body: CreateBugReportRequest) => {
-	await api.post("/api/v1/bug-reports", body);
+	await api.post("/bug-reports", body);
 };
