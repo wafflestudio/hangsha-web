@@ -238,12 +238,13 @@ body {
   .memoContent {
     font-size: 14px;
   }
+  .memosHeader {
+    padding: 0px;
+  }
   .memosHeader span {
     font-size: 17px;
   }
-  .memosHeader {
-    padding: 0 0 0 10px;
-  }
+  
   .cardsColumn {
     gap: 0;
   }
