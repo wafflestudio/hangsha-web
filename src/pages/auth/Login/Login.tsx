@@ -75,7 +75,7 @@ export default function Login() {
 						<span className={styles.loginSignupText}>
 							회원가입을 하시겠어요?
 						</span>
-						<Link to="/auth/signup" className={styles.loginSignupLink}>
+						<Link to="/auth/signup" className={styles.loginSignupText}>
 							회원가입
 						</Link>
 					</div>
