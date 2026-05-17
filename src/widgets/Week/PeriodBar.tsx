@@ -2,7 +2,11 @@ import { useMemo, useCallback } from "react";
 import type { Event, CalendarEvent } from "@/util/types";
 import { clampDate, dayIndexFromWeekStart } from "@/util/weekly_timetable/time";
 import styles from "@styles/PeriodBar.module.css";
-import { CATEGORY_COLORS } from "@/util/constants";
+import {
+	CATEGORY_COLORS,
+	CATEGORY_OTHER_INDEX,
+	CATEGORY_TEXT_COLORS,
+} from "@/util/constants";
 import type { CSSProperties } from "react";
 
 type Props = {
@@ -149,7 +153,11 @@ export function PeriodBars({
 				const displayTitle = truncate40(b.title);
 
 				const categoryId = b.raw.resource.event.eventTypeId;
-				const color = CATEGORY_COLORS[categoryId] ?? "#999";
+				const lineColor =
+					CATEGORY_COLORS[categoryId] ?? CATEGORY_COLORS[CATEGORY_OTHER_INDEX];
+				const textColor =
+					CATEGORY_TEXT_COLORS[categoryId] ??
+					CATEGORY_TEXT_COLORS[CATEGORY_OTHER_INDEX];
 
 				const style: CSSVarStyle = {
 					left: `${leftPct}px`,
@@ -157,8 +165,8 @@ export function PeriodBars({
 					bottom: b.lane * (laneHeight + laneGap),
 					height: laneHeight,
 
-					"--period-line": color,
-					"--period-text": color,
+					"--period-line": lineColor,
+					"--period-text": textColor,
 				};
 
 				return (
