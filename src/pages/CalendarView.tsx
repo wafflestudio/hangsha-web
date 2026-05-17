@@ -47,7 +47,7 @@ const CalendarView = () => {
 	const [showSideMonth, setShowSideMonth] = useState<boolean>(false);
 	const [clickedDate, setClickedDate] = useState<Date>(new Date());
 
-	/** ----------------------  FETCH MONTH / WEEK / DAY data -------------------- */ 
+	/** ----------------------  FETCH MONTH / WEEK / DAY data -------------------- */
 
 	const navigate = useNavigate();
 

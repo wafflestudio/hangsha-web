@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import styles from "@styles/DetailView.module.css";
 import { getDDay } from "../../util/Calendar/getDday";
 import { CATEGORY_COLORS, CATEGORY_LIST } from "@constants";
-import { FaAnglesRight } from "react-icons/fa6";
+import { FaAnglesRight, FaLocationDot } from "react-icons/fa6";
 import type { CalendarEvent, EventDetail } from "@types";
 import DOMPurify from "isomorphic-dompurify";
 import parse from "html-react-parser";
@@ -157,6 +157,12 @@ const DetailView = ({ eventId }: { eventId: number }) => {
 			</button>
 			<h1 className={styles.title}>{event.title}</h1>
 			<EventDate event={event} />
+			{event.location && (
+				<div className={styles.locationRow}>
+					<FaLocationDot color="#555555" />
+					<span>{event.location}</span>
+				</div>
+			)}
 			<ul className={styles.chipsList}>
 				<li className={styles.deadlineChip}>{getDDay(ddayTargetDate)}</li>
 				<li

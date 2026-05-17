@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { FaAngleLeft, FaAngleRight, FaAnglesRight } from "react-icons/fa6";
 import styles from "@styles/MonthSideView.module.css";
 import CardView from "./CardView";
@@ -12,16 +13,17 @@ import { useFilter } from "@/contexts/FilterContext";
 import { useUserData } from "@/contexts/UserDataContext";
 import { useDayEvents } from "@/contexts/useCalendarEvents";
 import { FilterButton } from "@/widgets/Toolbar";
+import Modal from "@/widgets/Modal";
 
 const MonthSideView = ({
 	day,
 	onClose,
-	onLoginPrompt,
 }: {
 	day: Date;
 	onClose: () => void;
-	onLoginPrompt: () => void;
 }) => {
+	const navigate = useNavigate();
+	const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 	const { setShowDetail, setClickedEventId } = useDetail();
 	const [date, setDate] = useState<Date>(day);
 	const { globalCategory, globalOrg, globalStatus, setFilterSheetShowing } = useFilter();
@@ -76,6 +78,16 @@ const MonthSideView = ({
 
 	return (
 		<div className={styles.mainWrapper}>
+			{isLoginModalOpen && (
+				<Modal
+					content="로그인 이후 이용해주세요"
+					leftText="로그인"
+					rightText="닫기"
+					onLeftClick={() => navigate("/")}
+					onRightClick={() => setIsLoginModalOpen(false)}
+					onClose={() => setIsLoginModalOpen(false)}
+				/>
+			)}
 			<button type="button" className={styles.foldBtn} onClick={onClose}>
 				<FaAnglesRight
 					width={24}
@@ -112,7 +124,7 @@ const MonthSideView = ({
 						onKeyDown={(e) => e.key === "Enter" && handleDetailClick(event.id)}
 						className={styles.cardButton}
 					>
-						<CardView key={event.id} event={event} onLoginPrompt={onLoginPrompt} />
+						<CardView key={event.id} event={event} onLoginPrompt={() => setIsLoginModalOpen(true)} />
 					</div>
 				))}
 			</div>

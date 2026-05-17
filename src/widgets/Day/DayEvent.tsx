@@ -13,6 +13,9 @@ const DayEvent = ({ event: calendarEvent }: { event: CalendarEvent }) => {
 	const { event } = calendarEvent.resource;
 	const color = CATEGORY_COLORS[event.eventTypeId] || CATEGORY_COLORS[6];
 
+	const location = event.location?.trim();
+	const shouldShowLocation = location && location !== "-";
+
 	return (
 		<div
 			className={styles.dayEventContainer}
@@ -23,12 +26,16 @@ const DayEvent = ({ event: calendarEvent }: { event: CalendarEvent }) => {
 			<div className={`${styles.eventContent} ${styles.eventTitle}`}>
 				{event.title}
 			</div>
-			<div className={styles.eventContent}>
+			{!calendarEvent.allDay && (
+				<div className={styles.eventContent}>
 				{formatTime(calendarEvent.start)} - {formatTime(calendarEvent.end)}
+				</div>
+			)}
+			{shouldShowLocation && (
+			<div className={`${styles.eventContent} ${styles.eventMeta} ${styles.blockLocation}`}>
+				{location}
 			</div>
-			<div className={`${styles.eventContent} ${styles.eventMeta}`}>
-				{event.location === "-" ? "" : event.location}
-			</div>
+			)}
 		</div>
 	);
 };
