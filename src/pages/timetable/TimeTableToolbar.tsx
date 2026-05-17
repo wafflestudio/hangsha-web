@@ -31,6 +31,7 @@ const TimeTableToolbar = ({
 }: TimeTableToolbarProps) => {
 	const { user } = useAuth();
 	const navigate = useNavigate();
+	const displayTimetableName = timetableName.trim() || "나의 시간표";
 	const yearOptions =
 		years ??
 		Array.from({ length: 7 }, (_, i) => new Date().getFullYear() - 3 + i);
@@ -78,6 +79,7 @@ const TimeTableToolbar = ({
 						</span>
 					</div>
 					<p className={styles.dateTitle}>{timetableName}</p>
+					<p className={styles.mobileTimetableTitle}>{displayTimetableName}</p>
 					<div className={styles.timetableToggleGroup}>
 						<span className={styles.timetableToggleLabel}>행사 함께 보기</span>
 						<button
