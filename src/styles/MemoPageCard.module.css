@@ -76,6 +76,11 @@
   margin-bottom: 12px;
   overflow: hidden;
   text-overflow: ellipsis;
+  cursor: pointer;
+}
+
+.memoTitle:hover {
+  text-decoration: underline;
 }
 
 .chips {
