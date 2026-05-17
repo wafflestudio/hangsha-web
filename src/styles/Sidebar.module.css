@@ -573,6 +573,10 @@ body::-webkit-scrollbar {
   cursor: pointer;
 }
 
+.timetableSidebarLogout {
+  margin-top: auto;
+}
+
 @media (max-width: 992px) {
   .sidebarContainer {
     width: 220px;
