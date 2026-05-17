@@ -168,14 +168,14 @@ body::-webkit-scrollbar {
 }
 
 .iconBtn {
-  width: 30px;
+  width: 100%;
   height: 30px;
-  border-radius: 10px;
   border: 0;
   background: transparent;
   cursor: pointer;
-  display: grid;
-  place-items: center;
+  display: flex;
+  place-items: left;
+  gap: 10px;
 }
 
 .iconBtn:hover {
@@ -571,6 +571,10 @@ body::-webkit-scrollbar {
   font-weight: 400;
   color: #a1a1a1;
   cursor: pointer;
+}
+
+.timetableSidebarLogout {
+  margin-top: auto;
 }
 
 @media (max-width: 992px) {

@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthProvider";
 import styles from "../../styles/Sidebar.module.css";
 import type { PatchTimetableRequest, Timetable } from "../../util/types";
+import { SidebarLogoutButton } from "../../widgets/SidebarLogoutButton";
 
 interface TimeTableSidebarProps {
 	timetables: Timetable[];
@@ -109,6 +110,7 @@ export const TimeTableSidebar = ({
 						<span className={styles.plus} aria-hidden="true">
 							+
 						</span>
+						<span className={styles.toggleText}>새 시간표 추가</span>
 					</button>
 				</div>
 
@@ -220,6 +222,9 @@ export const TimeTableSidebar = ({
 				/>
 				<span>시간표</span>
 			</button>
+			<div className={styles.timetableSidebarLogout}>
+				<SidebarLogoutButton />
+			</div>
 		</div>
 	);
 };
