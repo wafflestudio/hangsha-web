@@ -114,19 +114,23 @@ const MonthSideView = ({
 				</button>	
 			</div>
 			<div className={styles.cardWrapper}>
-				{events.map((event) => (
-					// biome-ignore lint/a11y/useSemanticElements: Cannot use button because it contains nested interactive elements
-					<div
-						role="button"
-						key={event.id}
-						tabIndex={0}
-						onClick={() => handleDetailClick(event.id)}
-						onKeyDown={(e) => e.key === "Enter" && handleDetailClick(event.id)}
-						className={styles.cardButton}
-					>
-						<CardView key={event.id} event={event} onLoginPrompt={() => setIsLoginModalOpen(true)} />
-					</div>
-				))}
+				{events.length === 0 ? (
+					<p className={styles.emptyText}>행사가 없습니다.</p>
+				) : (
+					events.map((event) => (
+						// biome-ignore lint/a11y/useSemanticElements: Cannot use button because it contains nested interactive elements
+						<div
+							role="button"
+							key={event.id}
+							tabIndex={0}
+							onClick={() => handleDetailClick(event.id)}
+							onKeyDown={(e) => e.key === "Enter" && handleDetailClick(event.id)}
+							className={styles.cardButton}
+						>
+							<CardView key={event.id} event={event} onLoginPrompt={() => setIsLoginModalOpen(true)} />
+						</div>
+					))
+				)}
 			</div>
 		</div>
 	);

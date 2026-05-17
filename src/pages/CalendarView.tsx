@@ -4,14 +4,15 @@ import { Views, type View } from "react-big-calendar";
 import { useQueryClient } from "@tanstack/react-query";
 import PullToRefresh from "react-simple-pull-to-refresh";
 import styles from "@styles/CalendarView.module.css";
-import type {
-	CalendarEvent,
-	Event,
-} from "@types";
+import type { CalendarEvent, Event } from "@types";
 import DetailView from "@/widgets/DetailView";
 import MonthSideView from "@widgets/Month/MonthSideView/MonthSideView";
 import { MyCalendar } from "@widgets/MyCalendar";
 import { Sidebar } from "@widgets/Sidebar";
+import {
+	SidePanelResizeHandle,
+	useResizableSidePanel,
+} from "@/widgets/SidePanelResize";
 
 import { useDetail } from "@contexts/DetailContext";
 import { useEvents } from "@contexts/EventContext";
@@ -19,7 +20,11 @@ import { useFilter } from "@contexts/FilterContext";
 import { useUserData } from "@/contexts/UserDataContext";
 import BottomNav from "@/widgets/BottomNav";
 import { FilterSheet } from "@/widgets/FilterSheet/FilterSheet";
-import { useMonthEvents, useWeekEvents, useDayEvents } from "@/contexts/useCalendarEvents";
+import {
+	useMonthEvents,
+	useWeekEvents,
+	useDayEvents,
+} from "@/contexts/useCalendarEvents";
 
 const CalendarView = () => {
 	// EventContext
@@ -56,12 +61,28 @@ const CalendarView = () => {
 			eventTypeId: globalCategory?.map((g) => g.id),
 			orgId: globalOrg?.map((g) => g.id),
 			statusId: globalStatus?.map((g) => g.id),
-		}), [globalCategory, globalOrg, globalStatus],
-	)
-	
-	const { data: monthViewData } = useMonthEvents(currentDate, filters, excludedKeywords, interestCategories);
-	const { data: weekViewData} = useWeekEvents(currentDate, filters, excludedKeywords, interestCategories);
-	const { data: dayViewEvents = [] } = useDayEvents(currentDate, filters, excludedKeywords, interestCategories);
+		}),
+		[globalCategory, globalOrg, globalStatus],
+	);
+
+	const { data: monthViewData } = useMonthEvents(
+		currentDate,
+		filters,
+		excludedKeywords,
+		interestCategories,
+	);
+	const { data: weekViewData } = useWeekEvents(
+		currentDate,
+		filters,
+		excludedKeywords,
+		interestCategories,
+	);
+	const { data: dayViewEvents = [] } = useDayEvents(
+		currentDate,
+		filters,
+		excludedKeywords,
+		interestCategories,
+	);
 
 	const queryClient = useQueryClient();
 	const handleRefresh = async () => {
@@ -72,11 +93,11 @@ const CalendarView = () => {
 		]);
 	};
 
-
-
-	// Flatten byDate buckets in chronological key order : preserve each date bucket's internal sequence 
+	// Flatten byDate buckets in chronological key order : preserve each date bucket's internal sequence
 	// 중복 시 첫 event만 keep : multi-day event sits at the position of its earliest bucket
-	const flattenByDate = (byDate: Record<string, { events: Event[] }> | undefined) => {
+	const flattenByDate = (
+		byDate: Record<string, { events: Event[] }> | undefined,
+	) => {
 		const seen = new Map<number, Event>();
 		const buckets = byDate ?? {};
 		for (const dateKey of Object.keys(buckets).sort()) {
@@ -94,7 +115,6 @@ const CalendarView = () => {
 	useEffect(() => {
 		setCurrentDate(dayDate);
 	}, [dayDate]);
-
 
 	// click handler
 	const onShowMoreClick = (date: Date, view: string) => {
@@ -137,6 +157,9 @@ const CalendarView = () => {
 
 	// clicking outside of sideview (that is not event or anything else) created
 	const sidePanelRef = useRef<HTMLDivElement>(null);
+
+	// shared width for both MonthSideView and DetailView panels
+	const { handleResizeStart, sidePanelStyle } = useResizableSidePanel();
 
 	// detect outside clicks
 	useEffect(() => {
@@ -186,7 +209,14 @@ const CalendarView = () => {
 					)}
 				</div>
 				{showSideMonth && (
-					<div className={styles.sidePanel} ref={sidePanelRef}>
+					<div
+						className={styles.sidePanel}
+						ref={sidePanelRef}
+						style={sidePanelStyle}
+					>
+						{!isMobile && (
+							<SidePanelResizeHandle onMouseDown={handleResizeStart} />
+						)}
 						<MonthSideView day={clickedDate} onClose={handleCloseSideMonth} />
 					</div>
 				)}
@@ -195,7 +225,11 @@ const CalendarView = () => {
 					<div
 						className={`${styles.sidePanel} ${styles.detailPanel}`}
 						ref={sidePanelRef}
+						style={sidePanelStyle}
 					>
+						{!isMobile && (
+							<SidePanelResizeHandle onMouseDown={handleResizeStart} />
+						)}
 						<DetailView eventId={clickedEventId} />
 					</div>
 				)}

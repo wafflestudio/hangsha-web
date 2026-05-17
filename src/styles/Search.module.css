@@ -41,6 +41,10 @@ body {
 }
 
 .sidePanel {
+  position: absolute;
+  right: 0;
+  top: 0;
+
   max-width: 40%;
   height: 100%;
   border-left: 1px solid #e0e0e0;

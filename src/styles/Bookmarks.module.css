@@ -133,8 +133,7 @@ body {
   position: absolute;
   right: 0;
   top: 0;
-
-  max-width: 430px;
+  width: 430px;
   height: 100vh;
   border-left: 1px solid #e0e0e0;
   background-color: #ffffff;

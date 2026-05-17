@@ -154,6 +154,15 @@ export const MyCalendar = ({
 		[isMobile, handleDrillDown, onSelectEvent],
 	);
 
+	const handleSelectSlot = useCallback(
+		(slotInfo: { start: Date; action: "click" | "select" | "doubleClick" }) => {
+			if (!isMobile) return;
+			if (slotInfo.action !== "click") return;
+			handleDrillDown(slotInfo.start);
+		},
+		[isMobile, handleDrillDown],
+	);
+
 	return (
 		<MonthEventPreviewProvider>
 			<div className={styles.main}>
@@ -195,6 +204,8 @@ export const MyCalendar = ({
 					// 더보기 눌렀을 때 popup 나타나기 X, 사이드뷰 나타남
 					popup={false}
 					onDrillDown={handleDrillDown}
+					selectable={isMobile}
+					onSelectSlot={handleSelectSlot}
 					// 더보기 미리보기
 					messages={messages}
 					// 행사 눌렀을 때 상세 뷰 나타나게 하기 :

@@ -8,6 +8,7 @@ import { DetailContextProvider } from "./contexts/DetailContext";
 import AppRoutes from "./router/AppRoutes";
 import { SearchProvider } from "./contexts/SearchContext";
 import { TimetableProvider } from "./contexts/TimetableContext";
+import { SidePanelResizeProvider } from "./widgets/SidePanelResize";
 
 function App() {
 	return (
@@ -19,7 +20,9 @@ function App() {
 							<DayViewContextProvider>
 								<DetailContextProvider>
 									<TimetableProvider>
-										<AppRoutes />
+										<SidePanelResizeProvider>
+											<AppRoutes />
+										</SidePanelResizeProvider>
 									</TimetableProvider>
 								</DetailContextProvider>
 							</DayViewContextProvider>
