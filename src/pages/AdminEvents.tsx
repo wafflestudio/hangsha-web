@@ -10,6 +10,7 @@ import {
 	type AdminEventPatchRequest,
 } from "@/api/adminEvent";
 import { useState } from "react";
+import styles from "@/styles/AdminEvents.module.css";
 
 const EMPTY_FORM = {
 	title: "",
@@ -351,157 +352,201 @@ export default function AdminEventsPage() {
 		["location", "장소", "text"],
 		["applyLink", "신청 링크", "text"],
 
-		["tags", "태그, 쉼표 구분", "text"],
+		["tags", "태그 (쉼표 구분)", "text"],
 	];
 
 	return (
-		<main
-			style={{
-				width: "100vw",
-				height: "100dvh",
-				overflowY: "auto",
-				boxSizing: "border-box",
-				maxWidth: 1080,
-				margin: "0 auto",
-				padding: 24,
-			}}
-		>
-			<h1>행샤 어드민</h1>
+		<div className={styles.page}>
+			<div className={styles.inner}>
+				<h1 className={styles.pageTitle}>행샤 어드민</h1>
 
-			<section style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-				<input
-					value={eventId}
-					onChange={(e) => setEventId(e.currentTarget.value)}
-					placeholder="행사 ID"
-				/>
+				<div className={styles.layout}>
+					{/* ── 왼쪽 패널 ── */}
+					<div className={styles.leftPanel}>
+						{/* 행사 관리 */}
+						<div className={styles.card}>
+							<p className={styles.cardTitle}>행사 관리</p>
+							<div className={styles.idBar}>
+								<input
+									className={styles.idInput}
+									value={eventId}
+									onChange={(e) => setEventId(e.currentTarget.value)}
+									placeholder="행사 ID"
+								/>
 
-				<button type="button" onClick={handleLoad} disabled={isLoading}>
-					불러오기
-				</button>
+								<button
+									type="button"
+									className={`${styles.btn} ${styles.btnPrimary}`}
+									onClick={handleLoad}
+									disabled={isLoading}
+								>
+									불러오기
+								</button>
 
-				<button type="button" onClick={handlePatch} disabled={isLoading}>
-					수정
-				</button>
+								<button
+									type="button"
+									className={`${styles.btn} ${styles.btnPrimary}`}
+									onClick={handlePatch}
+									disabled={isLoading}
+								>
+									수정
+								</button>
 
-				<button type="button" onClick={handleDelete} disabled={isLoading}>
-					단건 삭제
-				</button>
+								<button
+									type="button"
+									className={`${styles.btn} ${styles.btnPrimary}`}
+									onClick={handleCreate}
+									disabled={isLoading}
+								>
+									신규 생성
+								</button>
 
-				<button type="button" onClick={handleDeleteAll} disabled={isLoading}>
-					전체 삭제
-				</button>
+								<div className={styles.divider} />
 
-				<button type="button" onClick={handleCreate} disabled={isLoading}>
-					신규 생성
-				</button>
-			</section>
+								<button
+									type="button"
+									className={`${styles.btn} ${styles.btnDanger}`}
+									onClick={handleDelete}
+									disabled={isLoading}
+								>
+									단건 삭제
+								</button>
 
-			<section style={{ marginTop: 20 }}>
-				<h2>JSON 파일 Sync</h2>
+								<button
+									type="button"
+									className={`${styles.btn} ${styles.btnDanger}`}
+									onClick={handleDeleteAll}
+									disabled={isLoading}
+								>
+									전체 삭제
+								</button>
+							</div>
+						</div>
 
-				<input
-					type="file"
-					accept=".json,application/json"
-					onChange={(e) => {
-						setSelectedFile(e.currentTarget.files?.[0] ?? null);
-					}}
-				/>
+						{/* 피드백 메시지 */}
+						{message && <p className={styles.message}>{message}</p>}
 
-				<button
-					type="button"
-					onClick={handleSyncFile}
-					disabled={isLoading}
-					style={{ marginLeft: 8 }}
-				>
-					sync-file 업로드
-				</button>
-			</section>
+						{/* JSON 파일 Sync */}
+						<div className={styles.card}>
+							<p className={styles.cardTitle}>JSON 파일 Sync</p>
+							<div className={styles.fileRow}>
+								<label className={styles.fileLabel}>
+									파일 선택
+									<input
+										type="file"
+										accept=".json,application/json"
+										className={styles.fileInput}
+										onChange={(e) => {
+											setSelectedFile(e.currentTarget.files?.[0] ?? null);
+										}}
+									/>
+								</label>
 
-			<section style={{ marginTop: 20 }}>
-				<h2>adminOverriddenFields lock/unlock</h2>
+								<span className={styles.fileName}>
+									{selectedFile ? selectedFile.name : "선택된 파일 없음"}
+								</span>
 
-				<p style={{ margin: "8px 0" }}>
-					마지막 응답 기준 lock: {overrideFields.length > 0 ? overrideFields.join(", ") : "없음"}
-				</p>
+								<button
+									type="button"
+									className={`${styles.btn} ${styles.btnSecondary}`}
+									onClick={handleSyncFile}
+									disabled={isLoading}
+								>
+									업로드
+								</button>
+							</div>
+						</div>
 
-				<div
-					style={{
-						display: "grid",
-						gridTemplateColumns: "repeat(4, minmax(0, 1fr))",
-						gap: 8,
-					}}
-				>
-					{OVERRIDABLE_FIELDS.map(({ key, label }) => (
-						<label key={key} style={{ display: "flex", gap: 6 }}>
-							<input
-								type="checkbox"
-								checked={selectedOverrideFields.includes(key)}
-								onChange={() => toggleOverrideField(key)}
-							/>
-							{label} ({key})
-						</label>
-					))}
+						{/* adminOverriddenFields lock/unlock */}
+						<div className={`${styles.card} ${styles.cardGrow}`}>
+							<p className={styles.cardTitle}>Override Fields</p>
+
+							<div className={styles.overrideMeta}>
+								<span className={styles.overrideMetaLabel}>현재 lock</span>
+								{overrideFields.length > 0 ? (
+									overrideFields.map((f) => (
+										<span key={f} className={styles.lockedBadge}>
+											{f}
+										</span>
+									))
+								) : (
+									<span className={styles.overrideMetaLabel}>없음</span>
+								)}
+							</div>
+
+							<div className={styles.checkboxGrid}>
+								{OVERRIDABLE_FIELDS.map(({ key, label }) => {
+									const checked = selectedOverrideFields.includes(key);
+									return (
+										<label
+											key={key}
+											className={`${styles.checkboxLabel} ${checked ? styles.checkboxLabelChecked : ""}`}
+										>
+											<input
+												type="checkbox"
+												className={styles.checkboxNative}
+												checked={checked}
+												onChange={() => toggleOverrideField(key)}
+											/>
+											{label}
+											<span className={styles.checkboxKey}>({key})</span>
+										</label>
+									);
+								})}
+							</div>
+
+							<div className={styles.overrideActions}>
+								<button
+									type="button"
+									className={`${styles.btn} ${styles.btnLock}`}
+									onClick={() => handleUpdateOverrides("lock")}
+									disabled={isLoading}
+								>
+									선택 필드 lock
+								</button>
+
+								<button
+									type="button"
+									className={`${styles.btn} ${styles.btnSecondary}`}
+									onClick={() => handleUpdateOverrides("unlock")}
+									disabled={isLoading}
+								>
+									선택 필드 unlock
+								</button>
+							</div>
+						</div>
+					</div>
+
+					{/* ── 오른쪽 패널 ── */}
+					<div className={styles.rightPanel}>
+						<div className={styles.formCard}>
+							<p className={styles.cardTitle}>행사 데이터</p>
+							<div className={styles.formGrid}>
+								{fields.map(([key, label, type]) => (
+									<div key={key} className={styles.formField}>
+										<label className={styles.formLabel}>{label}</label>
+										<input
+											type={type}
+											className={styles.formInput}
+											value={form[key]}
+											onChange={(e) => updateForm(key, e.currentTarget.value)}
+										/>
+									</div>
+								))}
+
+								<div className={`${styles.formField} ${styles.formFieldFull}`}>
+									<label className={styles.formLabel}>상세 HTML</label>
+									<textarea
+										className={styles.formTextarea}
+										value={form.mainContentHtml}
+										onChange={(e) => updateForm("mainContentHtml", e.currentTarget.value)}
+									/>
+								</div>
+							</div>
+						</div>
+					</div>
 				</div>
-
-				<div style={{ display: "flex", gap: 8, marginTop: 12 }}>
-					<button
-						type="button"
-						onClick={() => handleUpdateOverrides("lock")}
-						disabled={isLoading}
-					>
-						선택 필드 lock
-					</button>
-
-					<button
-						type="button"
-						onClick={() => handleUpdateOverrides("unlock")}
-						disabled={isLoading}
-					>
-						선택 필드 unlock
-					</button>
-				</div>
-			</section>
-
-			{message && <p style={{ marginTop: 16 }}>{message}</p>}
-
-			<section
-				style={{
-					display: "grid",
-					gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
-					gap: 12,
-					marginTop: 20,
-				}}
-			>
-				{fields.map(([key, label, type]) => (
-					<label
-						key={key}
-						style={{ display: "flex", flexDirection: "column", gap: 4 }}
-					>
-						{label}
-						<input
-							type={type}
-							value={form[key]}
-							onChange={(e) => updateForm(key, e.currentTarget.value)}
-						/>
-					</label>
-				))}
-
-				<label
-					style={{
-						display: "flex",
-						flexDirection: "column",
-						gap: 4,
-						gridColumn: "1 / -1",
-					}}
-				>
-					상세 HTML
-					<textarea
-						value={form.mainContentHtml}
-						onChange={(e) => updateForm("mainContentHtml", e.currentTarget.value)}
-						rows={12}
-					/>
-				</label>
-			</section>
-		</main>
+			</div>
+		</div>
 	);
 }
