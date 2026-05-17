@@ -1,7 +1,7 @@
 import axios from "axios";
 import type React from "react";
 import { useRef, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { useAuth } from "@contexts/AuthProvider";
 import CompleteSignUp from "../OnBoarding/CompleteSignUp";
 import Onboarding from "../OnBoarding/Onboarding";
@@ -165,6 +165,12 @@ export default function EmailSignUp() {
 						계정 생성
 					</button>
 				</form>
+				<div className={styles.loginLink}>
+					<p className={styles.loginText}>이미 계정이 있으신가요?</p>
+					<Link to="/auth/login" className={styles.loginText}>
+						로그인하러 가기
+					</Link>
+				</div>
 			</div>
 		</div>
 	);
