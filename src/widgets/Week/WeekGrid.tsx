@@ -130,6 +130,8 @@ function DayColumn({
 			{blocks.map((b) => {
 				const { event } = b.raw.resource;
 				const color = CATEGORY_COLORS[event.eventTypeId] || CATEGORY_COLORS[6];
+				const location = event.location?.trim();
+				const shouldShowLocation = location && location !== "-";
 
 				return (
 					<button
@@ -152,6 +154,9 @@ function DayColumn({
 							{formatAmPmFromMinutes(b.startMin)} -{" "}
 							{formatAmPmFromMinutes(b.endMin)}
 						</div>
+						{shouldShowLocation && (
+							<div className={styles.blockLocation}>{location}</div>
+						)}
 					</button>
 				);
 			})}

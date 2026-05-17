@@ -24,7 +24,7 @@
 
 /* 타이틀 */
 .loginTitle {
-	margin: 0 0 28px;
+	margin: 0 0 54px;
 	font-size: 28px;
 	font-weight: 700;
 	letter-spacing: -0.02em;
@@ -99,23 +99,23 @@
 
 /* 회원가입 안내 */
 .loginSignup {
-	margin-top: 10px;
 	display: flex;
-	gap: 8px;
 	align-items: center;
-	justify-content: center;
+	gap: 8px;
+	margin-top: 24px;
 }
 
 .loginSignupText {
-	font-size: 12px;
-	color: #777;
+	margin: 0;
+  	border: 0;
+  	background: transparent;
+  	color: #8a8a8a;
+  	font-size: 14px;
+  	font-weight: 500;
+  	cursor: pointer;
 }
 
-.loginSignupLink {
-	font-size: 12px;
-	font-weight: 600;
-	color: #000;
-	cursor: pointer;
-	text-decoration: underline;
-	text-underline-offset: 3px;
+.loginSignupText:active {
+  color: #666666;
+  text-decoration: underline;
 }

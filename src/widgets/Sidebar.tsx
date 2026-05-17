@@ -14,6 +14,7 @@ import type { Category } from "@types";
 import { useUserData } from "@/contexts/UserDataContext";
 import { IoIosClose } from "react-icons/io";
 import { CATEGORY_BUTTON_COLORS } from "@/util/constants";
+import { SidebarLogoutButton } from "./SidebarLogoutButton";
 
 export const Sidebar = () => {
 	type FilterType = "status" | "org" | "category";
@@ -26,7 +27,7 @@ export const Sidebar = () => {
 		globalSetter: React.Dispatch<React.SetStateAction<Category[]>>;
 	}
 
-	const { user, logout } = useAuth();
+	const { user } = useAuth();
 	const { excludedKeywords, addExcludedKeyword, deleteExcludedKeyword, excludedKeywordLoading } =
 		useUserData();
 	const { categoryGroups, isLoadingMeta } = useFilter();
@@ -366,18 +367,7 @@ export const Sidebar = () => {
 				/>
 				<span>시간표</span>
 			</button>
-			{user && (
-				<button
-					type="button"
-					onClick={() => {
-						logout();
-						ref?.current?.scrollTo(0, 0);
-					}}
-					className={styles.logout}
-				>
-					로그아웃
-				</button>
-			)}
+			<SidebarLogoutButton onLogout={() => ref.current?.scrollTo(0, 0)} />
 		</div>
 	);
 };

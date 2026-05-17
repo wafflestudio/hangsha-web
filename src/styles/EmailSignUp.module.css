@@ -22,13 +22,13 @@
 
 .header {
 	text-align: center;
-	margin-bottom: 22px;
+	margin-bottom: 54px;
 }
 
 .title {
 	margin: 0;
-	font-size: 20px;
-	font-weight: 800;
+	font-size: 28px;
+	font-weight: 700;
 	letter-spacing: -0.03em;
 	color: #111;
 }
@@ -137,4 +137,26 @@
 .submit:active {
 	transform: translateY(1px);
 	box-shadow: 0 7px 16px rgba(0, 0, 0, 0.12);
+}
+
+
+.loginLink {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	margin-top: 24px;
+}
+.loginText {
+	margin: 0;
+  	border: 0;
+  	background: transparent;
+  	color: #8a8a8a;
+  	font-size: 14px;
+  	font-weight: 500;
+  	cursor: pointer;
+}
+
+.loginText:active {
+  color: #666666;
+  text-decoration: underline;
 }

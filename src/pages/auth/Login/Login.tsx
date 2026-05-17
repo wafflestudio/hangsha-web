@@ -27,7 +27,7 @@ export default function Login() {
 		try {
 			await login(email, password);
 			setCheck(true);
-			navigate("/auth/complete");
+			navigate("/main");
 		} catch {
 			setCheck(false);
 		}
@@ -75,7 +75,7 @@ export default function Login() {
 						<span className={styles.loginSignupText}>
 							회원가입을 하시겠어요?
 						</span>
-						<Link to="/auth/signup" className={styles.loginSignupLink}>
+						<Link to="/auth/signup" className={styles.loginSignupText}>
 							회원가입
 						</Link>
 					</div>
