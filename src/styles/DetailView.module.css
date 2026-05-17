@@ -127,3 +127,16 @@
   height: auto !important;
   display: block !important;
 }
+
+.locationRow {
+  display: flex;
+  flex-flow: row nowrap;
+  margin-top: 5px;
+  gap: 5px;
+  align-items: center;
+}
+.locationRow > span {
+  font-size: 14px;
+  font-weight: 500;
+  color: #555555;
+}

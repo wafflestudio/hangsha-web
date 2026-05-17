@@ -56,7 +56,7 @@ const MobileChipsList = ({ event }: { event: Event }) => {
 	)
 }
 
-const CardView = ({ event, onLoginPrompt }: { event: Event; onLoginPrompt: () => void; }) => {
+const CardView = ({ event, onLoginPrompt }: { event: Event; onLoginPrompt?: () => void; }) => {
 	const ddayTargetDate = event.applyEnd;
 	const {user} = useAuth();
 
@@ -72,7 +72,7 @@ const CardView = ({ event, onLoginPrompt }: { event: Event; onLoginPrompt: () =>
 		e.stopPropagation();
 
 		if (!user) {	
-			onLoginPrompt();
+			onLoginPrompt?.();
 			return;
 		}
 
