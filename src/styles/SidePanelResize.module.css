@@ -1,0 +1,16 @@
+.resizeHandle {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 8px;
+  height: 100%;
+  cursor: col-resize;
+  z-index: 120;
+  background-color: transparent;
+  transition: background-color 0.15s ease;
+}
+
+.resizeHandle:hover,
+.resizeHandle:active {
+  background-color: rgba(0, 0, 0, 0.08);
+}

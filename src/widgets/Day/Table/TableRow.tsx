@@ -8,7 +8,10 @@ import { ApplyDate, StartDate } from "@/widgets/EventDate";
 
 const TableRow = ({ data }: { data: CalendarEvent }) => {
 	const event = data.resource.event;
-	const ddayTargetDate = event.eventStart ? event.eventStart : event.applyEnd;
+	const ddayTargetDate = data?.resource.isPeriodEvent
+		? data.end
+		: data.start;
+
 
 	const { setShowDetail, setClickedEventId } = useDetail();
 

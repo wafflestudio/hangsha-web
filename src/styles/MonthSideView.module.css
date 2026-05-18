@@ -100,6 +100,13 @@
   height: 18px;
 }
 
+.emptyText {
+  text-align: center;
+  color: #888888;
+  font-size: 14px;
+  margin-top: 24px;
+}
+
 .cardButton {
   background: none;
   border-width: 0;

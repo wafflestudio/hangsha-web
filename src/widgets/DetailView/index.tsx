@@ -74,6 +74,7 @@ const DetailView = ({ eventId }: { eventId: number }) => {
 	const ddayTargetDate = calendarEvent?.resource.isPeriodEvent
 		? calendarEvent.end
 		: calendarEvent?.start;
+		
 	const [isBookmarked, setIsBookmarked] = useState<boolean>(
 		!!event?.isBookmarked,
 	);

@@ -13,6 +13,7 @@ import { HiOutlinePencilAlt } from "react-icons/hi";
 import { IoMdAdd, IoMdClose, IoMdDoneAll } from "react-icons/io";
 import { FaCheck, FaTrashCan } from "react-icons/fa6";
 import { useUserData } from "@/contexts/UserDataContext";
+import { useDetail } from "@/contexts/DetailContext";
 
 const MemoPageCard = ({
 	memo,
@@ -29,6 +30,7 @@ const MemoPageCard = ({
 	const [isAddingTag, setIsAddingTag] = useState<boolean>(false);
 	const [newTag, setNewTag] = useState<string>("");
 	const { updateMemo } = useUserData();
+	const { setShowDetail, setClickedEventId } = useDetail();
 	const inputRef = useRef<HTMLInputElement>(null);
 	const textareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -91,8 +93,26 @@ const MemoPageCard = ({
 		}
 	};
 
+	const handleOpenDetail = () => {
+		if (editMode || isAddingTag) return;
+		setClickedEventId(memo.eventId);
+		setShowDetail(true);
+	};
+
 	return (
-		<div className={styles.cardContainer}>
+		// biome-ignore lint/a11y/useSemanticElements: div cannot be button because card contains a textarea, inputs, and nested buttons
+		<div
+			className={styles.cardContainer}
+			onClick={handleOpenDetail}
+			onKeyDown={(e) => {
+				if (e.key === "Enter" || e.key === " ") {
+					e.preventDefault();
+					handleOpenDetail();
+				}
+			}}
+			role="button"
+			tabIndex={0}
+		>
 			<span className={styles.memoDate}>
 				{formatDateDotParsed(memo.createdAt)}
 			</span>
@@ -106,6 +126,7 @@ const MemoPageCard = ({
 						e.currentTarget.style.height = "auto";
 						e.currentTarget.style.height = `${Math.min(e.currentTarget.scrollHeight, 150)}px`;
 					}}
+					onClick={(e) => e.stopPropagation()}
 					disabled={!editMode}
 				/>
 				<span className={styles.memoTitle}>{memo.eventTitle}</span>
@@ -117,7 +138,10 @@ const MemoPageCard = ({
 								{editMode && (
 									<IoMdClose
 										className={styles.deleteTagIcon}
-										onClick={() => handleDeleteTag(t)}
+										onClick={(e) => {
+											e.stopPropagation();
+											handleDeleteTag(t);
+										}}
 									/>
 								)}
 							</li>
@@ -130,7 +154,9 @@ const MemoPageCard = ({
 								className={styles.addInput}
 								value={newTag}
 								onChange={(e) => setNewTag(e.currentTarget.value)}
+								onClick={(e) => e.stopPropagation()}
 								onKeyDown={(e) => {
+									e.stopPropagation();
 									if (e.key === "Enter" && !e.nativeEvent.isComposing) {
 										e.preventDefault();
 										handleAddTag();
@@ -138,7 +164,10 @@ const MemoPageCard = ({
 								}}
 							/>
 							<FaCheck
-								onClick={handleAddTag}
+								onClick={(e) => {
+									e.stopPropagation();
+									handleAddTag();
+								}}
 								className={styles.addIcon}
 								size={12}
 								color="#666666"
@@ -146,6 +175,7 @@ const MemoPageCard = ({
 								tabIndex={0}
 								aria-label="Add tag"
 								onKeyDown={(e) => {
+									e.stopPropagation();
 									if (e.key === "Enter" && !e.nativeEvent.isComposing) {
 										e.preventDefault();
 										handleAddTag();
@@ -158,7 +188,10 @@ const MemoPageCard = ({
 						<button
 							type="button"
 							className={styles.addTagBtn}
-							onClick={handleNewTag}
+							onClick={(e) => {
+								e.stopPropagation();
+								handleNewTag();
+							}}
 						>
 							<IoMdAdd size={18} color="#666666" />
 						</button>
@@ -167,13 +200,19 @@ const MemoPageCard = ({
 				{!editMode ? (
 					<div className={styles.buttonsRow}>
 						<FaTrashCan
-							onClick={() => onDelete(memo.id)}
+							onClick={(e) => {
+								e.stopPropagation();
+								onDelete(memo.id);
+							}}
 							className={styles.deleteBtn}
 							size={22}
 							color="#7c7c7c"
 						/>
 						<HiOutlinePencilAlt
-							onClick={() => setEditMode(true)}
+							onClick={(e) => {
+								e.stopPropagation();
+								setEditMode(true);
+							}}
 							className={styles.editIcon}
 							size={25}
 							color="#7c7c7c"
@@ -181,7 +220,10 @@ const MemoPageCard = ({
 					</div>
 				) : (
 					<IoMdDoneAll
-						onClick={handleSave}
+						onClick={(e) => {
+							e.stopPropagation();
+							handleSave();
+						}}
 						className={styles.checkIcon}
 						size={25}
 						color="#7c7c7c"

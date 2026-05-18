@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import SearchToolbar from "./SearchToolbar";
 import { Sidebar } from "@widgets/Sidebar";
 import GalleryView from "@/widgets/Day/Gallery/GalleryView";
@@ -15,6 +15,10 @@ import { FilterSheet } from "@/widgets/FilterSheet/FilterSheet";
 
 import { useSearch } from "@/contexts/SearchContext";
 import { useDetail } from "@/contexts/DetailContext";
+import {
+	SidePanelResizeHandle,
+	useResizableSidePanel,
+} from "@/widgets/SidePanelResize";
 
 const SearchView = () => {
 	const {
@@ -27,8 +31,26 @@ const SearchView = () => {
 		searchResults,
 		searchLoading,
 	} = useSearch();
-	const { showDetail, clickedEventId } = useDetail();
+	const { showDetail, setShowDetail, clickedEventId } = useDetail();
 	const [viewMode, setViewMode] = useState<"List" | "Grid">("Grid");
+	const { isMobile, handleResizeStart, sidePanelStyle } =
+		useResizableSidePanel();
+
+	const sidePanelRef = useRef<HTMLDivElement>(null);
+
+	useEffect(() => {
+		function handleClickOutside(event: MouseEvent) {
+			if (!sidePanelRef.current) return;
+			const isInside = sidePanelRef.current.contains(event.target as Node);
+			if (!isInside) {
+				setShowDetail(false);
+			}
+		}
+		document.addEventListener("mousedown", handleClickOutside);
+		return () => {
+			document.removeEventListener("mousedown", handleClickOutside);
+		};
+	}, [setShowDetail]);
 
 	useEffect(() => {
 		const fetchData = async () => {
@@ -52,7 +74,9 @@ const SearchView = () => {
 	const events: CalendarEvent[] = useMemo(() => {
 		if (!searchResults) return [];
 
-		return searchResults.items.map((e: Event) => calendarEventMapper(e, Views.DAY));
+		return searchResults.items.map((e: Event) =>
+			calendarEventMapper(e, Views.DAY),
+		);
 	}, [searchResults]);
 
 	/* pagination logic */
@@ -148,7 +172,14 @@ const SearchView = () => {
 				)}
 			</div>
 			{showDetail && clickedEventId !== undefined && (
-				<div className={styles.sidePanel}>
+				<div
+					className={styles.sidePanel}
+					ref={sidePanelRef}
+					style={sidePanelStyle}
+				>
+					{!isMobile && (
+						<SidePanelResizeHandle onMouseDown={handleResizeStart} />
+					)}
 					<DetailView eventId={clickedEventId} />
 				</div>
 			)}

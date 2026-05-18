@@ -60,6 +60,19 @@ export default function TimetablePage() {
 	const [isAddClassPanelOpen, setIsAddClassPanelOpen] = useState(false);
 	const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 	const [isTimetableSimplified, setIsTimetableSimplified] = useState(false);
+	const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+
+	const handleAddTimetable = async () => {
+		if (!user) {
+			setIsLoginModalOpen(true);
+			return;
+		}
+		await createTimetable({
+			year,
+			semester,
+			name: "새 시간표",
+		});
+	};
 
 	const { user } = useAuth();
 	const navigate = useNavigate();
@@ -174,13 +187,7 @@ export default function TimetablePage() {
 		>
 			<TimeTableSidebar
 				timetables={timetables}
-				onAddTimetable={() =>
-					createTimetable({
-						year,
-						semester,
-						name: "새 시간표",
-					})
-				}
+				onAddTimetable={handleAddTimetable}
 				onSelectTimetable={selectTimetable}
 				onRename={updateTimetableName}
 				onDelete={deleteTimetable}
@@ -262,6 +269,15 @@ export default function TimetablePage() {
 					/>
 				</div>
 			}
+
+			{isLoginModalOpen && (
+				<Modal
+					content={"시간표 추가를 위해서는\n로그인이 필요해요."}
+					leftText="로그인 ·회원가입 페이지로 이동"
+					onLeftClick={() => navigate("/")}
+					onClose={() => setIsLoginModalOpen(false)}
+				/>
+			)}
 
 			<BottomNav />
 		</div>

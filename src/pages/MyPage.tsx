@@ -132,14 +132,14 @@ const ProfileCard = ({ onClickInterest }: { onClickInterest: () => void }) => {
 					<IoMdDoneAll
 						onClick={handleChangesSave}
 						className={styles.editBtn}
-						size={20}
-						color="ABABAB"
+						size={25}
+						color="#555555"
 					/>
 				) : (
 					<RiPencilFill
 						className={styles.editBtn}
 						color="ABABAB"
-						size={24}
+						size={25}
 						onClick={() => setIsEditmode(true)}
 					/>
 				)}

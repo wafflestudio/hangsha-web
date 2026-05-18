@@ -138,7 +138,7 @@
 }
 
 :global(.rbc-date-cell):first-child:not(.rbc-now) :global(.rbc-button-link) {
-  color: #ef4444;
+  color: red;
 }
 
 /* Today's date styling */
@@ -155,6 +155,11 @@
   align-items: center;
   justify-content: center;
   border-radius: 50%;
+}
+
+:global(.rbc-date-cell):first-child:global(.rbc-now) :global(.rbc-button-link) {
+  background-color: rgb(255, 0, 0);
+  color: white;
 }
 
 :global(.rbc-off-range) {
