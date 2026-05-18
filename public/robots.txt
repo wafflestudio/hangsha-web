@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+ 
+Disallow: /auth/
+Disallow: /sync
+Disallow: /my
+Disallow: /bookmark
+Disallow: /memo
+ 
+Sitemap: https://hangsha.wafflestudio.com/sitemap.xml
