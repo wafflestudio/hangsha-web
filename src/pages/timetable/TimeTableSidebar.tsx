@@ -44,6 +44,10 @@ export const TimeTableSidebar = ({
 	const handleTimetableClick = () => {
 		navigate("/timetable");
 	};
+	
+	const handleBookmarkClick = () => {
+		navigate("/bookmark");
+	}
 
 	const startRename = (tt: Timetable) => {
 		setNameChangeId(tt.id);
@@ -202,14 +206,18 @@ export const TimeTableSidebar = ({
 				/>
 				<span>캘린더로 돌아가기</span>
 			</button>
-			<div className={styles.pageLink}>
+			<button 
+				type="button"
+				className={styles.pageLink}
+					onClick={() => handleBookmarkClick()}
+			>
 				<img
 					className={styles.icon}
 					src="/assets/bookmark.svg"
 					alt="bookmark icon"
 				/>
 				<span>찜한 행사</span>
-			</div>
+			</button>
 			<button
 				type="button"
 				className={styles.pageLink}
