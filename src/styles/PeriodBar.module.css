@@ -14,6 +14,13 @@
 	pointer-events: auto;
 	color: var(--period-text, #111);
 	transform: translateY(-10px);
+	transform-origin: center;
+	transition: transform 0.2s ease;
+}
+
+.bar:hover {
+	z-index: 1000;
+	transform: translateY(-10px) scale(1.03);
 }
 
 .line {
