@@ -73,6 +73,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 				if (restoredUser) {
 					setUser(restoredUser);
 					setIsAuthenticated(true);
+				} else if (TokenService.getToken()) {
+					try {
+						const user = await auth.getUser();
+						setUser(user); setIsAuthenticated(true);
+					} catch {
+						TokenService.clearTokens();
+					}
 				}
 			} catch (e) {
 				console.error(e);
