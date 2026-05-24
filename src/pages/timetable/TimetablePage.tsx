@@ -220,6 +220,7 @@ export default function TimetablePage() {
 					onToggleChange={setIsTimetableSimplified}
 					isLoading={isLoading}
 					years={years}
+					hasTimetable={hasTimetable}
 				/>
 
 				{!hasTimetable ? (
@@ -232,7 +233,10 @@ export default function TimetablePage() {
 								왼쪽 사이드바에서 시간표를 추가하거나 선택해 주세요.
 							</span>
 							<span className={styles.emptyMobile}>
-								시간표 변경에서 새 시간표를 추가해 주세요
+								하단 버튼을 클릭해
+							</span>
+						    <span className={styles.emptyMobile}>
+								시간표를 추가하거나 선택해 주세요.
 							</span>
 						</div>
 					</div>

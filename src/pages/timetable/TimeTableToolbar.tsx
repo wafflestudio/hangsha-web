@@ -15,6 +15,7 @@ interface TimeTableToolbarProps {
 	onToggleChange: (isToggleOn: boolean) => void;
 	isLoading?: boolean;
 	years?: number[];
+	hasTimetable?: boolean;
 }
 
 const TimeTableToolbar = ({
@@ -28,6 +29,7 @@ const TimeTableToolbar = ({
 	onToggleChange,
 	isLoading = false,
 	years,
+	hasTimetable = false,
 }: TimeTableToolbarProps) => {
 	const { user } = useAuth();
 	const navigate = useNavigate();
@@ -80,6 +82,7 @@ const TimeTableToolbar = ({
 					</div>
 					<p className={styles.dateTitle}>{timetableName}</p>
 					<p className={styles.mobileTimetableTitle}>{displayTimetableName}</p>
+					{hasTimetable ?
 					<div className={styles.timetableToggleGroup}>
 						<span className={styles.timetableToggleLabel}>행사 함께 보기</span>
 						<button
@@ -93,7 +96,8 @@ const TimeTableToolbar = ({
 						>
 							<span className={styles.timetableToggleThumb} />
 						</button>
-					</div>
+					</div> : null
+					}
 				</div>
 
 				<div className={styles.profileRow}>
