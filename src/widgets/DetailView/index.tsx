@@ -6,8 +6,8 @@ import { getDDay } from "../../util/Calendar/getDday";
 import { CATEGORY_COLORS, CATEGORY_LIST } from "@constants";
 import { FaAnglesRight, FaLocationDot } from "react-icons/fa6";
 import type { CalendarEvent, EventDetail } from "@types";
-import DOMPurify from "isomorphic-dompurify";
 import parse from "html-react-parser";
+import { sanitizeDetail } from "@/util/sanitizeDetail";
 import { useUserData } from "@/contexts/UserDataContext";
 import { useDetail } from "@/contexts/DetailContext";
 import { useAuth } from "@/contexts/AuthProvider";
@@ -185,7 +185,7 @@ const DetailView = ({ eventId }: { eventId: number }) => {
 			</button>
 			<div className={`${styles.contentText} html-viewer`}>
 				<hr style={{ borderWidth: "0.5px" }} />
-				{parse(DOMPurify.sanitize(event.detail))}
+				{parse(sanitizeDetail(event.detail))}
 			</div>
 
 			{/* ----- Memo & Tag Section ----- */}

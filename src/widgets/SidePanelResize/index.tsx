@@ -9,8 +9,10 @@ import {
 import styles from "@styles/SidePanelResize.module.css";
 
 const SIDE_PANEL_MIN_WIDTH = 280;
+// 기본 최대 너비. 화면이 넓으면 getSidePanelMaxWidth에서 더 키운다.
 const SIDE_PANEL_MAX_WIDTH = 800;
 const MOBILE_BREAKPOINT = 576;
+const STORAGE_KEY = "sidePanelWidth";
 
 // Keep in sync with media queries in page CSS modules
 const getDefaultSidePanelWidth = () => {
@@ -20,6 +22,34 @@ const getDefaultSidePanelWidth = () => {
 	if (w <= 1200) return 460;
 	if (w <= 1400) return 600;
 	return 480;
+};
+
+// 화면이 넓을수록 패널을 더 넓게 늘릴 수 있도록 최대 너비를 키운다
+const getSidePanelMaxWidth = () => {
+	if (typeof window === "undefined") return SIDE_PANEL_MAX_WIDTH;
+	const w = window.innerWidth;
+	if (w >= 2000) return 1500;
+	if (w >= 1400) return 1000;
+	return SIDE_PANEL_MAX_WIDTH;
+};
+
+// localStorage에 저장된 너비를 우선 사용하고, 없거나 범위를 벗어나면 기본값으로 폴백
+const getInitialSidePanelWidth = () => {
+	if (typeof window === "undefined") return 480;
+	const stored = Number(window.localStorage.getItem(STORAGE_KEY));
+	if (
+		Number.isFinite(stored) &&
+		stored >= SIDE_PANEL_MIN_WIDTH &&
+		stored <= getSidePanelMaxWidth()
+	) {
+		return stored;
+	}
+	return getDefaultSidePanelWidth();
+};
+
+const persistSidePanelWidth = (width: number) => {
+	if (typeof window === "undefined") return;
+	window.localStorage.setItem(STORAGE_KEY, String(width));
 };
 
 interface SidePanelResizeContextType {
@@ -37,7 +67,7 @@ export const SidePanelResizeProvider = ({
 }: {
 	children: ReactNode;
 }) => {
-	const [width, setWidth] = useState<number>(getDefaultSidePanelWidth);
+	const [width, setWidth] = useState<number>(getInitialSidePanelWidth);
 	const [isMobile, setIsMobile] = useState<boolean>(
 		typeof window !== "undefined" && window.innerWidth <= MOBILE_BREAKPOINT,
 	);
@@ -70,21 +100,26 @@ export const useResizableSidePanel = () => {
 			e.stopPropagation();
 			const startX = e.clientX;
 			const startWidth = width;
+			let latestWidth = startWidth;
+			const maxWidth = getSidePanelMaxWidth();
 			const previousCursor = document.body.style.cursor;
 			document.body.style.cursor = "col-resize";
 
 			const onMove = (ev: MouseEvent) => {
 				// panel anchored to the right — dragging left increases width
 				const next = Math.min(
-					SIDE_PANEL_MAX_WIDTH,
+					maxWidth,
 					Math.max(SIDE_PANEL_MIN_WIDTH, startWidth + (startX - ev.clientX)),
 				);
+				latestWidth = next;
 				setWidth(next);
 			};
 			const onUp = () => {
 				document.body.style.cursor = previousCursor;
 				document.removeEventListener("mousemove", onMove);
 				document.removeEventListener("mouseup", onUp);
+				// 드래그 종료 시점에 최종 너비만 1회 저장 (드래그 중 매 프레임 쓰기 방지)
+				persistSidePanelWidth(latestWidth);
 			};
 			document.addEventListener("mousemove", onMove);
 			document.addEventListener("mouseup", onUp);

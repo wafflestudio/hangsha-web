@@ -11,6 +11,12 @@
     sans-serif;
 
   overflow-y: auto;
+
+  /* body에 걸린 user-select: none(전역)이 상속되어 선택이 막히므로
+     상세 패널 안에서는 텍스트 선택·복사를 다시 허용한다. */
+  user-select: text;
+  -webkit-user-select: text;
+  -webkit-touch-callout: default;
 }
 
 .thumbnail {
@@ -119,7 +125,11 @@
   font-size: 15px;
   line-height: 1.6;
   color: #333333;
-  white-space: pre-wrap;
+  /* 렌더링된 HTML이므로 pre-wrap을 쓰면 태그 사이 들여쓰기·줄바꿈이
+     그대로 보여 레이아웃이 깨진다. 공백은 normal로 collapse시킨다. */
+  white-space: normal;
+  overflow-wrap: break-word;
+  word-break: break-word;
   margin-bottom: 40px;
 }
 .contentText :global(img) {
@@ -127,6 +137,11 @@
   width: auto !important;
   height: auto !important;
   display: block !important;
+}
+.contentText :global(a) {
+  color: #2563eb;
+  text-decoration: underline;
+  word-break: break-all;
 }
 
 .locationRow {
