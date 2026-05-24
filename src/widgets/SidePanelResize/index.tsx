@@ -4,13 +4,16 @@ import {
 	useCallback,
 	useContext,
 	useEffect,
+	useRef,
 	useState,
 } from "react";
 import styles from "@styles/SidePanelResize.module.css";
 
 const SIDE_PANEL_MIN_WIDTH = 280;
-// 기본 최대 너비. 화면이 넓으면 getSidePanelMaxWidth에서 더 키운다.
+// window가 없을 때(SSR)만 쓰는 기본 최대 너비
 const SIDE_PANEL_MAX_WIDTH = 800;
+// 좌측 사이드바(.sidebarContainer) 너비 :t Sidebar.module.css와 동기화
+const SIDEBAR_WIDTH = 256;
 const MOBILE_BREAKPOINT = 576;
 const STORAGE_KEY = "sidePanelWidth";
 
@@ -24,25 +27,21 @@ const getDefaultSidePanelWidth = () => {
 	return 480;
 };
 
-// 화면이 넓을수록 패널을 더 넓게 늘릴 수 있도록 최대 너비를 키운다
+// 패널 최대 너비 = 브라우저 너비 - 사이드바 너비 (사이드바를 덮지 않는 선까지 확장 허용)
 const getSidePanelMaxWidth = () => {
 	if (typeof window === "undefined") return SIDE_PANEL_MAX_WIDTH;
-	const w = window.innerWidth;
-	if (w >= 2000) return 1500;
-	if (w >= 1400) return 1000;
-	return SIDE_PANEL_MAX_WIDTH;
+	return Math.max(SIDE_PANEL_MIN_WIDTH, window.innerWidth - SIDEBAR_WIDTH);
 };
 
-// localStorage에 저장된 너비를 우선 사용하고, 없거나 범위를 벗어나면 기본값으로 폴백
+// 저장값이 있으면 현재 화면의 [min, max] 범위로 클램프해 복원, 없으면 기본값으로 폴백
 const getInitialSidePanelWidth = () => {
 	if (typeof window === "undefined") return 480;
 	const stored = Number(window.localStorage.getItem(STORAGE_KEY));
-	if (
-		Number.isFinite(stored) &&
-		stored >= SIDE_PANEL_MIN_WIDTH &&
-		stored <= getSidePanelMaxWidth()
-	) {
-		return stored;
+	if (Number.isFinite(stored) && stored > 0) {
+		return Math.min(
+			getSidePanelMaxWidth(),
+			Math.max(SIDE_PANEL_MIN_WIDTH, stored),
+		);
 	}
 	return getDefaultSidePanelWidth();
 };
@@ -72,8 +71,20 @@ export const SidePanelResizeProvider = ({
 		typeof window !== "undefined" && window.innerWidth <= MOBILE_BREAKPOINT,
 	);
 
+	// resize 핸들러(deps: [])에서 항상 최신 width를 읽기 위한 ref
+	const widthRef = useRef(width);
+	widthRef.current = width;
+
 	useEffect(() => {
-		const onResize = () => setIsMobile(window.innerWidth <= MOBILE_BREAKPOINT);
+		const onResize = () => {
+			setIsMobile(window.innerWidth <= MOBILE_BREAKPOINT);
+			// 창이 좁아지면 패널을 새 최대 너비로 실시간 축소 (넓어질 땐 사용자가 정한 너비 유지)
+			const max = getSidePanelMaxWidth();
+			if (widthRef.current > max) {
+				setWidth(max);
+				persistSidePanelWidth(max); // 자동 축소된 너비도 저장
+			}
+		};
 		window.addEventListener("resize", onResize);
 		return () => window.removeEventListener("resize", onResize);
 	}, []);
