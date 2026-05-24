@@ -21,6 +21,7 @@ import styles from "@styles/Timetable.module.css";
 import { SlArrowLeft } from "react-icons/sl";
 import { TimeTableSidebar } from "./TimeTableSidebar";
 import TimeTableToolbar from "./TimeTableToolbar";
+import { MobileTimetableSidebar } from "./MobileTimetableSidebar";
 import BottomNav from "@/widgets/BottomNav";
 import { useAuth } from "@/contexts/AuthProvider";
 import { useNavigate } from "react-router-dom";
@@ -59,6 +60,8 @@ export default function TimetablePage() {
 	const [tableName, setTableName] = useState<string>("");
 	const [isAddClassPanelOpen, setIsAddClassPanelOpen] = useState(false);
 	const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+	const [isMobileTimetableSidebarOpen, setIsMobileTimetableSidebarOpen] =
+		useState(false);
 	const [isTimetableSimplified, setIsTimetableSimplified] = useState(false);
 	const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
@@ -177,6 +180,16 @@ export default function TimetablePage() {
 			);
 	}, [weekViewData]);
 
+	const openAddClassPanel = () => {
+		setIsMobileTimetableSidebarOpen(false);
+		setIsAddClassPanelOpen(true);
+	};
+
+	const openMobileTimetableSidebar = () => {
+		setIsAddClassPanelOpen(false);
+		setIsMobileTimetableSidebarOpen(true);
+	};
+
 	return (
 		<div
 			className={`${styles.page} ${
@@ -219,10 +232,9 @@ export default function TimetablePage() {
 								왼쪽 사이드바에서 시간표를 추가하거나 선택해 주세요.
 							</span>
 							<span className={styles.emptyMobile}>
-								시간표는 데스크탑 뷰에서 설정해주세요!
+								시간표 변경에서 새 시간표를 추가해 주세요
 							</span>
 						</div>
-						
 					</div>
 				) : (
 					<TimetableGrid
@@ -238,11 +250,19 @@ export default function TimetablePage() {
 				)}
 			</main>
 
+			<button
+				type="button"
+				className={styles.changeTimetableButton}
+				onClick={openMobileTimetableSidebar}
+			>
+				시간표 변경
+			</button>
+
 			{hasTimetable && !isAddClassPanelOpen && (
 				<button
 					type="button"
 					className={styles.addButton}
-					onClick={() => setIsAddClassPanelOpen(true)}
+					onClick={openAddClassPanel}
 				>
 					<SlArrowLeft /> 수업 추가
 				</button>
@@ -259,7 +279,20 @@ export default function TimetablePage() {
 				/>
 			)}
 
-			{!user &&
+			<MobileTimetableSidebar
+				isOpen={isMobileTimetableSidebarOpen}
+				timetables={timetables}
+				currentTimetable={currentTimetable}
+				year={year}
+				semester={semester}
+				onClose={() => setIsMobileTimetableSidebarOpen(false)}
+				onAddTimetable={createTimetable}
+				onSelectTimetable={selectTimetable}
+				onRename={updateTimetableName}
+				onDelete={deleteTimetable}
+			/>
+
+			{!user && (
 				<div className={styles.notFound}>
 					<Modal
 						content={"시간표 페이지 이용을 위해서는\n로그인이 필요해요."}
@@ -268,7 +301,7 @@ export default function TimetablePage() {
 						onClose={null}
 					/>
 				</div>
-			}
+			)}
 
 			{isLoginModalOpen && (
 				<Modal
