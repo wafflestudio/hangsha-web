@@ -1,5 +1,6 @@
 // Home.tsx
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
+import { useAuth } from "@contexts/AuthProvider";
 import logo from "/assets/logo.png";
 import styles from "@styles/Home.module.css";
 
@@ -15,6 +16,13 @@ const SOCIAL_LOGIN_ENTRY = {
 
 export default function Home() {
 	const navigate = useNavigate();
+	const { isAuthenticated, isLoading } = useAuth();
+
+	// 세션 복원 중에는 판단을 보류
+	if (isLoading) return null;
+
+	// 이미 로그인된 사용자는 /main 으로
+	if (isAuthenticated) return <Navigate to="/main" replace />;
 
 	const toLogin = () => navigate("/auth/login");
 	const toSignUp = () => navigate("/auth/signup");

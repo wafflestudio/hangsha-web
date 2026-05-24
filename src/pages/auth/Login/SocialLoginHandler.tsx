@@ -20,12 +20,9 @@ const LoginHandler = () => {
 		const run = async () => {
 			try {
 				await completeSocialLogin(accessToken);
-				navigate(
-					isNewUser ? "/auth/signup?step=onboarding" : "/auth/complete",
-					{
-						replace: true,
-					},
-				);
+				navigate(isNewUser ? "/auth/signup?step=onboarding" : "/main", {
+					replace: true,
+				});
 			} catch (e) {
 				console.error(e);
 				navigate("/auth/login", { replace: true });
