@@ -346,6 +346,7 @@
 .blockRemove {
   justify-self: end;
   color: #333;
+  opacity: 0.55;
 }
 
 .blockTitle {
