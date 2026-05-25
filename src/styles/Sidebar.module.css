@@ -455,7 +455,7 @@ body::-webkit-scrollbar {
   background: #ffffff;
   border: 1px solid rgba(0, 0, 0, 0.08);
   border-radius: 12px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 3px 5px rgba(0, 0, 0, 0.05);
 
   display: flex;
   flex-direction: column;
