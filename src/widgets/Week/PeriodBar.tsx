@@ -47,11 +47,6 @@ function endOfWeekSaturday(d: Date) {
 	return end;
 }
 
-function truncate40(s: string) {
-	if (!s) return "";
-	return s.length > 40 ? `${s.slice(0, 40)}…` : s;
-}
-
 function assignLanes(bars: Bar[]) {
 	const lanes: Bar[][] = [];
 	const placed: Array<Bar & { lane: number }> = [];
@@ -150,8 +145,6 @@ export function PeriodBars({
 				const leftPct = b.startIdx * ((width - 80) / 7) + 80;
 				const widthPct = span * ((width - 80) / 7);
 
-				const displayTitle = truncate40(b.title);
-
 				const categoryId = b.raw.resource.event.eventTypeId;
 				const lineColor =
 					CATEGORY_COLORS[categoryId] ?? CATEGORY_COLORS[CATEGORY_OTHER_INDEX];
@@ -181,7 +174,7 @@ export function PeriodBars({
 						<div className={styles.line} />
 
 						<div className={styles.label}>
-							<span className={styles.title}>{displayTitle}</span>
+							<span className={styles.title}>{b.title}</span>
 						</div>
 					</button>
 				);

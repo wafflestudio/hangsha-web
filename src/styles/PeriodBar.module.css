@@ -1,7 +1,7 @@
 .container {
 	background: rgba(255, 255, 255, 0.75);
 	padding: 10px;
-	overflow: hidden;
+	overflow: visible;
 }
 
 .bar {
@@ -40,7 +40,7 @@
 	top: 0;
 	display: inline-flex;
 	align-items: center;
-	padding: 10px;
+	padding: 8px;
 	font-size: 14px;
 	font-weight: 700;
 	line-height: 1;
@@ -48,6 +48,18 @@
 	transform: translateY(-6px);
 	max-width: 80%;
 	left: 20px;
+	overflow: hidden;
+	border-radius: 999px;
+	transition: font-size 0.2s ease;
+}
+
+.bar:hover .label {
+	width: fit-content;
+	max-width: none;
+	overflow: visible;
+	font-size: 15px;
+	z-index: 1000;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
 .title {
@@ -56,4 +68,10 @@
 	overflow: hidden;
 	white-space: nowrap;
 	text-overflow: ellipsis;
+}
+
+.bar:hover .title {
+	max-width: none;
+	overflow: visible;
+	text-overflow: clip;
 }
