@@ -112,6 +112,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   	const completeSocialLogin = useCallback(async (accessToken: string) => {
     	try {
     	  	TokenService.setToken(accessToken);
+			try {
+				await auth.establishSession();
+			} catch (sessionError) {
+				console.warn(
+					"Session cookie issuance failed after social login:",
+					sessionError,
+				);
+			}
       		const userData = await auth.getUser();
       		setUser(userData);
       		setIsAuthenticated(true);

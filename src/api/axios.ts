@@ -28,12 +28,12 @@ api.interceptors.request.use(
 	(config) => {
 		const url = config.url ?? "";
 
-		const isAuthApi =
+		const skipsAuthorizationHeader =
 			url.includes("/auth/login") ||
 			url.includes("/auth/register") ||
 			url.includes("/auth/refresh");
 
-		if (isAuthApi) {
+		if (skipsAuthorizationHeader) {
 			delete config.headers.Authorization;
 			return config;
 		}
@@ -56,12 +56,13 @@ api.interceptors.response.use(
 		const originalRequest = error.config;
 		const url = originalRequest?.url ?? "";
 
-		const isAuthApi =
+		const skipsRefreshRecovery =
 			url.includes("/auth/login") ||
 			url.includes("/auth/register") ||
-			url.includes("/auth/refresh");
+			url.includes("/auth/refresh") ||
+			url.includes("/auth/session");
 
-		if (isAuthApi) {
+		if (skipsRefreshRecovery) {
 			return Promise.reject(error);
 		}
 

@@ -68,6 +68,10 @@ export const refresh = async () => {
 	return user;
 };
 
+export const establishSession = async () => {
+	await api.post("/auth/session");
+};
+
 // health check
 export const healthCheck = async () => {
 	const res = await api.get("/health");
