@@ -32,6 +32,8 @@ type CSSVarStyle = CSSProperties & {
 	[key: `--${string}`]: string;
 };
 
+const PERIOD_BAR_TOP_HEADROOM = 28;
+
 function startOfWeekSunday(d: Date) {
 	const x = new Date(d);
 	x.setHours(0, 0, 0, 0);
@@ -134,7 +136,10 @@ export function PeriodBars({
 			className={styles.container}
 			style={{
 				bottom: bottomOffset,
-				height: laneCount * laneHeight + Math.max(0, laneCount - 1) * laneGap,
+				height:
+					PERIOD_BAR_TOP_HEADROOM +
+					laneCount * laneHeight +
+					Math.max(0, laneCount - 1) * laneGap,
 				left: left,
 				width: width,
 			}}
