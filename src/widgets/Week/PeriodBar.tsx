@@ -32,6 +32,8 @@ type CSSVarStyle = CSSProperties & {
 	[key: `--${string}`]: string;
 };
 
+const PERIOD_BAR_TOP_HEADROOM = 28;
+
 function startOfWeekSunday(d: Date) {
 	const x = new Date(d);
 	x.setHours(0, 0, 0, 0);
@@ -45,11 +47,6 @@ function endOfWeekSaturday(d: Date) {
 	end.setDate(end.getDate() + 6);
 	end.setHours(23, 59, 59, 999);
 	return end;
-}
-
-function truncate40(s: string) {
-	if (!s) return "";
-	return s.length > 40 ? `${s.slice(0, 40)}…` : s;
 }
 
 function assignLanes(bars: Bar[]) {
@@ -139,7 +136,10 @@ export function PeriodBars({
 			className={styles.container}
 			style={{
 				bottom: bottomOffset,
-				height: laneCount * laneHeight + Math.max(0, laneCount - 1) * laneGap,
+				height:
+					PERIOD_BAR_TOP_HEADROOM +
+					laneCount * laneHeight +
+					Math.max(0, laneCount - 1) * laneGap,
 				left: left,
 				width: width,
 			}}
@@ -149,8 +149,6 @@ export function PeriodBars({
 
 				const leftPct = b.startIdx * ((width - 80) / 7) + 80;
 				const widthPct = span * ((width - 80) / 7);
-
-				const displayTitle = truncate40(b.title);
 
 				const categoryId = b.raw.resource.event.eventTypeId;
 				const lineColor =
@@ -169,6 +167,13 @@ export function PeriodBars({
 					"--period-text": textColor,
 				};
 
+				const labelAlignment =
+					b.startIdx <= 1
+						? styles.labelLeft
+						: b.startIdx >= 5
+							? styles.labelRight
+							: styles.labelCenter;
+
 				return (
 					<button
 						key={String(b.id)}
@@ -180,8 +185,8 @@ export function PeriodBars({
 					>
 						<div className={styles.line} />
 
-						<div className={styles.label}>
-							<span className={styles.title}>{displayTitle}</span>
+						<div className={`${styles.label} ${labelAlignment}`}>
+							<span className={styles.title}>{b.title}</span>
 						</div>
 					</button>
 				);

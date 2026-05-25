@@ -1,7 +1,7 @@
 .container {
 	background: rgba(255, 255, 255, 0.75);
 	padding: 10px;
-	overflow: hidden;
+	overflow: visible;
 }
 
 .bar {
@@ -14,6 +14,13 @@
 	pointer-events: auto;
 	color: var(--period-text, #111);
 	transform: translateY(-10px);
+	transform-origin: center;
+	transition: transform 0.2s ease;
+}
+
+.bar:hover {
+	z-index: 1000;
+	transform: translateY(-10px) scale(1.03);
 }
 
 .line {
@@ -33,14 +40,38 @@
 	top: 0;
 	display: inline-flex;
 	align-items: center;
-	padding: 10px;
+	padding: 8px;
 	font-size: 14px;
 	font-weight: 700;
 	line-height: 1;
 	background-color: white;
-	transform: translateY(-6px);
+	transform: translateY(3px);
 	max-width: 80%;
+	overflow: hidden;
+	border-radius: 999px;
+	transition: font-size 0.2s ease;
+}
+
+.labelLeft {
 	left: 20px;
+}
+
+.labelCenter {
+	left: 50%;
+	transform: translate(-50%, 3px);
+}
+
+.labelRight {
+	right: 20px;
+}
+
+.bar:hover .label {
+	width: fit-content;
+	max-width: none;
+	overflow: visible;
+	font-size: 15px;
+	z-index: 1000;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
 .title {
@@ -49,4 +80,10 @@
 	overflow: hidden;
 	white-space: nowrap;
 	text-overflow: ellipsis;
+}
+
+.bar:hover .title {
+	max-width: none;
+	overflow: visible;
+	text-overflow: clip;
 }

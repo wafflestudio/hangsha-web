@@ -119,128 +119,137 @@ export function AddClassPanel({
 	};
 
 	return (
-		<aside className={styles.panel}>
-			<SlArrowRight onClick={() => setIsClicked(false)} />
-			<h2>새 수업 추가</h2>
+		<>
+			<button
+				type="button"
+				className={styles.addClassPanelDim}
+				aria-label="수업 추가 닫기"
+				onClick={() => setIsClicked(false)}
+			/>
 
-			<label className={styles.field}>
-				<div>과목명 (필수)</div>
-				<input
-					value={title}
-					onChange={(e) => setTitle(e.target.value)}
-					placeholder="경제학개론"
-				/>
-			</label>
+			<aside className={styles.panel}>
+				<SlArrowRight onClick={() => setIsClicked(false)} />
+				<h2>새 수업 추가</h2>
 
-			<label className={styles.field}>
-				<div>교수명 (선택)</div>
-				<input
-					value={professor}
-					onChange={(e) => setProfessor(e.target.value)}
-					placeholder="박이택"
-				/>
-			</label>
+				<label className={styles.field}>
+					<div>과목명 (필수)</div>
+					<input
+						value={title}
+						onChange={(e) => setTitle(e.target.value)}
+						placeholder="경제학개론"
+					/>
+				</label>
 
-			<label className={styles.field}>
-				<div>학점 (선택)</div>
-				<input
-					type="number"
-					value={credit ?? ""}
-					onChange={(e) => {
-						const value = e.target.value;
-						setCredit(value === "" ? undefined : Number(value));
-					}}
-					placeholder="3"
-					min={0}
-					step={1}
-				/>
-			</label>
+				<label className={styles.field}>
+					<div>교수명 (선택)</div>
+					<input
+						value={professor}
+						onChange={(e) => setProfessor(e.target.value)}
+						placeholder="박이택"
+					/>
+				</label>
 
-			<div>
+				<label className={styles.field}>
+					<div>학점 (선택)</div>
+					<input
+						type="number"
+						value={credit ?? ""}
+						onChange={(e) => {
+							const value = e.target.value;
+							setCredit(value === "" ? undefined : Number(value));
+						}}
+						placeholder="3"
+						min={0}
+						step={1}
+					/>
+				</label>
+
 				<div>
-					<div>시간 (필수)</div>
+					<div>
+						<div>시간 (필수)</div>
+					</div>
+
+					{slot.map((t) => (
+						<div key={t.rowId}>
+							<div className={styles.timeslotDelete}>
+								<TiDelete onClick={() => removeRow(t.rowId)} />
+							</div>
+
+							<div className={styles.dayButtons}>
+								{DAYS.map((d) => {
+									const active = dayOfWeekToDay(t.dayOfweek) === d;
+									return (
+										<button
+											key={d}
+											type="button"
+											className={`${styles.dayBtn} ${active ? styles.isActive : ""}`}
+											onClick={() =>
+												updateRow(t.rowId, { dayOfweek: dayToDayOfWeek(d) })
+											}
+										>
+											{DAY_LABELS_KO[d]}
+										</button>
+									);
+								})}
+							</div>
+
+							<div className={styles.timeRange}>
+								<select
+									value={t.startAt}
+									onChange={(e) =>
+										updateRow(t.rowId, { startAt: Number(e.target.value) })
+									}
+								>
+									{timeOptions.map((o) => (
+										<option key={o.value} value={o.value}>
+											{o.label}
+										</option>
+									))}
+								</select>
+
+								<span className={styles.tilde}>~</span>
+
+								<select
+									value={t.endAt}
+									onChange={(e) =>
+										updateRow(t.rowId, { endAt: Number(e.target.value) })
+									}
+								>
+									{timeOptions.map((o) => (
+										<option key={o.value} value={o.value}>
+											{o.label}
+										</option>
+									))}
+								</select>
+							</div>
+						</div>
+					))}
+
+					<button className={styles.link} type="button" onClick={addRow}>
+						+ 시간 추가
+					</button>
+
+					{!isTimeRangeValid && (
+						<div className={styles.error}>
+							시간 범위가 잘못되었습니다. (종료가 시작보다 늦어야 하고 5분
+							단위여야 합니다.)
+						</div>
+					)}
+
+					{!isTitleValid && (
+						<div className={styles.error}>과목 이름은 필수입니다.</div>
+					)}
 				</div>
 
-				{slot.map((t) => (
-					<div key={t.rowId}>
-						<div className={styles.timeslotDelete}>
-							<TiDelete onClick={() => removeRow(t.rowId)} />
-						</div>
-
-						<div className={styles.dayButtons}>
-							{DAYS.map((d) => {
-								const active = dayOfWeekToDay(t.dayOfweek) === d;
-								return (
-									<button
-										key={d}
-										type="button"
-										className={`${styles.dayBtn} ${active ? styles.isActive : ""}`}
-										onClick={() =>
-											updateRow(t.rowId, { dayOfweek: dayToDayOfWeek(d) })
-										}
-									>
-										{DAY_LABELS_KO[d]}
-									</button>
-								);
-							})}
-						</div>
-
-						<div className={styles.timeRange}>
-							<select
-								value={t.startAt}
-								onChange={(e) =>
-									updateRow(t.rowId, { startAt: Number(e.target.value) })
-								}
-							>
-								{timeOptions.map((o) => (
-									<option key={o.value} value={o.value}>
-										{o.label}
-									</option>
-								))}
-							</select>
-
-							<span className={styles.tilde}>~</span>
-
-							<select
-								value={t.endAt}
-								onChange={(e) =>
-									updateRow(t.rowId, { endAt: Number(e.target.value) })
-								}
-							>
-								{timeOptions.map((o) => (
-									<option key={o.value} value={o.value}>
-										{o.label}
-									</option>
-								))}
-							</select>
-						</div>
-					</div>
-				))}
-
-				<button className={styles.link} type="button" onClick={addRow}>
-					+ 시간 추가
+				<button
+					className={styles.save}
+					type="button"
+					disabled={!canSave}
+					onClick={handleSave}
+				>
+					저장
 				</button>
-
-				{!isTimeRangeValid && (
-					<div className={styles.error}>
-						시간 범위가 잘못되었습니다. (종료가 시작보다 늦어야 하고 5분
-						단위여야 합니다.)
-					</div>
-				)}
-
-				{!isTitleValid && (
-					<div className={styles.error}>과목 이름은 필수입니다.</div>
-				)}
-			</div>
-
-			<button
-				className={styles.save}
-				type="button"
-				disabled={!canSave}
-				onClick={handleSave}
-			>
-				저장
-			</button>
-		</aside>
+			</aside>
+		</>
 	);
 }

@@ -74,7 +74,8 @@ export function TimetableGrid({
 	const hourMarks = useMemo(() => {
 		const list: { hour: number; top: number; label: string }[] = [];
 		for (let h = config.startHour; h <= config.endHour; h++) {
-			const top = (h * 60 - config.startHour * 60) * config.ppm + config.ppm*15;
+			const top =
+				(h * 60 - config.startHour * 60) * config.ppm + config.ppm * 15;
 			const labelHour = isMobile
 				? String(h % 12 || 12)
 				: formatAmPmFromMinutes(h * 60);
@@ -227,6 +228,8 @@ function DayColumn<T>({
 			{eventBlocks.map((b) => {
 				const { event } = b.raw.resource;
 				const color = CATEGORY_COLORS[event.eventTypeId] || CATEGORY_COLORS[6];
+				const location = event.location?.trim();
+				const shouldShowLocation = location && location !== "-";
 
 				return (
 					<button
@@ -249,6 +252,9 @@ function DayColumn<T>({
 							{formatAmPmFromMinutes(b.startMin)} -{" "}
 							{formatAmPmFromMinutes(b.endMin)}
 						</div>
+						{shouldShowLocation && (
+							<div className={styles.eventBlockLocation}>{location}</div>
+						)}
 					</button>
 				);
 			})}

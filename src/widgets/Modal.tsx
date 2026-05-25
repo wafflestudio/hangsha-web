@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import styles from "@styles/Modal.module.css";
 import { FaExternalLinkAlt } from "react-icons/fa";
 import { IoIosClose } from "react-icons/io";
@@ -7,8 +8,9 @@ interface ModalProps {
 	leftText: string;
 	rightText?: string | null;
 	onLeftClick: () => void;
-	onRightClick?: (() =>  void) | null;
+	onRightClick?: (() => void) | null;
 	onClose: (() => void) | null;
+	children?: ReactNode;
 }
 
 const Modal = ({
@@ -18,6 +20,7 @@ const Modal = ({
 	onLeftClick,
 	onRightClick,
 	onClose,
+	children,
 }: ModalProps) => {
 	return (
 		<div className={styles.modalContainer}>
@@ -32,25 +35,25 @@ const Modal = ({
 					</button>
 				)}
 				<span className={styles.modalContent}>{content}</span>
+				{children}
 				<div className={styles.buttonsRow}>
 					<button
 						className={`${rightText ? styles.leftBtn : styles.linkBtn}`}
 						type="button"
 						onClick={onLeftClick}
 					>
-						{!rightText && 
-							<FaExternalLinkAlt />
-						}
+						{!rightText && <FaExternalLinkAlt />}
 						<span>{leftText}</span>
 					</button>
-					{rightText && onRightClick &&
-					<button
-						className={styles.rightBtn}
-						type="button"
-						onClick={onRightClick}
-					>
-						{rightText}
-					</button>}
+					{rightText && onRightClick && (
+						<button
+							className={styles.rightBtn}
+							type="button"
+							onClick={onRightClick}
+						>
+							{rightText}
+						</button>
+					)}
 				</div>
 			</div>
 		</div>
