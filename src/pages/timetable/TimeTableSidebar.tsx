@@ -39,7 +39,7 @@ export const TimeTableSidebar = ({
 
 	const handleHeaderClick = () => {
 		// if user exists: refresh page
-		if (!user) navigate("/auth/login");
+		if (!user) navigate("/");
 	};
 
 	const handleTimetableClick = () => {
