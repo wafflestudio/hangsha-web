@@ -44,26 +44,40 @@
   overflow: auto;
 }
 
-.addButton {
+.addButton,
+.changeTimetableButton {
   position: fixed;
   right: 100px;
   top: 250px;
   z-index: 1000;
 
   font-weight: 500;
-  color: #e6e6e6;
 
   display: inline-flex;
   align-items: center;
   gap: 6px;
+  min-width: 110px;
+  justify-content: center;
 
-  padding: 10px 12px;
+  padding: 10px 10px;
   border: none;
-  border-radius: 10px;
+  border-radius: 999px;
   cursor: pointer;
 
-  background: #ff0031;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+  color: #ffffff;
+  background: #ff5b7d;
+  box-shadow: 0 8px 24px rgba(255, 91, 125, 0.28);
+}
+
+.addButton svg {
+  width: 13px;
+  height: 13px;
+}
+
+.changeTimetableButton {
+  display: none;
+  background: rgba(0, 192, 232, 0.6);
+  box-shadow: 0 8px 24px rgba(0, 192, 232, 0.24);
 }
 
 .leftSidebar {
@@ -107,6 +121,10 @@
 .panel {
   border-left: 1px solid #eee;
   padding: 16px;
+}
+
+.addClassPanelDim {
+  display: none;
 }
 
 .panelTitle {
@@ -328,6 +346,7 @@
 .blockRemove {
   justify-self: end;
   color: #333;
+  opacity: 0.55;
 }
 
 .blockTitle {
@@ -361,7 +380,6 @@
   padding: 8px;
   border: none;
   border-radius: 0;
-  color: #ffffff;
   text-align: left;
   cursor: pointer;
   overflow: hidden;
@@ -376,15 +394,24 @@
   -webkit-box-orient: vertical;
   overflow: hidden;
   font-size: 13px;
-  font-weight: 600;
+  font-weight: 550;
   line-height: 1.25;
 }
 
 .eventBlockTime {
   margin-top: 4px;
   font-size: 11px;
-  color: inherit;
-  opacity: 0.9;
+  color: #333;
+  opacity: 0.85;
+}
+
+.eventBlockLocation {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 11px;
+  color: #333;
+  opacity: 0.85;
 }
 
 .notFound {
@@ -400,6 +427,28 @@
 }
 .emptyMobile {
   display: none;
+}
+
+.mobileTimetableSidebarDim {
+  display: none;
+}
+
+.mobileTimetableSidebar {
+  display: none;
+}
+
+.mobileTimetableNameInput {
+  width: min(260px, 72vw);
+  padding: 11px 12px;
+  border: 1px solid #dedede;
+  border-radius: 10px;
+  font-size: 15px;
+  outline: none;
+}
+
+.mobileTimetableNameInput:focus {
+  border-color: rgba(0, 192, 232, 0.7);
+  box-shadow: 0 0 0 3px rgba(0, 192, 232, 0.14);
 }
 
 @media (max-width: 576px) {
@@ -434,23 +483,31 @@
   }
 
   .addButton {
-    left: 50%;
-    right: auto;
+    left: auto;
+    right: 20px;
     top: auto;
     bottom: calc(76px + env(safe-area-inset-bottom));
-    transform: translateX(-50%);
-    min-width: 132px;
-    justify-content: center;
-    padding: 10px 16px;
-    border-radius: 999px;
-    color: #ffffff;
-    background: #ff5b7d;
-    box-shadow: 0 8px 24px rgba(255, 91, 125, 0.28);
+    transform: none;
   }
 
-  .addButton svg {
-    width: 13px;
-    height: 13px;
+  .changeTimetableButton {
+    display: inline-flex;
+    left: auto;
+    right: 20px;
+    top: auto;
+    bottom: calc(124px + env(safe-area-inset-bottom));
+    transform: none;
+  }
+
+  .addClassPanelDim {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 1190;
+    border: none;
+    padding: 0;
+    background: none;
+    cursor: pointer;
   }
 
   .panel {
@@ -458,13 +515,13 @@
     left: 0;
     right: 0;
     bottom: calc(64px + env(safe-area-inset-bottom));
-    z-index: 110;
+    z-index: 1200;
     max-height: min(72dvh, 620px);
     overflow-y: auto;
     padding: 18px 20px 22px;
     border-left: 0;
     border-top: 1px solid #f0eff2;
-    border-radius: 20px 20px 0 0;
+    border-radius: 20px 0 0 0px;
     background: #ffffff;
     box-shadow: 0 -8px 28px rgba(0, 0, 0, 0.12);
   }
@@ -622,5 +679,167 @@
   }
   .emptyMobile {
     display: block;
+  }
+
+  .mobileTimetableSidebarDim {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 1190;
+    border: none;
+    padding: 0;
+    background: none;
+    cursor: pointer;
+  }
+
+  .mobileTimetableSidebar {
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: calc(64px + env(safe-area-inset-bottom));
+    flex-direction: column;
+    max-height: min(72dvh, 620px);
+    overflow-y: auto;
+    padding: 18px 20px 22px;
+    border-left: 0;
+    border-top: 1px solid #f0eff2;
+    border-radius: 20px 0 0 0px;
+    background: #ffffff;
+    box-shadow: 0 -8px 28px rgba(0, 0, 0, 0.12);
+    z-index: 1200;
+  }
+
+  .mobileTimetableSidebarClose {
+    display: inline-flex;
+    width: fit-content;
+    height: fit-content;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    margin: 0 0 8px;
+    border: none;
+    background: transparent;
+    color: #8a8a8a;
+    cursor: pointer;
+  }
+
+  .mobileTimetableSidebarClose svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .mobileTimetableSidebarHeader {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 0;
+    margin: 8px 0 18px;
+  }
+
+  .mobileTimetableSidebarHeader h2 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 700;
+    color: #111111;
+  }
+
+  .mobileTimetableAddIcon {
+    display: inline-flex;
+    width: 28px;
+    height: 28px;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border: none;
+    border-radius: 50%;
+    background: transparent;
+    color: #777777;
+    font-size: 26px;
+    line-height: 1;
+    cursor: pointer;
+  }
+
+  .mobileTimetableEmpty {
+    margin: 8px 0 0;
+    color: #757575;
+    font-size: 14px;
+    line-height: 1.45;
+    word-break: keep-all;
+  }
+
+  .mobileTimetableList {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .mobileTimetableItem {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 10px;
+    align-items: center;
+    min-height: 64px;
+    padding: 10px;
+    border-radius: 10px;
+    background: transparent;
+  }
+
+  .mobileTimetableItemSelected {
+    background: rgba(0, 192, 232, 0.12);
+  }
+
+  .mobileTimetableSelect {
+    min-width: 0;
+    padding: 0;
+    border: none;
+    background: transparent;
+    text-align: left;
+    cursor: pointer;
+  }
+
+  .mobileTimetableName {
+    display: block;
+    overflow: hidden;
+    color: #1e1e1e;
+    font-size: 16px;
+    line-height: 1.4;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .mobileTimetableItem:not(.mobileTimetableItemSelected) .mobileTimetableName {
+    opacity: 0.68;
+  }
+
+  .mobileTimetableActions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .mobileTimetableEditButton,
+  .mobileTimetableDeleteButton {
+    min-width: 54px;
+    height: 36px;
+    padding: 0 14px;
+    border: none;
+    border-radius: 999px;
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  .mobileTimetableEditButton {
+    background: rgba(0, 192, 232, 0.6);
+  }
+
+  .mobileTimetableDeleteButton {
+    background: rgba(255, 45, 85, 0.5);
   }
 }

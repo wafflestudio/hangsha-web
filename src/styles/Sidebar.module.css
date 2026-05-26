@@ -455,7 +455,7 @@ body::-webkit-scrollbar {
   background: #ffffff;
   border: 1px solid rgba(0, 0, 0, 0.08);
   border-radius: 12px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 3px 5px rgba(0, 0, 0, 0.05);
 
   display: flex;
   flex-direction: column;
@@ -468,15 +468,15 @@ body::-webkit-scrollbar {
   width: 100%;
   text-align: left;
 
-  padding: 10px 12px;
+  padding: 8px;
   border: none;
-  border-radius: 10px;
+  border-radius: 8px;
 
   background: transparent;
   cursor: pointer;
 
   font-size: var(--fs-md);
-  font-weight: 600;
+  font-weight: 550;
   color: #111;
 }
 
@@ -515,13 +515,14 @@ body::-webkit-scrollbar {
 
   font-size: var(--fs-md);
   border-radius: 8px;
-  border: 1px solid rgba(0, 0, 0, 0.15);
+  border: 0.3px solid rgba(0, 0, 0, 0.05);
+  box-shadow: 0 3px 3px rgba(0, 0, 0, 0.05);
 
   outline: none;
 }
 
 .renameInput:focus {
-  border-color: #111;
+  box-shadow: 0 3px 4px rgba(0, 0, 0, 0.15);
 }
 
 /* 적용 버튼 (입력 아래) */
@@ -532,18 +533,20 @@ body::-webkit-scrollbar {
 
   padding: 0 12px;
   border: none;
-  border-radius: 8px;
+  border-radius: 999px;
 
   font-size: var(--fs-sm);
-  font-weight: 600;
+  font-weight: 550;
 
   background: #111;
+  opacity: 0.8;
   color: #fff;
   cursor: pointer;
 }
 
 .applyButton:hover {
   background: #000;
+  opacity: 1;
 }
 
 .applyButton:active {

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { FaAnglesLeft, FaAnglesRight } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthProvider";
@@ -29,6 +29,7 @@ export const TimeTableSidebar = ({
 	const [editingId, setEditingId] = useState<number | null>(null);
 	const [newName, setNewName] = useState("");
 	const [nameChangeId, setNameChangeId] = useState<number | null>(null);
+	const activePanelRef = useRef<HTMLLIElement | null>(null);
 
 	const navigate = useNavigate();
 
@@ -38,16 +39,16 @@ export const TimeTableSidebar = ({
 
 	const handleHeaderClick = () => {
 		// if user exists: refresh page
-		if (!user) navigate("/auth/login");
+		if (!user) navigate("/");
 	};
 
 	const handleTimetableClick = () => {
 		navigate("/timetable");
 	};
-	
+
 	const handleBookmarkClick = () => {
 		navigate("/bookmark");
-	}
+	};
 
 	const startRename = (tt: Timetable) => {
 		setNameChangeId(tt.id);
@@ -55,10 +56,10 @@ export const TimeTableSidebar = ({
 		setNewName(tt.name ?? "");
 	};
 
-	const cancelRename = () => {
+	const cancelRename = useCallback(() => {
 		setNameChangeId(null);
 		setNewName("");
-	};
+	}, []);
 
 	const applyRename = async (ttId: number) => {
 		const name = newName.trim();
@@ -67,6 +68,25 @@ export const TimeTableSidebar = ({
 		cancelRename();
 		setEditingId(null);
 	};
+
+	useEffect(() => {
+		if (editingId === null && nameChangeId === null) return;
+
+		const handlePointerDown = (event: PointerEvent) => {
+			const activePanel = activePanelRef.current;
+			if (!activePanel) return;
+			if (activePanel.contains(event.target as Node)) return;
+
+			setEditingId(null);
+			cancelRename();
+		};
+
+		document.addEventListener("pointerdown", handlePointerDown);
+
+		return () => {
+			document.removeEventListener("pointerdown", handlePointerDown);
+		};
+	}, [editingId, nameChangeId, cancelRename]);
 
 	if (!isOpen) {
 		return (
@@ -120,7 +140,15 @@ export const TimeTableSidebar = ({
 
 				<ul className={styles.list}>
 					{timetables.map((tt) => (
-						<li key={tt.id} className={styles.listItem}>
+						<li
+							key={tt.id}
+							className={styles.listItem}
+							ref={
+								editingId === tt.id || nameChangeId === tt.id
+									? activePanelRef
+									: null
+							}
+						>
 							{nameChangeId === tt.id ? (
 								<div className={styles.renameBox}>
 									<input
@@ -129,10 +157,10 @@ export const TimeTableSidebar = ({
 										onChange={(e) => setNewName(e.target.value)}
 										onKeyDown={(e) => {
 											if (e.key === "Enter" && !e.nativeEvent.isComposing) {
-												onRename(tt.id, { name: newName });
+												void applyRename(tt.id);
 											}
 											if (e.key === "Escape") {
-												setEditingId(null);
+												cancelRename();
 											}
 										}}
 									></input>
@@ -206,10 +234,10 @@ export const TimeTableSidebar = ({
 				/>
 				<span>캘린더로 돌아가기</span>
 			</button>
-			<button 
+			<button
 				type="button"
 				className={styles.pageLink}
-					onClick={() => handleBookmarkClick()}
+				onClick={() => handleBookmarkClick()}
 			>
 				<img
 					className={styles.icon}
