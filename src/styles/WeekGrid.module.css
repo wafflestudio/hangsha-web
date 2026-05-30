@@ -21,7 +21,10 @@
 .block:hover,
 .block:focus-visible {
 	box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18);
-	transform: scale(1.1);
+	transform: scaleX(1.1);
+	height: auto !important;
+	min-height: var(--week-block-height);
+	overflow: visible;
 	z-index: 20;
 }
 
@@ -36,6 +39,10 @@
 
 .block:hover .blockTitle,
 .block:focus-visible .blockTitle {
+	display: block;
+	-webkit-line-clamp: unset;
+	line-clamp: unset;
+	overflow: visible;
 	font-size: 14px;
 }
 
@@ -222,4 +229,11 @@
 	font-size: 11px;
 	color: #333;
 	opacity: 0.85;
+}
+
+.block:hover .blockLocation,
+.block:focus-visible .blockLocation {
+	overflow: visible;
+	text-overflow: clip;
+	white-space: normal;
 }

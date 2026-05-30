@@ -140,6 +140,7 @@ function DayColumn({
 				const style: CSSVarStyle = {
 					top: `${b.top}px`,
 					height: `${b.height}px`,
+					"--week-block-height": `${b.height}px`,
 					left: `${b.leftPct}%`,
 					width: `${b.widthPct}%`,
 					backgroundColor: color,

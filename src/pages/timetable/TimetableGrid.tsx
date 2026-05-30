@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, type CSSProperties } from "react";
 import {
 	DAY_LABELS_KO,
 	type Day,
@@ -20,6 +20,10 @@ import { formatAmPmFromMinutes } from "../../util/weekly_timetable/time";
 import { CATEGORY_COLORS } from "../../util/constants";
 import { MdCancel } from "react-icons/md";
 import styles from "@styles/Timetable.module.css";
+
+type CSSVarStyle = CSSProperties & {
+	[key: `--${string}`]: string | number;
+};
 
 export type TimetableProps = {
 	timetableId: number;
@@ -235,15 +239,18 @@ function DayColumn<T>({
 					<button
 						key={`event-${b.blockId}-${b.sourceId}`}
 						className={styles.eventBlock}
-						style={{
-							top: b.top,
-							height: b.height,
-							left: `${b.leftPct}%`,
-							width: `${b.widthPct}%`,
-							backgroundColor: color,
-							opacity: b.opacity,
-							zIndex: b.zIndex,
-						}}
+						style={
+							{
+								top: b.top,
+								height: b.height,
+								"--event-block-height": `${b.height}px`,
+								left: `${b.leftPct}%`,
+								width: `${b.widthPct}%`,
+								backgroundColor: color,
+								opacity: b.opacity,
+								"--event-block-z-index": b.zIndex,
+							} as CSSVarStyle
+						}
 						onClick={() => onSelectEvent?.(event)}
 						type="button"
 					>

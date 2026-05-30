@@ -388,13 +388,16 @@
   transition:
     transform 0.18s ease,
     box-shadow 0.18s ease;
-  z-index: 2;
+  z-index: var(--event-block-z-index, 2);
 }
 
 .eventBlock:hover,
 .eventBlock:focus-visible {
   box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18);
-  transform: scale(1.1);
+  transform: scaleX(1.1);
+  height: auto !important;
+  min-height: var(--event-block-height);
+  overflow: visible;
   z-index: 20;
 }
 
@@ -411,6 +414,10 @@
 
 .eventBlock:hover .eventBlockTitle,
 .eventBlock:focus-visible .eventBlockTitle {
+  display: block;
+  -webkit-line-clamp: unset;
+  line-clamp: unset;
+  overflow: visible;
   font-size: 14px;
 }
 
@@ -437,6 +444,9 @@
 
 .eventBlock:hover .eventBlockLocation,
 .eventBlock:focus-visible .eventBlockLocation {
+  overflow: visible;
+  text-overflow: clip;
+  white-space: normal;
   font-size: 12px;
 }
 
