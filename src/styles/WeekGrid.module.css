@@ -11,7 +11,21 @@
 	box-shadow: none;
 	background-clip: padding-box;
 	overflow: hidden;
-	z-index: 1;
+	transform-origin: center;
+	transition:
+		transform 0.18s ease,
+		box-shadow 0.18s ease;
+	z-index: var(--week-block-z-index, 1);
+}
+
+.block:hover,
+.block:focus-visible {
+	box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18);
+	transform: scaleX(1.1);
+	height: auto !important;
+	min-height: var(--week-block-height);
+	overflow: visible;
+	z-index: 20;
 }
 
 .blockTitle {
@@ -23,8 +37,26 @@
 	font-weight: 550;
 }
 
-.block:focus-visible {
-	box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.15);
+.block:hover .blockTitle,
+.block:focus-visible .blockTitle {
+	display: block;
+	-webkit-line-clamp: unset;
+	line-clamp: unset;
+	overflow: visible;
+	font-size: 14px;
+}
+
+.block:hover .blockTime,
+.block:focus-visible .blockTime,
+.block:hover .blockLocation,
+.block:focus-visible .blockLocation {
+	font-size: 12px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.block {
+		transition: none;
+	}
 }
 
 .title {
@@ -167,7 +199,6 @@
 .dayCol {
 	position: relative;
 	border-right: 1px solid #f0f0f0;
-	z-index: 10;
 }
 
 .lines {
@@ -198,4 +229,11 @@
 	font-size: 11px;
 	color: #333;
 	opacity: 0.85;
+}
+
+.block:hover .blockLocation,
+.block:focus-visible .blockLocation {
+	overflow: visible;
+	text-overflow: clip;
+	white-space: normal;
 }

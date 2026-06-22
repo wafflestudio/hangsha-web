@@ -1,4 +1,4 @@
-import { useMemo, forwardRef } from "react";
+import { useMemo, forwardRef, type CSSProperties } from "react";
 import {
 	DAY_LABELS_KO,
 	type Day,
@@ -20,6 +20,10 @@ type WeekGridProps = {
 	toBlocks: (items: CalendarEvent[], config: GridConfig) => WeekGridBlock[];
 	onSelectBlock?: (event: Event) => void;
 	dayLabels?: Record<Day, string>;
+};
+
+type CSSVarStyle = CSSProperties & {
+	[key: `--${string}`]: string;
 };
 
 const Days: Day[] = [0, 1, 2, 3, 4, 5, 6];
@@ -133,19 +137,22 @@ function DayColumn({
 				const location = event.location?.trim();
 				const shouldShowLocation = location && location !== "-";
 
+				const style: CSSVarStyle = {
+					top: `${b.top}px`,
+					height: `${b.height}px`,
+					"--week-block-height": `${b.height}px`,
+					left: `${b.leftPct}%`,
+					width: `${b.widthPct}%`,
+					backgroundColor: color,
+					opacity: String(b.opacity),
+					"--week-block-z-index": String(b.zIndex),
+				};
+
 				return (
 					<button
 						key={b.blockId}
 						className={styles.block}
-						style={{
-							top: b.top,
-							height: b.height,
-							left: `${b.leftPct}%`,
-							width: `${b.widthPct}%`,
-							backgroundColor: color,
-							opacity: b.opacity,
-							zIndex: b.zIndex,
-						}}
+						style={style}
 						onClick={() => onSelectBlock?.(b.raw.resource.event)}
 						type="button"
 					>

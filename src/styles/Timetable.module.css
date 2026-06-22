@@ -384,7 +384,21 @@
   cursor: pointer;
   overflow: hidden;
   background-clip: padding-box;
-  z-index: 2;
+  transform-origin: center;
+  transition:
+    transform 0.18s ease,
+    box-shadow 0.18s ease;
+  z-index: var(--event-block-z-index, 2);
+}
+
+.eventBlock:hover,
+.eventBlock:focus-visible {
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18);
+  transform: scaleX(1.1);
+  height: auto !important;
+  min-height: var(--event-block-height);
+  overflow: visible;
+  z-index: 20;
 }
 
 .eventBlockTitle {
@@ -398,11 +412,25 @@
   line-height: 1.25;
 }
 
+.eventBlock:hover .eventBlockTitle,
+.eventBlock:focus-visible .eventBlockTitle {
+  display: block;
+  -webkit-line-clamp: unset;
+  line-clamp: unset;
+  overflow: visible;
+  font-size: 14px;
+}
+
 .eventBlockTime {
   margin-top: 4px;
   font-size: 11px;
   color: #333;
   opacity: 0.85;
+}
+
+.eventBlock:hover .eventBlockTime,
+.eventBlock:focus-visible .eventBlockTime {
+  font-size: 12px;
 }
 
 .eventBlockLocation {
@@ -412,6 +440,20 @@
   font-size: 11px;
   color: #333;
   opacity: 0.85;
+}
+
+.eventBlock:hover .eventBlockLocation,
+.eventBlock:focus-visible .eventBlockLocation {
+  overflow: visible;
+  text-overflow: clip;
+  white-space: normal;
+  font-size: 12px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .eventBlock {
+    transition: none;
+  }
 }
 
 .notFound {
@@ -665,9 +707,19 @@
     overflow-wrap: anywhere;
   }
 
+  .eventBlock:hover .eventBlockTitle,
+  .eventBlock:focus-visible .eventBlockTitle {
+    font-size: 12px;
+  }
+
   .eventBlockTime {
     margin-top: 3px;
     font-size: 10px;
+  }
+
+  .eventBlock:hover .eventBlockTime,
+  .eventBlock:focus-visible .eventBlockTime {
+    font-size: 11px;
   }
 
   .notFound {
