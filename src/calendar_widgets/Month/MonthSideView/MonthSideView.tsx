@@ -12,8 +12,8 @@ import { IoClose } from "react-icons/io5";
 import { useFilter } from "@/contexts/FilterContext";
 import { useUserData } from "@/contexts/UserDataContext";
 import { useDayEvents } from "@/contexts/useCalendarEvents";
-import { FilterButton } from "@/widgets/Toolbar";
-import Modal from "@/widgets/Modal";
+import { FilterButton } from "@/calendar_widgets/Toolbar";
+import Modal from "@/calendar_widgets/Modal";
 
 const MonthSideView = ({
 	day,

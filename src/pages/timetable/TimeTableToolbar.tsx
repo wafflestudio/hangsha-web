@@ -2,7 +2,7 @@ import type { Semester } from "../../util/types";
 import { useAuth } from "../../contexts/AuthProvider";
 import styles from "../../styles/Toolbar.module.css";
 import { useNavigate } from "react-router-dom";
-import SearchButton from "../../widgets/SearchButton";
+import SearchButton from "../../calendar_widgets/SearchButton";
 
 interface TimeTableToolbarProps {
 	timetableName: string;

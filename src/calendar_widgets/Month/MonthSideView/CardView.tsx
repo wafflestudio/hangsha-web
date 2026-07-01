@@ -4,7 +4,7 @@ import { getDDay } from "@calendarUtil/getDday";
 import { CATEGORY_COLORS, CATEGORY_LIST } from "@constants";
 import type { Event } from "@types";
 import { useUserData } from "@/contexts/UserDataContext";
-import { StartDate } from "@/widgets/EventDate";
+import { StartDate } from "@/calendar_widgets/EventDate";
 import { useAuth } from "@/contexts/AuthProvider";
 
 const MobileChipsList = ({ event }: { event: Event }) => {
@@ -50,7 +50,6 @@ const MobileChipsList = ({ event }: { event: Event }) => {
 					</span>
 				</button>
 			</li>
-			{/* <li className={styles.deadlineChip}>{`지원 ${getDDay(ddayTargetDate)}`}</li> */}
 			<span className={styles.ddayTargetDate}>{`지원 ${getDDay(ddayTargetDate)}`}</span>
 		</ul>
 	)

@@ -4,19 +4,19 @@ import styles from "@styles/Memo.module.css";
 import type { Memo } from "@/util/types";
 import { formatDateDotParsed } from "@/util/Calendar/dateFormatter";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
-import Navigationbar from "@/widgets/Navigationbar";
+import Navigationbar from "@/calendar_widgets/Navigationbar";
 import { useNavigate } from "react-router-dom";
 import MemoPageCard from "./MemoPageCard";
 import { useEffect, useRef, useState } from "react";
-import Modal from "@/widgets/Modal";
-import Loading from "@/widgets/Loading";
-import BottomNav from "@/widgets/BottomNav";
+import Modal from "@/calendar_widgets/Modal";
+import Loading from "@/calendar_widgets/Loading";
+import BottomNav from "@/calendar_widgets/BottomNav";
 import { useDetail } from "@/contexts/DetailContext";
-import DetailView from "@/widgets/DetailView";
+import DetailView from "@/calendar_widgets/DetailView";
 import {
 	SidePanelResizeHandle,
 	useResizableSidePanel,
-} from "@/widgets/SidePanelResize";
+} from "@/calendar_widgets/SidePanelResize";
 
 const MemoWidgetCard = ({ memo }: { memo: Memo }) => {
 	return (

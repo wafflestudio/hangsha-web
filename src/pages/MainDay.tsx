@@ -1,12 +1,12 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "@styles/CalendarView.module.css";
-import MonthSideView from "@widgets/Month/MonthSideView/MonthSideView";
-import DetailView from "@/widgets/DetailView";
-import BottomNav from "@/widgets/BottomNav";
+import MonthSideView from "@/calendar_widgets/Month/MonthSideView/MonthSideView";
+import DetailView from "@/calendar_widgets/DetailView";
+import BottomNav from "@/calendar_widgets/BottomNav";
 import { useEvents } from "@/contexts/EventContext";
 import { useDetail } from "@/contexts/DetailContext";
-import { FilterSheet } from "@/widgets/FilterSheet/FilterSheet";
+import { FilterSheet } from "@/calendar_widgets/FilterSheet/FilterSheet";
 
 const MOBILE_MAX_WIDTH = 576;
 

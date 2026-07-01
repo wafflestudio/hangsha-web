@@ -5,21 +5,21 @@ import { useQueryClient } from "@tanstack/react-query";
 import PullToRefresh from "react-simple-pull-to-refresh";
 import styles from "@styles/CalendarView.module.css";
 import type { CalendarEvent, Event } from "@types";
-import DetailView from "@/widgets/DetailView";
-import MonthSideView from "@widgets/Month/MonthSideView/MonthSideView";
-import { MyCalendar } from "@widgets/MyCalendar";
-import { Sidebar } from "@widgets/Sidebar";
+import DetailView from "@/calendar_widgets/DetailView";
+import MonthSideView from "@/calendar_widgets/Month/MonthSideView/MonthSideView";
+import { MyCalendar } from "@/calendar_widgets/MyCalendar";
+import { Sidebar } from "@/calendar_widgets/Sidebar";
 import {
 	SidePanelResizeHandle,
 	useResizableSidePanel,
-} from "@/widgets/SidePanelResize";
+} from "@/calendar_widgets/SidePanelResize";
 
 import { useDetail } from "@contexts/DetailContext";
 import { useEvents } from "@contexts/EventContext";
 import { useFilter } from "@contexts/FilterContext";
 import { useUserData } from "@/contexts/UserDataContext";
-import BottomNav from "@/widgets/BottomNav";
-import { FilterSheet } from "@/widgets/FilterSheet/FilterSheet";
+import BottomNav from "@/calendar_widgets/BottomNav";
+import { FilterSheet } from "@/calendar_widgets/FilterSheet/FilterSheet";
 import {
 	useMonthEvents,
 	useWeekEvents,

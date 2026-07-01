@@ -1,4 +1,4 @@
-import CardView from "@widgets/Month/MonthSideView/CardView";
+import CardView from "@/calendar_widgets/Month/MonthSideView/CardView";
 import type { Event } from "@types";
 import { useDetail } from "@/contexts/DetailContext";
 import styles from "@styles/CardView.module.css";
