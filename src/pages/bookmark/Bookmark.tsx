@@ -4,7 +4,7 @@ import styles from "./Bookmarks.module.css";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
 import Navigationbar from "@/components/layout/Navigationbar";
 import { useNavigate } from "react-router-dom";
-import GalleryCard from "@/calendar_widgets/day/gallery/GalleryCard";
+import GalleryCard from "../../calendar_widgets/day/gallery/GalleryCard"
 import { useDetail } from "@/contexts/DetailContext";
 import DetailView from "@/components/layout/sidePannel/DetailView";
 import {
