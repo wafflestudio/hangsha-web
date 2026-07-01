@@ -1,8 +1,8 @@
 import { useAuth } from "@/contexts/AuthProvider";
 // import { useFilter } from "@/contexts/FilterContext";
 import { useSearch } from "@/contexts/SearchContext";
-import { ProfileButton } from "@/components/Toolbar";
-import styles from "@styles/SearchToolbar.module.css";
+import { ProfileButton } from "@/components/layout/toolbar/Toolbar";
+import styles from "./SearchToolbar.module.css";
 import { useState } from "react";
 import { FaCalendarAlt } from "react-icons/fa";
 import { IoIosClose, IoIosSearch } from "react-icons/io";

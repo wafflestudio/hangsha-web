@@ -1,7 +1,7 @@
 import { useAuth } from "@/contexts/AuthProvider";
 import { createBugReport } from "@/api/bugReport";
-import Navigationbar from "@/components/Navigationbar";
-import styles from "@styles/MyPage.module.css";
+import Navigationbar from "@/components/layout/Navigationbar";
+import styles from "./MyPage.module.css";
 import { BookmarkWidget } from "./bookmark/Bookmark";
 import { MemoWidget } from "./memo/Memo";
 import { useNavigate } from "react-router-dom";
@@ -18,10 +18,10 @@ import {
 import { IoMdDoneAll } from "react-icons/io";
 import { useUserData } from "@/contexts/UserDataContext";
 import Onboarding from "./auth/OnBoarding/Onboarding";
-import Modal from "@/components/Modal";
-import Loading from "@/components/Loading";
+import Modal from "@/components/ui/Modal";
+import Loading from "@/components/ui/Loading";
 import defaultProfile from "/assets/defaultProfile.png";
-import BottomNav from "@/components/BottomNav";
+import BottomNav from "@/components/layout/BottomNav";
 
 // 이름 길이 제한: 한글 1자 = 2, 그 외 1자 = 1 → 상한 20 (한글 10자 / 영어 20자)
 const MAX_NAME_WEIGHT = 20;

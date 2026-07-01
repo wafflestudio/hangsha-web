@@ -1,22 +1,22 @@
 import { useUserData } from "@/contexts/UserDataContext";
 import { useAuth } from "@/contexts/AuthProvider";
-import styles from "@styles/Memo.module.css";
+import styles from "./Memo.module.css";
 import type { Memo } from "@/util/types";
 import { formatDateDotParsed } from "@/util/Calendar/dateFormatter";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
-import Navigationbar from "@/components/Navigationbar";
+import Navigationbar from "@/components/layout/Navigationbar";
 import { useNavigate } from "react-router-dom";
 import MemoPageCard from "./MemoPageCard";
 import { useEffect, useRef, useState } from "react";
-import Modal from "@/components/Modal";
-import Loading from "@/components/Loading";
-import BottomNav from "@/components/BottomNav";
+import Modal from "@/components/ui/Modal";
+import Loading from "@/components/ui/Loading";
+import BottomNav from "@/components/layout/BottomNav";
 import { useDetail } from "@/contexts/DetailContext";
-import DetailView from "@/components/sidePannel/DetailView";
+import DetailView from "@/components/layout/sidePannel/DetailView";
 import {
 	SidePanelResizeHandle,
 	useResizableSidePanel,
-} from "@/components/sidePannel/SidePanelResize";
+} from "@/components/layout/sidePannel/SidePanelResize";
 
 const MemoWidgetCard = ({ memo }: { memo: Memo }) => {
 	return (

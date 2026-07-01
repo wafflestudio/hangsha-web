@@ -2,9 +2,9 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { FaAnglesLeft, FaAnglesRight } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthProvider";
-import styles from "../../styles/Sidebar.module.css";
+import styles from "../../components/filterSideBar/Sidebar.module.css";
 import type { PatchTimetableRequest, Timetable } from "../../util/types";
-import { SidebarLogoutButton } from "../../components/filterSideBar/LogoutButton";
+import { SidebarLogoutButton } from "../../components/layout/filterSideBar/LogoutButton";
 
 interface TimeTableSidebarProps {
 	timetables: Timetable[];

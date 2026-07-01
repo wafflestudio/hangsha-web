@@ -1,14 +1,14 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Calendar, type View, Views } from "react-big-calendar";
-import styles from "@styles/Calendar.module.css";
+import styles from "./Calendar.module.css";
 import { localizer } from "@calendarUtil/calendarLocalizer";
 import type { CalendarEvent, Event } from "@types";
-import Toolbar from "../components/Toolbar";
-import MonthEvent from "./Month/MonthEvent";
-import { MonthEventPreviewProvider } from "./Month/MonthEventPreviewContext";
-import DayEvent from "./Day/DayEvent";
-import CustomDayView from "./Day/CustomDayView";
-import CustomWeekView from "./Week/CustomWeekView";
+import Toolbar from "../components/layout/toolbar/Toolbar";
+import MonthEvent from "./month/MonthEvent";
+import { MonthEventPreviewProvider } from "./month/MonthEventPreviewContext";
+import DayEvent from "./day/DayEvent";
+import CustomDayView from "./day/CustomDayView";
+import CustomWeekView from "./week/CustomWeekView";
 import { useEvents } from "@/contexts/EventContext";
 import calendarEventMapper from "@/util/Calendar/calendarEventMapper";
 

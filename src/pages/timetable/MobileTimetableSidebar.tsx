@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import { SlArrowRight } from "react-icons/sl";
-import Modal from "@/components/Modal";
+import Modal from "@/components/ui/Modal";
 import type {
 	CreateTimetableRequest,
 	PatchTimetableRequest,
 	Semester,
 	Timetable,
 } from "../../util/types";
-import styles from "@styles/Timetable.module.css";
+import styles from "./Timetable.module.css";
 
 type NameModalMode = "create" | "rename";
 

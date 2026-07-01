@@ -17,15 +17,15 @@ import {
 import calendarEventMapper from "../../util/Calendar/calendarEventMapper";
 import { formatDateToYYYYMMDD } from "../../util/Calendar/dateFormatter";
 import { TimetableGrid } from "./TimetableGrid";
-import styles from "@styles/Timetable.module.css";
+import styles from "./Timetable.module.css";
 import { SlArrowLeft } from "react-icons/sl";
 import { TimeTableSidebar } from "./TimeTableSidebar";
 import TimeTableToolbar from "./TimeTableToolbar";
 import { MobileTimetableSidebar } from "./MobileTimetableSidebar";
-import BottomNav from "@/components/BottomNav";
+import BottomNav from "@/components/layout/BottomNav";
 import { useAuth } from "@/contexts/AuthProvider";
 import { useNavigate } from "react-router-dom";
-import Modal from "@/components/Modal";
+import Modal from "@/components/ui/Modal";
 
 export default function TimetablePage() {
 	const now = new Date();

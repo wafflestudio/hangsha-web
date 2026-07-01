@@ -3,23 +3,23 @@ import { useNavigate } from "react-router-dom";
 import { Views, type View } from "react-big-calendar";
 import { useQueryClient } from "@tanstack/react-query";
 import PullToRefresh from "react-simple-pull-to-refresh";
-import styles from "@styles/CalendarView.module.css";
+import styles from "./CalendarView.module.css";
 import type { CalendarEvent, Event } from "@types";
-import DetailView from "@/components/sidePannel/DetailView";
-import EventCardView from "@/components/sidePannel/EventCardView";
+import DetailView from "@/components/layout/sidePannel/DetailView";
+import EventCardView from "@/components/layout/sidePannel/EventCardView";
 import { MyCalendar } from "@/calendar_widgets/MyCalendar";
-import { Sidebar } from "@/components/filterSideBar/FilterSidebar";
+import { Sidebar } from "@/components/layout/filterSideBar/FilterSidebar";
 import {
 	SidePanelResizeHandle,
 	useResizableSidePanel,
-} from "@/components/sidePannel/SidePanelResize";
+} from "@/components/layout/sidePannel/SidePanelResize";
 
 import { useDetail } from "@contexts/DetailContext";
 import { useEvents } from "@contexts/EventContext";
 import { useFilter } from "@contexts/FilterContext";
 import { useUserData } from "@/contexts/UserDataContext";
-import BottomNav from "@/components/BottomNav";
-import { FilterSheet } from "@/components/filterSheet/FilterSheet";
+import BottomNav from "@/components/layout/BottomNav";
+import { FilterSheet } from "@/components/layout/filterSheet/FilterSheet";
 import {
 	useMonthEvents,
 	useWeekEvents,

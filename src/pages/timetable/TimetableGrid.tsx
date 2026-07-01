@@ -19,7 +19,7 @@ import {
 import { formatAmPmFromMinutes } from "../../util/weekly_timetable/time";
 import { CATEGORY_COLORS } from "../../util/constants";
 import { MdCancel } from "react-icons/md";
-import styles from "@styles/Timetable.module.css";
+import styles from "./Timetable.module.css";
 
 type CSSVarStyle = CSSProperties & {
 	[key: `--${string}`]: string | number;

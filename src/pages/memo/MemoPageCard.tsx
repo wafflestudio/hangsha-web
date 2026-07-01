@@ -8,7 +8,7 @@ import {
 	type SetStateAction,
 } from "react";
 
-import styles from "@styles/MemoPageCard.module.css";
+import styles from "./MemoPageCard.module.css";
 import { HiOutlinePencilAlt } from "react-icons/hi";
 import { IoMdAdd, IoMdClose, IoMdDoneAll } from "react-icons/io";
 import { FaCheck, FaTrashCan } from "react-icons/fa6";
