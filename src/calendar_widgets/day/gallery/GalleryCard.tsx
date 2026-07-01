@@ -1,7 +1,7 @@
 import EventCard from "@/components/layout/sidePannel/EventCard";
 import type { Event } from "@types";
 import { useDetail } from "@/contexts/DetailContext";
-import styles from "../../../components/sidePannel/CardView.module.css";
+import styles from "../../../components/layout/sidePannel/CardView.module.css";
 
 const GalleryCard = ({ event }: { event: Event }) => {
 	const { setShowDetail, setClickedEventId } = useDetail();
