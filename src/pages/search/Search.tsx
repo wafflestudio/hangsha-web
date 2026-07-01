@@ -1,24 +1,24 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import SearchToolbar from "./SearchToolbar";
-import { Sidebar } from "@widgets/Sidebar";
-import GalleryView from "@/widgets/Day/Gallery/GalleryView";
+import { Sidebar } from "@/components/layout/filterSideBar/FilterSidebar";
+import GalleryView from "@/calendar_widgets/day/gallery/GalleryView";
 import type { CalendarEvent, Event } from "@/util/types";
-import Table from "@/widgets/Day/Table";
-import styles from "@styles/Search.module.css";
-import DetailView from "@/widgets/DetailView";
-import Pagination from "@/widgets/Pagination";
-import Loading from "@/widgets/Loading";
+import Table from "@/calendar_widgets/day/table";
+import styles from "./Search.module.css";
+import DetailView from "@/components/layout/sidePannel/DetailView";
+import Pagination from "@/components/ui/Pagination";
+import Loading from "@/components/ui/Loading";
 import { Views } from "react-big-calendar";
 import calendarEventMapper from "@/util/Calendar/calendarEventMapper";
-import BottomNav from "@/widgets/BottomNav";
-import { FilterSheet } from "@/widgets/FilterSheet/FilterSheet";
+import BottomNav from "@/components/layout/BottomNav";
+import { FilterSheet } from "@/components/layout/filterSheet/FilterSheet";
 
 import { useSearch } from "@/contexts/SearchContext";
 import { useDetail } from "@/contexts/DetailContext";
 import {
 	SidePanelResizeHandle,
 	useResizableSidePanel,
-} from "@/widgets/SidePanelResize";
+} from "@/components/layout/sidePannel/SidePanelResize";
 
 const SearchView = () => {
 	const {

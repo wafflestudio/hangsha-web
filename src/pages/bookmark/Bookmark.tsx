@@ -1,16 +1,16 @@
 import { useEffect, useRef } from "react";
 import { useUserData } from "@/contexts/UserDataContext";
-import styles from "@styles/Bookmarks.module.css";
+import styles from "./Bookmarks.module.css";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
-import Navigationbar from "@/widgets/Navigationbar";
+import Navigationbar from "@/components/layout/Navigationbar";
 import { useNavigate } from "react-router-dom";
-import GalleryCard from "@/widgets/Day/Gallery/GalleryCard";
+import GalleryCard from "@/calendar_widgets/day/gallery/GalleryCard";
 import { useDetail } from "@/contexts/DetailContext";
-import DetailView from "@/widgets/DetailView";
+import DetailView from "@/components/layout/sidePannel/DetailView";
 import {
 	SidePanelResizeHandle,
 	useResizableSidePanel,
-} from "@/widgets/SidePanelResize";
+} from "@/components/layout/sidePannel/SidePanelResize";
 
 export const BookmarkWidget = () => {
 	const { bookmarkedEvents } = useUserData();

@@ -8,7 +8,7 @@ import { DetailContextProvider } from "./contexts/DetailContext";
 import AppRoutes from "./router/AppRoutes";
 import { SearchProvider } from "./contexts/SearchContext";
 import { TimetableProvider } from "./contexts/TimetableContext";
-import { SidePanelResizeProvider } from "./widgets/SidePanelResize";
+import { SidePanelResizeProvider } from "./components/layout/sidePannel/SidePanelResize";
 
 function App() {
 	return (

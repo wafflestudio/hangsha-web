@@ -31,7 +31,7 @@
 			"@contexts/*": ["./src/contexts/*"],
 			"@constants": ["./src/util/constants"],
 			"@api/*": ["./src/api/*"],
-			"@widgets/*": ["./src/widgets/*"]
+			"@widgets/*": ["./src/calendar_widgets/*"]
 		}
 	},
 	"include": ["src"]

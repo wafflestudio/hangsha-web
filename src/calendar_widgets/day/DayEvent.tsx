@@ -1,0 +1,43 @@
+import { CATEGORY_COLORS } from "@constants";
+import type { CalendarEvent } from "@types";
+import styles from "./DayEvent.module.css";
+
+const formatTime = (d: Date) =>
+	d.toLocaleTimeString("ko-KR", {
+		hour: "2-digit",
+		minute: "2-digit",
+		hour12: false,
+	});
+
+const DayEvent = ({ event: calendarEvent }: { event: CalendarEvent }) => {
+	const { event } = calendarEvent.resource;
+	const color = CATEGORY_COLORS[event.eventTypeId] || CATEGORY_COLORS[6];
+
+	const location = event.location?.trim();
+	const shouldShowLocation = location && location !== "-";
+
+	return (
+		<div
+			className={styles.dayEventContainer}
+			style={{
+				backgroundColor: color,
+			}}
+		>
+			<div className={`${styles.eventContent} ${styles.eventTitle}`}>
+				{event.title}
+			</div>
+			{!calendarEvent.allDay && (
+				<div className={styles.eventContent}>
+				{formatTime(calendarEvent.start)} - {formatTime(calendarEvent.end)}
+				</div>
+			)}
+			{shouldShowLocation && (
+			<div className={`${styles.eventContent} ${styles.eventMeta} ${styles.blockLocation}`}>
+				{location}
+			</div>
+			)}
+		</div>
+	);
+};
+
+export default DayEvent;
