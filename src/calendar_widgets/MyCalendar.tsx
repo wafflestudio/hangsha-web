@@ -3,7 +3,7 @@ import { Calendar, type View, Views } from "react-big-calendar";
 import styles from "@styles/Calendar.module.css";
 import { localizer } from "@calendarUtil/calendarLocalizer";
 import type { CalendarEvent, Event } from "@types";
-import Toolbar from "./Toolbar";
+import Toolbar from "../components/Toolbar";
 import MonthEvent from "./Month/MonthEvent";
 import { MonthEventPreviewProvider } from "./Month/MonthEventPreviewContext";
 import DayEvent from "./Day/DayEvent";

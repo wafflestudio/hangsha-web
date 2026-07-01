@@ -15,7 +15,7 @@ import DetailMemo from "./DetailMemo";
 import Modal, { ErrorModal } from "../Modal";
 import Loading from "../Loading";
 import calendarEventMapper from "@/util/Calendar/calendarEventMapper";
-import EventDate from "../EventDate";
+import EventDate from "../eventDate/EventDate";
 
 const DetailView = ({ eventId }: { eventId: number }) => {
 	const [event, setEvent] = useState<EventDetail>();

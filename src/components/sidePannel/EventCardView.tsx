@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaAngleLeft, FaAngleRight, FaAnglesRight } from "react-icons/fa6";
 import styles from "@styles/MonthSideView.module.css";
-import CardView from "./CardView";
+import CardView from "./EventCard";
 import { useDetail } from "@/contexts/DetailContext";
 import calendarEventMapper from "@/util/Calendar/calendarEventMapper";
 import { Views } from "react-big-calendar";
@@ -12,10 +12,10 @@ import { IoClose } from "react-icons/io5";
 import { useFilter } from "@/contexts/FilterContext";
 import { useUserData } from "@/contexts/UserDataContext";
 import { useDayEvents } from "@/contexts/useCalendarEvents";
-import { FilterButton } from "@/calendar_widgets/Toolbar";
-import Modal from "@/calendar_widgets/Modal";
+import { FilterButton } from "@/components/Toolbar";
+import Modal from "@/components/Modal";
 
-const MonthSideView = ({
+const EventCardView = ({
 	day,
 	onClose,
 }: {
@@ -141,4 +141,4 @@ const MonthSideView = ({
 	);
 };
 
-export default MonthSideView;
+export default EventCardView;

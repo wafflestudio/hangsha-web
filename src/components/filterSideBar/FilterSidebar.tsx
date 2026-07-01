@@ -14,7 +14,7 @@ import type { Category } from "@types";
 import { useUserData } from "@/contexts/UserDataContext";
 import { IoIosClose } from "react-icons/io";
 import { CATEGORY_BUTTON_COLORS } from "@/util/constants";
-import { SidebarLogoutButton } from "./SidebarLogoutButton";
+import { SidebarLogoutButton } from "./LogoutButton";
 
 export const Sidebar = () => {
 	type FilterType = "status" | "org" | "category";

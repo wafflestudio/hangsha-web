@@ -5,21 +5,21 @@ import { useQueryClient } from "@tanstack/react-query";
 import PullToRefresh from "react-simple-pull-to-refresh";
 import styles from "@styles/CalendarView.module.css";
 import type { CalendarEvent, Event } from "@types";
-import DetailView from "@/calendar_widgets/DetailView";
-import MonthSideView from "@/calendar_widgets/Month/MonthSideView/MonthSideView";
+import DetailView from "@/components/sidePannel/DetailView";
+import EventCardView from "@/components/sidePannel/EventCardView";
 import { MyCalendar } from "@/calendar_widgets/MyCalendar";
-import { Sidebar } from "@/calendar_widgets/Sidebar";
+import { Sidebar } from "@/components/filterSideBar/FilterSidebar";
 import {
 	SidePanelResizeHandle,
 	useResizableSidePanel,
-} from "@/calendar_widgets/SidePanelResize";
+} from "@/components/sidePannel/SidePanelResize";
 
 import { useDetail } from "@contexts/DetailContext";
 import { useEvents } from "@contexts/EventContext";
 import { useFilter } from "@contexts/FilterContext";
 import { useUserData } from "@/contexts/UserDataContext";
-import BottomNav from "@/calendar_widgets/BottomNav";
-import { FilterSheet } from "@/calendar_widgets/FilterSheet/FilterSheet";
+import BottomNav from "@/components/BottomNav";
+import { FilterSheet } from "@/components/filterSheet/FilterSheet";
 import {
 	useMonthEvents,
 	useWeekEvents,
@@ -217,7 +217,7 @@ const CalendarView = () => {
 						{!isMobile && (
 							<SidePanelResizeHandle onMouseDown={handleResizeStart} />
 						)}
-						<MonthSideView day={clickedDate} onClose={handleCloseSideMonth} />
+						<EventCardView day={clickedDate} onClose={handleCloseSideMonth} />
 					</div>
 				)}
 

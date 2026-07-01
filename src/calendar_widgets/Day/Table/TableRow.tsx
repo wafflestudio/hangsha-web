@@ -4,7 +4,7 @@ import { CATEGORY_COLORS } from "@constants";
 import { CATEGORY_LIST } from "@constants";
 // import { formatDateToMMDD } from "@calendarUtil/dateFormatter";
 import { useDetail } from "@contexts/DetailContext";
-import { ApplyDate, StartDate } from "@/calendar_widgets/EventDate";
+import { ApplyDate, StartDate } from "@/components/eventDate/EventDate";
 
 const TableRow = ({ data }: { data: CalendarEvent }) => {
 	const event = data.resource.event;

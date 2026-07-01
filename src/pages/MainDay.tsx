@@ -1,12 +1,12 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "@styles/CalendarView.module.css";
-import MonthSideView from "@/calendar_widgets/Month/MonthSideView/MonthSideView";
-import DetailView from "@/calendar_widgets/DetailView";
-import BottomNav from "@/calendar_widgets/BottomNav";
+import EventCardView from "@/components/sidePannel/EventCardView";
+import DetailView from "@/components/sidePannel/DetailView";
+import BottomNav from "@/components/BottomNav";
 import { useEvents } from "@/contexts/EventContext";
 import { useDetail } from "@/contexts/DetailContext";
-import { FilterSheet } from "@/calendar_widgets/FilterSheet/FilterSheet";
+import { FilterSheet } from "@/components/filterSheet/FilterSheet";
 
 const MOBILE_MAX_WIDTH = 576;
 
@@ -33,7 +33,7 @@ const MainDay = () => {
 	return (
 		<div className={`${styles.container} ${styles.mainDay}`}>
 			<div className={styles.calendarContainer}>
-				<MonthSideView day={dayDate} onClose={handleClose} />
+				<EventCardView day={dayDate} onClose={handleClose} />
 				{showDetail && clickedEventId !== undefined && (
 					<div className={`${styles.sidePanel} ${styles.detailPanel}`}>
 						<DetailView eventId={clickedEventId} />

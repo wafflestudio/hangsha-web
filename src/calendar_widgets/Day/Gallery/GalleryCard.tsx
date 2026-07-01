@@ -1,4 +1,4 @@
-import CardView from "@/calendar_widgets/Month/MonthSideView/CardView";
+import EventCard from "@/components/sidePannel/EventCard";
 import type { Event } from "@types";
 import { useDetail } from "@/contexts/DetailContext";
 import styles from "@styles/CardView.module.css";
@@ -28,7 +28,7 @@ const GalleryCard = ({ event }: { event: Event }) => {
 					className={styles.thumbnailImage}
 				/>
 			</div>
-			<CardView event={event} />
+			<EventCard event={event} />
 		</div>
 	);
 };

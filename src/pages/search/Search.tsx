@@ -1,24 +1,24 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import SearchToolbar from "./SearchToolbar";
-import { Sidebar } from "@/calendar_widgets/Sidebar";
+import { Sidebar } from "@/components/filterSideBar/FilterSidebar";
 import GalleryView from "@/calendar_widgets/Day/Gallery/GalleryView";
 import type { CalendarEvent, Event } from "@/util/types";
 import Table from "@/calendar_widgets/Day/Table";
 import styles from "@styles/Search.module.css";
-import DetailView from "@/calendar_widgets/DetailView";
-import Pagination from "@/calendar_widgets/Pagination";
-import Loading from "@/calendar_widgets/Loading";
+import DetailView from "@/components/sidePannel/DetailView";
+import Pagination from "@/components/Pagination";
+import Loading from "@/components/Loading";
 import { Views } from "react-big-calendar";
 import calendarEventMapper from "@/util/Calendar/calendarEventMapper";
-import BottomNav from "@/calendar_widgets/BottomNav";
-import { FilterSheet } from "@/calendar_widgets/FilterSheet/FilterSheet";
+import BottomNav from "@/components/BottomNav";
+import { FilterSheet } from "@/components/filterSheet/FilterSheet";
 
 import { useSearch } from "@/contexts/SearchContext";
 import { useDetail } from "@/contexts/DetailContext";
 import {
 	SidePanelResizeHandle,
 	useResizableSidePanel,
-} from "@/calendar_widgets/SidePanelResize";
+} from "@/components/sidePannel/SidePanelResize";
 
 const SearchView = () => {
 	const {

@@ -4,7 +4,7 @@ import { getDDay } from "@calendarUtil/getDday";
 import { CATEGORY_COLORS, CATEGORY_LIST } from "@constants";
 import type { Event } from "@types";
 import { useUserData } from "@/contexts/UserDataContext";
-import { StartDate } from "@/calendar_widgets/EventDate";
+import { StartDate } from "@/components/eventDate/EventDate";
 import { useAuth } from "@/contexts/AuthProvider";
 
 const MobileChipsList = ({ event }: { event: Event }) => {
@@ -55,7 +55,7 @@ const MobileChipsList = ({ event }: { event: Event }) => {
 	)
 }
 
-const CardView = ({ event, onLoginPrompt, fullWidth = false }: { event: Event; onLoginPrompt?: () => void; fullWidth?: boolean; }) => {
+const EventCard = ({ event, onLoginPrompt, fullWidth = false }: { event: Event; onLoginPrompt?: () => void; fullWidth?: boolean; }) => {
 	const ddayTargetDate = event.applyEnd;
 	const {user} = useAuth();
 
@@ -122,4 +122,4 @@ const CardView = ({ event, onLoginPrompt, fullWidth = false }: { event: Event; o
 	);
 };
 
-export default CardView;
+export default EventCard;

@@ -2,15 +2,15 @@ import { useEffect, useRef } from "react";
 import { useUserData } from "@/contexts/UserDataContext";
 import styles from "@styles/Bookmarks.module.css";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
-import Navigationbar from "@/calendar_widgets/Navigationbar";
+import Navigationbar from "@/components/Navigationbar";
 import { useNavigate } from "react-router-dom";
 import GalleryCard from "@/calendar_widgets/Day/Gallery/GalleryCard";
 import { useDetail } from "@/contexts/DetailContext";
-import DetailView from "@/calendar_widgets/DetailView";
+import DetailView from "@/components/sidePannel/DetailView";
 import {
 	SidePanelResizeHandle,
 	useResizableSidePanel,
-} from "@/calendar_widgets/SidePanelResize";
+} from "@/components/sidePannel/SidePanelResize";
 
 export const BookmarkWidget = () => {
 	const { bookmarkedEvents } = useUserData();

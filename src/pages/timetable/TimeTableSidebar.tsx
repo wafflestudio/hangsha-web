@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthProvider";
 import styles from "../../styles/Sidebar.module.css";
 import type { PatchTimetableRequest, Timetable } from "../../util/types";
-import { SidebarLogoutButton } from "../../calendar_widgets/SidebarLogoutButton";
+import { SidebarLogoutButton } from "../../components/filterSideBar/LogoutButton";
 
 interface TimeTableSidebarProps {
 	timetables: Timetable[];

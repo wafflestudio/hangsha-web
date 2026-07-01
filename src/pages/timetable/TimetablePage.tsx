@@ -22,10 +22,10 @@ import { SlArrowLeft } from "react-icons/sl";
 import { TimeTableSidebar } from "./TimeTableSidebar";
 import TimeTableToolbar from "./TimeTableToolbar";
 import { MobileTimetableSidebar } from "./MobileTimetableSidebar";
-import BottomNav from "@/calendar_widgets/BottomNav";
+import BottomNav from "@/components/BottomNav";
 import { useAuth } from "@/contexts/AuthProvider";
 import { useNavigate } from "react-router-dom";
-import Modal from "@/calendar_widgets/Modal";
+import Modal from "@/components/Modal";
 
 export default function TimetablePage() {
 	const now = new Date();

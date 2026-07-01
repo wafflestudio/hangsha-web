@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { SlArrowRight } from "react-icons/sl";
-import Modal from "@/calendar_widgets/Modal";
+import Modal from "@/components/Modal";
 import type {
 	CreateTimetableRequest,
 	PatchTimetableRequest,
