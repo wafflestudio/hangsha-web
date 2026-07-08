@@ -3,6 +3,7 @@
   flex-direction: column;
   align-items: flex-start;
   width: 100%;
+  min-width: 0;
   font-family: -apple-system, BlinkMacSystemFont, "Pretendard", "Apple SD Gothic Neo", sans-serif;
   cursor: pointer;
 }
@@ -53,6 +54,7 @@
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
+  overflow-wrap: anywhere;
 }
 
 .gBody {
@@ -64,6 +66,7 @@
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
+  overflow-wrap: anywhere;
 }
 
 .gDateOrg {
