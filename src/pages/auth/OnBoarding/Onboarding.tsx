@@ -73,7 +73,7 @@ export default function Onboarding({
 			}
 			setSearchParams((prev) => {
 				const next = new URLSearchParams(prev);
-				next.set("step", "complete");
+				next.set("step", "sign-up-source");
 				return next;
 			});
 		} catch (e) {

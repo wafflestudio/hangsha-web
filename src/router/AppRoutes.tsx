@@ -2,6 +2,7 @@ import { Navigate, Route, Routes } from "react-router-dom";
 import Home from "../pages/auth/Home";
 import Login from "../pages/auth/Login/Login";
 import LoginHandler from "../pages/auth/Login/SocialLoginHandler";
+import SignUpSource from "../pages/auth/OnBoarding/SignUpSource";
 import EmailSignUp from "../pages/auth/Signup/EmailSignUp";
 import CalendarView from "../pages/CalendarView";
 import MainDay from "../pages/MainDay";
@@ -22,6 +23,10 @@ export default function AppRoutes() {
 				<Route path="/" element={<Home />} />
 				<Route path="/auth/login" element={<Login />} />
 				<Route path="/auth/signup" element={<EmailSignUp />} />
+				<Route
+					path="/auth/onbording/sign-up-source"
+					element={<SignUpSource />}
+				/>
 				{/* <Route path="/auth/complete" element={<CompleteSignUp />} /> */}
 
 				{/* OAuth Redirect */}
