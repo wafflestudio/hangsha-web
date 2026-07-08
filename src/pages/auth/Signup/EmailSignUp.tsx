@@ -6,6 +6,7 @@ import { useAuth } from "@contexts/AuthProvider";
 import CompleteSignUp from "../OnBoarding/CompleteSignUp";
 import Onboarding from "../OnBoarding/Onboarding";
 import ProfileSetting from "../OnBoarding/ProfileSetting";
+import SignUpSource from "../OnBoarding/SignUpSource";
 import styles from "./EmailSignUp.module.css";
 
 export default function EmailSignUp() {
@@ -31,6 +32,8 @@ export default function EmailSignUp() {
 			return <ProfileSetting />;
 		case "onboarding":
 			return <Onboarding />;
+		case "sign-up-source":
+			return <SignUpSource />;
 		case "complete":
 			return <CompleteSignUp />;
 	}
