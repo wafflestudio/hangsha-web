@@ -38,6 +38,7 @@
 }
 
 .aTitle {
+  min-width: 0;
   font-size: 17px;
   font-weight: 700;
   color: #111;
@@ -47,6 +48,31 @@
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
+}
+
+.aBookmarkColumn {
+  flex-shrink: 0;
+  align-self: stretch;
+  width: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.aBookmarkBtn {
+  flex-shrink: 0;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.aBookmarkBtn img {
+  width: 23px;
+  height: 23px;
 }
 
 /* backend-injected <mark> tags via dangerouslySetInnerHTML */

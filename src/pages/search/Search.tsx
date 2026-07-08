@@ -21,6 +21,7 @@ import {
 import { useDetail } from "@/contexts/DetailContext";
 import { useAuth } from "@/contexts/AuthProvider";
 import { ProfileButton } from "@/widgets/Toolbar";
+import Modal from "@/widgets/Modal";
 
 const DEFAULT_PAGE_SIZE = 20;
 const PAGE_GROUP_SIZE = 5;
@@ -44,6 +45,7 @@ const SearchView = () => {
 	const [error, setError] = useState(false);
 	const [viewMode, setViewMode] = useState<"list" | "grid">("list");
 	const [pageSize, setPageSize] = useState(DEFAULT_PAGE_SIZE);
+	const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
 	useEffect(() => {
 		setInputValue(query);
@@ -107,6 +109,16 @@ const SearchView = () => {
 
 	return (
 		<div className={styles.container}>
+			{isLoginModalOpen && (
+				<Modal
+					content="로그인 이후 이용해주세요"
+					leftText="로그인"
+					rightText="닫기"
+					onLeftClick={() => navigate("/")}
+					onRightClick={() => setIsLoginModalOpen(false)}
+					onClose={() => setIsLoginModalOpen(false)}
+				/>
+			)}
 			<Sidebar />
 			<div className={styles.restContainer}>
 				<div className={toolbarStyles.toolbarContainer}>
@@ -222,6 +234,7 @@ const SearchView = () => {
 											setClickedEventId(id);
 											setShowDetail(true);
 										}}
+										onLoginPrompt={() => setIsLoginModalOpen(true)}
 									/>
 								))}
 							</div>
@@ -235,6 +248,7 @@ const SearchView = () => {
 											setClickedEventId(id);
 											setShowDetail(true);
 										}}
+										onLoginPrompt={() => setIsLoginModalOpen(true)}
 									/>
 								))}
 							</div>
