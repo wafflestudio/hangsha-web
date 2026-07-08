@@ -133,6 +133,11 @@ body::-webkit-scrollbar {
   gap: 8px;
 }
 
+.tourTargetGroup {
+  display: flex;
+  flex-direction: column;
+}
+
 .labelText {
   font-size: var(--fs-label);
   font-weight: 600;
