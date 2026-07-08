@@ -10,7 +10,7 @@ import { useDayView } from "@contexts/DayViewContext";
 import type { User } from "@/util/types";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import FilterIcon from '/assets/filter.svg'
+import FilterIcon from "/assets/filter.svg";
 import { useFilter } from "@/contexts/FilterContext";
 import SearchButton from "./SearchButton";
 
@@ -47,15 +47,16 @@ export const ProfileButton = ({ user }: { user: User | null }) => {
 	);
 };
 
-export const FilterButton = ({ onFilterSet }: { onFilterSet: () => void }) => 
+export const FilterButton = ({ onFilterSet }: { onFilterSet: () => void }) => (
 	<button
 		type="button"
 		className={styles.filterBtn}
 		onClick={onFilterSet}
+		data-tour-id="main-tour-mobile-filter"
 	>
-		<img src={FilterIcon} alt="filter icon"/>
+		<img src={FilterIcon} alt="filter icon" />
 	</button>
-
+);
 
 const Toolbar: React.FC<ToolbarProps> = ({
 	view,
@@ -73,9 +74,13 @@ const Toolbar: React.FC<ToolbarProps> = ({
 			<div
 				className={`${styles.centerControl} ${view === Views.DAY && styles.dayView}`}
 			>
-				<div className={styles.viewToggleGroup}>
+				<div
+					className={styles.viewToggleGroup}
+					data-tour-id="main-tour-view-toggle"
+				>
 					<button
 						type="button"
+						data-tour-view="month"
 						onClick={() => onView(Views.MONTH)}
 						className={`${styles.toggleBtn} ${view === Views.MONTH ? styles.toggleBtnActive : ""}`}
 					>
@@ -83,6 +88,7 @@ const Toolbar: React.FC<ToolbarProps> = ({
 					</button>
 					<button
 						type="button"
+						data-tour-view="week"
 						onClick={() => onView(Views.WEEK)}
 						className={`${styles.toggleBtn} ${view === Views.WEEK ? styles.toggleBtnActive : ""}`}
 					>
@@ -90,6 +96,7 @@ const Toolbar: React.FC<ToolbarProps> = ({
 					</button>
 					<button
 						type="button"
+						data-tour-view="day"
 						onClick={() => onView(Views.DAY)}
 						className={`${styles.toggleBtn} ${view === Views.DAY ? styles.toggleBtnActive : ""}`}
 					>
@@ -111,7 +118,7 @@ const Toolbar: React.FC<ToolbarProps> = ({
 						>
 							오늘
 						</button>
-						
+
 						{/* < > 전환 버튼 */}
 						<button
 							type="button"
@@ -170,7 +177,9 @@ const Toolbar: React.FC<ToolbarProps> = ({
 					)}
 					<div className={styles.profileRow}>
 						<SearchButton />
-						<span className={styles.profileBtn}>{user && <ProfileButton user={user} />}</span>
+						<span className={styles.profileBtn}>
+							{user && <ProfileButton user={user} />}
+						</span>
 					</div>
 				</div>
 			</div>

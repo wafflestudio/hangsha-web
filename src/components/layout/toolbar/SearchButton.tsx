@@ -30,6 +30,7 @@ const SearchButton = () => {
 	return (
 		<form
 			className={styles.searchContainer}
+			data-tour-id="main-tour-search"
 			onMouseEnter={() => setHovered(true)}
 			onMouseLeave={() => setHovered(false)}
 			onSubmit={(e) => {
