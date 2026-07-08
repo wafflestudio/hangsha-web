@@ -132,8 +132,8 @@
 
 .aThumbnail {
   flex-shrink: 0;
-  width: 130px;
-  height: 90px;
+  width: 168px;
+  height: 116px;
   border-radius: 10px;
   overflow: hidden;
   border: 1px solid #eee;
@@ -148,7 +148,7 @@
 }
 
 @media (max-width: 600px) {
-  .aThumbnail { width: 88px; height: 65px; }
+  .aThumbnail { width: 110px; height: 76px; }
   .aTitle { font-size: 15px; }
   .aBody { -webkit-line-clamp: 2; }
 }
