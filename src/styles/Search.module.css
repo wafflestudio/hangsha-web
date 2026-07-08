@@ -83,11 +83,27 @@ body {
   color: #a3a3a3;
 }
 
+.resultCount {
+  font-size: 13px;
+  color: #9ca3af;
+  margin-bottom: 6px;
+}
+
+.listContainer {
+  flex: 1;
+}
+
+.gridContainer {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 32px 24px;
+}
+
 .dropdownRow {
   display: flex;
-  justify-content: flex-end; /* Align to right */
-  margin-bottom: 1rem;
-  padding-right: 1rem;
+  justify-content: flex-end;
+  margin-bottom: 0.75rem;
 }
 
 .sizeSelectContainer {
@@ -96,6 +112,10 @@ body {
   gap: 8px;
   font-size: 0.9rem;
   color: #666;
+}
+
+.sizeLabel {
+  white-space: nowrap;
 }
 
 .sizeSelect {
@@ -107,8 +127,18 @@ body {
   outline: none;
 }
 
+@media (max-width: 1024px) {
+  .gridContainer {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
 @media (max-width: 576px) {
   .restContainer {
     padding: 10px 10px 124px 10px;
+  }
+  .gridContainer {
+    grid-template-columns: 1fr;
+    gap: 20px;
   }
 }
