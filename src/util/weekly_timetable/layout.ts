@@ -93,6 +93,8 @@ export function flattenEventsToBlocks(
 	cfg: GridConfig,
 ): WeekGridBlock[] {
 	const blocks: WeekGridBlock[] = [];
+	const gridStartMin = cfg.startHour * 60;
+	const gridEndMin = cfg.endHour * 60;
 
 	cevents.forEach((cevent, idx) => {
 		const start = cevent.resource.event.eventStart;
@@ -108,14 +110,18 @@ export function flattenEventsToBlocks(
 
 		const startMin = toMinutesOfDay(start);
 		const endMin = toMinutesOfDay(end);
+		const visibleStartMin = Math.max(startMin, gridStartMin);
+		const visibleEndMin = Math.min(endMin, gridEndMin);
+
+		if (visibleEndMin <= visibleStartMin) return;
 
 		blocks.push({
 			blockId: idx,
 			sourceId: cevent.resource.event.id,
 			title: cevent.title,
 			day: toDay(start.getDay()),
-			top: minutesToTop(startMin, cfg),
-			height: durationToHeight(startMin, endMin, cfg),
+			top: minutesToTop(visibleStartMin, cfg),
+			height: durationToHeight(visibleStartMin, visibleEndMin, cfg),
 			startMin,
 			endMin,
 			raw: cevent,
