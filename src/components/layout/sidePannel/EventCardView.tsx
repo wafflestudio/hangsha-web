@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaAngleLeft, FaAngleRight, FaAnglesRight } from "react-icons/fa6";
-import styles from "./MonthSideView.module.css";
+import styles from "./EventCardView.module.css";
 import CardView from "./EventCard";
 import { useDetail } from "@/contexts/DetailContext";
 import calendarEventMapper from "@/util/Calendar/calendarEventMapper";

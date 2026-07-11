@@ -28,6 +28,14 @@
 		height 180ms ease;
 }
 
+.targetInteractionBlocker {
+	position: fixed;
+	z-index: 2;
+	border-radius: 12px;
+	pointer-events: auto;
+	background: transparent;
+}
+
 .cursorDemo {
 	position: fixed;
 	z-index: 3;
@@ -60,9 +68,68 @@
 	animation: cursorDemoClickRing 3.2s ease-out infinite;
 }
 
+.dragDemo {
+	position: fixed;
+	z-index: 3;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 56px;
+	height: 56px;
+	color: #111827;
+	pointer-events: none;
+	filter: drop-shadow(0 8px 12px rgba(15, 23, 42, 0.24));
+	animation: dragDemoMove 2.8s ease-in-out infinite;
+}
+
+.dragDemo svg {
+	width: 46px;
+	height: 46px;
+	stroke-width: 2.5;
+}
+
+.dragDemoTrack {
+	position: absolute;
+	top: 26px;
+	right: 18px;
+	width: 92px;
+	height: 3px;
+	border-radius: 999px;
+	background: linear-gradient(
+		90deg,
+		rgba(37, 99, 235, 0),
+		rgba(37, 99, 235, 0.72)
+	);
+	transform-origin: right center;
+	animation: dragDemoTrackPulse 2.8s ease-in-out infinite;
+}
+
+.dragDemoGrip {
+	position: absolute;
+	top: 9px;
+	left: 22px;
+	width: 4px;
+	height: 42px;
+	border-radius: 999px;
+	background: rgba(17, 24, 39, 0.42);
+	animation: dragDemoGripPulse 2.8s ease-in-out infinite;
+}
+
+.dragClickRing {
+	position: absolute;
+	top: 5px;
+	left: 5px;
+	width: 24px;
+	height: 24px;
+	border: 3px solid rgba(37, 99, 235, 0.45);
+	border-radius: 50%;
+	opacity: 0;
+	animation: dragDemoClickRing 2.8s ease-out infinite;
+}
+
 .bubble {
 	position: fixed;
-	z-index: 2;
+	z-index: 4;
 	width: min(320px, calc(100vw - 32px));
 	min-height: 180px;
 	padding: 30px 34px 24px;
@@ -259,6 +326,69 @@
 	92% {
 		opacity: 0;
 		transform: scale(1.75);
+	}
+}
+
+@keyframes dragDemoMove {
+	0%,
+	18% {
+		transform: translate3d(0, 0, 0) rotate(-10deg) scale(1);
+	}
+	24%,
+	32% {
+		transform: translate3d(0, 0, 0) rotate(-10deg) scale(0.9);
+	}
+	64%,
+	82% {
+		transform: translate3d(var(--drag-demo-x), 0, 0) rotate(-10deg) scale(0.9);
+	}
+	92%,
+	100% {
+		transform: translate3d(0, 0, 0) rotate(-10deg) scale(1);
+	}
+}
+
+@keyframes dragDemoClickRing {
+	0%,
+	18%,
+	42%,
+	100% {
+		opacity: 0;
+		transform: scale(0.55);
+	}
+	24% {
+		opacity: 0.9;
+		transform: scale(0.85);
+	}
+	38% {
+		opacity: 0;
+		transform: scale(1.75);
+	}
+}
+
+@keyframes dragDemoTrackPulse {
+	0%,
+	24%,
+	92%,
+	100% {
+		opacity: 0;
+		transform: scaleX(0);
+	}
+	42%,
+	82% {
+		opacity: 1;
+		transform: scaleX(1);
+	}
+}
+
+@keyframes dragDemoGripPulse {
+	0%,
+	100% {
+		background: rgba(17, 24, 39, 0.34);
+	}
+	24%,
+	82% {
+		background: rgba(37, 99, 235, 0.72);
 	}
 }
 
