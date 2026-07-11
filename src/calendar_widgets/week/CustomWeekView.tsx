@@ -176,7 +176,10 @@ function CustomWeekView({
 				events={allDayCalendarEvents}
 				onSelectEvent={onSelectEvent}
 			/>
-			<div className={styles.timetableLayer}>
+			<div
+				className={styles.timetableLayer}
+				data-tour-id="week-tour-participating-events"
+			>
 				<WeekGrid
 					ref={gridRef}
 					items={timetableEvents}
@@ -185,7 +188,11 @@ function CustomWeekView({
 					onSelectBlock={handleSelectBlock}
 				/>
 			</div>
-			<div className={styles.periodLayer} style={{ left, width }}>
+			<div
+				className={styles.periodLayer}
+				style={{ left, width }}
+				data-tour-id="week-tour-recruiting-events"
+			>
 				<div className={styles.inner}>
 					<PeriodBars
 						date={date}
