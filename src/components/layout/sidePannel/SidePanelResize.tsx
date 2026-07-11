@@ -151,5 +151,9 @@ export const SidePanelResizeHandle = ({
 	onMouseDown: (e: React.MouseEvent<HTMLDivElement>) => void;
 }) => (
 	// biome-ignore lint/a11y/noStaticElementInteractions: drag handle is intentionally mouse-only
-	<div className={styles.resizeHandle} onMouseDown={onMouseDown} />
+	<div
+		className={styles.resizeHandle}
+		data-tour-id="detail-tour-resize-handle"
+		onMouseDown={onMouseDown}
+	/>
 );

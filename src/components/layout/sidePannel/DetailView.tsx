@@ -74,7 +74,7 @@ const DetailView = ({ eventId }: { eventId: number }) => {
 	const ddayTargetDate = calendarEvent?.resource.isPeriodEvent
 		? calendarEvent.end
 		: calendarEvent?.start;
-		
+
 	const [isBookmarked, setIsBookmarked] = useState<boolean>(
 		!!event?.isBookmarked,
 	);
@@ -145,6 +145,7 @@ const DetailView = ({ eventId }: { eventId: number }) => {
 			<button
 				className={styles.bookmarkBtn}
 				type="button"
+				data-tour-id="detail-tour-bookmark"
 				onClick={handleToggleBookmark}
 			>
 				<img
@@ -189,7 +190,7 @@ const DetailView = ({ eventId }: { eventId: number }) => {
 			</div>
 
 			{/* ----- Memo & Tag Section ----- */}
-			<div ref={memoWrapperRef}>
+			<div ref={memoWrapperRef} data-tour-id="detail-tour-memo">
 				<DetailMemo
 					eventId={eventId}
 					isMemoExpanded={isMemoExpanded}
