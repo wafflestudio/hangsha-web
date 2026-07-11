@@ -4,11 +4,14 @@ import {
 	type Day,
 	type CalendarEvent,
 	type Event,
+	type Course,
+	type GetCoursesResponse,
 } from "../../util/types";
 import type {
 	GridConfig,
 	WeekGridBlock,
 	LayoutedBlock,
+	TimetableGridBlock,
 } from "../../util/weekly_timetable/layout";
 import { layoutDayBlocksLane } from "../../util/weekly_timetable/layout";
 import { formatAmPmFromMinutes } from "../../util/weekly_timetable/time";
@@ -16,8 +19,13 @@ import { CATEGORY_COLORS } from "@/util/constants";
 import styles from "./WeekGrid.module.css";
 type WeekGridProps = {
 	items: CalendarEvent[];
+	timetableOverlayItems?: GetCoursesResponse[];
 	config: GridConfig;
 	toBlocks: (items: CalendarEvent[], config: GridConfig) => WeekGridBlock[];
+	toTimetableOverlayBlocks?: (
+		items: GetCoursesResponse[],
+		config: GridConfig,
+	) => TimetableGridBlock<Course>[];
 	onSelectBlock?: (event: Event) => void;
 	dayLabels?: Record<Day, string>;
 };
@@ -30,7 +38,15 @@ const Days: Day[] = [0, 1, 2, 3, 4, 5, 6];
 
 export const WeekGrid = forwardRef<HTMLDivElement, WeekGridProps>(
 	function WeekGrid(
-		{ items, config, toBlocks, onSelectBlock, dayLabels = DAY_LABELS_KO },
+		{
+			items,
+			timetableOverlayItems = [],
+			config,
+			toBlocks,
+			toTimetableOverlayBlocks,
+			onSelectBlock,
+			dayLabels = DAY_LABELS_KO,
+		},
 		ref,
 	) {
 		const blocks = useMemo(
@@ -39,6 +55,13 @@ export const WeekGrid = forwardRef<HTMLDivElement, WeekGridProps>(
 		);
 
 		const totalHeight = (config.endHour - config.startHour) * 60 * config.ppm;
+		const timetableOverlayBlocks = useMemo(
+			() =>
+				toTimetableOverlayBlocks
+					? toTimetableOverlayBlocks(timetableOverlayItems, config)
+					: [],
+			[timetableOverlayItems, config, toTimetableOverlayBlocks],
+		);
 
 		const hourMarks = useMemo(() => {
 			const list: { hour: number; top: number; label: string }[] = [];
@@ -75,6 +98,21 @@ export const WeekGrid = forwardRef<HTMLDivElement, WeekGridProps>(
 			return laidOut;
 		}, [blocks]);
 
+		const timetableOverlayBlocksByDay = useMemo(() => {
+			const map: Record<Day, TimetableGridBlock<Course>[]> = {
+				0: [],
+				1: [],
+				2: [],
+				3: [],
+				4: [],
+				5: [],
+				6: [],
+			};
+
+			for (const b of timetableOverlayBlocks) map[b.day].push(b);
+			return map;
+		}, [timetableOverlayBlocks]);
+
 		return (
 			<div className={styles.gridWrap} ref={ref}>
 				<div className={styles.headerRow}>
@@ -105,6 +143,7 @@ export const WeekGrid = forwardRef<HTMLDivElement, WeekGridProps>(
 								key={d}
 								height={totalHeight}
 								blocks={blocksByDay[d]}
+								timetableOverlayBlocks={timetableOverlayBlocksByDay[d]}
 								config={config}
 								onSelectBlock={onSelectBlock}
 							/>
@@ -119,11 +158,13 @@ export const WeekGrid = forwardRef<HTMLDivElement, WeekGridProps>(
 function DayColumn({
 	height,
 	blocks,
+	timetableOverlayBlocks,
 	config,
 	onSelectBlock,
 }: {
 	height: number;
 	blocks: LayoutedBlock[];
+	timetableOverlayBlocks: TimetableGridBlock<Course>[];
 	config: GridConfig;
 	onSelectBlock?: (event: Event) => void;
 }) {
@@ -167,6 +208,25 @@ function DayColumn({
 					</button>
 				);
 			})}
+
+			{timetableOverlayBlocks.map((b) => (
+				<div
+					key={`timetable-${b.enrollId}-${b.id}-${b.startMin}-${b.endMin}`}
+					className={styles.timetableOverlayBlock}
+					style={{
+						top: b.top,
+						height: b.height,
+						width: `${b.widthPct}%`,
+					}}
+					aria-hidden="true"
+				>
+					<div className={styles.timetableOverlayTitle}>{b.title}</div>
+					<div className={styles.timetableOverlayTime}>
+						{formatAmPmFromMinutes(b.startMin)} -{" "}
+						{formatAmPmFromMinutes(b.endMin)}
+					</div>
+				</div>
+			))}
 		</div>
 	);
 }

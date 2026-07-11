@@ -413,6 +413,10 @@ body::-webkit-scrollbar {
   background: #f6f6f6;
 }
 
+.rowBtnSelected .ttName {
+  font-weight: 700;
+}
+
 .rowText {
   display: inline-flex;
   align-items: center;

@@ -20,6 +20,10 @@ interface ToolbarProps {
 	onView: (view: View) => void;
 	label: string;
 	date: Date;
+	showTimetableOverlay?: boolean;
+	onShowTimetableOverlayChange?: (value: boolean) => void;
+	hasTimetableOverlay?: boolean;
+	isTimetableOverlayEmpty?: boolean;
 }
 
 export const ProfileButton = ({ user }: { user: User | null }) => {
@@ -62,6 +66,10 @@ const Toolbar: React.FC<ToolbarProps> = ({
 	onNavigate,
 	onView,
 	label,
+	showTimetableOverlay = false,
+	onShowTimetableOverlayChange,
+	hasTimetableOverlay = false,
+	isTimetableOverlayEmpty = false,
 }) => {
 	const { user } = useAuth();
 	const { dayViewMode, setDayViewMode } = useDayView();
@@ -127,6 +135,34 @@ const Toolbar: React.FC<ToolbarProps> = ({
 						>
 							&gt;
 						</button>
+						{view === Views.WEEK && (
+							<div className={styles.weekTimetableToggleGroup}>
+								<span className={styles.timetableToggleLabel}>시간표</span>
+								<button
+									type="button"
+									className={`${styles.timetableToggle} ${
+										showTimetableOverlay ? styles.timetableToggleOn : ""
+									}`}
+									aria-label="시간표"
+									aria-pressed={showTimetableOverlay}
+									onClick={() =>
+										onShowTimetableOverlayChange?.(!showTimetableOverlay)
+									}
+								>
+									<span className={styles.timetableToggleThumb} />
+								</button>
+								{showTimetableOverlay && isTimetableOverlayEmpty && (
+									<span className={styles.timetableToggleLabel}>
+										현재 시간표에 수업이 없습니다!
+									</span>
+								)}
+								{showTimetableOverlay && isTimetableOverlayEmpty && hasTimetableOverlay && (
+									<span className={styles.timetableToggleLabel}>
+										현재 시간표가 없습니다!
+									</span>
+								)}
+							</div>
+						)}
 						{/** 모바일뷰 전용 필터 버튼 */}
 						<FilterButton onFilterSet={() => setFilterSheetShowing(true)} />
 					</div>

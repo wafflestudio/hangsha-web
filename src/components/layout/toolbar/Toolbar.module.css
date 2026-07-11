@@ -113,6 +113,44 @@
   display: none;
 }
 
+.mobileTimetableTitleGroup {
+  display: none;
+}
+
+.mobileEventWeekLabel {
+  display: none;
+}
+
+.mobileWeekNavGroup {
+  display: none;
+}
+
+.selectCurrentTimetableButton {
+  flex: 0 0 auto;
+  height: 36px;
+  padding: 0 14px;
+  border: none;
+  border-radius: 999px;
+  outline: none;
+  background: #ffffff;
+  color: #111827;
+  font-size: 13px;
+  font-weight: 700;
+  white-space: nowrap;
+  cursor: pointer;
+  box-shadow: 0 8px 18px rgba(17, 24, 39, 0.12);
+}
+
+.selectCurrentTimetableButton:active {
+  transform: translateY(1px);
+}
+
+.selectCurrentTimetableButton:disabled {
+  opacity: 0.45;
+  cursor: wait;
+  box-shadow: none;
+}
+
 .navBtnGroup {
   display: flex;
   align-items: center;
@@ -252,11 +290,18 @@
 }
 
 .timetableToggleGroup {
-  display: inline-flex;
+  display: none;
   flex-direction: column;
   align-items: flex-start;
   gap: 4px;
   flex: 0 0 auto;
+}
+
+.weekTimetableToggleGroup {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: 4px;
 }
 
 .timetableToggleLabel {
@@ -388,10 +433,16 @@
   .timetableToolbarContainer .dateTitle {
     display: none;
   }
-  .timetableToolbarContainer .mobileTimetableTitle {
-    display: block;
+  .timetableToolbarContainer .mobileTimetableTitleGroup {
+    display: flex;
     grid-column: 1;
     grid-row: 2;
+    min-width: 0;
+    flex-direction: column;
+    gap: 3px;
+  }
+  .timetableToolbarContainer .mobileTimetableTitle {
+    display: block;
     min-width: 0;
     margin: 0;
     padding-left: 0;
@@ -403,26 +454,48 @@
     text-overflow: ellipsis;
     white-space: nowrap;
   }
-  .timetableToolbarContainer .timetableToggleGroup {
+  .timetableToolbarContainer .mobileEventWeekLabel {
+    display: block;
+    margin: 0;
+    color: #777777;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 1.2;
+  }
+  .timetableToolbarContainer .mobileWeekNavGroup {
+    display: inline-flex;
     grid-column: 2;
     grid-row: 2;
-    align-items: flex-start;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 4px;
   }
-  .timetableToolbarContainer .timetableToggleLabel {
+  .timetableToolbarContainer .mobileWeekNavButton {
+    display: inline-flex;
+    width: 30px;
+    height: 30px;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border: none;
+    border-radius: 999px;
+    background: #f3f4f6;
+    color: #374151;
+    font-size: 18px;
+    line-height: 1;
+    cursor: pointer;
+  }
+  .timetableToolbarContainer .timetableToggleGroup {
+    display: inline-flex;
+    grid-column: 1 / -1;
+    grid-row: 3;
+    width: fit-content;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+  }
+  .timetableToolbarContainer .selectCurrentTimetableButton {
     display: none;
-  }
-  .timetableToolbarContainer .timetableToggle {
-    width: 38px;
-    height: 22px;
-  }
-  .timetableToolbarContainer .timetableToggleThumb {
-    top: 3px;
-    left: 3px;
-    width: 16px;
-    height: 16px;
-  }
-  .timetableToolbarContainer .timetableToggleOn .timetableToggleThumb {
-    transform: translateX(16px);
   }
   .timetableToolbarContainer .profileRow {
     display: none;

@@ -4,7 +4,7 @@ import { Views, type View } from "react-big-calendar";
 import { useQueryClient } from "@tanstack/react-query";
 import PullToRefresh from "react-simple-pull-to-refresh";
 import styles from "./CalendarView.module.css";
-import type { CalendarEvent, Event } from "@types";
+import type { CalendarEvent, Event, Semester } from "@types";
 import DetailView from "@/components/layout/sidePannel/DetailView";
 import EventCardView from "@/components/layout/sidePannel/EventCardView";
 import { MyCalendar } from "@/calendar_widgets/MyCalendar";
@@ -25,6 +25,16 @@ import {
 	useWeekEvents,
 	useDayEvents,
 } from "@/contexts/useCalendarEvents";
+import { useTimetable } from "@/contexts/TimetableContext";
+
+const getSemesterByDate = (date: Date): Semester => {
+	const month = date.getMonth() + 1;
+
+	if (month >= 3 && month <= 6) return "SPRING";
+	if (month >= 7 && month <= 8) return "SUMMER";
+	if (month >= 9 && month <= 12) return "FALL";
+	return "WINTER";
+};
 
 const CalendarView = () => {
 	// EventContext
@@ -41,6 +51,7 @@ const CalendarView = () => {
 	const { showDetail, setShowDetail, clickedEventId, setClickedEventId } =
 		useDetail();
 	const { excludedKeywords, interestCategories } = useUserData();
+	const { initializeDefaultOverlay } = useTimetable();
 
 	// 현재 기준점이 되는 날짜
 	const [currentDate, setCurrentDate] = useState<Date>(new Date());
@@ -83,6 +94,14 @@ const CalendarView = () => {
 		excludedKeywords,
 		interestCategories,
 	);
+
+	useEffect(() => {
+		const today = new Date();
+		void initializeDefaultOverlay(
+			today.getFullYear(),
+			getSemesterByDate(today),
+		);
+	}, [initializeDefaultOverlay]);
 
 	const queryClient = useQueryClient();
 	const handleRefresh = async () => {

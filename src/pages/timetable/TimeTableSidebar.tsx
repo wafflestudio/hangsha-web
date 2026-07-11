@@ -190,53 +190,45 @@ export const TimeTableSidebar = ({
 										}`}
 										onClick={() => onSelectTimetable(tt)}
 									>
-										적용
+										<span className={styles.rowText}>
+											<span className={styles.ttName}>{tt.name}</span>
+										</span>
 									</button>
-								</div>
-							) : (
-								<button
-									type="button"
-									className={`${styles.rowBtn}`}
-									onClick={() => onSelectTimetable(tt)}
-								>
-									<span className={styles.rowText}>
-										<span className={styles.ttName}>{tt.name}</span>
-									</span>
-								</button>
-							)}
+								)}
 
-							{nameChangeId !== tt.id && (
-								<button
-									type="button"
-									className={styles.moreBtn}
-									onClick={() => setEditingId(tt.id)}
-									aria-label={`${tt.name} 더보기`}
-								>
-									<span aria-hidden="true">⋮</span>
-								</button>
-							)}
-
-							{editingId === tt.id && nameChangeId !== tt.id && (
-								<div className={styles.menu}>
+								{nameChangeId !== tt.id && (
 									<button
 										type="button"
-										className={styles.menuItem}
-										onClick={() => startRename(tt)}
+										className={styles.moreBtn}
+										onClick={() => setEditingId(tt.id)}
+										aria-label={`${tt.name} 더보기`}
 									>
-										이름 바꾸기
+										<span aria-hidden="true">⋮</span>
 									</button>
+								)}
 
-									<button
-										type="button"
-										className={`${styles.menuItem} ${styles.danger}`}
-										onClick={() => onDelete(tt.id)}
-									>
-										삭제
-									</button>
-								</div>
-							)}
-						</li>
-					))}
+								{editingId === tt.id && nameChangeId !== tt.id && (
+									<div className={styles.menu}>
+										<button
+											type="button"
+											className={styles.menuItem}
+											onClick={() => startRename(tt)}
+										>
+											이름 바꾸기
+										</button>
+
+										<button
+											type="button"
+											className={`${styles.menuItem} ${styles.danger}`}
+											onClick={() => onDelete(tt.id)}
+										>
+											삭제
+										</button>
+									</div>
+								)}
+							</li>
+						);
+					})}
 				</ul>
 			</div>
 

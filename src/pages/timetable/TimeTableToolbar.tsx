@@ -11,8 +11,12 @@ interface TimeTableToolbarProps {
 	SEMESTER_LABEL: { id: Semester; label: string }[];
 	onYearChange: (year: number) => void;
 	onSemesterChange: (semester: Semester) => void;
-	isToggleOn: boolean;
-	onToggleChange: (isToggleOn: boolean) => void;
+	onSelectCurrentTimetable: () => Promise<void>;
+	isEventOverlayOn: boolean;
+	onEventOverlayChange: (isEventOverlayOn: boolean) => void;
+	onPrevEventWeek?: () => void;
+	onNextEventWeek?: () => void;
+	mobileEventWeekLabel?: string;
 	isLoading?: boolean;
 	years?: number[];
 	hasTimetable?: boolean;
@@ -25,8 +29,12 @@ const TimeTableToolbar = ({
 	SEMESTER_LABEL,
 	onYearChange,
 	onSemesterChange,
-	isToggleOn,
-	onToggleChange,
+	onSelectCurrentTimetable,
+	isEventOverlayOn,
+	onEventOverlayChange,
+	onPrevEventWeek,
+	onNextEventWeek,
+	mobileEventWeekLabel,
 	isLoading = false,
 	years,
 	hasTimetable = false,
@@ -81,23 +89,62 @@ const TimeTableToolbar = ({
 						</span>
 					</div>
 					<p className={styles.dateTitle}>{timetableName}</p>
-					<p className={styles.mobileTimetableTitle}>{displayTimetableName}</p>
-					{hasTimetable ?
-					<div className={styles.timetableToggleGroup}>
-						<span className={styles.timetableToggleLabel}>행사 함께 보기</span>
+					<div className={styles.mobileTimetableTitleGroup}>
+						<p className={styles.mobileTimetableTitle}>
+							{displayTimetableName}
+						</p>
+						{mobileEventWeekLabel && (
+							<p className={styles.mobileEventWeekLabel}>
+								{mobileEventWeekLabel}
+							</p>
+						)}
+					</div>
+					<div className={styles.mobileWeekNavGroup}>
 						<button
 							type="button"
-							className={`${styles.timetableToggle} ${
-								isToggleOn ? styles.timetableToggleOn : ""
-							}`}
-							aria-label="행사 함께 보기"
-							aria-pressed={isToggleOn}
-							onClick={() => onToggleChange(!isToggleOn)}
+							className={styles.mobileWeekNavButton}
+							onClick={onPrevEventWeek}
+							aria-label="이전 주 행사 보기"
 						>
-							<span className={styles.timetableToggleThumb} />
+							&lt;
 						</button>
-					</div> : null
-					}
+						<button
+							type="button"
+							className={styles.mobileWeekNavButton}
+							onClick={onNextEventWeek}
+							aria-label="다음 주 행사 보기"
+						>
+							&gt;
+						</button>
+					</div>
+					{hasTimetable ? (
+						<div className={styles.timetableToggleGroup}>
+							<span className={styles.timetableToggleLabel}>
+								행사 함께 보기
+							</span>
+							<button
+								type="button"
+								className={`${styles.timetableToggle} ${
+									isEventOverlayOn ? styles.timetableToggleOn : ""
+								}`}
+								aria-label="행사 함께 보기"
+								aria-pressed={isEventOverlayOn}
+								onClick={() => onEventOverlayChange(!isEventOverlayOn)}
+							>
+								<span className={styles.timetableToggleThumb} />
+							</button>
+						</div>
+					) : null}
+					{hasTimetable ? (
+						<button
+							type="button"
+							className={styles.selectCurrentTimetableButton}
+							onClick={() => void onSelectCurrentTimetable()}
+							disabled={isLoading}
+						>
+							현재 시간표 선택
+						</button>
+					) : null}
 				</div>
 
 				<div className={styles.profileRow}>
