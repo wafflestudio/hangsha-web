@@ -8,6 +8,7 @@ import { SidebarLogoutButton } from "../../components/layout/filterSideBar/Logou
 
 interface TimeTableSidebarProps {
 	timetables: Timetable[];
+	currentTimetable: Timetable | null;
 	isOpen: boolean;
 	onOpenChange: (isOpen: boolean) => void;
 	onAddTimetable: () => Promise<void>;
@@ -18,6 +19,7 @@ interface TimeTableSidebarProps {
 
 export const TimeTableSidebar = ({
 	timetables,
+	currentTimetable,
 	isOpen,
 	onOpenChange,
 	onAddTimetable,
@@ -139,83 +141,89 @@ export const TimeTableSidebar = ({
 				</div>
 
 				<ul className={styles.list}>
-					{timetables.map((tt) => (
-						<li
-							key={tt.id}
-							className={styles.listItem}
-							ref={
-								editingId === tt.id || nameChangeId === tt.id
-									? activePanelRef
-									: null
-							}
-						>
-							{nameChangeId === tt.id ? (
-								<div className={styles.renameBox}>
-									<input
-										className={styles.renameInput}
-										value={newName}
-										onChange={(e) => setNewName(e.target.value)}
-										onKeyDown={(e) => {
-											if (e.key === "Enter" && !e.nativeEvent.isComposing) {
-												void applyRename(tt.id);
-											}
-											if (e.key === "Escape") {
-												cancelRename();
-											}
-										}}
-									></input>
+					{timetables.map((tt) => {
+						const isSelected = currentTimetable?.id === tt.id;
+
+						return (
+							<li
+								key={tt.id}
+								className={styles.listItem}
+								ref={
+									editingId === tt.id || nameChangeId === tt.id
+										? activePanelRef
+										: null
+								}
+							>
+								{nameChangeId === tt.id ? (
+									<div className={styles.renameBox}>
+										<input
+											className={styles.renameInput}
+											value={newName}
+											onChange={(e) => setNewName(e.target.value)}
+											onKeyDown={(e) => {
+												if (e.key === "Enter" && !e.nativeEvent.isComposing) {
+													void applyRename(tt.id);
+												}
+												if (e.key === "Escape") {
+													cancelRename();
+												}
+											}}
+										></input>
+										<button
+											type="button"
+											className={styles.applyButton}
+											onClick={() => applyRename(tt.id)}
+										>
+											적용
+										</button>
+									</div>
+								) : (
 									<button
 										type="button"
-										className={styles.applyButton}
-										onClick={() => applyRename(tt.id)}
+										className={`${styles.rowBtn} ${
+											isSelected ? styles.rowBtnSelected : ""
+										}`}
+										onClick={() => onSelectTimetable(tt)}
 									>
-										적용
+										<span className={styles.rowText}>
+											<span className={styles.ttName}>{tt.name}</span>
+										</span>
 									</button>
-								</div>
-							) : (
-								<button
-									type="button"
-									className={`${styles.rowBtn}`}
-									onClick={() => onSelectTimetable(tt)}
-								>
-									<span className={styles.rowText}>
-										<span className={styles.ttName}>{tt.name}</span>
-									</span>
-								</button>
-							)}
+								)}
 
-							{nameChangeId !== tt.id && (
-								<button
-									type="button"
-									className={styles.moreBtn}
-									onClick={() => setEditingId(tt.id)}
-									aria-label={`${tt.name} 더보기`}
-								>
-									<span aria-hidden="true">⋮</span>
-								</button>
-							)}
-
-							{editingId === tt.id && nameChangeId !== tt.id && (
-								<div className={styles.menu}>
+								{nameChangeId !== tt.id && (
 									<button
 										type="button"
-										className={styles.menuItem}
-										onClick={() => startRename(tt)}
+										className={styles.moreBtn}
+										onClick={() => setEditingId(tt.id)}
+										aria-label={`${tt.name} 더보기`}
 									>
-										이름 바꾸기
+										<span aria-hidden="true">⋮</span>
 									</button>
+								)}
 
-									<button
-										type="button"
-										className={`${styles.menuItem} ${styles.danger}`}
-										onClick={() => onDelete(tt.id)}
-									>
-										삭제
-									</button>
-								</div>
-							)}
-						</li>
-					))}
+								{editingId === tt.id && nameChangeId !== tt.id && (
+									<div className={styles.menu}>
+										<button
+											type="button"
+											className={styles.menuItem}
+											onClick={() => startRename(tt)}
+										>
+											이름 바꾸기
+										</button>
+
+										<button
+											type="button"
+											className={`${styles.menuItem} ${styles.danger}`}
+											onClick={() => onDelete(tt.id)}
+										>
+											삭제
+										</button>
+									</div>
+								)}
+							</li>
+						);
+					})}
 				</ul>
 			</div>
 
