@@ -17,7 +17,7 @@ import type {
 } from "../../util/types";
 import { DAY_LABELS_KO } from "../../util/types";
 import { buildTimeOptions, STEP_MIN } from "../../util/weekly_timetable/time";
-import styles from "@styles/Timetable.module.css";
+import styles from "./Timetable.module.css";
 
 type Props = {
 	timetableId?: number;

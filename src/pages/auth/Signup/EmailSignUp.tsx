@@ -6,7 +6,7 @@ import { useAuth } from "@contexts/AuthProvider";
 import CompleteSignUp from "../OnBoarding/CompleteSignUp";
 import Onboarding from "../OnBoarding/Onboarding";
 import ProfileSetting from "../OnBoarding/ProfileSetting";
-import styles from "@styles/EmailSignUp.module.css";
+import styles from "./EmailSignUp.module.css";
 
 export default function EmailSignUp() {
 	const errorStatements = [

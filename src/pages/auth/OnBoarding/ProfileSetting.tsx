@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthProvider";
 import defaultProfile from "/assets/defaultProfile.png";
-import styles from "@styles/ProfileSetting.module.css";
+import styles from "./ProfileSetting.module.css";
 
 export default function ProfileSetting() {
 	const [, setSearchParams] = useSearchParams();

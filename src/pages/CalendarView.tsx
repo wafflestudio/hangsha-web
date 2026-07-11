@@ -3,23 +3,23 @@ import { useNavigate } from "react-router-dom";
 import { Views, type View } from "react-big-calendar";
 import { useQueryClient } from "@tanstack/react-query";
 import PullToRefresh from "react-simple-pull-to-refresh";
-import styles from "@styles/CalendarView.module.css";
+import styles from "./CalendarView.module.css";
 import type { CalendarEvent, Event } from "@types";
-import DetailView from "@/widgets/DetailView";
-import MonthSideView from "@widgets/Month/MonthSideView/MonthSideView";
-import { MyCalendar } from "@widgets/MyCalendar";
-import { Sidebar } from "@widgets/Sidebar";
+import DetailView from "@/components/layout/sidePannel/DetailView";
+import EventCardView from "@/components/layout/sidePannel/EventCardView";
+import { MyCalendar } from "@/calendar_widgets/MyCalendar";
+import { Sidebar } from "@/components/layout/filterSideBar/FilterSidebar";
 import {
 	SidePanelResizeHandle,
 	useResizableSidePanel,
-} from "@/widgets/SidePanelResize";
+} from "@/components/layout/sidePannel/SidePanelResize";
 
 import { useDetail } from "@contexts/DetailContext";
 import { useEvents } from "@contexts/EventContext";
 import { useFilter } from "@contexts/FilterContext";
 import { useUserData } from "@/contexts/UserDataContext";
-import BottomNav from "@/widgets/BottomNav";
-import { FilterSheet } from "@/widgets/FilterSheet/FilterSheet";
+import BottomNav from "@/components/layout/BottomNav";
+import { FilterSheet } from "@/components/layout/filterSheet/FilterSheet";
 import {
 	useMonthEvents,
 	useWeekEvents,
@@ -217,7 +217,7 @@ const CalendarView = () => {
 						{!isMobile && (
 							<SidePanelResizeHandle onMouseDown={handleResizeStart} />
 						)}
-						<MonthSideView day={clickedDate} onClose={handleCloseSideMonth} />
+						<EventCardView day={clickedDate} onClose={handleCloseSideMonth} />
 					</div>
 				)}
 
