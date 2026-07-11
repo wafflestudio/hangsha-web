@@ -256,7 +256,10 @@ const CalendarView = () => {
 			</div>
 			<FilterSheet />
 			<BottomNav />
-			<MainRouteTutorial />
+			<MainRouteTutorial
+				isDayView={currentView === Views.DAY}
+				isWeekView={currentView === Views.WEEK}
+			/>
 		</div>
 	);
 };

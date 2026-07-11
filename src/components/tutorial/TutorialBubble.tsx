@@ -33,6 +33,7 @@ export const TutorialBubble = ({
 	hasPreviousStep,
 }: TutorialBubbleProps) => {
 	const stepCount = steps.length;
+	const hasMultipleSteps = stepCount > 1;
 
 	return (
 		<div
@@ -58,37 +59,39 @@ export const TutorialBubble = ({
 				{step.title}
 			</h2>
 			<p className={styles.description}>{step.description}</p>
-			<div className={styles.controls}>
-				<button
-					type="button"
-					className={styles.chevronButton}
-					onClick={onPrevious}
-					disabled={!hasPreviousStep}
-					aria-label="이전 튜토리얼"
-				>
-					<FaChevronLeft aria-hidden="true" />
-				</button>
-				<div className={styles.dots} aria-hidden="true">
-					{steps.map((dotStep, index) => (
-						<span
-							key={dotStep.title}
-							className={`${styles.dot} ${
-								index === stepIndex ? styles.activeDot : ""
-							}`}
-						/>
-					))}
+			{hasMultipleSteps && (
+				<div className={styles.controls}>
+					<button
+						type="button"
+						className={styles.chevronButton}
+						onClick={onPrevious}
+						disabled={!hasPreviousStep}
+						aria-label="이전 튜토리얼"
+					>
+						<FaChevronLeft aria-hidden="true" />
+					</button>
+					<div className={styles.dots} aria-hidden="true">
+						{steps.map((dotStep, index) => (
+							<span
+								key={dotStep.title}
+								className={`${styles.dot} ${
+									index === stepIndex ? styles.activeDot : ""
+								}`}
+							/>
+						))}
+					</div>
+					<button
+						type="button"
+						className={styles.chevronButton}
+						onClick={onNext}
+						aria-label={
+							stepIndex < stepCount - 1 ? "다음 튜토리얼" : "튜토리얼 완료"
+						}
+					>
+						<FaChevronRight aria-hidden="true" />
+					</button>
 				</div>
-				<button
-					type="button"
-					className={styles.chevronButton}
-					onClick={onNext}
-					aria-label={
-						stepIndex < stepCount - 1 ? "다음 튜토리얼" : "튜토리얼 완료"
-					}
-				>
-					<FaChevronRight aria-hidden="true" />
-				</button>
-			</div>
+			)}
 		</div>
 	);
 };

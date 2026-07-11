@@ -178,7 +178,10 @@ const Toolbar: React.FC<ToolbarProps> = ({
 				<div className={styles.rightGroup}>
 					{/* 일별 뷰 전용 모드 전환 토글 */}
 					{view === Views.DAY && (
-						<div className={styles.viewToggleGroup}>
+						<div
+							className={styles.viewToggleGroup}
+							data-tour-id="day-tour-view-mode-toggle"
+						>
 							{/* 리스트 버튼 */}
 							<button
 								type="button"
