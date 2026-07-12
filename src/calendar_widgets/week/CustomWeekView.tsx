@@ -6,10 +6,11 @@ import type {
 	ViewStatic,
 } from "react-big-calendar";
 
-import type { Event, CalendarEvent } from "../../util/types";
+import type { Event, CalendarEvent, GetCoursesResponse } from "../../util/types";
 import {
 	config,
 	flattenEventsToBlocks,
+	flattenCoursesToBlocks,
 } from "../../util/weekly_timetable/layout";
 import { WeekGrid } from "./WeekGrid";
 import { PeriodBars } from "./PeriodBar";
@@ -20,6 +21,7 @@ interface CustomWeekViewProps {
 	date: Date;
 	localizer: DateLocalizer;
 	events: CalendarEvent[];
+	timetableOverlayCourses?: GetCoursesResponse[];
 	onSelectEvent?: (event: CalendarEvent) => void;
 	[key: string]: unknown;
 }
@@ -62,6 +64,7 @@ function CustomWeekView({
 	date,
 	localizer,
 	events,
+	timetableOverlayCourses = [],
 	onSelectEvent,
 }: CustomWeekViewProps) {
 	const WEEK_EVENTS = useMemo(() => {
@@ -180,8 +183,10 @@ function CustomWeekView({
 				<WeekGrid
 					ref={gridRef}
 					items={timetableEvents}
+					timetableOverlayItems={timetableOverlayCourses}
 					config={config}
 					toBlocks={flattenEventsToBlocks}
+					toTimetableOverlayBlocks={flattenCoursesToBlocks}
 					onSelectBlock={handleSelectBlock}
 				/>
 			</div>

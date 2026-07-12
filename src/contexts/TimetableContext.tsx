@@ -22,11 +22,15 @@ interface TimetableContextType {
 	timetables: Timetable[];
 	currentTimetable: Timetable | null;
 	courses: GetCoursesResponse[] | null;
+	selectedOverlayTimetable: Timetable | null;
+	selectedOverlayCourses: GetCoursesResponse[];
 	isLoading: boolean;
 
 	// actions
 	loadTimetable: (year: number, semester: Semester) => Promise<void>;
+	initializeDefaultOverlay: (year: number, semester: Semester) => Promise<void>;
 	selectTimetable: (timetable: Timetable) => void;
+	selectCurrentTimetableForOverlay: () => Promise<void>;
 
 	createTimetable: (body: CreateTimetableRequest) => Promise<void>;
 	updateTimetableName: (
@@ -60,7 +64,16 @@ export const TimetableProvider = ({ children }: { children: ReactNode }) => {
 		null,
 	);
 	const [courses, setCourses] = useState<GetCoursesResponse[]>([]);
+	const [selectedOverlayTimetable, setSelectedOverlayTimetable] =
+		useState<Timetable | null>(null);
+	const [selectedOverlayCourses, setSelectedOverlayCourses] = useState<
+		GetCoursesResponse[]
+	>([]);
 	const [isLoading, setIsLoading] = useState(false);
+
+	const loadCoursesByTimetableId = useCallback(async (timetableId: number) => {
+		return timetableApi.getTimetableCourses(timetableId);
+	}, []);
 
 	// --- Timetable ---
 	const loadTimetable = useCallback(
@@ -74,25 +87,74 @@ export const TimetableProvider = ({ children }: { children: ReactNode }) => {
 
 				// 기본 선택
 				if (res.length > 0) {
-					setCurrentTimetable(res[0]);
+					const defaultTimetable = res[0];
+					const defaultCourses = await loadCoursesByTimetableId(
+						defaultTimetable.id,
+					);
+
+					setCurrentTimetable(defaultTimetable);
+					setCourses(defaultCourses);
+					console.log(
+						`Loaded timetable for ${year} ${semester}:`,
+						defaultTimetable,
+					);
 				} else {
+					console.log(
+						"No timetable found for the specified year and semester.",
+					);
 					setCurrentTimetable(null);
+					setCourses([]);
 				}
 			} finally {
 				setIsLoading(false);
 			}
 		},
-		[isAuthenticated],
+		[isAuthenticated, loadCoursesByTimetableId],
+	);
+
+	const initializeDefaultOverlay = useCallback(
+		async (year: number, semester: Semester) => {
+			if (!isAuthenticated || selectedOverlayTimetable) return;
+
+			const availableTimetables = await timetableApi.getTimetable(
+				year,
+				semester,
+			);
+			const defaultTimetable = availableTimetables[0];
+			if (!defaultTimetable) return;
+
+			const defaultCourses = await loadCoursesByTimetableId(
+				defaultTimetable.id,
+			);
+			setSelectedOverlayTimetable(defaultTimetable);
+			setSelectedOverlayCourses(defaultCourses);
+		},
+		[isAuthenticated, loadCoursesByTimetableId, selectedOverlayTimetable],
 	);
 
 	const selectTimetable = (timetable: Timetable) => {
 		setCurrentTimetable(timetable);
 	};
 
+	const selectCurrentTimetableForOverlay = async () => {
+		if (!currentTimetable) {
+			setSelectedOverlayTimetable(null);
+			setSelectedOverlayCourses([]);
+			return;
+		}
+
+		const selectedCourses = await loadCoursesByTimetableId(currentTimetable.id);
+		setSelectedOverlayTimetable(currentTimetable);
+		setSelectedOverlayCourses(selectedCourses);
+	};
+
 	const createTimetable = async (body: CreateTimetableRequest) => {
 		const newTimetable = await timetableApi.addTimetable(body);
 		setTimetables((prev) => [...prev, newTimetable]);
 		setCurrentTimetable(newTimetable);
+		setCourses([]);
+		setSelectedOverlayTimetable(newTimetable);
+		setSelectedOverlayCourses([]);
 	};
 
 	const updateTimetableName = async (
@@ -119,13 +181,23 @@ export const TimetableProvider = ({ children }: { children: ReactNode }) => {
 			setCurrentTimetable(null);
 			setCourses([]);
 		}
+		if (selectedOverlayTimetable?.id === timetableId) {
+			setSelectedOverlayTimetable(null);
+			setSelectedOverlayCourses([]);
+		}
 	};
 
 	// --- Courses / Enrolls ---
-	const loadCourses = useCallback(async (timetableId: number) => {
-		const data = await timetableApi.getTimetableCourses(timetableId);
-		setCourses(data);
-	}, []);
+	const loadCourses = useCallback(
+		async (timetableId: number) => {
+			const data = await loadCoursesByTimetableId(timetableId);
+			setCourses(data);
+			setSelectedOverlayCourses((prev) =>
+				selectedOverlayTimetable?.id === timetableId ? data : prev,
+			);
+		},
+		[loadCoursesByTimetableId, selectedOverlayTimetable],
+	);
 
 	const addCustomCourse = async (
 		timetableId: number,
@@ -155,6 +227,8 @@ export const TimetableProvider = ({ children }: { children: ReactNode }) => {
 			setTimetables([]);
 			setCurrentTimetable(null);
 			setCourses([]);
+			setSelectedOverlayTimetable(null);
+			setSelectedOverlayCourses([]);
 		}
 	}, [isAuthenticated]);
 
@@ -164,10 +238,14 @@ export const TimetableProvider = ({ children }: { children: ReactNode }) => {
 				timetables,
 				currentTimetable,
 				courses,
+				selectedOverlayTimetable,
+				selectedOverlayCourses,
 				isLoading,
 
 				loadTimetable,
+				initializeDefaultOverlay,
 				selectTimetable,
+				selectCurrentTimetableForOverlay,
 
 				createTimetable,
 				updateTimetableName,
