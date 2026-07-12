@@ -28,35 +28,43 @@ const SearchButton = () => {
 	};
 
 	return (
-		<form
-			className={styles.searchContainer}
-			data-tour-id="main-tour-search"
-			onMouseEnter={() => setHovered(true)}
-			onMouseLeave={() => setHovered(false)}
-			onSubmit={(e) => {
-				e.preventDefault();
-				handleSearch();
-			}}
-		>
-			<input
-				ref={inputRef}
-				type="text"
-				maxLength={50}
-				className={`${styles.searchInput} ${active ? styles.active : ""}`}
-				placeholder="검색어를 입력하세요"
-				value={searchText}
-				onFocus={() => setFocused(true)}
-				onBlur={() => setFocused(false)}
-				onChange={(e) => setSearchText(e.currentTarget.value)}
+		<div className={styles.searchShell}>
+			<div
+				className={`${styles.searchTourTarget} ${
+					active ? styles.searchTourTargetActive : ""
+				}`}
+				data-tour-id="main-tour-search"
+				aria-hidden="true"
 			/>
-			<button
-				type="submit"
-				className={styles.searchIconButton}
-				aria-label="검색"
+			<form
+				className={styles.searchContainer}
+				onMouseEnter={() => setHovered(true)}
+				onMouseLeave={() => setHovered(false)}
+				onSubmit={(e) => {
+					e.preventDefault();
+					handleSearch();
+				}}
 			>
-				<IoIosSearch size={20} color="rgba(130, 130, 130, 1)" />
-			</button>
-		</form>
+				<input
+					ref={inputRef}
+					type="text"
+					maxLength={50}
+					className={`${styles.searchInput} ${active ? styles.active : ""}`}
+					placeholder="검색어를 입력하세요"
+					value={searchText}
+					onFocus={() => setFocused(true)}
+					onBlur={() => setFocused(false)}
+					onChange={(e) => setSearchText(e.currentTarget.value)}
+				/>
+				<button
+					type="submit"
+					className={styles.searchIconButton}
+					aria-label="검색"
+				>
+					<IoIosSearch size={20} color="rgba(130, 130, 130, 1)" />
+				</button>
+			</form>
+		</div>
 	);
 };
 

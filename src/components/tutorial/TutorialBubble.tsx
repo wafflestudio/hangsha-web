@@ -34,6 +34,7 @@ export const TutorialBubble = ({
 }: TutorialBubbleProps) => {
 	const stepCount = steps.length;
 	const hasMultipleSteps = stepCount > 1;
+	const isLastStep = stepIndex >= stepCount - 1;
 
 	return (
 		<div
@@ -82,13 +83,13 @@ export const TutorialBubble = ({
 					</div>
 					<button
 						type="button"
-						className={styles.chevronButton}
+						className={`${styles.chevronButton} ${
+							isLastStep ? styles.endButton : ""
+						}`}
 						onClick={onNext}
-						aria-label={
-							stepIndex < stepCount - 1 ? "다음 튜토리얼" : "튜토리얼 완료"
-						}
+						aria-label={isLastStep ? "튜토리얼 종료" : "다음 튜토리얼"}
 					>
-						<FaChevronRight aria-hidden="true" />
+						{isLastStep ? "종료" : <FaChevronRight aria-hidden="true" />}
 					</button>
 				</div>
 			)}
