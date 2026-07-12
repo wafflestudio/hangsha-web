@@ -12,7 +12,6 @@ interface TimeTableToolbarProps {
 	onYearChange: (year: number) => void;
 	onSemesterChange: (semester: Semester) => void;
 	onSelectCurrentTimetable: () => Promise<void>;
-	isCurrentTimetableSelected: boolean;
 	isEventOverlayOn: boolean;
 	onEventOverlayChange: (isEventOverlayOn: boolean) => void;
 	onPrevEventWeek?: () => void;
@@ -31,7 +30,6 @@ const TimeTableToolbar = ({
 	onYearChange,
 	onSemesterChange,
 	onSelectCurrentTimetable,
-	isCurrentTimetableSelected,
 	isEventOverlayOn,
 	onEventOverlayChange,
 	onPrevEventWeek,
@@ -51,60 +49,46 @@ const TimeTableToolbar = ({
 		<div className={styles.timetableToolbarContainer}>
 			<div className={styles.headerRow}>
 				<div className={styles.selectGroup}>
-					<p className={styles.dateTitle}>{displayTimetableName}</p>
-					<div className={styles.timetableControlRow}>
-						<div className={styles.semesterSelectGroup}>
-							<span className={styles.selectWrap}>
-								<select
-									className={styles.select}
-									value={year}
-									disabled={isLoading}
-									onChange={(e) => {
-										onYearChange(Number(e.target.value));
-										e.currentTarget.blur();
-									}}
-									aria-label="년도 선택"
-								>
-									{yearOptions.map((y) => (
-										<option key={y} value={y}>
-											{y}학년도
-										</option>
-									))}
-								</select>
-							</span>
+					<div className={styles.semesterSelectGroup}>
+						<span className={styles.selectWrap}>
+							<select
+								className={styles.select}
+								value={year}
+								disabled={isLoading}
+								onChange={(e) => {
+									onYearChange(Number(e.target.value));
+									e.currentTarget.blur();
+								}}
+								aria-label="년도 선택"
+							>
+								{yearOptions.map((y) => (
+									<option key={y} value={y}>
+										{y}학년도
+									</option>
+								))}
+							</select>
+						</span>
 
-							<span className={styles.selectWrap}>
-								<select
-									className={styles.select}
-									value={semester}
-									disabled={isLoading}
-									onChange={(e) => {
-										onSemesterChange(e.target.value as Semester);
-										e.currentTarget.blur();
-									}}
-									aria-label="학기 선택"
-								>
-									{SEMESTER_LABEL.map((s) => (
-										<option key={s.id} value={s.id}>
-											{s.label}
-										</option>
-									))}
-								</select>
-							</span>
-						</div>
-						{hasTimetable ? (
-							<label className={styles.selectCurrentTimetableButton}>
-								<input
-									type="checkbox"
-									className={styles.currentTimetableCheckbox}
-									checked={isCurrentTimetableSelected}
-									onChange={() => void onSelectCurrentTimetable()}
-									disabled={isLoading}
-								/>
-								현재 시간표 선택
-							</label>
-						) : null}
+						<span className={styles.selectWrap}>
+							<select
+								className={styles.select}
+								value={semester}
+								disabled={isLoading}
+								onChange={(e) => {
+									onSemesterChange(e.target.value as Semester);
+									e.currentTarget.blur();
+								}}
+								aria-label="학기 선택"
+							>
+								{SEMESTER_LABEL.map((s) => (
+									<option key={s.id} value={s.id}>
+										{s.label}
+									</option>
+								))}
+							</select>
+						</span>
 					</div>
+					<p className={styles.dateTitle}>{timetableName}</p>
 					<div className={styles.mobileTimetableTitleGroup}>
 						<p className={styles.mobileTimetableTitle}>
 							{displayTimetableName}
@@ -150,6 +134,16 @@ const TimeTableToolbar = ({
 								<span className={styles.timetableToggleThumb} />
 							</button>
 						</div>
+					) : null}
+					{hasTimetable ? (
+						<button
+							type="button"
+							className={styles.selectCurrentTimetableButton}
+							onClick={() => void onSelectCurrentTimetable()}
+							disabled={isLoading}
+						>
+							현재 시간표 선택
+						</button>
 					) : null}
 				</div>
 
