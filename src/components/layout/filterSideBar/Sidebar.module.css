@@ -392,6 +392,10 @@ body::-webkit-scrollbar {
   padding: 0 4px;
 }
 
+.listItemSelected {
+  background: #fff4b8;
+}
+
 .rowBtn {
   flex: 1;
   border: 0;

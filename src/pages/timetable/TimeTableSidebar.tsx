@@ -9,6 +9,7 @@ import { SidebarLogoutButton } from "../../components/layout/filterSideBar/Logou
 interface TimeTableSidebarProps {
 	timetables: Timetable[];
 	currentTimetable: Timetable | null;
+	selectedTimetable: Timetable | null;
 	isOpen: boolean;
 	onOpenChange: (isOpen: boolean) => void;
 	onAddTimetable: () => Promise<void>;
@@ -20,6 +21,7 @@ interface TimeTableSidebarProps {
 export const TimeTableSidebar = ({
 	timetables,
 	currentTimetable,
+	selectedTimetable,
 	isOpen,
 	onOpenChange,
 	onAddTimetable,
@@ -142,12 +144,15 @@ export const TimeTableSidebar = ({
 
 				<ul className={styles.list}>
 					{timetables.map((tt) => {
-						const isSelected = currentTimetable?.id === tt.id;
+						const isCurrent = currentTimetable?.id === tt.id;
+						const isSelected = selectedTimetable?.id === tt.id;
 
 						return (
 							<li
 								key={tt.id}
-								className={styles.listItem}
+								className={`${styles.listItem} ${
+									isSelected ? styles.listItemSelected : ""
+								}`}
 								ref={
 									editingId === tt.id || nameChangeId === tt.id
 										? activePanelRef
@@ -181,7 +186,7 @@ export const TimeTableSidebar = ({
 									<button
 										type="button"
 										className={`${styles.rowBtn} ${
-											isSelected ? styles.rowBtnSelected : ""
+											isCurrent ? styles.rowBtnSelected : ""
 										}`}
 										onClick={() => onSelectTimetable(tt)}
 									>

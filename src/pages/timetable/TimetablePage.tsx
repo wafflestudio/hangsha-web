@@ -239,6 +239,7 @@ export default function TimetablePage() {
 			<TimeTableSidebar
 				timetables={timetables}
 				currentTimetable={currentTimetable}
+				selectedTimetable={selectedOverlayTimetable}
 				onAddTimetable={handleAddTimetable}
 				onSelectTimetable={selectTimetable}
 				onRename={updateTimetableName}
