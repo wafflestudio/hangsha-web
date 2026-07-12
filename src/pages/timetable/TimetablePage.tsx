@@ -51,6 +51,7 @@ export default function TimetablePage() {
 		timetables,
 		courses,
 		currentTimetable,
+		selectedOverlayTimetable,
 		createTimetable,
 		isLoading,
 		loadTimetable,
@@ -257,6 +258,9 @@ export default function TimetablePage() {
 					onSemesterChange={setSemester}
 					onYearChange={setYear}
 					onSelectCurrentTimetable={selectCurrentTimetableForOverlay}
+					isCurrentTimetableSelected={
+						currentTimetable?.id === selectedOverlayTimetable?.id
+					}
 					isEventOverlayOn={isEventOverlayOn}
 					onEventOverlayChange={setIsEventOverlayOn}
 					onPrevEventWeek={() => moveEventWeek(-1)}
