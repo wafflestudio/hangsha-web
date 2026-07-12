@@ -15,8 +15,7 @@ import {
 	config,
 } from "../../util/weekly_timetable/layout";
 import calendarEventMapper from "../../util/Calendar/calendarEventMapper";
-import { formatDateToMMDD } from "../../util/Calendar/dateFormatter";
-import { getWeekRangeByDate } from "../../util/Calendar/getWeekRange";
+import { formatDateToYYYYMMDD } from "../../util/Calendar/dateFormatter";
 import { TimetableGrid } from "./TimetableGrid";
 import styles from "./Timetable.module.css";
 import { SlArrowLeft } from "react-icons/sl";
@@ -27,15 +26,6 @@ import BottomNav from "@/components/layout/BottomNav";
 import { useAuth } from "@/contexts/AuthProvider";
 import { useNavigate } from "react-router-dom";
 import Modal from "@/components/ui/Modal";
-
-const getSemesterByDate = (date: Date): Semester => {
-	const month = date.getMonth() + 1;
-
-	if (month >= 3 && month <= 6) return "SPRING";
-	if (month >= 7 && month <= 8) return "SUMMER";
-	if (month >= 9 && month <= 12) return "FALL";
-	return "WINTER";
-};
 
 export default function TimetablePage() {
 	const now = new Date();
@@ -55,7 +45,6 @@ export default function TimetablePage() {
 		isLoading,
 		loadTimetable,
 		selectTimetable,
-		selectCurrentTimetableForOverlay,
 		updateTimetableName,
 		deleteTimetable,
 		loadCourses,
@@ -67,17 +56,13 @@ export default function TimetablePage() {
 	const { globalCategory, globalOrg, globalStatus } = useFilter();
 
 	const [year, setYear] = useState<number>(now.getFullYear());
-	const [semester, setSemester] = useState<Semester>(() =>
-		getSemesterByDate(now),
-	);
+	const [semester, setSemester] = useState<Semester>("SPRING");
 	const [tableName, setTableName] = useState<string>("");
 	const [isAddClassPanelOpen, setIsAddClassPanelOpen] = useState(false);
 	const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 	const [isMobileTimetableSidebarOpen, setIsMobileTimetableSidebarOpen] =
 		useState(false);
-	const [eventWeekDate, setEventWeekDate] = useState<Date>(new Date());
-	const [isEventOverlayOn, setIsEventOverlayOn] = useState(false);
-	const [isMobile, setIsMobile] = useState(false);
+	const [isTimetableSimplified, setIsTimetableSimplified] = useState(false);
 	const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
 	const handleAddTimetable = async () => {
@@ -106,17 +91,6 @@ export default function TimetablePage() {
 	}, [currentTimetable, loadCourses]);
 
 	useEffect(() => {
-		const checkIsMobile = () => {
-			setIsMobile(window.innerWidth <= 576);
-		};
-
-		checkIsMobile();
-		window.addEventListener("resize", checkIsMobile);
-
-		return () => window.removeEventListener("resize", checkIsMobile);
-	}, []);
-
-	useEffect(() => {
 		if (!currentTimetable) {
 			setIsAddClassPanelOpen(false);
 			setTableName("");
@@ -133,35 +107,17 @@ export default function TimetablePage() {
 		[visibleCourses],
 	);
 
-	const eventWeekRange = useMemo(() => {
-		const from = new Date(eventWeekDate);
-		from.setHours(0, 0, 0, 0);
+	useEffect(() => {
+		const today = new Date();
+		const from = new Date(today);
 		from.setDate(from.getDate() - from.getDay());
 
 		const to = new Date(from);
 		to.setDate(to.getDate() + 6);
-		to.setHours(23, 59, 59, 999);
 
-		return { from, to };
-	}, [eventWeekDate]);
-
-	const mobileEventWeekLabel = `${formatDateToMMDD(
-		eventWeekRange.from,
-	)} ~ ${formatDateToMMDD(eventWeekRange.to)}`;
-
-	const moveEventWeek = (diff: number) => {
-		setEventWeekDate((prev) => {
-			const next = new Date(prev);
-			next.setDate(next.getDate() + diff * 7);
-			return next;
-		});
-	};
-
-	useEffect(() => {
-		const { from, to } = getWeekRangeByDate(eventWeekDate);
 		const params: FetchWeekEventArgs = {
-			from,
-			to,
+			from: formatDateToYYYYMMDD(from),
+			to: formatDateToYYYYMMDD(to),
 		};
 
 		if (globalCategory) params.eventTypeId = globalCategory.map((g) => g.id);
@@ -169,9 +125,17 @@ export default function TimetablePage() {
 		if (globalStatus) params.statusId = globalStatus.map((g) => g.id);
 
 		void fetchWeekEvents(params);
-	}, [eventWeekDate, fetchWeekEvents, globalCategory, globalOrg, globalStatus]);
+	}, [fetchWeekEvents, globalCategory, globalOrg, globalStatus]);
 
 	const weekCalendarEvents = useMemo(() => {
+		const weekStart = new Date();
+		weekStart.setHours(0, 0, 0, 0);
+		weekStart.setDate(weekStart.getDate() - weekStart.getDay());
+
+		const weekEnd = new Date(weekStart);
+		weekEnd.setDate(weekEnd.getDate() + 6);
+		weekEnd.setHours(23, 59, 59, 999);
+
 		const rawWeekEvents = Object.values(weekViewData?.byDate || {}).flatMap(
 			(bucket) => bucket.events,
 		);
@@ -183,8 +147,7 @@ export default function TimetablePage() {
 			.map((event) => calendarEventMapper(event, Views.WEEK) as CalendarEvent)
 			.filter(
 				(calendarEvent) =>
-					calendarEvent.start >= eventWeekRange.from &&
-					calendarEvent.end <= eventWeekRange.to,
+					calendarEvent.start >= weekStart && calendarEvent.end <= weekEnd,
 			)
 			.map((calendarEvent) => {
 				const sameMinute =
@@ -215,7 +178,7 @@ export default function TimetablePage() {
 					calendarEvent.resource.isPeriodEvent === false &&
 					calendarEvent.allDay === false,
 			);
-	}, [eventWeekRange, weekViewData]);
+	}, [weekViewData]);
 
 	const openAddClassPanel = () => {
 		setIsMobileTimetableSidebarOpen(false);
@@ -237,7 +200,6 @@ export default function TimetablePage() {
 		>
 			<TimeTableSidebar
 				timetables={timetables}
-				currentTimetable={currentTimetable}
 				onAddTimetable={handleAddTimetable}
 				onSelectTimetable={selectTimetable}
 				onRename={updateTimetableName}
@@ -254,12 +216,8 @@ export default function TimetablePage() {
 					SEMESTER_LABEL={semesters}
 					onSemesterChange={setSemester}
 					onYearChange={setYear}
-					onSelectCurrentTimetable={selectCurrentTimetableForOverlay}
-					isEventOverlayOn={isEventOverlayOn}
-					onEventOverlayChange={setIsEventOverlayOn}
-					onPrevEventWeek={() => moveEventWeek(-1)}
-					onNextEventWeek={() => moveEventWeek(1)}
-					mobileEventWeekLabel={mobileEventWeekLabel}
+					isToggleOn={isTimetableSimplified}
+					onToggleChange={setIsTimetableSimplified}
 					isLoading={isLoading}
 					years={years}
 					hasTimetable={hasTimetable}
@@ -289,9 +247,9 @@ export default function TimetablePage() {
 						config={config}
 						toBlocks={flattenCoursesToBlocks}
 						onRemoveBlock={deleteCourse}
-						isSimplified={isMobile}
+						isSimplified={isTimetableSimplified}
 						isLoading={isLoading}
-						weekEvents={isMobile && isEventOverlayOn ? weekCalendarEvents : []}
+						weekEvents={isTimetableSimplified ? weekCalendarEvents : []}
 					/>
 				)}
 			</main>
