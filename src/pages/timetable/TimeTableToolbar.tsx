@@ -109,29 +109,31 @@ const TimeTableToolbar = ({
 						<p className={styles.mobileTimetableTitle}>
 							{displayTimetableName}
 						</p>
+					</div>
+					<div className={styles.mobileWeekNavGroup}>
 						{mobileEventWeekLabel && (
 							<p className={styles.mobileEventWeekLabel}>
 								{mobileEventWeekLabel}
 							</p>
 						)}
-					</div>
-					<div className={styles.mobileWeekNavGroup}>
-						<button
-							type="button"
-							className={styles.mobileWeekNavButton}
-							onClick={onPrevEventWeek}
-							aria-label="이전 주 행사 보기"
-						>
-							&lt;
-						</button>
-						<button
-							type="button"
-							className={styles.mobileWeekNavButton}
-							onClick={onNextEventWeek}
-							aria-label="다음 주 행사 보기"
-						>
-							&gt;
-						</button>
+						<div className={styles.mobileWeekNavButtons}>
+							<button
+								type="button"
+								className={styles.mobileWeekNavButton}
+								onClick={onPrevEventWeek}
+								aria-label="이전 주 행사 보기"
+							>
+								&lt;
+							</button>
+							<button
+								type="button"
+								className={styles.mobileWeekNavButton}
+								onClick={onNextEventWeek}
+								aria-label="다음 주 행사 보기"
+							>
+								&gt;
+							</button>
+						</div>
 					</div>
 					{hasTimetable ? (
 						<div className={styles.timetableToggleGroup}>
