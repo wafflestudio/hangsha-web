@@ -221,7 +221,7 @@
 
 .controls {
 	display: grid;
-	grid-template-columns: 32px 1fr 32px;
+	grid-template-columns: 44px 1fr 44px;
 	align-items: center;
 	gap: 18px;
 	margin-top: 24px;
@@ -240,6 +240,7 @@
 	color: #4f83e8;
 	cursor: pointer;
 	font-size: 20px;
+	justify-self: center;
 }
 
 .chevronButton:hover:not(:disabled) {
@@ -249,6 +250,13 @@
 .chevronButton:disabled {
 	color: #bcd4fb;
 	cursor: default;
+}
+
+.endButton {
+	width: 44px;
+	border-radius: 999px;
+	font-size: 14px;
+	font-weight: 700;
 }
 
 .dots {
@@ -268,6 +276,78 @@
 
 .activeDot {
 	background: #4f83e8;
+}
+
+.mobileTutorialRoot {
+	position: fixed;
+	inset: 0;
+	z-index: 1300;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	box-sizing: border-box;
+	padding: calc(20px + env(safe-area-inset-top)) 16px
+		calc(20px + env(safe-area-inset-bottom));
+	background: rgba(238, 238, 238, 0.78);
+	font-family:
+		"Pretendard", -apple-system, BlinkMacSystemFont, system-ui, Roboto,
+		sans-serif;
+	pointer-events: auto;
+}
+
+.mobileTutorialDialog {
+	position: relative;
+	width: min(508px, calc(100vw - 72px));
+	box-sizing: border-box;
+	padding: 58px clamp(28px, 8vw, 80px) 32px;
+	border-radius: 8px;
+	background: #ffffff;
+	box-shadow: 0 10px 26px rgba(0, 0, 0, 0.14);
+	color: #111111;
+}
+
+.mobileTutorialCloseButton {
+	position: absolute;
+	top: 17px;
+	right: 20px;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 36px;
+	height: 36px;
+	padding: 0;
+	border: none;
+	border-radius: 50%;
+	background: transparent;
+	color: #b6b6b6;
+	cursor: pointer;
+}
+
+.mobileTutorialCloseButton:hover {
+	background: #f3f4f6;
+	color: #8a8f98;
+}
+
+.mobileTutorialTitle {
+	margin: 0 32px 24px;
+	font-size: 18px;
+	font-weight: 800;
+	line-height: 1.25;
+	text-align: center;
+}
+
+.mobileTutorialImage {
+	display: block;
+	width: min(200px, 100%);
+	height: auto;
+	margin: 0 auto 28px;
+}
+
+.mobileTutorialDescription {
+	margin: 0;
+	font-size: 14px;
+	font-weight: 500;
+	line-height: 1.35;
 }
 
 @keyframes cursorDemoMove {

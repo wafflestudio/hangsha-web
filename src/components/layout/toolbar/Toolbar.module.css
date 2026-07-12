@@ -175,6 +175,27 @@
   padding: 0;
 }
 
+.searchShell {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  height: 40px;
+}
+
+.searchTourTarget {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  width: 24px;
+  height: 40px;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.searchTourTargetActive {
+  width: 250px;
+}
+
 .profileButton {
   width: 35px;
   height: 35px;
