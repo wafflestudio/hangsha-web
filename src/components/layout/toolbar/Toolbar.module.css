@@ -323,7 +323,7 @@
 .timetableControlRow {
 	display: flex;
 	align-items: center;
-	gap: 36px;
+	gap: 26px;
 }
 
 .semesterSelectGroup {
@@ -401,7 +401,10 @@
 	-moz-appearance: none;
 
 	height: 36px;
-	border: none;
+	padding: 0 34px 0 12px;
+	border-radius: 12px;
+	border: 1px solid #e6e6e6;
+	background: #fff;
 	color: #111;
 	font-size: 15px;
 	font-weight: 500;
@@ -438,7 +441,7 @@
 
 .timetableToolbarContainer .select {
 	height: 32px;
-	padding: 0 30px 0 0;
+	padding: 0 30px 0 11px;
 	border-radius: 10px;
 	font-size: 15px;
 }
@@ -447,12 +450,6 @@
 	right: 11px;
 	width: 7px;
 	height: 7px;
-}
-
-@media (min-width: 577px) {
-	.timetableToolbarContainer .semesterSelectGroup {
-		gap: 15px;
-	}
 }
 
 @media (max-width: 576px) {
@@ -479,8 +476,8 @@
 	}
 	.timetableToolbarContainer .semesterSelectGroup {
 		display: inline-flex;
-		grid-column: 1;
-		grid-row: 2;
+		grid-column: 1 / -1;
+		grid-row: 1;
 		min-width: 0;
 	}
 	.timetableToolbarContainer .selectWrap {
@@ -490,7 +487,7 @@
 	.timetableToolbarContainer .select {
 		width: 100%;
 		height: 34px;
-		padding: 0 30px 0 0;
+		padding: 0 30px 0 10px;
 		font-size: 13px;
 	}
 	.timetableToolbarContainer .dateTitle {
@@ -499,9 +496,10 @@
 	.timetableToolbarContainer .mobileTimetableTitleGroup {
 		display: flex;
 		grid-column: 1;
-		grid-row: 1;
+		grid-row: 2;
 		min-width: 0;
-		align-items: center;
+		flex-direction: column;
+		gap: 3px;
 	}
 	.timetableToolbarContainer .mobileTimetableTitle {
 		display: block;
@@ -519,23 +517,16 @@
 	.timetableToolbarContainer .mobileEventWeekLabel {
 		display: block;
 		margin: 0;
-		text-align: right;
 		color: #777777;
 		font-size: 12px;
 		font-weight: 500;
 		line-height: 1.2;
 	}
 	.timetableToolbarContainer .mobileWeekNavGroup {
-		display: flex;
-		grid-column: 2;
-		grid-row: 1 / span 2;
-		align-items: flex-end;
-		justify-content: center;
-		flex-direction: column;
-		gap: 3px;
-	}
-	.timetableToolbarContainer .mobileWeekNavButtons {
 		display: inline-flex;
+		grid-column: 2;
+		grid-row: 2;
+		align-items: center;
 		justify-content: flex-end;
 		gap: 4px;
 	}
@@ -561,7 +552,7 @@
 		width: fit-content;
 		flex-direction: row;
 		align-items: center;
-		gap: 10px;
+		gap: 8px;
 	}
 	.timetableToolbarContainer .selectCurrentTimetableButton {
 		display: none;
