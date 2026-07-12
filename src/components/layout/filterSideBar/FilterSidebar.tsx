@@ -28,8 +28,12 @@ export const Sidebar = () => {
 	}
 
 	const { user } = useAuth();
-	const { excludedKeywords, addExcludedKeyword, deleteExcludedKeyword, excludedKeywordLoading } =
-		useUserData();
+	const {
+		excludedKeywords,
+		addExcludedKeyword,
+		deleteExcludedKeyword,
+		excludedKeywordLoading,
+	} = useUserData();
 	const { categoryGroups, isLoadingMeta } = useFilter();
 	const {
 		globalCategory,
@@ -228,82 +232,89 @@ export const Sidebar = () => {
 				</button>
 			</div>
 
-			<div className={styles.sectionTitle}>필터</div>
-			{isLoadingMeta ? (
-				<span className={styles.filterTitle}>필터 로딩중 ...</span>
-			) : (
-				filterDict.map(({ name, label, list, state }) => (
-					<div key={name} className={styles.filterGroup}>
-						<div className={styles.labelRow}>
-							<button
-								type="button"
-								className={styles.labelLeftBtn}
-								onClick={() => toggleSection(name)}
-							>
-								<img
-									alt={`${name} icon`}
-									className={styles.icon}
-									src={`/assets/${name}.svg`}
-								/>
-								<span className={styles.labelText}>{label}</span>
-								<span className={styles.chevron}>
-									{expandedSections[name] ? <FaChevronUp /> : <FaChevronDown />}
-								</span>
-							</button>
-
-							{/* Reset button */}
-							{state.length > 0 && (
+			<div data-tour-id="main-tour-filters" className={styles.tourTargetGroup}>
+				<div className={styles.sectionTitle}>필터</div>
+				{isLoadingMeta ? (
+					<span className={styles.filterTitle}>필터 로딩중 ...</span>
+				) : (
+					filterDict.map(({ name, label, list, state }) => (
+						<div key={name} className={styles.filterGroup}>
+							<div className={styles.labelRow}>
 								<button
 									type="button"
-									className={styles.resetBtn}
-									onClick={() => handleResetGroup(name)}
-									title="전체 선택"
+									className={styles.labelLeftBtn}
+									onClick={() => toggleSection(name)}
 								>
-									<MdRefresh />
+									<img
+										alt={`${name} icon`}
+										className={styles.icon}
+										src={`/assets/${name}.svg`}
+									/>
+									<span className={styles.labelText}>{label}</span>
+									<span className={styles.chevron}>
+										{expandedSections[name] ? (
+											<FaChevronUp />
+										) : (
+											<FaChevronDown />
+										)}
+									</span>
 								</button>
+
+								{/* Reset button */}
+								{state.length > 0 && (
+									<button
+										type="button"
+										className={styles.resetBtn}
+										onClick={() => handleResetGroup(name)}
+										title="전체 선택"
+									>
+										<MdRefresh />
+									</button>
+								)}
+							</div>
+
+							{/* toggle list */}
+							{expandedSections[name] && (
+								<div className={styles.toggleListWrapper}>
+									{list.map((option, idx) => {
+										const isChecked = state.some((s) => s.id === option.id);
+
+										return (
+											<button
+												key={option.id}
+												type="button"
+												style={
+													option.groupId === 3
+														? {
+																backgroundColor:
+																	CATEGORY_BUTTON_COLORS[idx + 1],
+															}
+														: {}
+												}
+												className={`${styles.toggleItem} ${
+													isChecked ? styles.active : ""
+												}`}
+												onClick={() => handleToggle(option, name)}
+											>
+												<span className={styles.checkIcon}>
+													{isChecked ? (
+														<MdCheckBox color="#3b82f6" />
+													) : (
+														<MdCheckBoxOutlineBlank color="#9d9d9dff" />
+													)}
+												</span>
+												<span className={styles.toggleText}>{option.name}</span>
+											</button>
+										);
+									})}
+								</div>
 							)}
 						</div>
+					))
+				)}
+			</div>
 
-						{/* toggle list */}
-						{expandedSections[name] && (
-							<div className={styles.toggleListWrapper}>
-								{list.map((option, idx) => {
-									const isChecked = state.some((s) => s.id === option.id);
-
-									return (
-										<button
-											key={option.id}
-											type="button"
-											style={
-												option.groupId === 3
-													? {
-															backgroundColor: CATEGORY_BUTTON_COLORS[idx + 1],
-														}
-													: {}
-											}
-											className={`${styles.toggleItem} ${
-												isChecked ? styles.active : ""
-											}`}
-											onClick={() => handleToggle(option, name)}
-										>
-											<span className={styles.checkIcon}>
-												{isChecked ? (
-													<MdCheckBox color="#3b82f6" />
-												) : (
-													<MdCheckBoxOutlineBlank color="#9d9d9dff" />
-												)}
-											</span>
-											<span className={styles.toggleText}>{option.name}</span>
-										</button>
-									);
-								})}
-							</div>
-						)}
-					</div>
-				))
-			)}
-
-			<div className={styles.filterGroup}>
+			<div className={styles.filterGroup} data-tour-id="main-tour-exclude">
 				<div className={styles.labelRow}>
 					<button
 						type="button"
@@ -365,33 +376,35 @@ export const Sidebar = () => {
 				)}
 			</div>
 
-			<div className={styles.sectionTitle} style={{ marginTop: "20px" }}>
-				페이지
+			<div data-tour-id="main-tour-pages" className={styles.tourTargetGroup}>
+				<div className={styles.sectionTitle} style={{ marginTop: "20px" }}>
+					페이지
+				</div>
+				<button
+					className={styles.pageLink}
+					type="button"
+					onClick={() => navigate("/bookmark")}
+				>
+					<img
+						className={styles.icon}
+						src="/assets/bookmark.svg"
+						alt="bookmark icon"
+					/>
+					<span>찜한 행사</span>
+				</button>
+				<button
+					type="button"
+					className={styles.pageLink}
+					onClick={() => handleTimetableClick()}
+				>
+					<img
+						className={styles.icon}
+						src="/assets/timetable.svg"
+						alt="timetable icon"
+					/>
+					<span>시간표</span>
+				</button>
 			</div>
-			<button
-				className={styles.pageLink}
-				type="button"
-				onClick={() => navigate("/bookmark")}
-			>
-				<img
-					className={styles.icon}
-					src="/assets/bookmark.svg"
-					alt="bookmark icon"
-				/>
-				<span>찜한 행사</span>
-			</button>
-			<button
-				type="button"
-				className={styles.pageLink}
-				onClick={() => handleTimetableClick()}
-			>
-				<img
-					className={styles.icon}
-					src="/assets/timetable.svg"
-					alt="timetable icon"
-				/>
-				<span>시간표</span>
-			</button>
 			<SidebarLogoutButton onLogout={() => ref.current?.scrollTo(0, 0)} />
 		</div>
 	);

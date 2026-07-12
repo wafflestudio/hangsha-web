@@ -20,6 +20,7 @@ import { useFilter } from "@contexts/FilterContext";
 import { useUserData } from "@/contexts/UserDataContext";
 import BottomNav from "@/components/layout/BottomNav";
 import { FilterSheet } from "@/components/layout/filterSheet/FilterSheet";
+import MainRouteTutorial from "@/components/tutorial/MainRouteTutorial";
 import {
 	useMonthEvents,
 	useWeekEvents,
@@ -255,6 +256,10 @@ const CalendarView = () => {
 			</div>
 			<FilterSheet />
 			<BottomNav />
+			<MainRouteTutorial
+				isDayView={currentView === Views.DAY}
+				isWeekView={currentView === Views.WEEK}
+			/>
 		</div>
 	);
 };
