@@ -53,30 +53,6 @@
 	font-size: 12px;
 }
 
-.timetableOverlayBlock {
-	position: absolute;
-	left: 0;
-	box-sizing: border-box;
-	display: grid;
-	grid-template-columns: 1fr;
-	align-content: start;
-	align-items: start;
-	padding: 8px;
-	border: none;
-	border-radius: 0;
-	background: #000000;
-	color: #111111;
-	opacity: 0.15;
-	overflow: hidden;
-	pointer-events: none;
-	z-index: 10;
-}
-
-.timetableOverlayTitle,
-.timetableOverlayTime {
-	display: none;
-}
-
 @media (prefers-reduced-motion: reduce) {
 	.block {
 		transition: none;

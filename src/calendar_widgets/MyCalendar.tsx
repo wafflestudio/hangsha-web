@@ -10,7 +10,6 @@ import DayEvent from "./day/DayEvent";
 import CustomDayView from "./day/CustomDayView";
 import CustomWeekView from "./week/CustomWeekView";
 import { useEvents } from "@/contexts/EventContext";
-import { useTimetable } from "@/contexts/TimetableContext";
 import calendarEventMapper from "@/util/Calendar/calendarEventMapper";
 
 const eventPropGetter = () => {
@@ -37,29 +36,8 @@ export const MyCalendar = ({
 	onViewChange,
 }: MyCalendarProps) => {
 	const { dayDate, setDayDate } = useEvents();
-	const { selectedOverlayCourses, selectedOverlayTimetable } = useTimetable();
 	const [currentView, setCurrentView] = useState<View>(Views.MONTH);
 	const [isMobile, setIsMobile] = useState(false);
-	const [showTimetableOverlay, setShowTimetableOverlay] = useState(true);
-	const hasTimetableOverlay = selectedOverlayTimetable !== null;
-	const isTimetableOverlayEmpty = selectedOverlayCourses.length <= 0;
-
-	const WeekViewWithOverlay = useMemo(() => {
-		const WeekView = (weekProps: Record<string, unknown>) => (
-			<CustomWeekView
-				{...weekProps}
-				timetableOverlayCourses={showTimetableOverlay ? selectedOverlayCourses : []}
-			/>
-		);
-
-		return Object.assign(WeekView, {
-			range: (CustomWeekView as typeof CustomWeekView & { range: unknown }).range,
-			navigate: (
-				CustomWeekView as typeof CustomWeekView & { navigate: unknown }
-			).navigate,
-			title: (CustomWeekView as typeof CustomWeekView & { title: unknown }).title,
-		});
-	}, [selectedOverlayCourses, showTimetableOverlay]);
 
 	const onNavigate = useCallback(
 		(newDate: Date) => {
@@ -196,15 +174,7 @@ export const MyCalendar = ({
 					style={{ height: "100%" }}
 					// custom toolbar
 					components={{
-						toolbar: (toolbarProps) => (
-							<Toolbar
-								{...toolbarProps}
-								showTimetableOverlay={showTimetableOverlay}
-								onShowTimetableOverlayChange={setShowTimetableOverlay}
-								hasTimetableOverlay={hasTimetableOverlay}
-								isTimetableOverlayEmpty={isTimetableOverlayEmpty}
-							/>
-						),
+						toolbar: Toolbar,
 						// event: MonthEvent,
 						month: {
 							event: MonthEvent,
@@ -224,7 +194,7 @@ export const MyCalendar = ({
 					}}
 					views={{
 						month: true,
-						week: WeekViewWithOverlay,
+						week: CustomWeekView,
 						day: CustomDayView,
 					}}
 					onNavigate={onNavigate}
