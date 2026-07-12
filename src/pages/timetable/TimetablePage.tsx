@@ -51,7 +51,6 @@ export default function TimetablePage() {
 		timetables,
 		courses,
 		currentTimetable,
-		selectedOverlayTimetable,
 		createTimetable,
 		isLoading,
 		loadTimetable,
