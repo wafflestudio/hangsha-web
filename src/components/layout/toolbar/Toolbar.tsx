@@ -151,12 +151,12 @@ const Toolbar: React.FC<ToolbarProps> = ({
 								>
 									<span className={styles.timetableToggleThumb} />
 								</button>
-								{showTimetableOverlay && isTimetableOverlayEmpty && hasTimetableOverlay && (
+								{showTimetableOverlay && isTimetableOverlayEmpty && (
 									<span className={styles.timetableToggleLabel}>
 										현재 시간표에 수업이 없습니다!
 									</span>
 								)}
-								{showTimetableOverlay && isTimetableOverlayEmpty && !hasTimetableOverlay && (
+								{showTimetableOverlay && isTimetableOverlayEmpty && hasTimetableOverlay && (
 									<span className={styles.timetableToggleLabel}>
 										현재 시간표가 없습니다!
 									</span>
