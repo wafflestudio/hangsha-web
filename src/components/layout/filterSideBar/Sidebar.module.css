@@ -396,6 +396,14 @@ body::-webkit-scrollbar {
   background: #fff4b8;
 }
 
+.listItem:hover {
+  background: #ececec;
+}
+
+.listItemSelected:hover {
+  background: #ffe98a;
+}
+
 .rowBtn {
   flex: 1;
   border: 0;
@@ -403,14 +411,9 @@ body::-webkit-scrollbar {
   cursor: pointer;
   text-align: left;
   padding: 10px 10px;
-  border-radius: 12px;
   display: flex;
   align-items: center;
   min-height: 40px;
-}
-
-.rowBtn:hover {
-  background: #f6f6f6;
 }
 
 .rowBtnSelected .ttName {
@@ -448,7 +451,7 @@ body::-webkit-scrollbar {
 }
 
 .moreBtn:hover {
-  background: #f6f6f6;
+  background: transparent;
 }
 
 .menu {
