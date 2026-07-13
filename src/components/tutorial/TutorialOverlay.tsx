@@ -11,6 +11,7 @@ import {
 	DEFAULT_BUBBLE_SIZE,
 	getBlockerStyles,
 	getBubbleLayout,
+	getFocusAreaRect,
 	getHighlightedRect,
 } from "./tutorialLayout";
 import { markTutorialSeen } from "./tutorialStorage";
@@ -128,7 +129,9 @@ export const TutorialOverlay = ({ guides }: TutorialOverlayProps) => {
 			return;
 		}
 
-		setTargetRect(toRect(target.getBoundingClientRect()));
+		setTargetRect(
+			getFocusAreaRect(toRect(target.getBoundingClientRect()), step.focusArea),
+		);
 	}, [
 		activeGuide,
 		activeSteps,
@@ -182,10 +185,12 @@ export const TutorialOverlay = ({ guides }: TutorialOverlayProps) => {
 			return;
 		}
 
-		target.scrollIntoView({
-			block: "center",
-			inline: "center",
-		});
+		if (step.scrollTargetIntoView !== false) {
+			target.scrollIntoView({
+				block: "center",
+				inline: "center",
+			});
+		}
 
 		const animationFrame = window.requestAnimationFrame(updateTargetRect);
 		const timeoutId = window.setTimeout(updateTargetRect, 120);
