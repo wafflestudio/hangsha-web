@@ -119,6 +119,13 @@
   gap: 0.25rem;
 }
 
+.weekTimetableToggleGroup {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  flex: 0 0 auto;
+}
+
 .todayBtn {
   padding: 0.25rem 0.75rem;
   border: 1px solid #e5e7eb;
