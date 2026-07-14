@@ -1,8 +1,8 @@
 import type { Semester } from "../../util/types";
 import { useAuth } from "../../contexts/AuthProvider";
-import styles from "../../styles/Toolbar.module.css";
+import styles from "../../components/layout/toolbar/Toolbar.module.css";
 import { useNavigate } from "react-router-dom";
-import SearchButton from "../../widgets/SearchButton";
+import SearchButton from "../../components/layout/toolbar/SearchButton";
 
 interface TimeTableToolbarProps {
 	timetableName: string;
@@ -11,8 +11,13 @@ interface TimeTableToolbarProps {
 	SEMESTER_LABEL: { id: Semester; label: string }[];
 	onYearChange: (year: number) => void;
 	onSemesterChange: (semester: Semester) => void;
-	isToggleOn: boolean;
-	onToggleChange: (isToggleOn: boolean) => void;
+	onSelectCurrentTimetable: () => Promise<void>;
+	isCurrentTimetableSelected: boolean;
+	isEventOverlayOn: boolean;
+	onEventOverlayChange: (isEventOverlayOn: boolean) => void;
+	onPrevEventWeek?: () => void;
+	onNextEventWeek?: () => void;
+	mobileEventWeekLabel?: string;
 	isLoading?: boolean;
 	years?: number[];
 	hasTimetable?: boolean;
@@ -25,8 +30,13 @@ const TimeTableToolbar = ({
 	SEMESTER_LABEL,
 	onYearChange,
 	onSemesterChange,
-	isToggleOn,
-	onToggleChange,
+	onSelectCurrentTimetable,
+	isCurrentTimetableSelected,
+	isEventOverlayOn,
+	onEventOverlayChange,
+	onPrevEventWeek,
+	onNextEventWeek,
+	mobileEventWeekLabel,
 	isLoading = false,
 	years,
 	hasTimetable = false,
@@ -41,63 +51,108 @@ const TimeTableToolbar = ({
 		<div className={styles.timetableToolbarContainer}>
 			<div className={styles.headerRow}>
 				<div className={styles.selectGroup}>
-					<div className={styles.semesterSelectGroup}>
-						<span className={styles.selectWrap}>
-							<select
-								className={styles.select}
-								value={year}
-								disabled={isLoading}
-								onChange={(e) => {
-									onYearChange(Number(e.target.value));
-									e.currentTarget.blur();
-								}}
-								aria-label="년도 선택"
-							>
-								{yearOptions.map((y) => (
-									<option key={y} value={y}>
-										{y}학년도
-									</option>
-								))}
-							</select>
-						</span>
+					<p className={styles.dateTitle}>{displayTimetableName}</p>
+					<div className={styles.timetableControlRow}>
+						<div className={styles.semesterSelectGroup}>
+							<span className={styles.selectWrap}>
+								<select
+									className={styles.select}
+									value={year}
+									disabled={isLoading}
+									onChange={(e) => {
+										onYearChange(Number(e.target.value));
+										e.currentTarget.blur();
+									}}
+									aria-label="년도 선택"
+								>
+									{yearOptions.map((y) => (
+										<option key={y} value={y}>
+											{y}학년도
+										</option>
+									))}
+								</select>
+							</span>
 
-						<span className={styles.selectWrap}>
-							<select
-								className={styles.select}
-								value={semester}
-								disabled={isLoading}
-								onChange={(e) => {
-									onSemesterChange(e.target.value as Semester);
-									e.currentTarget.blur();
-								}}
-								aria-label="학기 선택"
-							>
-								{SEMESTER_LABEL.map((s) => (
-									<option key={s.id} value={s.id}>
-										{s.label}
-									</option>
-								))}
-							</select>
-						</span>
+							<span className={styles.selectWrap}>
+								<select
+									className={styles.select}
+									value={semester}
+									disabled={isLoading}
+									onChange={(e) => {
+										onSemesterChange(e.target.value as Semester);
+										e.currentTarget.blur();
+									}}
+									aria-label="학기 선택"
+								>
+									{SEMESTER_LABEL.map((s) => (
+										<option key={s.id} value={s.id}>
+											{s.label}
+										</option>
+									))}
+								</select>
+							</span>
+						</div>
+						{hasTimetable ? (
+							<label className={styles.selectCurrentTimetableButton}>
+								<input
+									type="checkbox"
+									className={styles.currentTimetableCheckbox}
+									checked={isCurrentTimetableSelected}
+									onChange={() => void onSelectCurrentTimetable()}
+									disabled={isLoading}
+								/>
+								현재 시간표 선택
+							</label>
+						) : null}
 					</div>
-					<p className={styles.dateTitle}>{timetableName}</p>
-					<p className={styles.mobileTimetableTitle}>{displayTimetableName}</p>
-					{hasTimetable ?
-					<div className={styles.timetableToggleGroup}>
-						<span className={styles.timetableToggleLabel}>행사 함께 보기</span>
-						<button
-							type="button"
-							className={`${styles.timetableToggle} ${
-								isToggleOn ? styles.timetableToggleOn : ""
-							}`}
-							aria-label="행사 함께 보기"
-							aria-pressed={isToggleOn}
-							onClick={() => onToggleChange(!isToggleOn)}
-						>
-							<span className={styles.timetableToggleThumb} />
-						</button>
-					</div> : null
-					}
+					<div className={styles.mobileTimetableTitleGroup}>
+						<p className={styles.mobileTimetableTitle}>
+							{displayTimetableName}
+						</p>
+					</div>
+					<div className={styles.mobileWeekNavGroup}>
+						{mobileEventWeekLabel && (
+							<p className={styles.mobileEventWeekLabel}>
+								{mobileEventWeekLabel}
+							</p>
+						)}
+						<div className={styles.mobileWeekNavButtons}>
+							<button
+								type="button"
+								className={styles.mobileWeekNavButton}
+								onClick={onPrevEventWeek}
+								aria-label="이전 주 행사 보기"
+							>
+								&lt;
+							</button>
+							<button
+								type="button"
+								className={styles.mobileWeekNavButton}
+								onClick={onNextEventWeek}
+								aria-label="다음 주 행사 보기"
+							>
+								&gt;
+							</button>
+						</div>
+					</div>
+					{hasTimetable ? (
+						<div className={styles.timetableToggleGroup}>
+							<span className={styles.timetableToggleLabel}>
+								행사 함께 보기
+							</span>
+							<button
+								type="button"
+								className={`${styles.timetableToggle} ${
+									isEventOverlayOn ? styles.timetableToggleOn : ""
+								}`}
+								aria-label="행사 함께 보기"
+								aria-pressed={isEventOverlayOn}
+								onClick={() => onEventOverlayChange(!isEventOverlayOn)}
+							>
+								<span className={styles.timetableToggleThumb} />
+							</button>
+						</div>
+					) : null}
 				</div>
 
 				<div className={styles.profileRow}>

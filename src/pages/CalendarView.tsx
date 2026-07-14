@@ -3,28 +3,39 @@ import { useNavigate } from "react-router-dom";
 import { Views, type View } from "react-big-calendar";
 import { useQueryClient } from "@tanstack/react-query";
 import PullToRefresh from "react-simple-pull-to-refresh";
-import styles from "@styles/CalendarView.module.css";
-import type { CalendarEvent, Event } from "@types";
-import DetailView from "@/widgets/DetailView";
-import MonthSideView from "@widgets/Month/MonthSideView/MonthSideView";
-import { MyCalendar } from "@widgets/MyCalendar";
-import { Sidebar } from "@widgets/Sidebar";
+import styles from "./CalendarView.module.css";
+import type { CalendarEvent, Event, Semester } from "@types";
+import DetailView from "@/components/layout/sidePannel/DetailView";
+import EventCardView from "@/components/layout/sidePannel/EventCardView";
+import { MyCalendar } from "@/calendar_widgets/MyCalendar";
+import { Sidebar } from "@/components/layout/filterSideBar/FilterSidebar";
 import {
 	SidePanelResizeHandle,
 	useResizableSidePanel,
-} from "@/widgets/SidePanelResize";
+} from "@/components/layout/sidePannel/SidePanelResize";
 
 import { useDetail } from "@contexts/DetailContext";
 import { useEvents } from "@contexts/EventContext";
 import { useFilter } from "@contexts/FilterContext";
 import { useUserData } from "@/contexts/UserDataContext";
-import BottomNav from "@/widgets/BottomNav";
-import { FilterSheet } from "@/widgets/FilterSheet/FilterSheet";
+import BottomNav from "@/components/layout/BottomNav";
+import { FilterSheet } from "@/components/layout/filterSheet/FilterSheet";
+import MainRouteTutorial from "@/components/tutorial/MainRouteTutorial";
 import {
 	useMonthEvents,
 	useWeekEvents,
 	useDayEvents,
 } from "@/contexts/useCalendarEvents";
+import { useTimetable } from "@/contexts/TimetableContext";
+
+const getSemesterByDate = (date: Date): Semester => {
+	const month = date.getMonth() + 1;
+
+	if (month >= 3 && month <= 6) return "SPRING";
+	if (month >= 7 && month <= 8) return "SUMMER";
+	if (month >= 9 && month <= 12) return "FALL";
+	return "WINTER";
+};
 
 const CalendarView = () => {
 	// EventContext
@@ -41,6 +52,7 @@ const CalendarView = () => {
 	const { showDetail, setShowDetail, clickedEventId, setClickedEventId } =
 		useDetail();
 	const { excludedKeywords, interestCategories } = useUserData();
+	const { initializeDefaultOverlay } = useTimetable();
 
 	// 현재 기준점이 되는 날짜
 	const [currentDate, setCurrentDate] = useState<Date>(new Date());
@@ -83,6 +95,14 @@ const CalendarView = () => {
 		excludedKeywords,
 		interestCategories,
 	);
+
+	useEffect(() => {
+		const today = new Date();
+		void initializeDefaultOverlay(
+			today.getFullYear(),
+			getSemesterByDate(today),
+		);
+	}, [initializeDefaultOverlay]);
 
 	const queryClient = useQueryClient();
 	const handleRefresh = async () => {
@@ -217,7 +237,7 @@ const CalendarView = () => {
 						{!isMobile && (
 							<SidePanelResizeHandle onMouseDown={handleResizeStart} />
 						)}
-						<MonthSideView day={clickedDate} onClose={handleCloseSideMonth} />
+						<EventCardView day={clickedDate} onClose={handleCloseSideMonth} />
 					</div>
 				)}
 
@@ -236,6 +256,10 @@ const CalendarView = () => {
 			</div>
 			<FilterSheet />
 			<BottomNav />
+			<MainRouteTutorial
+				isDayView={currentView === Views.DAY}
+				isWeekView={currentView === Views.WEEK}
+			/>
 		</div>
 	);
 };

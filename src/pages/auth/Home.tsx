@@ -2,7 +2,7 @@
 import { Navigate, useNavigate } from "react-router-dom";
 import { useAuth } from "@contexts/AuthProvider";
 import logo from "/assets/logo.png";
-import styles from "@styles/Home.module.css";
+import styles from "./Home.module.css";
 
 const SOCIAL_LOGIN_BASE_URL =
 	import.meta.env.VITE_SOCIAL_LOGIN_BASE_URL ||

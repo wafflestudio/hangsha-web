@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import type { Category } from "@types";
-import styles from "@styles/Onboarding.module.css";
+import styles from "./Onboarding.module.css";
 import { useFilter } from "@/contexts/FilterContext";
 import { useUserData } from "@/contexts/UserDataContext";
 

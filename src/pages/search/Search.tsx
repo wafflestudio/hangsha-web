@@ -1,27 +1,27 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type ChangeEvent } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { Sidebar } from "@widgets/Sidebar";
+import { Sidebar } from "@/components/layout/filterSideBar/FilterSidebar";
 import SearchNewListItem from "./SearchNewListItem";
 import SearchGridItem from "./SearchGridItem";
 import type { HighlightSearchResult } from "@/util/types";
 import { getEventSearchFull } from "@/api/event";
-import styles from "@styles/Search.module.css";
-import toolbarStyles from "@styles/SearchToolbar.module.css";
+import styles from "./Search.module.css";
+import toolbarStyles from "./SearchToolbar.module.css";
 import { FaCalendarAlt } from "react-icons/fa";
 import { IoIosClose, IoIosSearch } from "react-icons/io";
-import BottomNav from "@/widgets/BottomNav";
-import { FilterSheet } from "@/widgets/FilterSheet/FilterSheet";
-import Loading from "@/widgets/Loading";
-import Pagination from "@/widgets/Pagination";
-import DetailView from "@/widgets/DetailView";
+import BottomNav from "@/components/layout/BottomNav";
+import { FilterSheet } from "@/components/layout/filterSheet/FilterSheet";
+import Loading from "@/components/ui/Loading";
+import Pagination from "@/components/ui/Pagination";
+import DetailView from "@/components/layout/sidePannel/DetailView";
 import {
 	SidePanelResizeHandle,
 	useResizableSidePanel,
-} from "@/widgets/SidePanelResize";
+} from "@/components/layout/sidePannel/SidePanelResize";
 import { useDetail } from "@/contexts/DetailContext";
 import { useAuth } from "@/contexts/AuthProvider";
-import { ProfileButton } from "@/widgets/Toolbar";
-import Modal from "@/widgets/Modal";
+import { ProfileButton } from "@/components/layout/toolbar/Toolbar";
+import Modal from "@/components/ui/Modal";
 
 const DEFAULT_PAGE_SIZE = 20;
 const PAGE_GROUP_SIZE = 5;
@@ -38,6 +38,7 @@ const SearchView = () => {
 
 	const query = searchParams.get("q") ?? "";
 	const page = Math.max(1, parseInt(searchParams.get("page") ?? "1", 10));
+	const searchLocationKey = `${query}:${page}`;
 
 	const [inputValue, setInputValue] = useState(query);
 	const [result, setResult] = useState<HighlightSearchResult | null>(null);
@@ -52,8 +53,8 @@ const SearchView = () => {
 	}, [query]);
 
 	useEffect(() => {
-		setShowDetail(false);
-	}, [query, page, setShowDetail]);
+		if (searchLocationKey) setShowDetail(false);
+	}, [searchLocationKey, setShowDetail]);
 
 	useEffect(() => {
 		if (!query.trim()) {
@@ -83,7 +84,7 @@ const SearchView = () => {
 		if (trimmed) setSearchParams({ q: trimmed, page: "1" });
 	};
 
-	const handleSizeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+	const handleSizeChange = (e: ChangeEvent<HTMLSelectElement>) => {
 		setPageSize(Number(e.target.value));
 		setSearchParams({ q: query, page: "1" });
 	};
@@ -177,14 +178,20 @@ const SearchView = () => {
 								onClick={() => setViewMode("list")}
 								className={`${toolbarStyles.toggleBtn} ${viewMode === "list" ? toolbarStyles.toggleBtnActive : ""}`}
 							>
-								<img alt="list icon, three rows of a small circle and a longer line" src="/assets/list.svg" />
+								<img
+									alt="list icon, three rows of a small circle and a longer line"
+									src="/assets/list.svg"
+								/>
 							</button>
 							<button
 								type="button"
 								onClick={() => setViewMode("grid")}
 								className={`${toolbarStyles.toggleBtn} ${viewMode === "grid" ? toolbarStyles.toggleBtnActive : ""}`}
 							>
-								<img alt="grid icon, four rectangles of 2x2 layout" src="/assets/grid.svg" />
+								<img
+									alt="grid icon, four rectangles of 2x2 layout"
+									src="/assets/grid.svg"
+								/>
 							</button>
 						</div>
 					</div>

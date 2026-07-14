@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useState, type KeyboardEvent, type MouseEvent } from "react";
 import { CATEGORY_COLORS, CATEGORY_LIST } from "@/util/constants";
 import { getDDay } from "@/util/Calendar/getDday";
 import type { HighlightSearchItem } from "@/util/types";
 import { useUserData } from "@/contexts/UserDataContext";
 import { useAuth } from "@/contexts/AuthProvider";
-import styles from "@styles/SearchGridItem.module.css";
+import { renderHighlight } from "./renderHighlight";
+import styles from "./SearchGridItem.module.css";
 
 function formatDateRange(start: Date | null, end: Date | null) {
 	if (!start) return "";
@@ -33,7 +34,7 @@ const SearchGridItem = ({ item, onClick, onLoginPrompt }: GridItemProps) => {
 		event.isBookmarked || false,
 	);
 
-	const handleToggleBookmark = async (e: React.MouseEvent<HTMLButtonElement>) => {
+	const handleToggleBookmark = async (e: MouseEvent<HTMLButtonElement>) => {
 		e.stopPropagation();
 		if (!user) {
 			onLoginPrompt?.();
@@ -49,14 +50,31 @@ const SearchGridItem = ({ item, onClick, onLoginPrompt }: GridItemProps) => {
 		}
 	};
 
+	const handleOpen = () => onClick?.(event.id);
+
+	const handleKeyDown = (e: KeyboardEvent<HTMLElement>) => {
+		if (!onClick || e.target !== e.currentTarget) return;
+		if (e.key === "Enter" || e.key === " ") {
+			e.preventDefault();
+			onClick(event.id);
+		}
+	};
+
 	return (
 		<article
 			className={styles.cardWrapper}
-			onClick={() => onClick?.(event.id)}
+			onClick={handleOpen}
+			onKeyDown={handleKeyDown}
+			role={onClick ? "button" : undefined}
+			tabIndex={onClick ? 0 : undefined}
 			style={onClick ? { cursor: "pointer" } : undefined}
 		>
 			<div className={styles.thumbnail}>
-				<img alt={event.title} src={event.imageUrl} className={styles.thumbnailImage} />
+				<img
+					alt={event.title}
+					src={event.imageUrl}
+					className={styles.thumbnailImage}
+				/>
 			</div>
 			<button
 				type="button"
@@ -64,21 +82,19 @@ const SearchGridItem = ({ item, onClick, onLoginPrompt }: GridItemProps) => {
 				onClick={handleToggleBookmark}
 			>
 				<img
-					src={isBookmarked ? "/assets/Bookmarked.svg" : "/assets/notBookmarked.svg"}
+					src={
+						isBookmarked
+							? "/assets/Bookmarked.svg"
+							: "/assets/notBookmarked.svg"
+					}
 					alt={isBookmarked ? "Remove bookmark" : "Add bookmark"}
 				/>
 			</button>
-			{/* eslint-disable-next-line react/no-danger */}
-			<h2
-				className={styles.gTitle}
-				dangerouslySetInnerHTML={{ __html: highlight.title }}
-			/>
+			<h2 className={styles.gTitle}>{renderHighlight(highlight.title)}</h2>
 			{highlight.contentSnippet && (
-				// eslint-disable-next-line react/no-danger
-				<p
-					className={styles.gBody}
-					dangerouslySetInnerHTML={{ __html: highlight.contentSnippet }}
-				/>
+				<p className={styles.gBody}>
+					{renderHighlight(highlight.contentSnippet)}
+				</p>
 			)}
 			<div className={styles.gDateOrg}>
 				<span className={styles.gDate}>{dateStr}</span>
@@ -86,7 +102,10 @@ const SearchGridItem = ({ item, onClick, onLoginPrompt }: GridItemProps) => {
 			</div>
 			<ul className={styles.gChipsList}>
 				<li className={styles.gDday}>{`지원 ${dday}`}</li>
-				<li className={styles.gCategoryChip} style={{ backgroundColor: catColor }}>
+				<li
+					className={styles.gCategoryChip}
+					style={{ backgroundColor: catColor }}
+				>
 					{CATEGORY_LIST[event.eventTypeId]}
 				</li>
 			</ul>

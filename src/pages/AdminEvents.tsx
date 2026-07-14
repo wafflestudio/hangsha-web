@@ -10,7 +10,7 @@ import {
 	type AdminEventPatchRequest,
 } from "@/api/adminEvent";
 import { useState } from "react";
-import styles from "@/styles/AdminEvents.module.css";
+import styles from "./AdminEvents.module.css";
 
 const EMPTY_FORM = {
 	title: "",

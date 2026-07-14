@@ -7,34 +7,35 @@ export const CATEGORY_MIN_INDEX = 4;
 // 카테고리 최대 index
 export const CATEGORY_MAX_INDEX = 10;
 
+
 export const CATEGORY_COLORS: Record<number, string> = {
-	1: "#FBB77A",
-	2: "#DFD093",
-	3: "#69DEB1",
-	4: "#72D3FA",
-	5: "#62B4FB",
-	6: "#C398FB",
-	7: "#FB7D95",
+	1: "rgba(255, 140, 40, 0.6)",
+	2: "rgba(186, 158, 49, 0.6)",
+	3: "rgba(11, 206, 131, 0.6)",
+	4: "rgba(0, 193, 232, 0.6)",
+	5: "rgba(0, 136, 255, 0.6)",
+	6: "rgba(162, 90, 255, 0.6)",
+	7: "rgba(255, 45, 83, 0.6)",
 };
 
 export const CATEGORY_BUTTON_COLORS: Record<number, string> = {
-	1: "#fbb67a5f",
-	2: "#ffeea962",
-	3: "#69deb15b",
-	4: "#72d3fa62",
-	5: "#629ffb5f",
-	6: "#c398fb62",
-	7: "#fb7d945e",
+	1: "rgba(255, 140, 40, 0.15)",
+	2: "rgba(255, 204, 0, 0.15)",
+	3: "rgba(11, 206, 131, 0.15)",
+	4: "rgba(0, 193, 232, 0.15)",
+	5: "rgba(0, 136, 255, 0.15)",
+	6: "rgba(162, 90, 255, 0.15)",
+	7: "rgba(255, 45, 83, 0.15)",
 };
 
 export const CATEGORY_TEXT_COLORS: Record<number, string> = {
-	1: "#b67d4b",
-	2: "#a0882a",
-	3: "#349570",
-	4: "#3a90b2",
-	5: "#3e6cb1",
-	6: "#7d50b9",
-	7: "#ac3a4f",
+	1: "#cc874c",
+	2: "#ad9227",
+	3: "#36a47a",
+	4: "#3498c0",
+	5: "#3d73c4",
+	6: "#824acd",
+	7: "#c84059",
 };
 
 export const CATEGORY_LIST: Record<number, string> = {
