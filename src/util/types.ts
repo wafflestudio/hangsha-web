@@ -253,6 +253,31 @@ export interface SearchResult {
 	items: Event[];
 }
 
+export interface SearchHighlight {
+	title: string;
+	contentSnippet: string | null;
+}
+export interface HighlightSearchItemDTO {
+	event: EventDTO;
+	highlight: SearchHighlight;
+}
+export interface HighlightSearchItem {
+	event: Event;
+	highlight: SearchHighlight;
+}
+export interface HighlightSearchResultDTO {
+	page: number;
+	size: number;
+	total: number;
+	items: HighlightSearchItemDTO[];
+}
+export interface HighlightSearchResult {
+	page: number;
+	size: number;
+	total: number;
+	items: HighlightSearchItem[];
+}
+
 export interface FetchMonthEventArgs {
 	start?: Date; // optional - default to today
 	statusId?: number[];
