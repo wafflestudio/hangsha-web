@@ -164,6 +164,12 @@
     0 3px 10px rgba(0, 0, 0, 0.06);
 }
 
+.signup {
+  background: #b7b7b7;
+  border-color: transparent;
+  color: #111111;
+}
+
 .social {
   position: relative;
   justify-content: center;
@@ -208,7 +214,7 @@
   margin-top: 10px;
   border: 0;
   background: transparent;
-  color: #8a8a8a;
+  color: #6a6a6a;
   font-size: 14px;
   font-weight: 500;
   cursor: pointer;

@@ -135,7 +135,11 @@ export default function Home() {
 							<span>네이버 계정으로 계속하기</span>
 						</button>
 
-						<button className={styles.btn} type="button" onClick={toSignUp}>
+						<button
+							className={`${styles.btn} ${styles.signup}`}
+							type="button"
+							onClick={toSignUp}
+						>
 							회원가입
 						</button>
 
