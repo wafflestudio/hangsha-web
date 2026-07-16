@@ -19,6 +19,12 @@ const eventPropGetter = () => {
 	};
 };
 
+const MOBILE_MAX_WIDTH = 576;
+const DESKTOP_MONTH_VISIBLE_EVENT_ROWS = 3;
+const MOBILE_MONTH_VISIBLE_EVENT_ROWS = 4;
+const getIsMobile = () =>
+	typeof window !== "undefined" && window.innerWidth <= MOBILE_MAX_WIDTH;
+
 interface MyCalendarProps {
 	monthEvents: Event[];
 	weekEvents: Event[];
@@ -39,7 +45,7 @@ export const MyCalendar = ({
 	const { dayDate, setDayDate } = useEvents();
 	const { selectedOverlayCourses, selectedOverlayTimetable } = useTimetable();
 	const [currentView, setCurrentView] = useState<View>(Views.MONTH);
-	const [isMobile, setIsMobile] = useState(false);
+	const [isMobile, setIsMobile] = useState(getIsMobile);
 	const [showTimetableOverlay, setShowTimetableOverlay] = useState(true);
 	const hasTimetableOverlay = selectedOverlayTimetable !== null;
 	const isTimetableOverlayEmpty = selectedOverlayCourses.length <= 0;
@@ -146,7 +152,7 @@ export const MyCalendar = ({
 	 */
 	useEffect(() => {
 		const checkIsMobile = () => {
-			setIsMobile(window.innerWidth <= 576);
+			setIsMobile(getIsMobile());
 		};
 
 		checkIsMobile();
@@ -156,6 +162,11 @@ export const MyCalendar = ({
 			window.removeEventListener("resize", checkIsMobile);
 		};
 	}, []);
+
+	const monthMaxRows =
+		(isMobile
+			? MOBILE_MONTH_VISIBLE_EVENT_ROWS
+			: DESKTOP_MONTH_VISIBLE_EVENT_ROWS) + 1;
 
 	/** 날짜 클릭 핸들러 함수 - onDrillDown */
 	const handleDrillDown = useCallback(
@@ -218,6 +229,7 @@ export const MyCalendar = ({
 					date={dayDate}
 					// view setup
 					view={currentView}
+					monthMaxRows={monthMaxRows}
 					onView={(view) => {
 						setCurrentView(view);
 						onViewChange?.(view);
