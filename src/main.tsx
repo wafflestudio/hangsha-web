@@ -2,6 +2,7 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
 import App from "./App";
+import "./styles/typography.css";
 import { initGA4 } from "./lib/ga4";
 import { QueryClient } from "@tanstack/react-query";
 import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
@@ -15,13 +16,13 @@ if (rootElement === null) {
 initGA4();
 
 const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      staleTime: 5 * 60 * 1000,        // 5 min: cache hit returns instantly, no refetch
-      gcTime: 24 * 60 * 60 * 1000,     // 24h: keep in memory
-      refetchOnWindowFocus: false,
-    },
-  },
+	defaultOptions: {
+		queries: {
+			staleTime: 5 * 60 * 1000, // 5 min: cache hit returns instantly, no refetch
+			gcTime: 24 * 60 * 60 * 1000, // 24h: keep in memory
+			refetchOnWindowFocus: false,
+		},
+	},
 });
 
 const asyncStoragePersister = createAsyncStoragePersister({
@@ -40,9 +41,9 @@ createRoot(rootElement).render(
 				buster: "v1",
 			}}
 		>
-		<BrowserRouter>
-			<App />
-		</BrowserRouter>
+			<BrowserRouter>
+				<App />
+			</BrowserRouter>
 		</PersistQueryClientProvider>
 	</StrictMode>,
 );
