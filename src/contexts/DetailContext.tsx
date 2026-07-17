@@ -1,17 +1,12 @@
-import {
-	createContext,
-	type Dispatch,
-	type ReactNode,
-	type SetStateAction,
-	useContext,
-	useState,
-} from "react";
+import { createContext, type ReactNode, useCallback, useContext } from "react";
+import { useLocation, useSearchParams } from "react-router-dom";
+import { parseDateFromYYYYMMDD } from "@calendarUtil/dateFormatter";
 
 interface DetailContextType {
 	showDetail: boolean;
-	setShowDetail: Dispatch<SetStateAction<boolean>>;
 	clickedEventId?: number;
-	setClickedEventId: Dispatch<SetStateAction<number | undefined>>;
+	openDetail: (eventId: number) => void;
+	closeDetail: () => void;
 }
 
 const DetailContext = createContext<DetailContextType | undefined>(undefined);
@@ -21,16 +16,57 @@ export const DetailContextProvider = ({
 }: {
 	children: ReactNode;
 }) => {
-	const [showDetail, setShowDetail] = useState<boolean>(false);
-	const [clickedEventId, setClickedEventId] = useState<number>();
+	const location = useLocation();
+	const [searchParams, setSearchParams] = useSearchParams();
+	const eventIdParam = searchParams.get("eventId");
+	const parsedEventId = eventIdParam ? Number(eventIdParam) : Number.NaN;
+	const clickedEventId =
+		Number.isSafeInteger(parsedEventId) && parsedEventId > 0
+			? parsedEventId
+			: undefined;
+	const showDetail =
+		searchParams.get("panel") === "detail" && clickedEventId !== undefined;
+
+	const openDetail = useCallback(
+		(eventId: number) => {
+			setSearchParams((prev) => {
+				const next = new URLSearchParams(prev);
+				next.set("panel", "detail");
+				next.set("eventId", String(eventId));
+				return next;
+			});
+		},
+		[setSearchParams],
+	);
+
+	const closeDetail = useCallback(() => {
+		setSearchParams(
+			(prev) => {
+				const next = new URLSearchParams(prev);
+				const hasEventListDate =
+					(location.pathname === "/main" ||
+						location.pathname === "/main/day") &&
+					parseDateFromYYYYMMDD(next.get("date")) !== null;
+
+				if (hasEventListDate) {
+					next.set("panel", "events");
+				} else {
+					next.delete("panel");
+				}
+				next.delete("eventId");
+				return next;
+			},
+			{ replace: true },
+		);
+	}, [location.pathname, setSearchParams]);
 
 	return (
 		<DetailContext.Provider
 			value={{
 				showDetail,
-				setShowDetail,
 				clickedEventId,
-				setClickedEventId,
+				openDetail,
+				closeDetail,
 			}}
 		>
 			{children}
@@ -41,7 +77,7 @@ export const DetailContextProvider = ({
 export const useDetail = () => {
 	const ctx = useContext(DetailContext);
 	if (!ctx) {
-		throw new Error("useDayView must be used within DayViewContextProvider");
+		throw new Error("useDetail must be used within DetailContextProvider");
 	}
 	return ctx;
 };
