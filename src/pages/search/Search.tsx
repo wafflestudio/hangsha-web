@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, type ChangeEvent } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { Sidebar } from "@/components/layout/filterSideBar/FilterSidebar";
+import { SearchSidebar } from "@/components/layout/filterSideBar/SearchSidebar";
 import SearchNewListItem from "./SearchNewListItem";
 import SearchGridItem from "./SearchGridItem";
 import type { HighlightSearchResult } from "@/util/types";
@@ -10,7 +10,6 @@ import toolbarStyles from "./SearchToolbar.module.css";
 import { FaCalendarAlt } from "react-icons/fa";
 import { IoIosClose, IoIosSearch } from "react-icons/io";
 import BottomNav from "@/components/layout/BottomNav";
-import { FilterSheet } from "@/components/layout/filterSheet/FilterSheet";
 import Loading from "@/components/ui/Loading";
 import Pagination from "@/components/ui/Pagination";
 import DetailView from "@/components/layout/sidePannel/DetailView";
@@ -114,7 +113,7 @@ const SearchView = () => {
 					onClose={() => setIsLoginModalOpen(false)}
 				/>
 			)}
-			<Sidebar />
+			<SearchSidebar />
 			<div className={styles.restContainer}>
 				<div className={toolbarStyles.toolbarContainer}>
 					<div className={toolbarStyles.headerRow}>
@@ -277,7 +276,6 @@ const SearchView = () => {
 				</div>
 			)}
 
-			<FilterSheet />
 			<BottomNav />
 		</div>
 	);
