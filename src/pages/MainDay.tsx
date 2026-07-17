@@ -7,7 +7,7 @@ import BottomNav from "@/components/layout/BottomNav";
 import { useEvents } from "@/contexts/EventContext";
 import { useDetail } from "@/contexts/DetailContext";
 import { FilterSheet } from "@/components/layout/filterSheet/FilterSheet";
-import { useMainPanelQuery } from "@/hooks/useMainPanelQuery";
+import { useMainPanelQuery } from "@/pages/useMainPanelQuery";
 
 const MOBILE_MAX_WIDTH = 576;
 
