@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Views, type View } from "react-big-calendar";
+import { Views } from "react-big-calendar";
+import { useQueryClient } from "@tanstack/react-query";
+import PullToRefresh from "react-simple-pull-to-refresh";
 import styles from "./CalendarView.module.css";
 import type { CalendarEvent, Event, Semester } from "@types";
 import DetailView from "@/components/layout/sidePannel/DetailView";
@@ -25,7 +27,8 @@ import {
 	useDayEvents,
 } from "@/contexts/useCalendarEvents";
 import { useTimetable } from "@/contexts/TimetableContext";
-import { useMainPanelQuery } from "@/hooks/useMainPanelQuery";
+import { useMainPanelQuery } from "@/pages/useMainPanelQuery";
+import { useCalendarViewQuery } from "@/pages/useCalendarViewQuery";
 import { formatDateToYYYYMMDD } from "@calendarUtil/dateFormatter";
 
 const getSemesterByDate = (date: Date): Semester => {
@@ -57,14 +60,12 @@ const CalendarView = () => {
 		openEventList,
 		closePanel,
 	} = useMainPanelQuery();
+	const { calendarView, setCalendarView } = useCalendarViewQuery();
 	const { excludedKeywords, interestCategories } = useUserData();
 	const { initializeDefaultOverlay } = useTimetable();
 
 	// 현재 기준점이 되는 날짜
 	const [currentDate, setCurrentDate] = useState<Date>(new Date());
-
-	// 캘린더 뷰 모드 추적 (월/주/일)
-	const [currentView, setCurrentView] = useState<View>(Views.MONTH);
 
 	/** ----------------------  FETCH MONTH / WEEK / DAY data -------------------- */
 
@@ -157,10 +158,10 @@ const CalendarView = () => {
 	}, []);
 	useEffect(() => {
 		if (!isMobile) return;
-		if (currentView !== Views.DAY && !showEventList && !showDetail) return;
+		if (calendarView !== Views.DAY && !showEventList && !showDetail) return;
 
 		let nextSearch = panelSearch;
-		if (currentView === Views.DAY && !showEventList && !showDetail) {
+		if (calendarView === Views.DAY && !showEventList && !showDetail) {
 			const nextParams = new URLSearchParams(panelSearch);
 			nextParams.set("panel", "events");
 			nextParams.set("date", formatDateToYYYYMMDD(dayDate));
@@ -177,7 +178,7 @@ const CalendarView = () => {
 		);
 	}, [
 		isMobile,
-		currentView,
+		calendarView,
 		showEventList,
 		showDetail,
 		panelSearch,
@@ -215,14 +216,29 @@ const CalendarView = () => {
 			<Sidebar />
 			<div className={styles.calendarContainer}>
 				<div className={styles.calendarWrapper}>
-					<MyCalendar
-						monthEvents={MONTH_EVENTS}
-						weekEvents={WEEK_EVENTS}
-						dayEvents={dayViewEvents}
-						onShowMoreClick={onShowMoreClick}
-						onSelectEvent={onSelectEvent}
-						onViewChange={setCurrentView}
-					/>
+					{isMobile ? (
+						<PullToRefresh onRefresh={handleRefresh} pullDownThreshold={70}>
+							<MyCalendar
+								monthEvents={MONTH_EVENTS}
+								weekEvents={WEEK_EVENTS}
+								dayEvents={dayViewEvents}
+								view={calendarView}
+								onShowMoreClick={onShowMoreClick}
+								onSelectEvent={onSelectEvent}
+								onViewChange={setCalendarView}
+							/>
+						</PullToRefresh>
+					) : (
+						<MyCalendar
+							monthEvents={MONTH_EVENTS}
+							weekEvents={WEEK_EVENTS}
+							dayEvents={dayViewEvents}
+							view={calendarView}
+							onShowMoreClick={onShowMoreClick}
+							onSelectEvent={onSelectEvent}
+							onViewChange={setCalendarView}
+						/>
+					)}
 				</div>
 				{showEventList && eventListDate && (
 					<div
@@ -257,8 +273,8 @@ const CalendarView = () => {
 			<FilterSheet />
 			<BottomNav />
 			<MainRouteTutorial
-				isDayView={currentView === Views.DAY}
-				isWeekView={currentView === Views.WEEK}
+				isDayView={calendarView === Views.DAY}
+				isWeekView={calendarView === Views.WEEK}
 			/>
 		</div>
 	);
