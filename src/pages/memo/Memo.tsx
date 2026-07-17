@@ -2,7 +2,7 @@ import { useUserData } from "@/contexts/UserDataContext";
 import { useAuth } from "@/contexts/AuthProvider";
 import styles from "./Memo.module.css";
 import type { Memo } from "@/util/types";
-import { formatDateDotParsed } from "@/util/Calendar/dateFormatter";
+import { formatDateDotParsed } from "@/util/calendar/dateFormatter";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
 import Navigationbar from "@/components/layout/Navigationbar";
 import { useNavigate } from "react-router-dom";

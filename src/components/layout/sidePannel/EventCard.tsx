@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import styles from "./CardView.module.css";
-import { getDDay } from "@calendarUtil/getDday";
+import { getDDay } from "@/util/calendar/getDday";
 import { CATEGORY_COLORS, CATEGORY_LIST } from "@constants";
 import type { Event } from "@types";
 import { useUserData } from "@/contexts/UserDataContext";

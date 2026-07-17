@@ -1,6 +1,6 @@
 import type { EventDetail, Event } from "@/util/types";
 import styles from "./EventDate.module.css";
-import { eventDateRenderer } from "@/util/Calendar/eventDateRenderer";
+import { eventDateRenderer } from "@/util/calendar/eventDateRenderer";
 
 
 // label - null : 테이블에 넣는 경우

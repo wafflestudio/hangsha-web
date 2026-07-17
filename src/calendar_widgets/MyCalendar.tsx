@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Calendar, type View, Views } from "react-big-calendar";
 import styles from "./Calendar.module.css";
-import { localizer } from "@calendarUtil/calendarLocalizer";
+import { localizer } from "@/util/calendar/calendarLocalizer";
 import type { CalendarEvent, Event } from "@types";
 import Toolbar from "../components/layout/toolbar/Toolbar";
 import MonthEvent from "./month/MonthEvent";
@@ -11,8 +11,8 @@ import CustomDayView from "./day/CustomDayView";
 import CustomWeekView from "./week/CustomWeekView";
 import { useEvents } from "@/contexts/EventContext";
 import { useTimetable } from "@/contexts/TimetableContext";
-import calendarEventMapper from "@/util/Calendar/calendarEventMapper";
-import { sortMonthCalendarEvents } from "@/util/Calendar/sortMonthCalendarEvents";
+import calendarEventMapper from "@/util/calendar/calendarEventMapper";
+import { sortMonthCalendarEvents } from "@/util/calendar/sortMonthCalendarEvents";
 
 const eventPropGetter = () => {
 	return {
