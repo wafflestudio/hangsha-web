@@ -1,0 +1,136 @@
+.cardWrapper {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	width: 100%;
+	min-width: 0;
+	font-family:
+		-apple-system, BlinkMacSystemFont, "Pretendard", "Apple SD Gothic Neo",
+		sans-serif;
+	cursor: pointer;
+}
+
+.thumbnail {
+	width: 100%;
+	aspect-ratio: 16 / 9;
+	border-radius: 12px;
+	overflow: hidden;
+	border: 1px solid #f0f0f0;
+	background-color: #f9f9f9;
+	position: relative;
+	margin-bottom: 14px;
+}
+
+.thumbnailImage {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	position: absolute;
+	top: 0;
+	left: 0;
+}
+
+.gBookmarkBtn {
+	background: none;
+	border: none;
+	padding: 0;
+	margin: 0 0 10px 0;
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.gBookmarkBtn img {
+	width: 23px;
+	height: 23px;
+}
+
+.gTitle {
+	font-size: 16px;
+	font-weight: 700;
+	color: #111;
+	margin: 0 0 6px 0;
+	line-height: 1.4;
+	display: -webkit-box;
+	-webkit-line-clamp: 2;
+	-webkit-box-orient: vertical;
+	overflow: hidden;
+	overflow-wrap: anywhere;
+}
+
+.gBody {
+	font-size: 13px;
+	color: #666;
+	line-height: 1.6;
+	margin: 0 0 10px 0;
+	display: -webkit-box;
+	-webkit-line-clamp: 2;
+	-webkit-box-orient: vertical;
+	overflow: hidden;
+	overflow-wrap: anywhere;
+}
+
+.gDateOrg {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	margin-bottom: 8px;
+	font-size: 12.5px;
+	color: #767676;
+}
+
+.gDate {
+	white-space: nowrap;
+}
+
+.gOrg {
+	color: #767676;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.gChipsList {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+
+.gDday {
+	font-size: 13px;
+	font-weight: 600;
+	color: #333333;
+	padding: 4px 8px;
+	background-color: #ffffff;
+	border: 1px solid #e0e0e0;
+	border-radius: 6px;
+	white-space: nowrap;
+}
+
+.gCategoryChip {
+	font-size: 13px;
+	font-weight: 600;
+	color: #111111;
+	padding: 4px 8px;
+	border-radius: 6px;
+	white-space: nowrap;
+}
+
+/* backend highlight <mark> tags */
+.gTitle mark,
+.gBody mark {
+	background: #fff176;
+	color: inherit;
+	border-radius: 2px;
+	padding: 0 1px;
+}
+
+@media (max-width: 600px) {
+	.gTitle {
+		font-size: 15px;
+	}
+}

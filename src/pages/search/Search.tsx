@@ -1,180 +1,281 @@
-import { useEffect, useMemo, useRef, useState } from "react";
-import SearchToolbar from "./SearchToolbar";
+import { useEffect, useRef, useState, type ChangeEvent } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { Sidebar } from "@/components/layout/filterSideBar/FilterSidebar";
-import GalleryView from "@/calendar_widgets/day/gallery/GalleryView";
-import type { CalendarEvent, Event } from "@/util/types";
-import Table from "@/calendar_widgets/day/table";
+import SearchNewListItem from "./SearchNewListItem";
+import SearchGridItem from "./SearchGridItem";
+import type { HighlightSearchResult } from "@/util/types";
+import { getEventSearchFull } from "@/api/event";
 import styles from "./Search.module.css";
-import DetailView from "@/components/layout/sidePannel/DetailView";
-import Pagination from "@/components/ui/Pagination";
-import Loading from "@/components/ui/Loading";
-import { Views } from "react-big-calendar";
-import calendarEventMapper from "@/util/Calendar/calendarEventMapper";
+import toolbarStyles from "./SearchToolbar.module.css";
+import { FaCalendarAlt } from "react-icons/fa";
+import { IoIosClose, IoIosSearch } from "react-icons/io";
 import BottomNav from "@/components/layout/BottomNav";
 import { FilterSheet } from "@/components/layout/filterSheet/FilterSheet";
-
-import { useSearch } from "@/contexts/SearchContext";
-import { useDetail } from "@/contexts/DetailContext";
+import Loading from "@/components/ui/Loading";
+import Pagination from "@/components/ui/Pagination";
+import DetailView from "@/components/layout/sidePannel/DetailView";
 import {
 	SidePanelResizeHandle,
 	useResizableSidePanel,
 } from "@/components/layout/sidePannel/SidePanelResize";
+import { useDetail } from "@/contexts/DetailContext";
+import { useAuth } from "@/contexts/AuthProvider";
+import { ProfileButton } from "@/components/layout/toolbar/Toolbar";
+import Modal from "@/components/ui/Modal";
+
+const DEFAULT_PAGE_SIZE = 20;
+const PAGE_GROUP_SIZE = 5;
 
 const SearchView = () => {
-	const {
-		query,
-		page,
-		size,
-		setPage,
-		setSize,
-		fetchSearchResult,
-		emptySearchResults,
-		searchResults,
-		searchLoading,
-	} = useSearch();
-	const { showDetail, setShowDetail, clickedEventId } = useDetail();
-	const [viewMode, setViewMode] = useState<"List" | "Grid">("Grid");
+	const [searchParams, setSearchParams] = useSearchParams();
+	const navigate = useNavigate();
+	const { user } = useAuth();
+	const { showDetail, setShowDetail, clickedEventId, setClickedEventId } =
+		useDetail();
 	const { isMobile, handleResizeStart, sidePanelStyle } =
 		useResizableSidePanel();
-
 	const sidePanelRef = useRef<HTMLDivElement>(null);
 
+	const query = searchParams.get("q") ?? "";
+	const page = Math.max(1, parseInt(searchParams.get("page") ?? "1", 10));
+	const searchLocationKey = `${query}:${page}`;
+
+	const [inputValue, setInputValue] = useState(query);
+	const [result, setResult] = useState<HighlightSearchResult | null>(null);
+	const [loading, setLoading] = useState(false);
+	const [error, setError] = useState(false);
+	const [viewMode, setViewMode] = useState<"list" | "grid">("list");
+	const [pageSize, setPageSize] = useState(DEFAULT_PAGE_SIZE);
+	const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+
 	useEffect(() => {
-		function handleClickOutside(event: MouseEvent) {
-			if (!sidePanelRef.current) return;
-			const isInside = sidePanelRef.current.contains(event.target as Node);
-			if (!isInside) {
+		setInputValue(query);
+	}, [query]);
+
+	useEffect(() => {
+		if (searchLocationKey) setShowDetail(false);
+	}, [searchLocationKey, setShowDetail]);
+
+	useEffect(() => {
+		if (!query.trim()) {
+			setResult(null);
+			return;
+		}
+		setLoading(true);
+		setError(false);
+		getEventSearchFull({ query, page, size: pageSize })
+			.then(setResult)
+			.catch(() => setError(true))
+			.finally(() => setLoading(false));
+	}, [query, page, pageSize]);
+
+	useEffect(() => {
+		function handleClickOutside(e: MouseEvent) {
+			if (!sidePanelRef.current?.contains(e.target as Node)) {
 				setShowDetail(false);
 			}
 		}
 		document.addEventListener("mousedown", handleClickOutside);
-		return () => {
-			document.removeEventListener("mousedown", handleClickOutside);
-		};
+		return () => document.removeEventListener("mousedown", handleClickOutside);
 	}, [setShowDetail]);
 
-	useEffect(() => {
-		const fetchData = async () => {
-			if (query.trim()) {
-				await fetchSearchResult(query, page, size);
-			} else {
-				// 빈 검색어로 들어오면 이전 검색 결과를 비움
-				emptySearchResults();
-			}
-		};
-		fetchData();
-	}, [fetchSearchResult, emptySearchResults, query, page, size]);
+	const handleSearch = () => {
+		const trimmed = inputValue.trim();
+		if (trimmed) setSearchParams({ q: trimmed, page: "1" });
+	};
 
-	useEffect(() => {
-		const mq = window.matchMedia("(max-width: 576px)");
-		const apply = () => {
-			if (mq.matches) setViewMode("Grid");
-		};
-		apply();
-		mq.addEventListener("change", apply);
-		return () => mq.removeEventListener("change", apply);
-	}, []);
+	const handleSizeChange = (e: ChangeEvent<HTMLSelectElement>) => {
+		setPageSize(Number(e.target.value));
+		setSearchParams({ q: query, page: "1" });
+	};
 
-	const events: CalendarEvent[] = useMemo(() => {
-		if (!searchResults) return [];
-
-		return searchResults.items.map((e: Event) =>
-			calendarEventMapper(e, Views.DAY),
-		);
-	}, [searchResults]);
-
-	/* pagination logic */
-	const totalPages = searchResults ? Math.ceil(searchResults.total / size) : 0;
-	const PAGE_GROUP_SIZE = 5;
+	const totalPages = result ? Math.ceil(result.total / pageSize) : 0;
 	const currentGroupStart =
 		Math.floor((page - 1) / PAGE_GROUP_SIZE) * PAGE_GROUP_SIZE + 1;
 	const currentGroupEnd = Math.min(
 		totalPages,
 		currentGroupStart + PAGE_GROUP_SIZE - 1,
 	);
-
 	const getPageNumbers = () => {
-		const pageNumbers = [];
-		for (let i = currentGroupStart; i <= currentGroupEnd; i++) {
-			pageNumbers.push(i);
-		}
-		return pageNumbers;
+		const nums: number[] = [];
+		for (let i = currentGroupStart; i <= currentGroupEnd; i++) nums.push(i);
+		return nums;
 	};
 	const handlePageChange = (newPage: number) => {
 		if (newPage >= 1 && newPage <= totalPages) {
-			setPage(newPage);
+			setSearchParams({ q: query, page: String(newPage) });
 			window.scrollTo({ top: 0, behavior: "smooth" });
 		}
-	};
-	const handlePrevGroup = () => {
-		const newPage = currentGroupStart - 1;
-		if (newPage >= 1) handlePageChange(newPage);
-	};
-
-	const handleNextGroup = () => {
-		const newPage = currentGroupEnd + 1;
-		if (newPage <= totalPages) handlePageChange(newPage);
-	};
-
-	/* for pagination size */
-	const handleSizeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-		setSize(Number(e.target.value));
-		setPage(1);
 	};
 
 	return (
 		<div className={styles.container}>
+			{isLoginModalOpen && (
+				<Modal
+					content="로그인 이후 이용해주세요"
+					leftText="로그인"
+					rightText="닫기"
+					onLeftClick={() => navigate("/")}
+					onRightClick={() => setIsLoginModalOpen(false)}
+					onClose={() => setIsLoginModalOpen(false)}
+				/>
+			)}
 			<Sidebar />
 			<div className={styles.restContainer}>
-				<SearchToolbar viewMode={viewMode} setViewMode={setViewMode} />
-				<div className={styles.dropdownRow}>
-					<div className={styles.sizeSelectContainer}>
-						<span className={styles.sizeLabel}>표시 개수:</span>
-						<select
-							className={styles.sizeSelect}
-							value={size}
-							onChange={handleSizeChange}
-						>
-							{/* <option value={1}>1개</option> */}
-							<option value={5}>5개</option>
-							<option value={10}>10개</option>
-							<option value={20}>20개</option>
-						</select>
+				<div className={toolbarStyles.toolbarContainer}>
+					<div className={toolbarStyles.headerRow}>
+						<span>{query ? `'${query}' 검색 결과` : "검색"}</span>
+						<div className={toolbarStyles.btnGroup}>
+							<button type="button" className={toolbarStyles.calendarBtn}>
+								<FaCalendarAlt
+									onClick={() => navigate("/main")}
+									size={25}
+									color="rgba(130,130,130,1)"
+								/>
+							</button>
+							{user && <ProfileButton user={user} />}
+						</div>
+					</div>
+					<div className={toolbarStyles.searchRow}>
+						<div className={toolbarStyles.searchBox}>
+							<div className={toolbarStyles.inputWrapper}>
+								<input
+									type="text"
+									maxLength={50}
+									className={toolbarStyles.searchInput}
+									placeholder="검색어를 입력해주세요"
+									value={inputValue}
+									onChange={(e) => setInputValue(e.target.value)}
+									onKeyDown={(e) => {
+										if (e.key === "Enter" && !e.nativeEvent.isComposing)
+											handleSearch();
+									}}
+								/>
+								{inputValue && (
+									<button
+										type="button"
+										className={toolbarStyles.clearBtn}
+										onClick={() => {
+											setInputValue("");
+											setSearchParams({});
+										}}
+									>
+										<IoIosClose size={20} color="rgba(130,130,130,1)" />
+									</button>
+								)}
+							</div>
+							<button
+								type="button"
+								className={toolbarStyles.searchBtn}
+								onClick={handleSearch}
+							>
+								<IoIosSearch size={25} color="rgba(130,130,130,1)" />
+							</button>
+						</div>
+						<div className={toolbarStyles.viewToggleGroup}>
+							<button
+								type="button"
+								onClick={() => setViewMode("list")}
+								className={`${toolbarStyles.toggleBtn} ${viewMode === "list" ? toolbarStyles.toggleBtnActive : ""}`}
+							>
+								<img
+									alt="list icon, three rows of a small circle and a longer line"
+									src="/assets/list.svg"
+								/>
+							</button>
+							<button
+								type="button"
+								onClick={() => setViewMode("grid")}
+								className={`${toolbarStyles.toggleBtn} ${viewMode === "grid" ? toolbarStyles.toggleBtnActive : ""}`}
+							>
+								<img
+									alt="grid icon, four rectangles of 2x2 layout"
+									src="/assets/grid.svg"
+								/>
+							</button>
+						</div>
 					</div>
 				</div>
-				{!searchResults || searchResults.total === 0 ? (
+
+				{!loading && !error && result && result.total > 0 && (
+					<div className={styles.dropdownRow}>
+						<div className={styles.sizeSelectContainer}>
+							<span className={styles.sizeLabel}>표시 개수:</span>
+							<select
+								className={styles.sizeSelect}
+								value={pageSize}
+								onChange={handleSizeChange}
+							>
+								<option value={5}>5개</option>
+								<option value={10}>10개</option>
+								<option value={20}>20개</option>
+							</select>
+						</div>
+					</div>
+				)}
+
+				{loading ? (
+					<div className={styles.noResult}>
+						<Loading />
+					</div>
+				) : error ? (
+					<div className={styles.noResult}>
+						<span>오류가 발생했습니다. 잠시 후 다시 시도해주세요.</span>
+					</div>
+				) : !result || result.total === 0 ? (
 					<div className={styles.noResult}>
 						<span>
-							{searchLoading ? (
-								<Loading />
-							) : query ? (
-								"검색 결과가 없습니다."
-							) : (
-								"검색어를 입력해보세요!"
-							)}
+							{query ? "검색 결과가 없습니다." : "검색어를 입력해보세요!"}
 						</span>
 					</div>
-				) : viewMode === "List" ? (
-					<Table
-						theadData={["찜", "제목", "D-day", "카테고리", "날짜", "주최기관"]}
-						tbodyData={events}
-					/>
 				) : (
-					viewMode === "Grid" && <GalleryView events={events} />
-				)}
-				{searchResults && searchResults.total > 0 && (
-					<Pagination
-						page={page}
-						currentGroupStart={currentGroupStart}
-						currentGroupEnd={currentGroupEnd}
-						onPrev={handlePrevGroup}
-						onNext={handleNextGroup}
-						handlePageChange={handlePageChange}
-						totalPages={totalPages}
-						getPageNumbers={getPageNumbers}
-					/>
+					<>
+						<div className={styles.resultCount}>총 {result.total}개 결과</div>
+						{viewMode === "list" ? (
+							<div className={styles.listContainer}>
+								{result.items.map((item) => (
+									<SearchNewListItem
+										key={item.event.id}
+										item={item}
+										onClick={(id) => {
+											setClickedEventId(id);
+											setShowDetail(true);
+										}}
+										onLoginPrompt={() => setIsLoginModalOpen(true)}
+									/>
+								))}
+							</div>
+						) : (
+							<div className={styles.gridContainer}>
+								{result.items.map((item) => (
+									<SearchGridItem
+										key={item.event.id}
+										item={item}
+										onClick={(id) => {
+											setClickedEventId(id);
+											setShowDetail(true);
+										}}
+										onLoginPrompt={() => setIsLoginModalOpen(true)}
+									/>
+								))}
+							</div>
+						)}
+						{totalPages > 1 && (
+							<Pagination
+								page={page}
+								totalPages={totalPages}
+								currentGroupStart={currentGroupStart}
+								currentGroupEnd={currentGroupEnd}
+								onPrev={() => handlePageChange(currentGroupStart - 1)}
+								onNext={() => handlePageChange(currentGroupEnd + 1)}
+								handlePageChange={handlePageChange}
+								getPageNumbers={getPageNumbers}
+							/>
+						)}
+					</>
 				)}
 			</div>
+
 			{showDetail && clickedEventId !== undefined && (
 				<div
 					className={styles.sidePanel}
@@ -187,9 +288,11 @@ const SearchView = () => {
 					<DetailView eventId={clickedEventId} />
 				</div>
 			)}
+
 			<FilterSheet />
 			<BottomNav />
 		</div>
 	);
 };
+
 export default SearchView;
