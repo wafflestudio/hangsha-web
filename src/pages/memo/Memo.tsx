@@ -73,7 +73,7 @@ const MemoPage = () => {
 	const [deletingMemoId, setDeletingMemoId] = useState<number | null>(null);
 	const { user } = useAuth();
 	const navigate = useNavigate();
-	const { showDetail, setShowDetail, clickedEventId } = useDetail();
+	const { showDetail, closeDetail, clickedEventId } = useDetail();
 	const { isMobile, handleResizeStart, sidePanelStyle } =
 		useResizableSidePanel();
 
@@ -84,14 +84,14 @@ const MemoPage = () => {
 			if (!sidePanelRef.current) return;
 			const isInside = sidePanelRef.current.contains(event.target as Node);
 			if (!isInside) {
-				setShowDetail(false);
+				closeDetail();
 			}
 		}
 		document.addEventListener("mousedown", handleClickOutside);
 		return () => {
 			document.removeEventListener("mousedown", handleClickOutside);
 		};
-	}, [setShowDetail]);
+	}, [closeDetail]);
 
 	const handleDelete = async () => {
 		if (deletingMemoId) await deleteMemo(deletingMemoId);
