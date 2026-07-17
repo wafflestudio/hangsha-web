@@ -67,6 +67,7 @@ export default function Home() {
 				<div className={styles.box}>
 					<div className={styles.brand}>
 						<p className={styles.tagline}>행사 찾느라 헤매지 말고</p>
+						<img className={styles.logo} src="/assets/logo.png" alt="" />
 						<h1 className={styles.title}>행샤</h1>
 					</div>
 
@@ -106,6 +107,8 @@ export default function Home() {
 							로그인
 						</button>
 					</form>
+
+					<div className={styles.divider} aria-hidden="true" />
 
 					<div className={styles.actions}>
 						<button
