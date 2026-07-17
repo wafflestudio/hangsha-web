@@ -1,6 +1,6 @@
 import { useState, type KeyboardEvent, type MouseEvent } from "react";
 import { CATEGORY_COLORS, CATEGORY_LIST } from "@/util/constants";
-import { getDDay } from "@/util/Calendar/getDday";
+import { getDDay } from "@/util/calendar/getDday";
 import type { HighlightSearchItem } from "@/util/types";
 import { useUserData } from "@/contexts/UserDataContext";
 import { useAuth } from "@/contexts/AuthProvider";

@@ -3,7 +3,7 @@ import { getDayEvents, getMonthEvents } from "@api/event";
 import { formatDateToYYYYMMDD } from "@calendarUtil/dateFormatter";
 import { getMonthRange } from "@calendarUtil/getMonthRange";
 import type { Category, Event, MonthViewResponse } from "@types";
-import { getWeekRangeByDate } from "@/util/Calendar/getWeekRange";
+import { getWeekRangeByDate } from "@/util/calendar/getWeekRange";
 
 type Filters = {
 	statusId?: number[];
