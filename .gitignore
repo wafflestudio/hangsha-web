@@ -29,3 +29,6 @@ dist-ssr
 .claude/*
 .cluade/settings.json
 settings.json
+
+# use yarn instead of npm
+package-lock.json
