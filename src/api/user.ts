@@ -1,4 +1,4 @@
-import { transformEvent } from "@calendarUtil/transformEvent";
+import { transformEvent } from "@/util/calendar/transformEvent";
 import type { Category, EventDTO, Memo, MemoTag } from "@types";
 import api from "./axios";
 

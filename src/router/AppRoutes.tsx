@@ -3,15 +3,15 @@ import Home from "../pages/auth/Home";
 import Login from "../pages/auth/Login/Login";
 import LoginHandler from "../pages/auth/Login/SocialLoginHandler";
 import EmailSignUp from "../pages/auth/Signup/EmailSignUp";
-import CalendarView from "../pages/CalendarView";
-import MainDay from "../pages/MainDay";
+import CalendarView from "../pages/calendar/CalendarView";
+import MainDay from "../pages/calendar/MainDay";
 import TimetablePage from "../pages/timetable/TimetablePage";
 import SearchView from "@/pages/search/Search";
 import BookmarksPage from "@/pages/bookmark/Bookmark";
 import MemoPage from "@/pages/memo/Memo";
-import MyPage from "@/pages/MyPage";
+import MyPage from "@/pages/mypage/MyPage";
 import AdminRoute from "@/router/AdminRoute";
-import AdminEventsPage from "@/pages/AdminEvents";
+import AdminEventsPage from "@/pages/admin/AdminEvents";
 import PageViewTracker from "@/router/PageViewTracker";
 
 export default function AppRoutes() {

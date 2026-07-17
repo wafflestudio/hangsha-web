@@ -1,6 +1,6 @@
 import { createContext, type ReactNode, useCallback, useContext } from "react";
 import { useLocation, useSearchParams } from "react-router-dom";
-import { parseDateFromYYYYMMDD } from "@calendarUtil/dateFormatter";
+import { parseDateFromYYYYMMDD } from "@/util/calendar/dateFormatter";
 
 interface DetailContextType {
 	showDetail: boolean;

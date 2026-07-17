@@ -27,9 +27,9 @@ import {
 	useDayEvents,
 } from "@/contexts/useCalendarEvents";
 import { useTimetable } from "@/contexts/TimetableContext";
-import { useMainPanelQuery } from "@/pages/useMainPanelQuery";
-import { useCalendarViewQuery } from "@/pages/useCalendarViewQuery";
-import { formatDateToYYYYMMDD } from "@calendarUtil/dateFormatter";
+import { useMainPanelQuery } from "@/pages/calendar/hooks/useMainPanelQuery";
+import { useCalendarViewQuery } from "@/pages/calendar/hooks/useCalendarViewQuery";
+import { formatDateToYYYYMMDD } from "@/util/calendar/dateFormatter";
 
 const getSemesterByDate = (date: Date): Semester => {
 	const month = date.getMonth() + 1;

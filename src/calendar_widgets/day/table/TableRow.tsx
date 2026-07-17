@@ -1,5 +1,5 @@
 import type { CalendarEvent } from "@types";
-import { getDDay } from "@calendarUtil/getDday";
+import { getDDay } from "@/util/calendar/getDday";
 import { CATEGORY_COLORS } from "@constants";
 import { CATEGORY_LIST } from "@constants";
 // import { formatDateToMMDD } from "@calendarUtil/dateFormatter";

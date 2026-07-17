@@ -3,7 +3,7 @@ import { useSearchParams } from "react-router-dom";
 import {
 	formatDateToYYYYMMDD,
 	parseDateFromYYYYMMDD,
-} from "@calendarUtil/dateFormatter";
+} from "@/util/calendar/dateFormatter";
 
 export const useMainPanelQuery = () => {
 	const [searchParams, setSearchParams] = useSearchParams();

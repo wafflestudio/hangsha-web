@@ -11,8 +11,8 @@ import {
 	getEventSearch,
 	getMonthEvents,
 } from "@api/event";
-import { formatDateToYYYYMMDD } from "@calendarUtil/dateFormatter";
-import { getMonthRange } from "@calendarUtil/getMonthRange";
+import { formatDateToYYYYMMDD } from "@/util/calendar/dateFormatter";
+import { getMonthRange } from "@/util/calendar/getMonthRange";
 import type {
 	DayViewParams,
 	Event,
