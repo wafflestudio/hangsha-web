@@ -1,4 +1,4 @@
-import { formatDateDotParsed } from "@/util/Calendar/dateFormatter";
+import { formatDateDotParsed } from "@/util/calendar/dateFormatter";
 import type { Memo } from "@/util/types";
 import {
 	useEffect,

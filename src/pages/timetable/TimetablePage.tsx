@@ -15,7 +15,7 @@ import {
 	config,
 } from "../../util/weekly_timetable/layout";
 import calendarEventMapper from "../../util/Calendar/calendarEventMapper";
-import { formatDateToMMDD } from "../../util/Calendar/dateFormatter";
+import { formatDateToMMDD } from "../../util/calendar/dateFormatter";
 import { getWeekRangeByDate } from "../../util/Calendar/getWeekRange";
 import { TimetableGrid } from "./TimetableGrid";
 import styles from "./Timetable.module.css";
