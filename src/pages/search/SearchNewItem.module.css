@@ -1,0 +1,163 @@
+.variantA {
+	font-family:
+		-apple-system, BlinkMacSystemFont, "Pretendard", "Apple SD Gothic Neo",
+		sans-serif;
+	display: flex;
+	align-items: flex-start;
+	gap: 20px;
+	padding: 24px 0;
+	border-bottom: 1px solid #f0f0f0;
+	cursor: pointer;
+	transition: background 0.15s;
+}
+.variantA:hover {
+	background: #fafafa;
+	border-radius: 8px;
+	padding-left: 12px;
+	padding-right: 12px;
+	margin: 0 -12px;
+}
+.variantA:last-child {
+	border-bottom: none;
+}
+
+.aContent {
+	flex: 1;
+	min-width: 0;
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+}
+
+.aCategoryChip {
+	display: inline-block;
+	font-size: 13px;
+	font-weight: 600;
+	color: #111111;
+	padding: 4px 8px;
+	border-radius: 6px;
+	white-space: nowrap;
+}
+
+.aTitle {
+	min-width: 0;
+	font-size: 17px;
+	font-weight: 700;
+	color: #111;
+	line-height: 1.45;
+	margin: 0;
+	display: -webkit-box;
+	-webkit-line-clamp: 2;
+	-webkit-box-orient: vertical;
+	overflow: hidden;
+}
+
+.aBookmarkColumn {
+	flex-shrink: 0;
+	align-self: stretch;
+	width: 32px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.aBookmarkBtn {
+	flex-shrink: 0;
+	background: none;
+	border: none;
+	padding: 0;
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.aBookmarkBtn img {
+	width: 23px;
+	height: 23px;
+}
+
+/* backend highlight <mark> tags */
+.aTitle mark,
+.aBody mark {
+	background: #fff176;
+	color: inherit;
+	border-radius: 2px;
+	padding: 0 1px;
+}
+
+.aBody {
+	font-size: 13.5px;
+	color: #666;
+	line-height: 1.65;
+	margin: 0;
+	display: -webkit-box;
+	-webkit-line-clamp: 3;
+	-webkit-box-orient: vertical;
+	overflow: hidden;
+}
+
+.aFooter {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	margin-top: 4px;
+	flex-wrap: wrap;
+}
+
+.aDday {
+	font-size: 13px;
+	font-weight: 600;
+	color: #333333;
+	padding: 4px 8px;
+	background-color: #ffffff;
+	border: 1px solid #e0e0e0;
+	border-radius: 6px;
+	white-space: nowrap;
+}
+
+.aDate {
+	font-size: 12.5px;
+	color: #888;
+}
+
+.aSep {
+	font-size: 12px;
+	color: #ccc;
+}
+
+.aOrg {
+	font-size: 12.5px;
+	color: #555;
+	font-weight: 500;
+}
+
+.aThumbnail {
+	flex-shrink: 0;
+	width: 168px;
+	height: 116px;
+	border-radius: 10px;
+	overflow: hidden;
+	border: 1px solid #eee;
+	background: #f5f5f5;
+}
+
+.aThumbnail img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	display: block;
+}
+
+@media (max-width: 600px) {
+	.aThumbnail {
+		width: 110px;
+		height: 76px;
+	}
+	.aTitle {
+		font-size: 15px;
+	}
+	.aBody {
+		-webkit-line-clamp: 2;
+	}
+}
