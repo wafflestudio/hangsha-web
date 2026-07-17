@@ -25,7 +25,7 @@ const DetailView = ({ eventId }: { eventId: number }) => {
 	const { toggleBookmark } = useUserData();
 	const { fetchEventById, detailError, isLoadingDetail, clearError } =
 		useEvents();
-	const { setShowDetail } = useDetail();
+	const { closeDetail } = useDetail();
 	const { user } = useAuth();
 	const navigate = useNavigate();
 
@@ -129,11 +129,7 @@ const DetailView = ({ eventId }: { eventId: number }) => {
 					onClose={() => setIsLoginModalOpen(false)}
 				/>
 			)}
-			<button
-				type="button"
-				className={styles.foldBtn}
-				onClick={() => setShowDetail(false)}
-			>
+			<button type="button" className={styles.foldBtn} onClick={closeDetail}>
 				<FaAnglesRight width={28} height={28} color="rgba(171, 171, 171, 1)" />
 			</button>
 
