@@ -1,4 +1,4 @@
-import { transformEvent } from "@calendarUtil/transformEvent";
+import { transformEvent } from "@/util/calendar/transformEvent";
 import type {
 	OrgsResponse,
 	CategoryGroupWithCategoriesResponse,
@@ -74,7 +74,9 @@ export const getEventSearch = async (
 export const getEventSearchFull = async (
 	params: SearchParams,
 ): Promise<HighlightSearchResult> => {
-	const res = await api.get<HighlightSearchResultDTO>("/events/search", { params });
+	const res = await api.get<HighlightSearchResultDTO>("/events/search", {
+		params,
+	});
 	return {
 		...res.data,
 		items: (res.data.items ?? []).map((item) => ({
