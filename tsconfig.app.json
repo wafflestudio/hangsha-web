@@ -26,7 +26,7 @@
 		"paths": {
 			"@/*": ["./src/*"],
 			"@styles/*": ["./src/styles/*"],
-			"@calendarUtil/*": ["./src/util/Calendar/*"],
+			"@calendarUtil/*": ["./src/util/calendar/*"],
 			"@types": ["./src/util/types"],
 			"@contexts/*": ["./src/contexts/*"],
 			"@constants": ["./src/util/constants"],
