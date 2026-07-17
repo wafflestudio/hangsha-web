@@ -12,6 +12,7 @@ import CustomWeekView from "./week/CustomWeekView";
 import { useEvents } from "@/contexts/EventContext";
 import { useTimetable } from "@/contexts/TimetableContext";
 import calendarEventMapper from "@/util/Calendar/calendarEventMapper";
+import { sortMonthCalendarEvents } from "@/util/Calendar/sortMonthCalendarEvents";
 
 const eventPropGetter = () => {
 	return {
@@ -93,15 +94,7 @@ export const MyCalendar = ({
 			calendarEventMapper(e, currentView),
 		);
 		if (currentView !== Views.MONTH) return mapped;
-		// Single-day events first so they win the lower row slots in the
-		// month-view layout; multi-day strips push down into "+N more".
-		const isSingleDay = (e: (typeof mapped)[number]) =>
-			e.start instanceof Date &&
-			e.end instanceof Date &&
-			e.start.toDateString() === e.end.toDateString();
-		return [...mapped].sort(
-			(a, b) => Number(!isSingleDay(a)) - Number(!isSingleDay(b)),
-		);
+		return sortMonthCalendarEvents(mapped);
 	}, [currentEvents, currentView]);
 
 	/** Calendar format */
