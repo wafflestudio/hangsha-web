@@ -3,9 +3,10 @@ import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./DetailView.module.css";
 import { getDDay } from "../../../util/Calendar/getDday";
+import { getEventDDayTargetDate } from "@/util/Calendar/getEventDDayTargetDate";
 import { CATEGORY_COLORS, CATEGORY_LIST } from "@constants";
 import { FaAnglesRight, FaLocationDot } from "react-icons/fa6";
-import type { CalendarEvent, EventDetail } from "@types";
+import type { EventDetail } from "@types";
 import parse from "html-react-parser";
 import { sanitizeDetail } from "@/util/sanitizeDetail";
 import { useUserData } from "@/contexts/UserDataContext";
@@ -14,14 +15,10 @@ import { useAuth } from "@/contexts/AuthProvider";
 import DetailMemo from "./DetailMemo";
 import Modal, { ErrorModal } from "../../ui/Modal";
 import Loading from "../../ui/Loading";
-import calendarEventMapper from "@/util/Calendar/calendarEventMapper";
 import EventDate from "../../feature/eventDate/EventDate";
 
 const DetailView = ({ eventId }: { eventId: number }) => {
 	const [event, setEvent] = useState<EventDetail>();
-	const [calendarEvent, setCalendarEvent] = useState<CalendarEvent | null>(
-		event ? calendarEventMapper(event, "day") : null,
-	);
 	const { toggleBookmark } = useUserData();
 	const { fetchEventById, detailError, isLoadingDetail, clearError } =
 		useEvents();
@@ -61,7 +58,6 @@ const DetailView = ({ eventId }: { eventId: number }) => {
 		const loadEvent = async () => {
 			const event = await fetchEventById(eventId);
 			setEvent(event ?? undefined);
-			if (event) setCalendarEvent(calendarEventMapper(event, "day"));
 		};
 		loadEvent();
 		// scroll to top of component
@@ -71,9 +67,7 @@ const DetailView = ({ eventId }: { eventId: number }) => {
 	}, [eventId, fetchEventById]);
 
 	// 디데이 계산할 기준 날짜
-	const ddayTargetDate = calendarEvent?.resource.isPeriodEvent
-		? calendarEvent.end
-		: calendarEvent?.start;
+	const ddayTargetDate = getEventDDayTargetDate(event);
 
 	const [isBookmarked, setIsBookmarked] = useState<boolean>(
 		!!event?.isBookmarked,

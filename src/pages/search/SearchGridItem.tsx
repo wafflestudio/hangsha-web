@@ -1,6 +1,7 @@
 import { useState, type KeyboardEvent, type MouseEvent } from "react";
 import { CATEGORY_COLORS, CATEGORY_LIST } from "@/util/constants";
 import { getDDay } from "@/util/Calendar/getDday";
+import { getEventDDayTargetDate } from "@/util/Calendar/getEventDDayTargetDate";
 import type { HighlightSearchItem } from "@/util/types";
 import { useUserData } from "@/contexts/UserDataContext";
 import { useAuth } from "@/contexts/AuthProvider";
@@ -24,7 +25,7 @@ interface GridItemProps {
 const SearchGridItem = ({ item, onClick, onLoginPrompt }: GridItemProps) => {
 	const { event, highlight } = item;
 
-	const dday = getDDay(event.applyEnd);
+	const dday = getDDay(getEventDDayTargetDate(event));
 	const catColor = CATEGORY_COLORS[event.eventTypeId];
 	const dateStr = formatDateRange(event.eventStart, event.eventEnd);
 
