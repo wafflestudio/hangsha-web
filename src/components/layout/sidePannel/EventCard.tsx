@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
 import styles from "./CardView.module.css";
 import { getDDay } from "@calendarUtil/getDday";
+import { getEventDDayTargetDate } from "@calendarUtil/getEventDDayTargetDate";
 import { CATEGORY_COLORS, CATEGORY_LIST } from "@constants";
 import type { Event } from "@types";
 import { useUserData } from "@/contexts/UserDataContext";
@@ -8,7 +9,7 @@ import { StartDate } from "@/components/feature/eventDate/EventDate";
 import { useAuth } from "@/contexts/AuthProvider";
 
 const MobileChipsList = ({ event }: { event: Event }) => {
-	const ddayTargetDate = event.applyEnd;
+	const ddayTargetDate = getEventDDayTargetDate(event);
 	const [expanded, setExpanded] = useState(false);
 	const timerRef = useRef<number | null>(null);
 
@@ -50,13 +51,14 @@ const MobileChipsList = ({ event }: { event: Event }) => {
 					</span>
 				</button>
 			</li>
+			{/* TODO: 비기간 행사는 행사 시작 D-day라서 '지원' 레이블 유지 여부 확인 필요 */}
 			<span className={styles.ddayTargetDate}>{`지원 ${getDDay(ddayTargetDate)}`}</span>
 		</ul>
 	)
 }
 
 const EventCard = ({ event, onLoginPrompt, fullWidth = false }: { event: Event; onLoginPrompt?: () => void; fullWidth?: boolean; }) => {
-	const ddayTargetDate = event.applyEnd;
+	const ddayTargetDate = getEventDDayTargetDate(event);
 	const {user} = useAuth();
 
 	const [isBookmarked, setIsBookmarked] = useState<boolean>(
@@ -107,6 +109,7 @@ const EventCard = ({ event, onLoginPrompt, fullWidth = false }: { event: Event; 
 				<span className={styles.orgText}>{event.organization}</span>
 			</div>
 			<ul className={styles.chipsList}>
+				{/* TODO: 비기간 행사는 행사 시작 D-day라서 '지원' 레이블 유지 여부 확인 필요 */}
 				<li className={styles.deadlineChip}>{`지원 ${getDDay(ddayTargetDate)}`}</li>
 				<li
 					className={styles.categoryChip}
