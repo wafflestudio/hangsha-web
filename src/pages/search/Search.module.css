@@ -1,114 +1,141 @@
 body {
-  overflow: hidden;
-  padding: 0;
-  margin: 0;
+	overflow: hidden;
+	padding: 0;
+	margin: 0;
 }
 
 .container {
-  display: flex;
-  flex-direction: row;
-  width: 100vw;
-  height: 100vh;
-  overflow: hidden;
-  background-color: #ffffff;
-  padding: 0;
-  font-family:
-    "Pretendard",
-    -apple-system,
-    BlinkMacSystemFont,
-    system-ui,
-    Roboto,
-    sans-serif;
+	display: flex;
+	flex-direction: row;
+	width: 100vw;
+	height: 100vh;
+	overflow: hidden;
+	background-color: #ffffff;
+	padding: 0;
+	font-family:
+		"Pretendard", -apple-system, BlinkMacSystemFont, system-ui, Roboto,
+		sans-serif;
 }
 
 .restContainer {
-  flex-grow: 1;
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  padding: 20px 44px 20px 44px;
-  box-sizing: border-box;
-  /* position: relative; */
-  overflow-y: auto;
-  transition: flex-basis 0.3s ease;
+	flex-grow: 1;
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+	padding: 20px 44px 20px 44px;
+	box-sizing: border-box;
+	/* position: relative; */
+	overflow-y: auto;
+	transition: flex-basis 0.3s ease;
 
-  -ms-overflow-style: none;
-  scrollbar-width: none;
+	-ms-overflow-style: none;
+	scrollbar-width: none;
 }
 
 .restContainer::-webkit-scrollbar {
-  display: none;
+	display: none;
 }
 
 .sidePanel {
-  position: absolute;
-  right: 0;
-  top: 0;
+	position: absolute;
+	right: 0;
+	top: 0;
 
-  max-width: 40%;
-  height: 100%;
-  border-left: 1px solid #e0e0e0;
-  background-color: #ffffff;
-  box-shadow: -4px 0 24px rgba(0, 0, 0, 0.05);
-  z-index: 20;
-  overflow-y: auto;
-  flex-shrink: 0;
-  animation: slideIn 0.3s ease-out;
+	max-width: 40%;
+	height: 100%;
+	border-left: 1px solid #e0e0e0;
+	background-color: #ffffff;
+	box-shadow: -4px 0 24px rgba(0, 0, 0, 0.05);
+	z-index: 20;
+	overflow-y: auto;
+	flex-shrink: 0;
+	animation: slideIn 0.3s ease-out;
 }
 
 @keyframes slideIn {
-  from {
-    transform: translateX(100%);
-    opacity: 0;
-  }
-  to {
-    transform: translateX(0);
-    opacity: 1;
-  }
+	from {
+		transform: translateX(100%);
+		opacity: 0;
+	}
+	to {
+		transform: translateX(0);
+		opacity: 1;
+	}
 }
 @media (max-width: 1024px) {
-  .sidePanel {
-    width: 340px;
-  }
+	.sidePanel {
+		width: 340px;
+	}
 }
 
 .noResult {
-  display: flex;
-  flex: 1;
-  align-items: center;
-  justify-content: center;
+	display: flex;
+	flex: 1;
+	align-items: center;
+	justify-content: center;
 }
 .noResult span {
-  font-weight: 500;
-  color: #a3a3a3;
+	font-weight: 500;
+	color: #a3a3a3;
+}
+
+.resultCount {
+	font-size: 13px;
+	color: #9ca3af;
+	margin-bottom: 6px;
+}
+
+.listContainer {
+	flex: 1;
+}
+
+.gridContainer {
+	flex: 1;
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: 32px 24px;
+	margin-top: 24px;
 }
 
 .dropdownRow {
-  display: flex;
-  justify-content: flex-end; /* Align to right */
-  margin-bottom: 1rem;
-  padding-right: 1rem;
+	display: flex;
+	justify-content: flex-end;
+	margin-bottom: 0.75rem;
 }
 
 .sizeSelectContainer {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 0.9rem;
-  color: #666;
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	font-size: 0.9rem;
+	color: #666;
+}
+
+.sizeLabel {
+	white-space: nowrap;
 }
 
 .sizeSelect {
-  padding: 4px 8px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  background-color: white;
-  cursor: pointer;
-  outline: none;
+	padding: 4px 8px;
+	border: 1px solid #ddd;
+	border-radius: 4px;
+	background-color: white;
+	cursor: pointer;
+	outline: none;
+}
+
+@media (max-width: 1024px) {
+	.gridContainer {
+		grid-template-columns: repeat(2, 1fr);
+	}
 }
 
 @media (max-width: 576px) {
-  .restContainer {
-    padding: 10px 10px 124px 10px;
-  }
+	.restContainer {
+		padding: 10px 10px 124px 10px;
+	}
+	.gridContainer {
+		grid-template-columns: 1fr;
+		gap: 20px;
+	}
 }
