@@ -8,7 +8,7 @@ import { StartDate } from "@/components/feature/eventDate/EventDate";
 import { useAuth } from "@/contexts/AuthProvider";
 
 const MobileChipsList = ({ event }: { event: Event }) => {
-	const ddayTargetDate = event.applyEnd;
+	const ddayTargetDate = event.applyEnd || null;
 	const [expanded, setExpanded] = useState(false);
 	const timerRef = useRef<number | null>(null);
 
@@ -50,7 +50,7 @@ const MobileChipsList = ({ event }: { event: Event }) => {
 					</span>
 				</button>
 			</li>
-			<span className={styles.ddayTargetDate}>{`지원 ${getDDay(ddayTargetDate)}`}</span>
+			{ddayTargetDate && <span className={styles.ddayTargetDate}>{`지원 ${getDDay(ddayTargetDate)}`}</span>}
 		</ul>
 	)
 }

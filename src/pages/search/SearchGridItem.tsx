@@ -24,7 +24,7 @@ interface GridItemProps {
 const SearchGridItem = ({ item, onClick, onLoginPrompt }: GridItemProps) => {
 	const { event, highlight } = item;
 
-	const dday = getDDay(event.applyEnd);
+	const ddayTargetDate = event.applyEnd || null;
 	const catColor = CATEGORY_COLORS[event.eventTypeId];
 	const dateStr = formatDateRange(event.eventStart, event.eventEnd);
 
@@ -101,7 +101,7 @@ const SearchGridItem = ({ item, onClick, onLoginPrompt }: GridItemProps) => {
 				<span className={styles.gOrg}>{event.organization}</span>
 			</div>
 			<ul className={styles.gChipsList}>
-				<li className={styles.gDday}>{`지원 ${dday}`}</li>
+				{ddayTargetDate && <li className={styles.gDday}>{`지원 ${getDDay(ddayTargetDate)}`}</li>}
 				<li
 					className={styles.gCategoryChip}
 					style={{ backgroundColor: catColor }}

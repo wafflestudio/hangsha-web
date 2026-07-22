@@ -8,7 +8,7 @@ import { ApplyDate, StartDate } from "@/components/feature/eventDate/EventDate";
 
 const TableRow = ({ data }: { data: CalendarEvent }) => {
 	const event = data.resource.event;
-	const ddayTargetDate = data?.resource.isPeriodEvent ? data.end : data.start;
+	const ddayTargetDate = data.resource.event.applyEnd || null; // 지원 마감 기한
 
 	const { openDetail } = useDetail();
 
@@ -28,7 +28,9 @@ const TableRow = ({ data }: { data: CalendarEvent }) => {
 
 			<td>{event.title}</td>
 			<td>
-				<li>{getDDay(ddayTargetDate)}</li>
+			{ddayTargetDate &&
+				<li>{`지원 ${getDDay(ddayTargetDate)}`}</li>
+				}
 			</td>
 			<td>
 				<li style={{ backgroundColor: CATEGORY_COLORS[event.eventTypeId] }}>
