@@ -1,0 +1,518 @@
+.timetableToolbarContainer {
+	display: flex;
+	margin-top: 70px;
+	margin-left: 30px;
+	margin-right: 30px;
+	flex-direction: column;
+	margin-bottom: 1.5rem;
+	z-index: 1;
+}
+
+.profileButton > img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+.headerRow {
+	display: flex;
+	align-items: flex-start;
+	justify-content: space-between;
+}
+
+.dateTitle {
+	font-size: 1.5rem;
+	font-weight: 700;
+	color: #111827;
+	margin: 0;
+	padding-left: 5px;
+}
+
+.mobileTimetableTitle {
+	display: none;
+}
+
+.mobileTimetableTitleGroup {
+	display: none;
+}
+
+.mobileEventWeekLabel {
+	display: none;
+}
+
+.mobileWeekNavGroup {
+	display: none;
+}
+
+.selectCurrentTimetableButton {
+	display: inline-flex;
+	flex: 0 0 auto;
+	align-items: center;
+	gap: 9px;
+	height: 36px;
+	padding: 0;
+	border: none;
+	outline: none;
+	background: transparent;
+	color: #111827;
+	font-size: 15px;
+	font-weight: 500;
+	white-space: nowrap;
+	cursor: pointer;
+}
+
+.currentTimetableCheckbox {
+	position: relative;
+	appearance: none;
+	flex: 0 0 auto;
+	margin: 0;
+	width: 20px;
+	height: 20px;
+	border: 1.5px solid #9ca3af;
+	border-radius: 5px;
+	background: #ffffff;
+	transition:
+		border-color 0.15s ease,
+		background-color 0.15s ease;
+}
+
+.currentTimetableCheckbox:checked {
+	border-color: #facc15;
+	background: #facc15;
+}
+
+.currentTimetableCheckbox:checked::after {
+	content: "";
+	position: absolute;
+	top: 3px;
+	left: 6px;
+	width: 5px;
+	height: 9px;
+	border-right: 2px solid #ffffff;
+	border-bottom: 2px solid #ffffff;
+	transform: rotate(45deg);
+}
+
+.selectCurrentTimetableButton:hover .currentTimetableCheckbox {
+	border-color: #eab308;
+}
+
+.currentTimetableCheckbox:focus-visible {
+	outline: none;
+	box-shadow: 0 0 0 3px rgba(250, 204, 21, 0.25);
+}
+
+.selectCurrentTimetableButton:has(.currentTimetableCheckbox:disabled) {
+	opacity: 0.45;
+	cursor: wait;
+}
+
+.profileRow {
+	display: flex;
+	flex-flow: row nowrap;
+	align-items: center;
+	justify-content: flex-end;
+	gap: 0.75rem;
+}
+
+.profileButton {
+	width: 35px;
+	height: 35px;
+	border: none;
+	background: transparent;
+	padding: 0;
+	cursor: pointer;
+	border-radius: 50%;
+	overflow: hidden;
+}
+
+.selectGroup {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	gap: 18px;
+	min-width: 0;
+}
+
+.timetableControlRow {
+	display: flex;
+	align-items: center;
+	gap: 36px;
+}
+
+.semesterSelectGroup {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	flex: 0 0 auto;
+}
+
+.timetableToggleGroup {
+	display: none;
+	flex-direction: column;
+	align-items: flex-start;
+	gap: 4px;
+	flex: 0 0 auto;
+}
+
+.timetableToggleLabel {
+	font-size: 12px;
+	font-weight: 500;
+	line-height: 1;
+	color: #6b7280;
+	white-space: nowrap;
+}
+
+.timetableToggle {
+	position: relative;
+	flex: 0 0 auto;
+	width: 42px;
+	height: 24px;
+	padding: 0;
+	border: none;
+	border-radius: 999px;
+	background: #d8d8d8;
+	cursor: pointer;
+	transition: background-color 0.2s ease;
+}
+
+.timetableToggleThumb {
+	position: absolute;
+	top: 3px;
+	left: 3px;
+	width: 18px;
+	height: 18px;
+	border-radius: 50%;
+	background: #ffffff;
+	box-shadow: 0 1px 4px rgba(0, 0, 0, 0.18);
+	transition: transform 0.2s ease;
+}
+
+.timetableToggleOn {
+	background: #20c4dd;
+}
+
+.timetableToggleOn .timetableToggleThumb {
+	transform: translateX(18px);
+}
+
+.selectWrap {
+	position: relative;
+	display: inline-flex;
+	align-items: center;
+}
+
+.select {
+	appearance: none;
+	-webkit-appearance: none;
+	-moz-appearance: none;
+
+	height: 36px;
+	border: none;
+	color: #111;
+	font-size: 15px;
+	font-weight: 500;
+	cursor: pointer;
+	outline: none;
+}
+
+.select:hover {
+	background: #fafafa;
+}
+
+.select:disabled {
+	color: #8a8a8a;
+	cursor: wait;
+	background: #f7f7f7;
+}
+
+.select:focus {
+	border-color: #d0d0d0;
+	box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.04);
+}
+
+.selectWrap::after {
+	content: "";
+	position: absolute;
+	right: 12px;
+	width: 8px;
+	height: 8px;
+	border-right: 2px solid #8a8a8a;
+	border-bottom: 2px solid #8a8a8a;
+	transform: rotate(45deg);
+	pointer-events: none;
+}
+
+.timetableToolbarContainer .select {
+	height: 32px;
+	padding: 0 30px 0 0;
+	border-radius: 10px;
+	font-size: 15px;
+}
+
+.timetableToolbarContainer .selectWrap::after {
+	right: 11px;
+	width: 7px;
+	height: 7px;
+}
+
+@media (min-width: 577px) {
+	.timetableToolbarContainer .semesterSelectGroup {
+		gap: 15px;
+	}
+}
+
+@media (max-width: 576px) {
+	.timetableToolbarContainer {
+		margin: 0;
+		padding: 56px 20px 0;
+		margin-bottom: 20px;
+		background: #ffffff;
+	}
+
+	.timetableToolbarContainer .headerRow {
+		align-items: center;
+	}
+
+	.timetableToolbarContainer .selectGroup {
+		display: grid;
+		flex: 1;
+		grid-template-columns: minmax(0, 1fr) auto;
+		gap: 10px 8px;
+	}
+
+	.timetableToolbarContainer .timetableControlRow {
+		display: contents;
+	}
+
+	.timetableToolbarContainer .semesterSelectGroup {
+		display: inline-flex;
+		grid-column: 1;
+		grid-row: 2;
+		min-width: 0;
+	}
+
+	.timetableToolbarContainer .selectWrap {
+		display: inline-flex;
+		min-width: 0;
+	}
+
+	.timetableToolbarContainer .select {
+		width: 100%;
+		height: 34px;
+		padding: 0 30px 0 0;
+		font-size: 13px;
+	}
+
+	.timetableToolbarContainer .dateTitle {
+		display: none;
+	}
+
+	.timetableToolbarContainer .mobileTimetableTitleGroup {
+		display: flex;
+		grid-column: 1;
+		grid-row: 1;
+		min-width: 0;
+		align-items: center;
+	}
+
+	.timetableToolbarContainer .mobileTimetableTitle {
+		display: block;
+		min-width: 0;
+		margin: 0;
+		padding-left: 0;
+		overflow: hidden;
+		font-size: 18px;
+		font-weight: 700;
+		color: #111827;
+		line-height: 1.25;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+
+	.timetableToolbarContainer .mobileEventWeekLabel {
+		display: block;
+		margin: 0;
+		text-align: right;
+		color: #777777;
+		font-size: 12px;
+		font-weight: 500;
+		line-height: 1.2;
+	}
+
+	.timetableToolbarContainer .mobileWeekNavGroup {
+		display: flex;
+		grid-column: 2;
+		grid-row: 1 / span 2;
+		align-items: flex-end;
+		justify-content: center;
+		flex-direction: column;
+		gap: 3px;
+	}
+
+	.timetableToolbarContainer .mobileWeekNavButtons {
+		display: inline-flex;
+		justify-content: flex-end;
+		gap: 4px;
+	}
+
+	.timetableToolbarContainer .mobileWeekNavButton {
+		display: inline-flex;
+		width: 30px;
+		height: 30px;
+		align-items: center;
+		justify-content: center;
+		padding: 0;
+		border: none;
+		border-radius: 999px;
+		background: #f3f4f6;
+		color: #374151;
+		font-size: 18px;
+		line-height: 1;
+		cursor: pointer;
+	}
+
+	.timetableToolbarContainer .timetableToggleGroup {
+		display: inline-flex;
+		grid-column: 1 / -1;
+		grid-row: 3;
+		width: fit-content;
+		flex-direction: row;
+		align-items: center;
+		gap: 10px;
+	}
+
+	.timetableToolbarContainer .selectCurrentTimetableButton {
+		display: none;
+	}
+
+	.timetableToolbarContainer .profileRow {
+		display: none;
+	}
+
+	.dateTitle {
+		font-size: 1.1rem;
+		font-weight: 600;
+		padding-bottom: 0px;
+	}
+}
+
+@media (min-width: 1400px) {
+	.dateTitle {
+		font-size: 1.8rem;
+	}
+
+	.profileRow {
+		gap: 0.9rem;
+	}
+
+	.profileButton {
+		width: 42px;
+		height: 42px;
+	}
+
+	.selectGroup {
+		gap: 30px;
+	}
+
+	.semesterSelectGroup {
+		gap: 10px;
+	}
+
+	.timetableToggleGroup {
+		gap: 5px;
+	}
+
+	.timetableToggleLabel {
+		font-size: 14px;
+	}
+
+	.timetableToggle {
+		width: 50px;
+		height: 28px;
+	}
+
+	.timetableToggleThumb {
+		top: 3px;
+		left: 3px;
+		width: 22px;
+		height: 22px;
+	}
+
+	.timetableToggleOn .timetableToggleThumb {
+		transform: translateX(22px);
+	}
+
+	.select {
+		height: 43px;
+		padding: 0 40px 0 14px;
+		font-size: 17px;
+		border-radius: 14px;
+	}
+
+	.selectWrap::after {
+		right: 14px;
+		width: 10px;
+		height: 10px;
+	}
+}
+
+@media (min-width: 2000px) {
+	.dateTitle {
+		font-size: 2.25rem;
+	}
+
+	.profileRow {
+		gap: 1.125rem;
+	}
+
+	.profileButton {
+		width: 52px;
+		height: 52px;
+	}
+
+	.selectGroup {
+		gap: 37px;
+	}
+
+	.semesterSelectGroup {
+		gap: 12px;
+	}
+
+	.timetableToggleGroup {
+		gap: 6px;
+	}
+
+	.timetableToggleLabel {
+		font-size: 18px;
+	}
+
+	.timetableToggle {
+		width: 64px;
+		height: 36px;
+	}
+
+	.timetableToggleThumb {
+		top: 4px;
+		left: 4px;
+		width: 28px;
+		height: 28px;
+	}
+
+	.timetableToggleOn .timetableToggleThumb {
+		transform: translateX(28px);
+	}
+
+	.select {
+		height: 54px;
+		padding: 0 50px 0 18px;
+		font-size: 21px;
+		border-radius: 18px;
+	}
+
+	.selectWrap::after {
+		right: 18px;
+		width: 12px;
+		height: 12px;
+	}
+}
