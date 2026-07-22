@@ -6,6 +6,7 @@ import type { Event } from "@types";
 import { useUserData } from "@/contexts/UserDataContext";
 import { StartDate } from "@/components/feature/eventDate/EventDate";
 import { useAuth } from "@/contexts/AuthProvider";
+import { CategoryChip, DdayChip } from "@/components/feature/eventChip/EventChip";
 
 const MobileChipsList = ({ event }: { event: Event }) => {
 	const ddayTargetDate = event.applyEnd || null;
@@ -107,15 +108,14 @@ const EventCard = ({ event, onLoginPrompt, fullWidth = false }: { event: Event; 
 				<span className={styles.orgText}>{event.organization}</span>
 			</div>
 			<ul className={styles.chipsList}>
-				{ddayTargetDate && <li className={styles.deadlineChip}>{`지원 ${getDDay(ddayTargetDate)}`}</li>}
-				<li
-					className={styles.categoryChip}
-					style={{
-						backgroundColor: CATEGORY_COLORS[event.eventTypeId],
-					}}
-				>
-					{CATEGORY_LIST[event.eventTypeId]}
-				</li>
+				{ddayTargetDate && (
+					<DdayChip as="li" className={styles.cardChip} targetDate={ddayTargetDate} />
+				)}
+				<CategoryChip
+					as="li"
+					categoryId={event.eventTypeId}
+					className={styles.cardChip}
+				/>
 			</ul>
 			<span className={styles.orgText}>{event.organization}</span>
 		</div>
