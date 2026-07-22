@@ -63,8 +63,8 @@ export interface EventDetailDTO extends EventDTO, EventDetailExtras {}
 export interface EventDetail extends Event, EventDetailExtras {}
 
 export interface CalendarEvent {
-	start: Date | null;
-	end: Date | null;
+	start: Date;
+	end: Date;
 	title: string;
 	// 'block' event( 행사) : allDay===true
 	allDay: boolean;
