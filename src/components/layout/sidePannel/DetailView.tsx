@@ -2,7 +2,7 @@ import { useEvents } from "@contexts/EventContext";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./DetailView.module.css";
-import { getDDay } from "../../../util/Calendar/getDday";
+import { getDDay } from "../../../util/calendar/getDday";
 import { CATEGORY_COLORS, CATEGORY_LIST } from "@constants";
 import { FaAnglesRight, FaLocationDot } from "react-icons/fa6";
 import type { CalendarEvent, EventDetail } from "@types";
@@ -14,7 +14,7 @@ import { useAuth } from "@/contexts/AuthProvider";
 import DetailMemo from "./DetailMemo";
 import Modal, { ErrorModal } from "../../ui/Modal";
 import Loading from "../../ui/Loading";
-import calendarEventMapper from "@/util/Calendar/calendarEventMapper";
+import calendarEventMapper from "@/util/calendar/calendarEventMapper";
 import EventDate from "../../feature/eventDate/EventDate";
 
 const DetailView = ({ eventId }: { eventId: number }) => {

@@ -4,7 +4,7 @@ import { FaAngleLeft, FaAngleRight, FaAnglesRight } from "react-icons/fa6";
 import styles from "./EventCardView.module.css";
 import CardView from "./EventCard";
 import { useDetail } from "@/contexts/DetailContext";
-import calendarEventMapper from "@/util/Calendar/calendarEventMapper";
+import calendarEventMapper from "@/util/calendar/calendarEventMapper";
 import { Views } from "react-big-calendar";
 import type { CalendarEvent, Event } from "@/util/types";
 import { startOfDay, isWithinInterval } from 'date-fns';
@@ -14,7 +14,7 @@ import { useUserData } from "@/contexts/UserDataContext";
 import { useDayEvents } from "@/contexts/useCalendarEvents";
 import { FilterButton } from "@/components/layout/toolbar/Toolbar";
 import Modal from "@/components/ui/Modal";
-import { sortMonthCalendarEvents } from "@/util/Calendar/sortMonthCalendarEvents";
+import { sortMonthCalendarEvents } from "@/util/calendar/sortMonthCalendarEvents";
 
 const EventCardView = ({
 	day,
