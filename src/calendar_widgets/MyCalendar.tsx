@@ -11,8 +11,8 @@ import CustomDayView from "./day/CustomDayView";
 import CustomWeekView from "./week/CustomWeekView";
 import { useEvents } from "@/contexts/EventContext";
 import { useTimetable } from "@/contexts/TimetableContext";
-import calendarEventMapper from "@/util/Calendar/calendarEventMapper";
-import { sortMonthCalendarEvents } from "@/util/Calendar/sortMonthCalendarEvents";
+import calendarEventMapper from "@/util/calendar/calendarEventMapper";
+import { sortMonthCalendarEvents } from "@/util/calendar/sortMonthCalendarEvents";
 
 const eventPropGetter = () => {
 	return {

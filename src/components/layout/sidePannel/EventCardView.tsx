@@ -14,7 +14,7 @@ import { useUserData } from "@/contexts/UserDataContext";
 import { useDayEvents } from "@/contexts/useCalendarEvents";
 import { FilterButton } from "@/components/layout/toolbar/Toolbar";
 import Modal from "@/components/ui/Modal";
-import { sortMonthCalendarEvents } from "@/util/Calendar/sortMonthCalendarEvents";
+import { sortMonthCalendarEvents } from "@/util/calendar/sortMonthCalendarEvents";
 
 const EventCardView = ({
 	day,
