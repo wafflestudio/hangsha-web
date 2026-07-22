@@ -71,9 +71,7 @@ const DetailView = ({ eventId }: { eventId: number }) => {
 	}, [eventId, fetchEventById]);
 
 	// 디데이 계산할 기준 날짜
-	const ddayTargetDate = calendarEvent?.resource.isPeriodEvent
-		? calendarEvent.end
-		: calendarEvent?.start;
+	const ddayTargetDate = calendarEvent?.resource.event.applyEnd || null;
 
 	const [isBookmarked, setIsBookmarked] = useState<boolean>(
 		!!event?.isBookmarked,
@@ -162,7 +160,9 @@ const DetailView = ({ eventId }: { eventId: number }) => {
 				</div>
 			)}
 			<ul className={styles.chipsList}>
-				<li className={styles.deadlineChip}>{getDDay(ddayTargetDate)}</li>
+				{ddayTargetDate && 
+					<li className={styles.deadlineChip}>{`지원 ${getDDay(ddayTargetDate)}`}</li>
+					}
 				<li
 					className={styles.categoryChip}
 					style={{

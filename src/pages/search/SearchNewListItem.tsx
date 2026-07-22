@@ -23,7 +23,7 @@ interface ItemProps {
 
 const SearchNewListItem = ({ item, onClick, onLoginPrompt }: ItemProps) => {
 	const { event, highlight } = item;
-	const dday = getDDay(event.applyEnd);
+	const ddayTargetDate = event.applyEnd || null;
 	const catColor = CATEGORY_COLORS[event.eventTypeId];
 	const dateStr = formatDateRange(event.eventStart, event.eventEnd);
 
@@ -92,7 +92,7 @@ const SearchNewListItem = ({ item, onClick, onLoginPrompt }: ItemProps) => {
 					</p>
 				)}
 				<div className={styles.aFooter}>
-					<span className={styles.aDday}>{dday}</span>
+					{ddayTargetDate && <span className={styles.aDday}>{getDDay(ddayTargetDate)}</span>}
 					<span
 						className={styles.aCategoryChip}
 						style={{ backgroundColor: catColor }}
