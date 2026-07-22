@@ -1,8 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Views, type View } from "react-big-calendar";
-import { useQueryClient } from "@tanstack/react-query";
-import PullToRefresh from "react-simple-pull-to-refresh";
 import styles from "./CalendarView.module.css";
 import type { CalendarEvent, Event, Semester } from "@types";
 import DetailView from "@/components/layout/sidePannel/DetailView";
@@ -104,15 +102,6 @@ const CalendarView = () => {
 		);
 	}, [initializeDefaultOverlay]);
 
-	const queryClient = useQueryClient();
-	const handleRefresh = async () => {
-		await Promise.all([
-			queryClient.invalidateQueries({ queryKey: ["monthEvents"] }),
-			queryClient.invalidateQueries({ queryKey: ["weekEvents"] }),
-			queryClient.invalidateQueries({ queryKey: ["dayEvents"] }),
-		]);
-	};
-
 	// Flatten byDate buckets in chronological key order : preserve each date bucket's internal sequence
 	// 중복 시 첫 event만 keep : multi-day event sits at the position of its earliest bucket
 	const flattenByDate = (
@@ -206,27 +195,14 @@ const CalendarView = () => {
 			<Sidebar />
 			<div className={styles.calendarContainer}>
 				<div className={styles.calendarWrapper}>
-					{isMobile ? (
-						<PullToRefresh onRefresh={handleRefresh} pullDownThreshold={70}>
-							<MyCalendar
-								monthEvents={MONTH_EVENTS}
-								weekEvents={WEEK_EVENTS}
-								dayEvents={dayViewEvents}
-								onShowMoreClick={onShowMoreClick}
-								onSelectEvent={onSelectEvent}
-								onViewChange={setCurrentView}
-							/>
-						</PullToRefresh>
-					) : (
-						<MyCalendar
-							monthEvents={MONTH_EVENTS}
-							weekEvents={WEEK_EVENTS}
-							dayEvents={dayViewEvents}
-							onShowMoreClick={onShowMoreClick}
-							onSelectEvent={onSelectEvent}
-							onViewChange={setCurrentView}
-						/>
-					)}
+					<MyCalendar
+						monthEvents={MONTH_EVENTS}
+						weekEvents={WEEK_EVENTS}
+						dayEvents={dayViewEvents}
+						onShowMoreClick={onShowMoreClick}
+						onSelectEvent={onSelectEvent}
+						onViewChange={setCurrentView}
+					/>
 				</div>
 				{showSideMonth && (
 					<div

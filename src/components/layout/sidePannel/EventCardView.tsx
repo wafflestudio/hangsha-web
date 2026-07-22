@@ -14,6 +14,7 @@ import { useUserData } from "@/contexts/UserDataContext";
 import { useDayEvents } from "@/contexts/useCalendarEvents";
 import { FilterButton } from "@/components/layout/toolbar/Toolbar";
 import Modal from "@/components/ui/Modal";
+import { sortMonthCalendarEvents } from "@/util/Calendar/sortMonthCalendarEvents";
 
 const EventCardView = ({
 	day,
@@ -49,11 +50,13 @@ const EventCardView = ({
 	const dayCalendarEvents: CalendarEvent[] = dayViewEvents.map((e: Event) => calendarEventMapper(e, Views.DAY));
 	// filter : server puts events in the day slot if applyStart < day < applyEnd OR eventStart < day < eventEnd
 	// render differently for isPeriodEvent - put event in slot if
-	const filteredCalendarEvents = dayCalendarEvents.filter((e) =>
-		isWithinInterval(startOfDay(date), {
-			start: startOfDay(e.start),
-			end: startOfDay(e.end),
-		}),
+	const filteredCalendarEvents = sortMonthCalendarEvents(
+		dayCalendarEvents.filter((e) =>
+			isWithinInterval(startOfDay(date), {
+				start: startOfDay(e.start),
+				end: startOfDay(e.end),
+			}),
+		),
 	);
 	const events = filteredCalendarEvents.map(e => e.resource.event);
 
