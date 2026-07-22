@@ -107,7 +107,7 @@ const EventCard = ({ event, onLoginPrompt, fullWidth = false }: { event: Event; 
 				<span className={styles.orgText}>{event.organization}</span>
 			</div>
 			<ul className={styles.chipsList}>
-				<li className={styles.deadlineChip}>{`지원 ${getDDay(ddayTargetDate)}`}</li>
+				{ddayTargetDate && <li className={styles.deadlineChip}>{`지원 ${getDDay(ddayTargetDate)}`}</li>}
 				<li
 					className={styles.categoryChip}
 					style={{

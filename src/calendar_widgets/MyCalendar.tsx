@@ -173,8 +173,11 @@ export const MyCalendar = ({
 	const handleSelectEvent = useCallback(
 		(event: CalendarEvent) => {
 			if (isMobile) {
-				handleDrillDown(event.start);
-				return;
+				const date = event.start || event.end || null;
+				if (date) {
+					handleDrillDown(date);
+					return;
+				}
 			}
 			onSelectEvent(event);
 		},

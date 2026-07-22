@@ -15,15 +15,17 @@ export const transformEvent = (dto: EventDTO): Event => {
 			dto.eventTypeId >= CATEGORY_MIN_INDEX
 				? dto.eventTypeId - 3
 				: 6,
-		applyStart: new Date(dto.applyStart),
-		applyEnd: new Date(dto.applyEnd),
+		applyStart: dto.applyStart ? new Date(dto.applyStart) : null,
+		applyEnd: dto.applyEnd ? new Date(dto.applyEnd) : null,
 		eventStart: dto.eventStart ? new Date(dto.eventStart) : null,
 		eventEnd: dto.eventEnd ? new Date(dto.eventEnd) : null,
 
 		statusId: dto.statusId
 			? dto.statusId
-			: new Date(dto.applyEnd) < today // 모집 마감 날짜가 지남
+			: dto.applyEnd ?
+				new Date(dto.applyEnd) < today // 모집 마감 날짜가 지남
 				? 2 // 모집 마감
-				: 1, // 모집 중
+				: 1
+			:   2, // 모집 중
 	};
 };
