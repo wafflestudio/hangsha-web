@@ -1,6 +1,5 @@
 import { useState, type KeyboardEvent, type MouseEvent } from "react";
-import { CATEGORY_COLORS, CATEGORY_LIST } from "@/util/constants";
-import { getDDay } from "@/util/calendar/getDday";
+import { CategoryChip, DdayChip } from "@/components/feature/eventChip/EventChip";
 import type { HighlightSearchItem } from "@/util/types";
 import { useUserData } from "@/contexts/UserDataContext";
 import { useAuth } from "@/contexts/AuthProvider";
@@ -24,7 +23,6 @@ interface ItemProps {
 const SearchNewListItem = ({ item, onClick, onLoginPrompt }: ItemProps) => {
 	const { event, highlight } = item;
 	const ddayTargetDate = event.applyEnd || null;
-	const catColor = CATEGORY_COLORS[event.eventTypeId];
 	const dateStr = formatDateRange(event.eventStart, event.eventEnd);
 
 	const { user } = useAuth();
@@ -92,13 +90,10 @@ const SearchNewListItem = ({ item, onClick, onLoginPrompt }: ItemProps) => {
 					</p>
 				)}
 				<div className={styles.aFooter}>
-					{ddayTargetDate && <span className={styles.aDday}>{getDDay(ddayTargetDate)}</span>}
-					<span
-						className={styles.aCategoryChip}
-						style={{ backgroundColor: catColor }}
-					>
-						{CATEGORY_LIST[event.eventTypeId]}
-					</span>
+					{ddayTargetDate && (
+						<DdayChip compact prefix="" targetDate={ddayTargetDate} />
+					)}
+					<CategoryChip categoryId={event.eventTypeId} compact />
 					<span className={styles.aDate}>{dateStr}</span>
 					<span className={styles.aSep}>·</span>
 					<span className={styles.aOrg}>{event.organization}</span>
