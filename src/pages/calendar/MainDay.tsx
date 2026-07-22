@@ -37,7 +37,9 @@ const MainDay = () => {
 	};
 
 	return (
-		<div className={`${styles.container} ${styles.mainDay}`}>
+		<div
+			className={`${styles.container} ${styles.mainDay} ${showDetail ? styles.detailOpen : ""}`}
+		>
 			<div className={styles.calendarContainer}>
 				<EventCardView
 					day={eventListDate ?? dayDate}
