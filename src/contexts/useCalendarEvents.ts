@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { getDayEvents, getMonthEvents } from "@api/event";
-import { formatDateToYYYYMMDD } from "@calendarUtil/dateFormatter";
-import { getMonthRange } from "@calendarUtil/getMonthRange";
+import { formatDateToYYYYMMDD } from "@/util/calendar/dateFormatter";
+import { getMonthRange } from "@/util/calendar/getMonthRange";
 import type { Category, Event, MonthViewResponse } from "@types";
 import { getWeekRangeByDate } from "@/util/calendar/getWeekRange";
 

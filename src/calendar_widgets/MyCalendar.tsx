@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Calendar, type View, Views } from "react-big-calendar";
 import styles from "./Calendar.module.css";
-import { localizer } from "@calendarUtil/calendarLocalizer";
+import { localizer } from "@/util/calendar/calendarLocalizer";
 import type { CalendarEvent, Event } from "@types";
 import Toolbar from "../components/layout/toolbar/Toolbar";
 import MonthEvent from "./month/MonthEvent";
@@ -30,22 +30,23 @@ interface MyCalendarProps {
 	monthEvents: Event[];
 	weekEvents: Event[];
 	dayEvents: Event[];
+	view: View;
 	onShowMoreClick: (date: Date, view: string) => void;
 	onSelectEvent: (event: CalendarEvent) => void;
-	onViewChange?: (view: View) => void;
+	onViewChange: (view: View) => void;
 }
 
 export const MyCalendar = ({
 	monthEvents,
 	weekEvents,
 	dayEvents,
+	view,
 	onShowMoreClick,
 	onSelectEvent,
 	onViewChange,
 }: MyCalendarProps) => {
 	const { dayDate, setDayDate } = useEvents();
 	const { selectedOverlayCourses, selectedOverlayTimetable } = useTimetable();
-	const [currentView, setCurrentView] = useState<View>(Views.MONTH);
 	const [isMobile, setIsMobile] = useState(getIsMobile);
 	const [showTimetableOverlay, setShowTimetableOverlay] = useState(true);
 	const hasTimetableOverlay = selectedOverlayTimetable !== null;
@@ -77,7 +78,7 @@ export const MyCalendar = ({
 
 	/** Event Mapping */
 	const currentEvents = useMemo(() => {
-		switch (currentView) {
+		switch (view) {
 			case Views.MONTH:
 				return monthEvents;
 			case Views.WEEK:
@@ -87,15 +88,15 @@ export const MyCalendar = ({
 			default:
 				return monthEvents;
 		}
-	}, [currentView, monthEvents, weekEvents, dayEvents]);
+	}, [view, monthEvents, weekEvents, dayEvents]);
 
 	const CALENDER_EVENTS = useMemo(() => {
 		const mapped = currentEvents.map((e: Event) =>
-			calendarEventMapper(e, currentView),
+			calendarEventMapper(e, view),
 		);
-		if (currentView !== Views.MONTH) return mapped;
+		if (view !== Views.MONTH) return mapped;
 		return sortMonthCalendarEvents(mapped);
-	}, [currentEvents, currentView]);
+	}, [currentEvents, view]);
 
 	/** Calendar format */
 	const formats = useMemo(
@@ -221,19 +222,15 @@ export const MyCalendar = ({
 					eventPropGetter={eventPropGetter}
 					date={dayDate}
 					// view setup
-					view={currentView}
+					view={view}
 					monthMaxRows={monthMaxRows}
-					onView={(view) => {
-						setCurrentView(view);
-						onViewChange?.(view);
-					}}
+					onView={onViewChange}
 					views={{
 						month: true,
 						week: WeekViewWithOverlay,
 						day: CustomDayView,
 					}}
 					onNavigate={onNavigate}
-					defaultView={Views.MONTH}
 					// 한국어 형식
 					formats={formats}
 					// 더보기 눌렀을 때 popup 나타나기 X, 사이드뷰 나타남

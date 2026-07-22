@@ -7,7 +7,7 @@ import { useDetail } from "@/contexts/DetailContext";
 import calendarEventMapper from "@/util/calendar/calendarEventMapper";
 import { Views } from "react-big-calendar";
 import type { CalendarEvent, Event } from "@/util/types";
-import { startOfDay, isWithinInterval } from 'date-fns';
+import { startOfDay, isWithinInterval } from "date-fns";
 import { IoClose } from "react-icons/io5";
 import { useFilter } from "@/contexts/FilterContext";
 import { useUserData } from "@/contexts/UserDataContext";
@@ -16,18 +16,21 @@ import { FilterButton } from "@/components/layout/toolbar/Toolbar";
 import Modal from "@/components/ui/Modal";
 import { sortMonthCalendarEvents } from "@/util/calendar/sortMonthCalendarEvents";
 
+// 월별 뷰에서 날짜 클릭 시 나오는, 일별 행사 목록 보여주는 side panel
 const EventCardView = ({
 	day,
 	onClose,
+	onDateChange, // 선택된 날짜 query에 반영
 }: {
 	day: Date;
 	onClose: () => void;
+	onDateChange: (date: Date) => void;
 }) => {
 	const navigate = useNavigate();
 	const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
-	const { setShowDetail, setClickedEventId } = useDetail();
-	const [date, setDate] = useState<Date>(day);
-	const { globalCategory, globalOrg, globalStatus, setFilterSheetShowing } = useFilter();
+	const { openDetail } = useDetail();
+	const { globalCategory, globalOrg, globalStatus, setFilterSheetShowing } =
+		useFilter();
 	const { excludedKeywords, interestCategories } = useUserData();
 
 	const filters = useMemo(
@@ -40,43 +43,44 @@ const EventCardView = ({
 	);
 
 	const { data: dayViewEvents = [] } = useDayEvents(
-		date,
+		day,
 		filters,
 		excludedKeywords,
 		interestCategories,
 	);
 
 	// list of day events
-	const dayCalendarEvents: CalendarEvent[] = dayViewEvents.map((e: Event) => calendarEventMapper(e, Views.DAY));
+	const dayCalendarEvents: CalendarEvent[] = dayViewEvents.map((e: Event) =>
+		calendarEventMapper(e, Views.DAY),
+	);
 	// filter : server puts events in the day slot if applyStart < day < applyEnd OR eventStart < day < eventEnd
-	// render differently for isPeriodEvent - put event in slot if
+	// render differently for isPeriodEvent - put event in slot if applyStart < day < applyEnd
 	const filteredCalendarEvents = sortMonthCalendarEvents(
 		dayCalendarEvents.filter((e) =>
-			isWithinInterval(startOfDay(date), {
+			isWithinInterval(startOfDay(day), {
 				start: startOfDay(e.start),
 				end: startOfDay(e.end),
 			}),
 		),
 	);
-	const events = filteredCalendarEvents.map(e => e.resource.event);
+	const events = filteredCalendarEvents.map((e) => e.resource.event);
 
 	const handleClickToday = () => {
-		setDate(new Date());
+		onDateChange(new Date());
 	};
 	const handleClickPrevday = () => {
-		const prevDate = new Date(date);
-		prevDate.setDate(date.getDate() - 1);
-		setDate(prevDate);
+		const prevDate = new Date(day);
+		prevDate.setDate(day.getDate() - 1);
+		onDateChange(prevDate);
 	};
 	const handleClickNextday = () => {
-		const nextDate = new Date(date);
-		nextDate.setDate(date.getDate() + 1);
-		setDate(nextDate);
+		const nextDate = new Date(day);
+		nextDate.setDate(day.getDate() + 1);
+		onDateChange(nextDate);
 	};
 
 	const handleDetailClick = (id: number) => {
-		setShowDetail(true);
-		setClickedEventId(id);
+		openDetail(id);
 	};
 
 	return (
@@ -92,29 +96,39 @@ const EventCardView = ({
 				/>
 			)}
 			<button type="button" className={styles.foldBtn} onClick={onClose}>
-				<FaAnglesRight
-					width={24}
-					color="rgba(171, 171, 171, 1)"
-				/>
+				<FaAnglesRight width={24} color="rgba(171, 171, 171, 1)" />
 			</button>
-			<div className={styles.dateRow}>			
-				<h1>{`${date.getMonth() + 1}월 ${date.getDate()}일`}</h1>
-				<button type="button" className={styles.todayBtn} onClick={handleClickToday}>
+			<div className={styles.dateRow}>
+				<h1>{`${day.getMonth() + 1}월 ${day.getDate()}일`}</h1>
+				<button
+					type="button"
+					className={styles.todayBtn}
+					onClick={handleClickToday}
+				>
 					오늘
 				</button>
-				<button type="button" className={styles.dateChangeBtn} onClick={handleClickPrevday}>
+				<button
+					type="button"
+					className={styles.dateChangeBtn}
+					onClick={handleClickPrevday}
+				>
 					<FaAngleLeft size={24} color="rgba(171, 171, 171, 1)" />
 				</button>
-				<button type="button" className={styles.dateChangeBtn} onClick={handleClickNextday}>
+				<button
+					type="button"
+					className={styles.dateChangeBtn}
+					onClick={handleClickNextday}
+				>
 					<FaAngleRight size={24} color="rgba(171, 171, 171, 1)" />
 				</button>
-				<FilterButton onFilterSet={() => setFilterSheetShowing(true)}/>
-				<button type="button" className={`${styles.mobileCloseBtn}`} onClick={onClose}>
-					<IoClose
-						size={24}
-						color="rgba(171, 171, 171, 1)"
-					/>
-				</button>	
+				<FilterButton onFilterSet={() => setFilterSheetShowing(true)} />
+				<button
+					type="button"
+					className={`${styles.mobileCloseBtn}`}
+					onClick={onClose}
+				>
+					<IoClose size={24} color="rgba(171, 171, 171, 1)" />
+				</button>
 			</div>
 			<div className={styles.cardWrapper}>
 				{events.length === 0 ? (
@@ -127,7 +141,9 @@ const EventCardView = ({
 							key={event.id}
 							tabIndex={0}
 							onClick={() => handleDetailClick(event.id)}
-							onKeyDown={(e) => e.key === "Enter" && handleDetailClick(event.id)}
+							onKeyDown={(e) =>
+								e.key === "Enter" && handleDetailClick(event.id)
+							}
 							className={styles.cardButton}
 						>
 							<CardView
