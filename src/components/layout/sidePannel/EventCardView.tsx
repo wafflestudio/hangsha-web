@@ -50,9 +50,9 @@ const EventCardView = ({
 	);
 
 	// list of day events
-	const dayCalendarEvents: CalendarEvent[] = dayViewEvents.map((e: Event) =>
-		calendarEventMapper(e, Views.DAY),
-	);
+	const dayCalendarEvents = dayViewEvents
+		.map((e: Event) => calendarEventMapper(e, Views.DAY))
+		.filter((event): event is CalendarEvent => event !== null);
 	// filter : server puts events in the day slot if applyStart < day < applyEnd OR eventStart < day < eventEnd
 	// render differently for isPeriodEvent - put event in slot if applyStart < day < applyEnd
 	const filteredCalendarEvents = sortMonthCalendarEvents(

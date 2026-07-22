@@ -5,6 +5,7 @@ import type {
 	NavigateAction,
 	ViewStatic,
 } from "react-big-calendar";
+import { Views } from "react-big-calendar";
 
 import type { Event, CalendarEvent, GetCoursesResponse } from "../../util/types";
 import {
@@ -16,6 +17,7 @@ import { WeekGrid } from "./WeekGrid";
 import { PeriodBars } from "./PeriodBar";
 import AllDayBar from "./AllDayBar";
 import styles from "./WeekView.module.css";
+import calendarEventMapper from "@/util/calendar/calendarEventMapper";
 
 interface CustomWeekViewProps {
 	date: Date;
@@ -144,7 +146,10 @@ function CustomWeekView({
 
 	const handleSelectBlock = useCallback(
 		(calendarEventLike: CalendarEvent | Event) => {
-			const raw = calendarEventLike as Event;
+			const raw =
+				"resource" in calendarEventLike
+					? calendarEventLike.resource.event
+					: calendarEventLike;
 			const found = (events ?? []).find(
 				(ce) => ce?.resource?.event?.id === raw.id,
 			);
@@ -154,16 +159,8 @@ function CustomWeekView({
 				return;
 			}
 
-			const start = raw.eventStart || raw.applyStart;
-			const end = raw.eventEnd || raw.applyEnd;
-
-			onSelectEvent?.({
-				start: new Date(start),
-				end: new Date(end),
-				title: raw.title,
-				allDay: true,
-				resource: { event: raw, isPeriodEvent: !raw.eventStart },
-			} as unknown as CalendarEvent);
+			const calendarEvent = calendarEventMapper(raw, Views.WEEK);
+			if (calendarEvent) onSelectEvent?.(calendarEvent);
 		},
 		[events, onSelectEvent],
 	);

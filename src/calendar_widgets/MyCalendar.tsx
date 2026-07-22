@@ -91,9 +91,9 @@ export const MyCalendar = ({
 	}, [view, monthEvents, weekEvents, dayEvents]);
 
 	const CALENDER_EVENTS = useMemo(() => {
-		const mapped = currentEvents.map((e: Event) =>
-			calendarEventMapper(e, view),
-		);
+		const mapped = currentEvents
+			.map((e: Event) => calendarEventMapper(e, view))
+			.filter((event): event is CalendarEvent => event !== null);
 		if (view !== Views.MONTH) return mapped;
 		return sortMonthCalendarEvents(mapped);
 	}, [currentEvents, view]);
