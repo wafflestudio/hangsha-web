@@ -70,6 +70,7 @@ const CalendarView = () => {
 	/** ----------------------  FETCH MONTH / WEEK / DAY data -------------------- */
 
 	const navigate = useNavigate();
+	const queryClient = useQueryClient();
 
 	const filters = useMemo(
 		() => ({
@@ -98,6 +99,14 @@ const CalendarView = () => {
 		excludedKeywords,
 		interestCategories,
 	);
+
+	const handleRefresh = async () => {
+		await Promise.all([
+			queryClient.invalidateQueries({ queryKey: ["monthEvents"] }),
+			queryClient.invalidateQueries({ queryKey: ["weekEvents"] }),
+			queryClient.invalidateQueries({ queryKey: ["dayEvents"] }),
+		]);
+	};
 
 	useEffect(() => {
 		const today = new Date();
