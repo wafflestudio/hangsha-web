@@ -4,11 +4,10 @@ import { useDetail } from "@/contexts/DetailContext";
 import styles from "../../../components/layout/sidePannel/CardView.module.css";
 
 const GalleryCard = ({ event }: { event: Event }) => {
-	const { setShowDetail, setClickedEventId } = useDetail();
+	const { openDetail } = useDetail();
 
 	const handleClick = () => {
-		setShowDetail(true);
-		setClickedEventId(event.id);
+		openDetail(event.id);
 	};
 
 	return (
