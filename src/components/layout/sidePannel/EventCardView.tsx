@@ -56,12 +56,17 @@ const EventCardView = ({
 	// filter : server puts events in the day slot if applyStart < day < applyEnd OR eventStart < day < eventEnd
 	// render differently for isPeriodEvent - put event in slot if applyStart < day < applyEnd
 	const filteredCalendarEvents = sortMonthCalendarEvents(
-		dayCalendarEvents.filter((e) =>
-			isWithinInterval(startOfDay(day), {
-				start: startOfDay(e.start),
-				end: startOfDay(e.end),
-			}),
-		),
+		dayCalendarEvents.filter((e) => {
+			const start = e.start ?? e.end;
+			const end = e.end ?? e.start;
+
+			if (!start || !end) return false;
+
+			return isWithinInterval(startOfDay(day), {
+				start: startOfDay(start),
+				end: startOfDay(end),
+			});
+		}),
 	);
 	const events = filteredCalendarEvents.map((e) => e.resource.event);
 
