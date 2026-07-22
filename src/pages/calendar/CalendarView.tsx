@@ -70,6 +70,7 @@ const CalendarView = () => {
 	/** ----------------------  FETCH MONTH / WEEK / DAY data -------------------- */
 
 	const navigate = useNavigate();
+	const queryClient = useQueryClient();
 
 	const filters = useMemo(
 		() => ({
@@ -99,15 +100,6 @@ const CalendarView = () => {
 		interestCategories,
 	);
 
-	useEffect(() => {
-		const today = new Date();
-		void initializeDefaultOverlay(
-			today.getFullYear(),
-			getSemesterByDate(today),
-		);
-	}, [initializeDefaultOverlay]);
-
-	const queryClient = useQueryClient();
 	const handleRefresh = async () => {
 		await Promise.all([
 			queryClient.invalidateQueries({ queryKey: ["monthEvents"] }),
@@ -115,6 +107,14 @@ const CalendarView = () => {
 			queryClient.invalidateQueries({ queryKey: ["dayEvents"] }),
 		]);
 	};
+
+	useEffect(() => {
+		const today = new Date();
+		void initializeDefaultOverlay(
+			today.getFullYear(),
+			getSemesterByDate(today),
+		);
+	}, [initializeDefaultOverlay]);
 
 	// Flatten byDate buckets in chronological key order : preserve each date bucket's internal sequence
 	// 중복 시 첫 event만 keep : multi-day event sits at the position of its earliest bucket
