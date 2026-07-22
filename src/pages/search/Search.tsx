@@ -7,7 +7,6 @@ import type { HighlightSearchResult } from "@/util/types";
 import { getEventSearchFull } from "@/api/event";
 import styles from "./Search.module.css";
 import toolbarStyles from "./SearchToolbar.module.css";
-import { FaCalendarAlt } from "react-icons/fa";
 import { IoIosClose, IoIosSearch } from "react-icons/io";
 import BottomNav from "@/components/layout/BottomNav";
 import Loading from "@/components/ui/Loading";
@@ -119,13 +118,6 @@ const SearchView = () => {
 					<div className={toolbarStyles.headerRow}>
 						<span>{query ? `'${query}' 검색 결과` : "검색"}</span>
 						<div className={toolbarStyles.btnGroup}>
-							<button type="button" className={toolbarStyles.calendarBtn}>
-								<FaCalendarAlt
-									onClick={() => navigate("/main")}
-									size={25}
-									color="rgba(130,130,130,1)"
-								/>
-							</button>
 							{user && <ProfileButton user={user} />}
 						</div>
 					</div>
