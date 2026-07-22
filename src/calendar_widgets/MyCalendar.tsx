@@ -12,12 +12,19 @@ import CustomWeekView from "./week/CustomWeekView";
 import { useEvents } from "@/contexts/EventContext";
 import { useTimetable } from "@/contexts/TimetableContext";
 import calendarEventMapper from "@/util/Calendar/calendarEventMapper";
+import { sortMonthCalendarEvents } from "@/util/Calendar/sortMonthCalendarEvents";
 
 const eventPropGetter = () => {
 	return {
 		className: styles.resetEventStyle, // CSS 모듈로 기본 스타일 제거
 	};
 };
+
+const MOBILE_MAX_WIDTH = 576;
+const DESKTOP_MONTH_VISIBLE_EVENT_ROWS = 3;
+const MOBILE_MONTH_VISIBLE_EVENT_ROWS = 4;
+const getIsMobile = () =>
+	typeof window !== "undefined" && window.innerWidth <= MOBILE_MAX_WIDTH;
 
 interface MyCalendarProps {
 	monthEvents: Event[];
@@ -39,7 +46,7 @@ export const MyCalendar = ({
 	const { dayDate, setDayDate } = useEvents();
 	const { selectedOverlayCourses, selectedOverlayTimetable } = useTimetable();
 	const [currentView, setCurrentView] = useState<View>(Views.MONTH);
-	const [isMobile, setIsMobile] = useState(false);
+	const [isMobile, setIsMobile] = useState(getIsMobile);
 	const [showTimetableOverlay, setShowTimetableOverlay] = useState(true);
 	const hasTimetableOverlay = selectedOverlayTimetable !== null;
 	const isTimetableOverlayEmpty = selectedOverlayCourses.length <= 0;
@@ -87,15 +94,7 @@ export const MyCalendar = ({
 			calendarEventMapper(e, currentView),
 		);
 		if (currentView !== Views.MONTH) return mapped;
-		// Single-day events first so they win the lower row slots in the
-		// month-view layout; multi-day strips push down into "+N more".
-		const isSingleDay = (e: (typeof mapped)[number]) =>
-			e.start instanceof Date &&
-			e.end instanceof Date &&
-			e.start.toDateString() === e.end.toDateString();
-		return [...mapped].sort(
-			(a, b) => Number(!isSingleDay(a)) - Number(!isSingleDay(b)),
-		);
+		return sortMonthCalendarEvents(mapped);
 	}, [currentEvents, currentView]);
 
 	/** Calendar format */
@@ -146,7 +145,7 @@ export const MyCalendar = ({
 	 */
 	useEffect(() => {
 		const checkIsMobile = () => {
-			setIsMobile(window.innerWidth <= 576);
+			setIsMobile(getIsMobile());
 		};
 
 		checkIsMobile();
@@ -156,6 +155,11 @@ export const MyCalendar = ({
 			window.removeEventListener("resize", checkIsMobile);
 		};
 	}, []);
+
+	const monthMaxRows =
+		(isMobile
+			? MOBILE_MONTH_VISIBLE_EVENT_ROWS
+			: DESKTOP_MONTH_VISIBLE_EVENT_ROWS) + 1;
 
 	/** 날짜 클릭 핸들러 함수 - onDrillDown */
 	const handleDrillDown = useCallback(
@@ -218,6 +222,7 @@ export const MyCalendar = ({
 					date={dayDate}
 					// view setup
 					view={currentView}
+					monthMaxRows={monthMaxRows}
 					onView={(view) => {
 						setCurrentView(view);
 						onViewChange?.(view);

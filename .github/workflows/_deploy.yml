@@ -31,7 +31,7 @@ jobs:
           node-version: '24.12.0'
 
       - name: Install dependencies
-        run: yarn install
+        run: yarn install --frozen-lockfile
 
       - name: Build & Export
         run: yarn build

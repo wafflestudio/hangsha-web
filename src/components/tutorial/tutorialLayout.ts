@@ -1,5 +1,5 @@
 import type { CSSProperties } from "react";
-import type { Placement, Rect, Size } from "./types";
+import type { Placement, Rect, Size, TargetFocusArea } from "./types";
 
 const VIEWPORT_MARGIN = 16;
 const BUBBLE_GAP = 20;
@@ -21,6 +21,48 @@ export const getHighlightedRect = (targetRect: Rect): Rect => ({
 	width: targetRect.width + TARGET_PADDING * 2,
 	height: targetRect.height + TARGET_PADDING * 2,
 });
+
+export const getFocusAreaRect = (
+	targetRect: Rect,
+	focusArea?: TargetFocusArea,
+): Rect => {
+	if (!focusArea) return targetRect;
+
+	const maxHeights = [targetRect.height];
+
+	if (typeof focusArea.maxHeight === "number") {
+		maxHeights.push(focusArea.maxHeight);
+	}
+
+	if (typeof focusArea.viewportBottomMargin === "number") {
+		maxHeights.push(
+			Math.max(
+				1,
+				window.innerHeight - targetRect.top - focusArea.viewportBottomMargin,
+			),
+		);
+	}
+
+	const height = Math.max(1, Math.min(...maxHeights));
+	let top = targetRect.top;
+
+	if (focusArea.verticalAnchor === "center") {
+		top = targetRect.top + (targetRect.height - height) / 2;
+	}
+
+	if (focusArea.verticalAnchor === "bottom") {
+		top = targetRect.bottom - height;
+	}
+
+	return {
+		top,
+		left: targetRect.left,
+		right: targetRect.right,
+		bottom: top + height,
+		width: targetRect.width,
+		height,
+	};
+};
 
 export const getBubbleLayout = (
 	targetRect: Rect,

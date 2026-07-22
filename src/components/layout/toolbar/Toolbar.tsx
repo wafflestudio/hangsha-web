@@ -143,7 +143,10 @@ const Toolbar: React.FC<ToolbarProps> = ({
 							&gt;
 						</button>
 						{view === Views.WEEK && (
-							<div className={styles.weekTimetableToggleGroup}>
+							<div
+								className={styles.weekTimetableToggleGroup}
+								data-tour-id="week-tour-timetable-toggle"
+							>
 								<span className={styles.timetableToggleLabel}>시간표</span>
 								<button
 									type="button"
