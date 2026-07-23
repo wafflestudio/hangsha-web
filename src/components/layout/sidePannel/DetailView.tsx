@@ -2,7 +2,7 @@ import { useEvents } from "@contexts/EventContext";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./DetailView.module.css";
-import { getDDay } from "../../../util/Calendar/getDday";
+import { getDDay } from "../../../util/calendar/getDday";
 import { CATEGORY_COLORS, CATEGORY_LIST } from "@constants";
 import { FaAnglesRight, FaLocationDot } from "react-icons/fa6";
 import type { CalendarEvent, EventDetail } from "@types";
@@ -14,7 +14,7 @@ import { useAuth } from "@/contexts/AuthProvider";
 import DetailMemo from "./DetailMemo";
 import Modal, { ErrorModal } from "../../ui/Modal";
 import Loading from "../../ui/Loading";
-import calendarEventMapper from "@/util/Calendar/calendarEventMapper";
+import calendarEventMapper from "@/util/calendar/calendarEventMapper";
 import EventDate from "../../feature/eventDate/EventDate";
 
 const DetailView = ({ eventId }: { eventId: number }) => {
@@ -25,7 +25,7 @@ const DetailView = ({ eventId }: { eventId: number }) => {
 	const { toggleBookmark } = useUserData();
 	const { fetchEventById, detailError, isLoadingDetail, clearError } =
 		useEvents();
-	const { setShowDetail } = useDetail();
+	const { closeDetail } = useDetail();
 	const { user } = useAuth();
 	const navigate = useNavigate();
 
@@ -74,7 +74,7 @@ const DetailView = ({ eventId }: { eventId: number }) => {
 	const ddayTargetDate = calendarEvent?.resource.isPeriodEvent
 		? calendarEvent.end
 		: calendarEvent?.start;
-		
+
 	const [isBookmarked, setIsBookmarked] = useState<boolean>(
 		!!event?.isBookmarked,
 	);
@@ -129,11 +129,7 @@ const DetailView = ({ eventId }: { eventId: number }) => {
 					onClose={() => setIsLoginModalOpen(false)}
 				/>
 			)}
-			<button
-				type="button"
-				className={styles.foldBtn}
-				onClick={() => setShowDetail(false)}
-			>
+			<button type="button" className={styles.foldBtn} onClick={closeDetail}>
 				<FaAnglesRight width={28} height={28} color="rgba(171, 171, 171, 1)" />
 			</button>
 
@@ -145,6 +141,7 @@ const DetailView = ({ eventId }: { eventId: number }) => {
 			<button
 				className={styles.bookmarkBtn}
 				type="button"
+				data-tour-id="detail-tour-bookmark"
 				onClick={handleToggleBookmark}
 			>
 				<img
@@ -189,7 +186,7 @@ const DetailView = ({ eventId }: { eventId: number }) => {
 			</div>
 
 			{/* ----- Memo & Tag Section ----- */}
-			<div ref={memoWrapperRef}>
+			<div ref={memoWrapperRef} data-tour-id="detail-tour-memo">
 				<DetailMemo
 					eventId={eventId}
 					isMemoExpanded={isMemoExpanded}

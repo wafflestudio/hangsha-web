@@ -1,4 +1,4 @@
-import { transformEvent } from "@calendarUtil/transformEvent";
+import { transformEvent } from "@/util/calendar/transformEvent";
 import type {
 	OrgsResponse,
 	CategoryGroupWithCategoriesResponse,
@@ -13,6 +13,8 @@ import type {
 	SearchParams,
 	SearchResult,
 	SearchResultDTO,
+	HighlightSearchResult,
+	HighlightSearchResultDTO,
 } from "../util/types";
 import api from "./axios";
 
@@ -67,6 +69,21 @@ export const getEventSearch = async (
 	};
 
 	return result;
+};
+
+export const getEventSearchFull = async (
+	params: SearchParams,
+): Promise<HighlightSearchResult> => {
+	const res = await api.get<HighlightSearchResultDTO>("/events/search", {
+		params,
+	});
+	return {
+		...res.data,
+		items: (res.data.items ?? []).map((item) => ({
+			event: transformEvent(item.event),
+			highlight: item.highlight,
+		})),
+	};
 };
 
 export const getEventDetail = async (eventId: number): Promise<EventDetail> => {

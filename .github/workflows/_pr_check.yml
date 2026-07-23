@@ -1,0 +1,35 @@
+name: _pr_check
+
+on:
+  workflow_call:
+    inputs:
+      ga_measurement_id:
+        required: true
+        type: string
+      social_login_base_url:
+        required: true
+        type: string
+
+jobs:
+  check:
+    name: PR Check
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24.12.0'
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Build
+        run: yarn build
+        env:
+          VITE_GA_MEASUREMENT_ID: ${{ inputs.ga_measurement_id }}
+          VITE_API_URL: ${{ vars.VITE_API_URL }}
+          VITE_SOCIAL_LOGIN_BASE_URL: ${{ inputs.social_login_base_url }}

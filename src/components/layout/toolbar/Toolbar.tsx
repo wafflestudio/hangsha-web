@@ -10,7 +10,7 @@ import { useDayView } from "@contexts/DayViewContext";
 import type { User } from "@/util/types";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import FilterIcon from '/assets/filter.svg'
+import FilterIcon from "/assets/filter.svg";
 import { useFilter } from "@/contexts/FilterContext";
 import SearchButton from "./SearchButton";
 
@@ -20,6 +20,10 @@ interface ToolbarProps {
 	onView: (view: View) => void;
 	label: string;
 	date: Date;
+	showTimetableOverlay?: boolean;
+	onShowTimetableOverlayChange?: (value: boolean) => void;
+	hasTimetableOverlay?: boolean;
+	isTimetableOverlayEmpty?: boolean;
 }
 
 export const ProfileButton = ({ user }: { user: User | null }) => {
@@ -47,21 +51,26 @@ export const ProfileButton = ({ user }: { user: User | null }) => {
 	);
 };
 
-export const FilterButton = ({ onFilterSet }: { onFilterSet: () => void }) => 
+export const FilterButton = ({ onFilterSet }: { onFilterSet: () => void }) => (
 	<button
 		type="button"
 		className={styles.filterBtn}
 		onClick={onFilterSet}
+		data-tour-id="main-tour-mobile-filter"
 	>
-		<img src={FilterIcon} alt="filter icon"/>
+		<img src={FilterIcon} alt="filter icon" />
 	</button>
-
+);
 
 const Toolbar: React.FC<ToolbarProps> = ({
 	view,
 	onNavigate,
 	onView,
 	label,
+	showTimetableOverlay = false,
+	onShowTimetableOverlayChange,
+	hasTimetableOverlay = false,
+	isTimetableOverlayEmpty = false,
 }) => {
 	const { user } = useAuth();
 	const { dayViewMode, setDayViewMode } = useDayView();
@@ -73,9 +82,13 @@ const Toolbar: React.FC<ToolbarProps> = ({
 			<div
 				className={`${styles.centerControl} ${view === Views.DAY && styles.dayView}`}
 			>
-				<div className={styles.viewToggleGroup}>
+				<div
+					className={styles.viewToggleGroup}
+					data-tour-id="main-tour-view-toggle"
+				>
 					<button
 						type="button"
+						data-tour-view="month"
 						onClick={() => onView(Views.MONTH)}
 						className={`${styles.toggleBtn} ${view === Views.MONTH ? styles.toggleBtnActive : ""}`}
 					>
@@ -83,6 +96,7 @@ const Toolbar: React.FC<ToolbarProps> = ({
 					</button>
 					<button
 						type="button"
+						data-tour-view="week"
 						onClick={() => onView(Views.WEEK)}
 						className={`${styles.toggleBtn} ${view === Views.WEEK ? styles.toggleBtnActive : ""}`}
 					>
@@ -90,6 +104,7 @@ const Toolbar: React.FC<ToolbarProps> = ({
 					</button>
 					<button
 						type="button"
+						data-tour-view="day"
 						onClick={() => onView(Views.DAY)}
 						className={`${styles.toggleBtn} ${view === Views.DAY ? styles.toggleBtnActive : ""}`}
 					>
@@ -111,7 +126,7 @@ const Toolbar: React.FC<ToolbarProps> = ({
 						>
 							오늘
 						</button>
-						
+
 						{/* < > 전환 버튼 */}
 						<button
 							type="button"
@@ -127,6 +142,37 @@ const Toolbar: React.FC<ToolbarProps> = ({
 						>
 							&gt;
 						</button>
+						{view === Views.WEEK && (
+							<div
+								className={styles.weekTimetableToggleGroup}
+								data-tour-id="week-tour-timetable-toggle"
+							>
+								<span className={styles.timetableToggleLabel}>시간표</span>
+								<button
+									type="button"
+									className={`${styles.timetableToggle} ${
+										showTimetableOverlay ? styles.timetableToggleOn : ""
+									}`}
+									aria-label="시간표"
+									aria-pressed={showTimetableOverlay}
+									onClick={() =>
+										onShowTimetableOverlayChange?.(!showTimetableOverlay)
+									}
+								>
+									<span className={styles.timetableToggleThumb} />
+								</button>
+								{showTimetableOverlay && isTimetableOverlayEmpty && hasTimetableOverlay && (
+									<span className={styles.timetableToggleLabel}>
+										현재 시간표에 수업이 없습니다!
+									</span>
+								)}
+								{showTimetableOverlay && isTimetableOverlayEmpty && !hasTimetableOverlay && (
+									<span className={styles.timetableToggleLabel}>
+										현재 시간표가 없습니다!
+									</span>
+								)}
+							</div>
+						)}
 						{/** 모바일뷰 전용 필터 버튼 */}
 						<FilterButton onFilterSet={() => setFilterSheetShowing(true)} />
 					</div>
@@ -135,7 +181,10 @@ const Toolbar: React.FC<ToolbarProps> = ({
 				<div className={styles.rightGroup}>
 					{/* 일별 뷰 전용 모드 전환 토글 */}
 					{view === Views.DAY && (
-						<div className={styles.viewToggleGroup}>
+						<div
+							className={styles.viewToggleGroup}
+							data-tour-id="day-tour-view-mode-toggle"
+						>
 							{/* 리스트 버튼 */}
 							<button
 								type="button"
@@ -170,7 +219,9 @@ const Toolbar: React.FC<ToolbarProps> = ({
 					)}
 					<div className={styles.profileRow}>
 						<SearchButton />
-						<span className={styles.profileBtn}>{user && <ProfileButton user={user} />}</span>
+						<span className={styles.profileBtn}>
+							{user && <ProfileButton user={user} />}
+						</span>
 					</div>
 				</div>
 			</div>

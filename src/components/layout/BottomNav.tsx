@@ -41,17 +41,15 @@ const NAV_ITEMS: NavItem[] = [
 	},
 ];
 
-
-
 const BottomNav = () => {
 	const navigate = useNavigate();
 	const location = useLocation();
-    const { setDayDate } = useEvents();
+	const { setDayDate } = useEvents();
 
 	const isActive = (path: string) => location.pathname.startsWith(path);
 
 	return (
-		<nav className={styles.bottomNav}>
+		<nav className={styles.bottomNav} data-tour-id="main-tour-bottom-nav">
 			{NAV_ITEMS.map((item) => (
 				<button
 					key={item.key}
@@ -60,14 +58,14 @@ const BottomNav = () => {
 						isActive(item.path) ? styles.active : ""
 					}`}
 					onClick={() => {
-                        navigate(item.path)
-                        if (item.key === 'calendar') {
-                            setDayDate(new Date());
-                        }
-                    }}
+						navigate(item.path);
+						if (item.key === "calendar") {
+							setDayDate(new Date());
+						}
+					}}
 				>
 					<img
-					    src={isActive(item.path) ? item.activeIcon : item.icon}
+						src={isActive(item.path) ? item.activeIcon : item.icon}
 						alt={`${item.label} icon`}
 						className={styles.icon}
 					/>

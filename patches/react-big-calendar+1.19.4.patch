@@ -1,3 +1,78 @@
+diff --git a/node_modules/react-big-calendar/dist/react-big-calendar.esm.js b/node_modules/react-big-calendar/dist/react-big-calendar.esm.js
+index a809b6d..e483b44 100644
+--- a/node_modules/react-big-calendar/dist/react-big-calendar.esm.js
++++ b/node_modules/react-big-calendar/dist/react-big-calendar.esm.js
+@@ -1651,26 +1651,8 @@ function segsOverlap(seg, otherSegs) {
+     return otherSeg.left <= seg.right && otherSeg.right >= seg.left;
+   });
+ }
+-function sortWeekEvents(events, accessors, localizer) {
+-  var base = _toConsumableArray(events);
+-  var multiDayEvents = [];
+-  var standardEvents = [];
+-  base.forEach(function (event) {
+-    var startCheck = accessors.start(event);
+-    var endCheck = accessors.end(event);
+-    if (localizer.daySpan(startCheck, endCheck) > 1) {
+-      multiDayEvents.push(event);
+-    } else {
+-      standardEvents.push(event);
+-    }
+-  });
+-  var multiSorted = multiDayEvents.sort(function (a, b) {
+-    return sortEvents(a, b, accessors, localizer);
+-  });
+-  var standardSorted = standardEvents.sort(function (a, b) {
+-    return sortEvents(a, b, accessors, localizer);
+-  });
+-  return [].concat(_toConsumableArray(multiSorted), _toConsumableArray(standardSorted));
++function sortWeekEvents(events) {
++  return events;
+ }
+ function sortEvents(eventA, eventB, accessors, localizer) {
+   var evtA = {
+@@ -2139,7 +2121,8 @@ var MonthView = /*#__PURE__*/function (_React$Component) {
+         longPressThreshold = _this$props.longPressThreshold,
+         accessors = _this$props.accessors,
+         getters = _this$props.getters,
+-        showAllEvents = _this$props.showAllEvents;
++        showAllEvents = _this$props.showAllEvents,
++        monthMaxRows = _this$props.monthMaxRows;
+       var _this$state = _this.state,
+         needLimitMeasure = _this$state.needLimitMeasure,
+         rowLimit = _this$state.rowLimit;
+@@ -2156,7 +2139,7 @@ var MonthView = /*#__PURE__*/function (_React$Component) {
+         date: date,
+         range: week,
+         events: sorted,
+-        maxRows: showAllEvents ? Infinity : rowLimit,
++        maxRows: showAllEvents ? Infinity : monthMaxRows !== null && monthMaxRows !== void 0 ? monthMaxRows : rowLimit,
+         selected: selected,
+         selectable: selectable,
+         components: components,
+diff --git a/node_modules/react-big-calendar/lib/Month.js b/node_modules/react-big-calendar/lib/Month.js
+index 2763e66..d39318d 100644
+--- a/node_modules/react-big-calendar/lib/Month.js
++++ b/node_modules/react-big-calendar/lib/Month.js
+@@ -55,7 +55,8 @@ var MonthView = /*#__PURE__*/function (_React$Component) {
+         longPressThreshold = _this$props.longPressThreshold,
+         accessors = _this$props.accessors,
+         getters = _this$props.getters,
+-        showAllEvents = _this$props.showAllEvents;
++        showAllEvents = _this$props.showAllEvents,
++        monthMaxRows = _this$props.monthMaxRows;
+       var _this$state = _this.state,
+         needLimitMeasure = _this$state.needLimitMeasure,
+         rowLimit = _this$state.rowLimit;
+@@ -72,7 +73,7 @@ var MonthView = /*#__PURE__*/function (_React$Component) {
+         date: date,
+         range: week,
+         events: sorted,
+-        maxRows: showAllEvents ? Infinity : rowLimit,
++        maxRows: showAllEvents ? Infinity : monthMaxRows !== null && monthMaxRows !== void 0 ? monthMaxRows : rowLimit,
+         selected: selected,
+         selectable: selectable,
+         components: components,
 diff --git a/node_modules/react-big-calendar/lib/utils/eventLevels.js b/node_modules/react-big-calendar/lib/utils/eventLevels.js
 index e3ee1e1..012d91a 100644
 --- a/node_modules/react-big-calendar/lib/utils/eventLevels.js

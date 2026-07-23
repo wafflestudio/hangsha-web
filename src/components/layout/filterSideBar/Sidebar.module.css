@@ -133,6 +133,11 @@ body::-webkit-scrollbar {
   gap: 8px;
 }
 
+.tourTargetGroup {
+  display: flex;
+  flex-direction: column;
+}
+
 .labelText {
   font-size: var(--fs-label);
   font-weight: 600;
@@ -392,6 +397,18 @@ body::-webkit-scrollbar {
   padding: 0 4px;
 }
 
+.listItemSelected {
+  background: #fff4b8;
+}
+
+.listItem:hover {
+  background: #ececec;
+}
+
+.listItemSelected:hover {
+  background: #ffe98a;
+}
+
 .rowBtn {
   flex: 1;
   border: 0;
@@ -399,14 +416,13 @@ body::-webkit-scrollbar {
   cursor: pointer;
   text-align: left;
   padding: 10px 10px;
-  border-radius: 12px;
   display: flex;
   align-items: center;
   min-height: 40px;
 }
 
-.rowBtn:hover {
-  background: #f6f6f6;
+.rowBtnSelected .ttName {
+  font-weight: 700;
 }
 
 .rowText {
@@ -440,7 +456,7 @@ body::-webkit-scrollbar {
 }
 
 .moreBtn:hover {
-  background: #f6f6f6;
+  background: transparent;
 }
 
 .menu {

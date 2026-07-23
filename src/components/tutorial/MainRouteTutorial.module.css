@@ -1,0 +1,499 @@
+.tourRoot {
+  --tour-highlight-radius: 12px;
+
+  position: fixed;
+  inset: 0;
+  z-index: 1200;
+  pointer-events: none;
+  font-family:
+    "Pretendard",
+    -apple-system,
+    BlinkMacSystemFont,
+    system-ui,
+    Roboto,
+    sans-serif;
+}
+
+.interactionBlocker {
+  position: fixed;
+  z-index: 0;
+  pointer-events: auto;
+  background: transparent;
+}
+
+.highlight {
+  position: fixed;
+  z-index: 1;
+  border: 2px solid rgba(96, 165, 250, 0.62);
+  border-radius: var(--tour-highlight-radius);
+  box-shadow: 0 0 0 100vmax rgba(238, 238, 238, 0.78);
+  pointer-events: none;
+  transition:
+    top 180ms ease,
+    left 180ms ease,
+    width 180ms ease,
+    height 180ms ease;
+}
+
+.targetInteractionBlocker {
+  position: fixed;
+  z-index: 2;
+  border-radius: var(--tour-highlight-radius);
+  pointer-events: auto;
+  background: transparent;
+}
+
+.cursorDemo {
+  position: fixed;
+  z-index: 3;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  color: #2563eb;
+  pointer-events: none;
+  filter: drop-shadow(0 8px 12px rgba(15, 23, 42, 0.24));
+  animation: cursorDemoMove 3.2s ease-in-out infinite;
+}
+
+.cursorDemo svg {
+  width: 46px;
+  height: 46px;
+  stroke-width: 2.5;
+}
+
+.cursorClickRing {
+  position: absolute;
+  top: 2px;
+  left: 4px;
+  width: 24px;
+  height: 24px;
+  border: 3px solid rgba(37, 99, 235, 0.45);
+  border-radius: 50%;
+  opacity: 0;
+  animation: cursorDemoClickRing 3.2s ease-out infinite;
+}
+
+.dragDemo {
+  position: fixed;
+  z-index: 3;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  color: #111827;
+  pointer-events: none;
+  filter: drop-shadow(0 8px 12px rgba(15, 23, 42, 0.24));
+  animation: dragDemoMove 2.8s ease-in-out infinite;
+}
+
+.dragDemo svg {
+  width: 46px;
+  height: 46px;
+  stroke-width: 2.5;
+}
+
+.dragDemoTrack {
+  position: absolute;
+  top: 26px;
+  right: 18px;
+  width: 92px;
+  height: 3px;
+  border-radius: 999px;
+  background: linear-gradient(
+    90deg,
+    rgba(37, 99, 235, 0),
+    rgba(37, 99, 235, 0.72)
+  );
+  transform-origin: right center;
+  animation: dragDemoTrackPulse 2.8s ease-in-out infinite;
+}
+
+.dragDemoGrip {
+  position: absolute;
+  top: 9px;
+  left: 22px;
+  width: 4px;
+  height: 42px;
+  border-radius: 999px;
+  background: rgba(17, 24, 39, 0.42);
+  animation: dragDemoGripPulse 2.8s ease-in-out infinite;
+}
+
+.dragClickRing {
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  width: 24px;
+  height: 24px;
+  border: 3px solid rgba(37, 99, 235, 0.45);
+  border-radius: 50%;
+  opacity: 0;
+  animation: dragDemoClickRing 2.8s ease-out infinite;
+}
+
+.bubble {
+  position: fixed;
+  z-index: 4;
+  width: min(320px, calc(100vw - 32px));
+  min-height: 180px;
+  padding: 30px 34px 24px;
+  box-sizing: border-box;
+  border-radius: 10px;
+  background: #ffffff;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.16);
+  color: #111111;
+  pointer-events: auto;
+  transition:
+    top 180ms ease,
+    left 180ms ease;
+}
+
+.bubble::before {
+  position: absolute;
+  width: 22px;
+  height: 22px;
+  background: #ffffff;
+  content: "";
+  transform: rotate(45deg);
+}
+
+.bubble[data-side="right"]::before {
+  top: var(--tour-arrow-y, 50%);
+  left: -9px;
+  margin-top: -11px;
+  box-shadow: -5px 5px 12px rgba(0, 0, 0, 0.06);
+}
+
+.bubble[data-side="left"]::before {
+  top: var(--tour-arrow-y, 50%);
+  right: -9px;
+  margin-top: -11px;
+  box-shadow: 5px -5px 12px rgba(0, 0, 0, 0.04);
+}
+
+.bubble[data-side="bottom"]::before {
+  top: -9px;
+  left: var(--tour-arrow-x, 50%);
+  margin-left: -11px;
+  box-shadow: -5px -5px 12px rgba(0, 0, 0, 0.04);
+}
+
+.bubble[data-side="top"]::before {
+  bottom: -9px;
+  left: var(--tour-arrow-x, 50%);
+  margin-left: -11px;
+  box-shadow: 5px 5px 12px rgba(0, 0, 0, 0.04);
+}
+
+.closeButton {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  color: #b6b6b6;
+  cursor: pointer;
+}
+
+.closeButton:hover {
+  background: #f3f4f6;
+  color: #6b7280;
+}
+
+.title {
+  margin: 0 24px 22px 0;
+  font-size: 20px;
+  font-weight: 800;
+  line-height: 1.25;
+  text-align: center;
+}
+
+.description {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.35;
+  white-space: pre-line;
+}
+
+.controls {
+  display: grid;
+  grid-template-columns: 44px 1fr 44px;
+  align-items: center;
+  gap: 18px;
+  margin-top: 24px;
+}
+
+.chevronButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  color: #4f83e8;
+  cursor: pointer;
+  font-size: 20px;
+  justify-self: center;
+}
+
+.chevronButton:hover:not(:disabled) {
+  background: #eef4ff;
+}
+
+.chevronButton:disabled {
+  color: #bcd4fb;
+  cursor: default;
+}
+
+.endButton {
+  width: 44px;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.dots {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.dot {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: #bcd4fb;
+}
+
+.activeDot {
+  background: #4f83e8;
+}
+
+.mobileTutorialRoot {
+  position: fixed;
+  inset: 0;
+  z-index: 1300;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  padding: calc(20px + env(safe-area-inset-top)) 16px
+    calc(20px + env(safe-area-inset-bottom));
+  background: rgba(238, 238, 238, 0.78);
+  font-family:
+    "Pretendard",
+    -apple-system,
+    BlinkMacSystemFont,
+    system-ui,
+    Roboto,
+    sans-serif;
+  pointer-events: auto;
+}
+
+.mobileTutorialDialog {
+  position: relative;
+  width: min(508px, calc(100vw - 72px));
+  box-sizing: border-box;
+  padding: 58px clamp(28px, 8vw, 80px) 32px;
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.14);
+  color: #111111;
+}
+
+.mobileTutorialCloseButton {
+  position: absolute;
+  top: 17px;
+  right: 20px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  color: #b6b6b6;
+  cursor: pointer;
+}
+
+.mobileTutorialCloseButton:hover {
+  background: #f3f4f6;
+  color: #8a8f98;
+}
+
+.mobileTutorialTitle {
+  margin: 0 32px 24px;
+  font-size: 18px;
+  font-weight: 800;
+  line-height: 1.25;
+  text-align: center;
+}
+
+.mobileTutorialImage {
+  display: block;
+  width: min(200px, 100%);
+  height: auto;
+  margin: 0 auto 28px;
+}
+
+.mobileTutorialDescription {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.35;
+}
+
+@keyframes cursorDemoMove {
+  0%,
+  18% {
+    transform: translate3d(0, 0, 0) rotate(-10deg) scale(1);
+  }
+  38%,
+  46% {
+    transform: translate3d(var(--cursor-demo-mid-x), 0, 0) rotate(-10deg)
+      scale(1);
+  }
+  50%,
+  56% {
+    transform: translate3d(var(--cursor-demo-mid-x), 0, 0) rotate(-10deg)
+      scale(0.9);
+  }
+  62%,
+  70% {
+    transform: translate3d(var(--cursor-demo-mid-x), 0, 0) rotate(-10deg)
+      scale(1);
+  }
+  76%,
+  80% {
+    transform: translate3d(var(--cursor-demo-end-x), 0, 0) rotate(-10deg)
+      scale(1);
+  }
+  82%,
+  88% {
+    transform: translate3d(var(--cursor-demo-end-x), 0, 0) rotate(-10deg)
+      scale(0.9);
+  }
+  94%,
+  100% {
+    transform: translate3d(var(--cursor-demo-end-x), 0, 0) rotate(-10deg)
+      scale(1);
+  }
+}
+
+@keyframes cursorDemoClickRing {
+  0%,
+  44%,
+  62%,
+  76%,
+  92%,
+  100% {
+    opacity: 0;
+    transform: scale(0.55);
+  }
+  50%,
+  82% {
+    opacity: 0.9;
+    transform: scale(0.85);
+  }
+  60%,
+  92% {
+    opacity: 0;
+    transform: scale(1.75);
+  }
+}
+
+@keyframes dragDemoMove {
+  0%,
+  18% {
+    transform: translate3d(0, 0, 0) rotate(-10deg) scale(1);
+  }
+  24%,
+  32% {
+    transform: translate3d(0, 0, 0) rotate(-10deg) scale(0.9);
+  }
+  64%,
+  82% {
+    transform: translate3d(var(--drag-demo-x), 0, 0) rotate(-10deg) scale(0.9);
+  }
+  92%,
+  100% {
+    transform: translate3d(0, 0, 0) rotate(-10deg) scale(1);
+  }
+}
+
+@keyframes dragDemoClickRing {
+  0%,
+  18%,
+  42%,
+  100% {
+    opacity: 0;
+    transform: scale(0.55);
+  }
+  24% {
+    opacity: 0.9;
+    transform: scale(0.85);
+  }
+  38% {
+    opacity: 0;
+    transform: scale(1.75);
+  }
+}
+
+@keyframes dragDemoTrackPulse {
+  0%,
+  24%,
+  92%,
+  100% {
+    opacity: 0;
+    transform: scaleX(0);
+  }
+  42%,
+  82% {
+    opacity: 1;
+    transform: scaleX(1);
+  }
+}
+
+@keyframes dragDemoGripPulse {
+  0%,
+  100% {
+    background: rgba(17, 24, 39, 0.34);
+  }
+  24%,
+  82% {
+    background: rgba(37, 99, 235, 0.72);
+  }
+}
+
+@media (max-width: 576px) {
+  .bubble {
+    min-height: 160px;
+    padding: 26px 28px 22px;
+  }
+
+  .title {
+    font-size: 18px;
+  }
+
+  .description {
+    font-size: 14px;
+  }
+}
