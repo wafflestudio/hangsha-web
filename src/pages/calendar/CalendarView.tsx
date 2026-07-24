@@ -1,8 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Views } from "react-big-calendar";
-import { useQueryClient } from "@tanstack/react-query";
-import PullToRefresh from "react-simple-pull-to-refresh";
 import styles from "./CalendarView.module.css";
 import type { CalendarEvent, Event, Semester } from "@types";
 import DetailView from "@/components/layout/sidePannel/DetailView";
@@ -70,7 +68,6 @@ const CalendarView = () => {
 	/** ----------------------  FETCH MONTH / WEEK / DAY data -------------------- */
 
 	const navigate = useNavigate();
-	const queryClient = useQueryClient();
 
 	const filters = useMemo(
 		() => ({
@@ -100,13 +97,6 @@ const CalendarView = () => {
 		interestCategories,
 	);
 
-	const handleRefresh = async () => {
-		await Promise.all([
-			queryClient.invalidateQueries({ queryKey: ["monthEvents"] }),
-			queryClient.invalidateQueries({ queryKey: ["weekEvents"] }),
-			queryClient.invalidateQueries({ queryKey: ["dayEvents"] }),
-		]);
-	};
 
 	useEffect(() => {
 		const today = new Date();
@@ -226,7 +216,6 @@ const CalendarView = () => {
 			<div className={styles.calendarContainer}>
 				<div className={styles.calendarWrapper}>
 					{isMobile ? (
-						<PullToRefresh onRefresh={handleRefresh} pullDownThreshold={70}>
 							<MyCalendar
 								monthEvents={MONTH_EVENTS}
 								weekEvents={WEEK_EVENTS}
@@ -236,7 +225,6 @@ const CalendarView = () => {
 								onSelectEvent={onSelectEvent}
 								onViewChange={setCalendarView}
 							/>
-						</PullToRefresh>
 					) : (
 						<MyCalendar
 							monthEvents={MONTH_EVENTS}
