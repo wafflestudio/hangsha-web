@@ -1,4 +1,4 @@
-import { TokenService } from "@/api/tokenService";
+import { AdminTokenService } from "@/api/adminTokenService";
 import type { ReactNode } from "react";
 import { useState } from "react";
 import AdminAccessPage from "@/pages/AdminAccess";
@@ -30,7 +30,7 @@ function isAdminToken(token: string): boolean {
 
 export default function AdminRoute({ children }: AdminRouteProps) {
 	const [, refreshRoute] = useState(0);
-	const token = TokenService.getToken();
+	const token = AdminTokenService.getToken();
 
 	if (!token || !isAdminToken(token)) {
 		return (

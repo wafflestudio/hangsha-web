@@ -1,4 +1,4 @@
-import api from "./axios";
+import adminApi from "./adminAxios";
 
 export interface AdminActionResponse {
 	ok: boolean;
@@ -55,7 +55,9 @@ export interface AdminEventRequest {
 export const getAdminEvent = async (
 	eventId: number,
 ): Promise<AdminEventDetailResponse> => {
-	const res = await api.get<AdminEventDetailResponse>(`/events/${eventId}`);
+	const res = await adminApi.get<AdminEventDetailResponse>(
+		`/events/${eventId}`,
+	);
 	return res.data;
 };
 
@@ -78,7 +80,7 @@ export interface AdminEventOverrideUpdateResponse extends AdminActionResponse {
 export const createAdminEvent = async (
 	body: AdminEventCreateRequest,
 ): Promise<AdminActionResponse> => {
-	const res = await api.post<AdminActionResponse>("/admin/events", body);
+	const res = await adminApi.post<AdminActionResponse>("/admin/events", body);
 	return res.data;
 };
 
@@ -86,7 +88,7 @@ export const patchAdminEvent = async (
 	eventId: number,
 	body: AdminEventPatchRequest,
 ): Promise<AdminActionResponse> => {
-	const res = await api.patch<AdminActionResponse>(
+	const res = await adminApi.patch<AdminActionResponse>(
 		`/admin/events/${eventId}`,
 		body,
 	);
@@ -96,12 +98,16 @@ export const patchAdminEvent = async (
 export const deleteAdminEvent = async (
 	eventId: number,
 ): Promise<AdminActionResponse> => {
-	const res = await api.delete<AdminActionResponse>(`/admin/events/${eventId}`);
+	const res = await adminApi.delete<AdminActionResponse>(
+		`/admin/events/${eventId}`,
+	);
 	return res.data;
 };
 
 export const deleteAllAdminEvents = async (): Promise<AdminActionResponse> => {
-	const res = await api.delete<AdminActionResponse>("/admin/events/delete");
+	const res = await adminApi.delete<AdminActionResponse>(
+		"/admin/events/delete",
+	);
 	return res.data;
 };
 
@@ -111,7 +117,7 @@ export const syncAdminEventsFile = async (
 	const formData = new FormData();
 	formData.append("file", file);
 
-	const res = await api.post<AdminActionResponse>(
+	const res = await adminApi.post<AdminActionResponse>(
 		"/admin/events/sync-file",
 		formData,
 	);
@@ -123,7 +129,7 @@ export const updateAdminEventOverrides = async (
 	eventId: number,
 	body: AdminEventOverrideUpdateRequest,
 ): Promise<AdminEventOverrideUpdateResponse> => {
-	const res = await api.patch<AdminEventOverrideUpdateResponse>(
+	const res = await adminApi.patch<AdminEventOverrideUpdateResponse>(
 		`/admin/events/${eventId}/overrides`,
 		body,
 	);
