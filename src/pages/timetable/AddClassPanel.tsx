@@ -18,6 +18,7 @@ import type {
 import { DAY_LABELS_KO } from "../../util/types";
 import { buildTimeOptions, STEP_MIN } from "../../util/weekly_timetable/time";
 import { TimeRangePicker, type TimeValue } from "./TimeRangePicker";
+import { TimeSelect } from "./TimeSelect";
 import styles from "./Timetable.module.css";
 
 type Props = {
@@ -225,39 +226,29 @@ export function AddClassPanel({
 								/>
 							) : (
 								<div className={styles.timeRange}>
-									<select
-										aria-label="수업 시작 시간"
+									<TimeSelect
+										ariaLabel="수업 시작 시간"
 										value={t.startAt}
-										onChange={(e) =>
+										options={timeOptions}
+										onChange={(startAt) =>
 											updateRow(t.rowId, {
-												startAt: Number(e.target.value),
+												startAt,
 											})
 										}
-									>
-										{timeOptions.map((option) => (
-											<option key={option.value} value={option.value}>
-												{option.label}
-											</option>
-										))}
-									</select>
+									/>
 
 									<span className={styles.tilde}>~</span>
 
-									<select
-										aria-label="수업 종료 시간"
+									<TimeSelect
+										ariaLabel="수업 종료 시간"
 										value={t.endAt}
-										onChange={(e) =>
+										options={timeOptions}
+										onChange={(endAt) =>
 											updateRow(t.rowId, {
-												endAt: Number(e.target.value),
+												endAt,
 											})
 										}
-									>
-										{timeOptions.map((option) => (
-											<option key={option.value} value={option.value}>
-												{option.label}
-											</option>
-										))}
-									</select>
+									/>
 								</div>
 							)}
 						</div>
