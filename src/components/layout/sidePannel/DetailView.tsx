@@ -2,8 +2,6 @@ import { useEvents } from "@contexts/EventContext";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./DetailView.module.css";
-import { getDDay } from "../../../util/calendar/getDday";
-import { CATEGORY_COLORS, CATEGORY_LIST } from "@constants";
 import { FaAnglesRight, FaLocationDot } from "react-icons/fa6";
 import type { CalendarEvent, EventDetail } from "@types";
 import parse from "html-react-parser";
@@ -16,6 +14,7 @@ import Modal, { ErrorModal } from "../../ui/Modal";
 import Loading from "../../ui/Loading";
 import calendarEventMapper from "@/util/calendar/calendarEventMapper";
 import EventDate from "../../feature/eventDate/EventDate";
+import { CategoryChip, DdayChip } from "../../feature/eventChip/EventChip";
 
 const DetailView = ({ eventId }: { eventId: number }) => {
 	const [event, setEvent] = useState<EventDetail>();
@@ -71,9 +70,7 @@ const DetailView = ({ eventId }: { eventId: number }) => {
 	}, [eventId, fetchEventById]);
 
 	// 디데이 계산할 기준 날짜
-	const ddayTargetDate = calendarEvent?.resource.isPeriodEvent
-		? calendarEvent.end
-		: calendarEvent?.start;
+	const ddayTargetDate = calendarEvent?.resource.event.applyEnd || null;
 
 	const [isBookmarked, setIsBookmarked] = useState<boolean>(
 		!!event?.isBookmarked,
@@ -162,15 +159,8 @@ const DetailView = ({ eventId }: { eventId: number }) => {
 				</div>
 			)}
 			<ul className={styles.chipsList}>
-				<li className={styles.deadlineChip}>{getDDay(ddayTargetDate)}</li>
-				<li
-					className={styles.categoryChip}
-					style={{
-						backgroundColor: CATEGORY_COLORS[event.eventTypeId],
-					}}
-				>
-					{CATEGORY_LIST[event.eventTypeId]}
-				</li>
+				{ddayTargetDate && <DdayChip as="li" targetDate={ddayTargetDate} />}
+				<CategoryChip as="li" categoryId={event.eventTypeId} />
 			</ul>
 			<span className={styles.orgText}>{event.organization}</span>
 			<button

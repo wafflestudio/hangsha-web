@@ -20,21 +20,6 @@
 	border-bottom: 1px solid #eaeaea;
 }
 
-/* D-day */
-.table li {
-	list-style: none;
-	font-size: 13px;
-	font-weight: 600;
-	color: #333333;
-	padding: 4px 8px;
-	background-color: #ffffff;
-	border: 1px solid #e0e0e0;
-	border-radius: 6px;
-	white-space: nowrap;
-	text-align: center;
-	width: fit-content;
-}
-
 /* 날짜 */
 .table tbody td:nth-child(5) {
 	font-size: 14px;
