@@ -119,8 +119,13 @@
 }
 
 .panel {
-  border-left: 1px solid #eee;
-  padding: 16px;
+	box-sizing: border-box;
+	min-height: 0;
+	height: 100vh;
+	overflow-y: auto;
+	overscroll-behavior: contain;
+	border-left: 1px solid #eee;
+	padding: 16px;
 }
 
 .addClassPanelDim {
@@ -558,6 +563,7 @@
     right: 0;
     bottom: calc(64px + env(safe-area-inset-bottom));
     z-index: 1200;
+    height: auto;
     max-height: min(72dvh, 620px);
     overflow-y: auto;
     padding: 18px 20px 22px;
