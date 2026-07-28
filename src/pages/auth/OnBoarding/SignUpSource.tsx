@@ -4,10 +4,12 @@ import signupStyles from "../Signup/EmailSignUp.module.css";
 import styles from "./SignUpSource.module.css";
 
 const SIGN_UP_SOURCES = [
-	"검색",
-	"커뮤니티/카페",
-	"인스타그램",
-	"지인을 통해",
+	"에브리타임 등 커뮤니티",
+	"인스타그램 및 SNS 홍보",
+	"단톡방",
+	"인터넷 검색",
+	"지인 추천",
+	"와플스튜디오의 프로젝트가 궁금해서",
 	"기타",
 ] as const;
 
