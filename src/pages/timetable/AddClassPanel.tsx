@@ -103,11 +103,6 @@ export function AddClassPanel({
 	const canSave = isTimeRangeValid && isTitleValid && !hasConflict;
 
 	const handleSave = () => {
-		const conflict = slot.some((s) => hasOverlap(allSlots, s));
-		if (conflict) {
-			alert("시간이 겹치는 수업은 추가할 수 없습니다.");
-			return;
-		}
 		if (!timetableId) {
 			alert("시간표를 먼저 추가해주세요.");
 			return;
@@ -260,6 +255,9 @@ export function AddClassPanel({
 
 					{!isTitleValid && (
 						<div className={styles.error}>과목 이름은 필수입니다.</div>
+					)}
+					{hasConflict && (
+						<div className={styles.error}>시간이 겹치는 수업이 있습니다.</div>
 					)}
 				</div>
 
