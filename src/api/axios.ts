@@ -7,12 +7,14 @@ let isRefreshing = false;
 let refreshSubscribers: ((token: string) => void)[] = [];
 
 const onRefreshed = (accessToken: string) => {
-    refreshSubscribers.forEach((callback) => callback(accessToken));
-    refreshSubscribers = [];
+	refreshSubscribers.forEach((callback) => {
+		callback(accessToken);
+	});
+	refreshSubscribers = [];
 };
 
 const addRefreshSubscriber = (callback: (token: string) => void) => {
-    refreshSubscribers.push(callback);
+	refreshSubscribers.push(callback);
 };
 
 const api = axios.create({
@@ -31,7 +33,8 @@ api.interceptors.request.use(
 		const skipsAuthorizationHeader =
 			url.includes("/auth/login") ||
 			url.includes("/auth/register") ||
-			url.includes("/auth/refresh");
+			url.includes("/auth/refresh") ||
+			url.includes("/admin/auth/session");
 
 		if (skipsAuthorizationHeader) {
 			delete config.headers.Authorization;
@@ -60,7 +63,8 @@ api.interceptors.response.use(
 			url.includes("/auth/login") ||
 			url.includes("/auth/register") ||
 			url.includes("/auth/refresh") ||
-			url.includes("/auth/session");
+			url.includes("/auth/session") ||
+			url.includes("/admin/auth/session");
 
 		if (skipsRefreshRecovery) {
 			return Promise.reject(error);
@@ -68,14 +72,14 @@ api.interceptors.response.use(
 
 		if (error.response?.status === 401 && !originalRequest._retry) {
 			if (isRefreshing) {
-                return new Promise((resolve) => {
-                    addRefreshSubscriber((token: string) => {
-                        originalRequest.headers.Authorization = `Bearer ${token}`;
-                        resolve(api(originalRequest));
-                    });
-                });
-            }
-			
+				return new Promise((resolve) => {
+					addRefreshSubscriber((token: string) => {
+						originalRequest.headers.Authorization = `Bearer ${token}`;
+						resolve(api(originalRequest));
+					});
+				});
+			}
+
 			originalRequest._retry = true;
 			isRefreshing = true;
 
@@ -88,10 +92,10 @@ api.interceptors.response.use(
 
 				// update storage
 				TokenService.setToken(data.accessToken);
-				
+
 				isRefreshing = false;
 				onRefreshed(data.accessToken);
-				
+
 				// update header
 				originalRequest.headers.Authorization = `Bearer ${data.accessToken}`;
 
@@ -100,7 +104,7 @@ api.interceptors.response.use(
 			} catch (refreshError) {
 				// refresh failed :
 				isRefreshing = false;
-                refreshSubscribers = [];
+				refreshSubscribers = [];
 				TokenService.clearTokens();
 				console.error("Session expired. Please sign in again");
 				return Promise.reject(refreshError);
