@@ -176,9 +176,9 @@
 }
 
 .timeRange {
-  display: flex;
-  gap: 10px;
-  align-items: center;
+	display: flex;
+	gap: 10px;
+	align-items: center;
 }
 
 .timeRange select {
@@ -603,20 +603,7 @@
     font-size: 12px;
   }
 
-  .timeRange {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
-    gap: 8px;
-  }
-
-  .timeRange select {
-    width: 100%;
-    min-width: 0;
-    padding: 9px 10px;
-    font-size: 13px;
-  }
-
-  .gridWrap {
+	.gridWrap {
     width: 100%;
     min-width: 0;
     background: #ffffff;
