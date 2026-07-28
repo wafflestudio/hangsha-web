@@ -1,5 +1,5 @@
 import { createAdminSession } from "@/api/adminAuth";
-import { TokenService } from "@/api/tokenService";
+import { AdminTokenService } from "@/api/adminTokenService";
 import type { FormEvent } from "react";
 import { useState } from "react";
 import styles from "./AdminAccess.module.css";
@@ -29,7 +29,7 @@ export default function AdminAccessPage({
 
 		try {
 			const accessToken = await createAdminSession(trimmedCode);
-			TokenService.setToken(accessToken);
+			AdminTokenService.setToken(accessToken);
 			onAuthorized();
 		} catch {
 			setError("액세스 코드가 올바르지 않습니다.");
