@@ -327,6 +327,7 @@ export default function TimetablePage() {
 					allSlots={allSlots}
 					year={year}
 					semester={semester}
+					isMobile={isMobile}
 					setIsClicked={setIsAddClassPanelOpen}
 				/>
 			)}

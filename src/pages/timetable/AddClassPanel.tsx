@@ -17,6 +17,7 @@ import type {
 } from "../../util/types";
 import { DAY_LABELS_KO } from "../../util/types";
 import { buildTimeOptions, STEP_MIN } from "../../util/weekly_timetable/time";
+import { TimeRangePicker, type TimeValue } from "./TimeRangePicker";
 import styles from "./Timetable.module.css";
 
 type Props = {
@@ -25,10 +26,26 @@ type Props = {
 	allSlots: TimeSlot[];
 	year: number;
 	semester: Semester;
+	isMobile: boolean;
 	setIsClicked: (isClicked: boolean) => void;
 };
 
 const DAYS: Day[] = [0, 1, 2, 3, 4, 5, 6];
+
+const minutesToTimeValue = (minutes: number): TimeValue => {
+	const hour = Math.floor(minutes / 60);
+	const minute = minutes % 60;
+
+	return `${String(hour).padStart(2, "0")}:${String(minute).padStart(
+		2,
+		"0",
+	)}` as TimeValue;
+};
+
+const timeValueToMinutes = (time: TimeValue) => {
+	const [hour, minute] = time.split(":").map(Number);
+	return hour * 60 + minute;
+};
 
 export function AddClassPanel({
 	timetableId,
@@ -36,6 +53,7 @@ export function AddClassPanel({
 	allSlots,
 	year,
 	semester,
+	isMobile,
 	setIsClicked,
 }: Props) {
 	const timeOptions = useMemo(() => buildTimeOptions(STEP_MIN), []);
@@ -193,48 +211,61 @@ export function AddClassPanel({
 								})}
 							</div>
 
-							<div className={styles.timeRange}>
-								<select
-									value={t.startAt}
-									onChange={(e) =>
-										updateRow(t.rowId, { startAt: Number(e.target.value) })
+							{isMobile ? (
+								<TimeRangePicker
+									startTime={minutesToTimeValue(t.startAt)}
+									endTime={minutesToTimeValue(t.endAt)}
+									minuteStep={STEP_MIN}
+									onChange={({ startTime, endTime }) =>
+										updateRow(t.rowId, {
+											startAt: timeValueToMinutes(startTime),
+											endAt: timeValueToMinutes(endTime),
+										})
 									}
-								>
-									{timeOptions.map((o) => (
-										<option key={o.value} value={o.value}>
-											{o.label}
-										</option>
-									))}
-								</select>
+								/>
+							) : (
+								<div className={styles.timeRange}>
+									<select
+										aria-label="수업 시작 시간"
+										value={t.startAt}
+										onChange={(e) =>
+											updateRow(t.rowId, {
+												startAt: Number(e.target.value),
+											})
+										}
+									>
+										{timeOptions.map((option) => (
+											<option key={option.value} value={option.value}>
+												{option.label}
+											</option>
+										))}
+									</select>
 
-								<span className={styles.tilde}>~</span>
+									<span className={styles.tilde}>~</span>
 
-								<select
-									value={t.endAt}
-									onChange={(e) =>
-										updateRow(t.rowId, { endAt: Number(e.target.value) })
-									}
-								>
-									{timeOptions.map((o) => (
-										<option key={o.value} value={o.value}>
-											{o.label}
-										</option>
-									))}
-								</select>
-							</div>
+									<select
+										aria-label="수업 종료 시간"
+										value={t.endAt}
+										onChange={(e) =>
+											updateRow(t.rowId, {
+												endAt: Number(e.target.value),
+											})
+										}
+									>
+										{timeOptions.map((option) => (
+											<option key={option.value} value={option.value}>
+												{option.label}
+											</option>
+										))}
+									</select>
+								</div>
+							)}
 						</div>
 					))}
 
 					<button className={styles.link} type="button" onClick={addRow}>
 						+ 시간 추가
 					</button>
-
-					{!isTimeRangeValid && (
-						<div className={styles.error}>
-							시간 범위가 잘못되었습니다. (종료가 시작보다 늦어야 하고 5분
-							단위여야 합니다.)
-						</div>
-					)}
 
 					{!isTitleValid && (
 						<div className={styles.error}>과목 이름은 필수입니다.</div>
