@@ -7,7 +7,11 @@ import type {
 } from "react-big-calendar";
 import { Views } from "react-big-calendar";
 
-import type { Event, CalendarEvent, GetCoursesResponse } from "../../util/types";
+import type {
+	Event,
+	CalendarEvent,
+	GetCoursesResponse,
+} from "../../util/types";
 import {
 	config,
 	flattenEventsToBlocks,
@@ -29,6 +33,30 @@ interface CustomWeekViewProps {
 }
 
 type Rect = { left: number; width: number };
+
+function useElementHeight<T extends HTMLElement>(
+	elementRef: React.RefObject<T | null>,
+) {
+	const [height, setHeight] = useState(0);
+
+	useLayoutEffect(() => {
+		const el = elementRef.current;
+		if (!el) return;
+
+		const update = () => {
+			setHeight(el.getBoundingClientRect().height);
+		};
+
+		update();
+
+		const ro = new ResizeObserver(update);
+		ro.observe(el);
+
+		return () => ro.disconnect();
+	}, [elementRef]);
+
+	return height;
+}
 
 function useAnchorRect<T extends HTMLElement>(
 	anchorRef: React.RefObject<T | null>,
@@ -103,10 +131,11 @@ function CustomWeekView({
 						cevent.end.getMonth(),
 						cevent.end.getDate(),
 					);
-					const differentDate = (startDay.getFullYear() !== endDay.getFullYear() 
-						&& startDay.getMonth() !== endDay.getMonth() 
-						&& startDay.getDate() !== endDay.getDate());
-					
+					const differentDate =
+						startDay.getFullYear() !== endDay.getFullYear() &&
+						startDay.getMonth() !== endDay.getMonth() &&
+						startDay.getDate() !== endDay.getDate();
+
 					isAllDay = Boolean(cevent.allDay) || differentDate || sameMinute;
 				}
 
@@ -166,7 +195,9 @@ function CustomWeekView({
 	);
 
 	const gridRef = useRef<HTMLDivElement>(null);
+	const periodLayerRef = useRef<HTMLDivElement>(null);
 	const { left, width } = useAnchorRect(gridRef);
+	const periodBarHeight = useElementHeight(periodLayerRef);
 
 	return (
 		<div className={styles.weekView}>
@@ -179,6 +210,11 @@ function CustomWeekView({
 			<div
 				className={styles.timetableLayer}
 				data-tour-id="week-tour-participating-events"
+				style={
+					{
+						"--period-bar-height": `${periodBarHeight}px`,
+					} as React.CSSProperties
+				}
 			>
 				<WeekGrid
 					ref={gridRef}
@@ -191,6 +227,7 @@ function CustomWeekView({
 				/>
 			</div>
 			<div
+				ref={periodLayerRef}
 				className={styles.periodLayer}
 				style={{ left, width }}
 				data-tour-id="week-tour-recruiting-events"
