@@ -4,7 +4,7 @@ import styles from "./Bookmarks.module.css";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
 import Navigationbar from "@/components/layout/Navigationbar";
 import { useNavigate } from "react-router-dom";
-import GalleryCard from "../../calendar_widgets/day/gallery/GalleryCard"
+import GalleryCard from "../../calendar_widgets/day/gallery/GalleryCard";
 import { useDetail } from "@/contexts/DetailContext";
 import DetailView from "@/components/layout/sidePannel/DetailView";
 import {
@@ -47,7 +47,7 @@ const BookmarksPage = () => {
 	const { bookmarkedEvents } = useUserData();
 	const navigate = useNavigate();
 
-	const { showDetail, setShowDetail, clickedEventId } = useDetail();
+	const { showDetail, closeDetail, clickedEventId } = useDetail();
 	const { isMobile, handleResizeStart, sidePanelStyle } =
 		useResizableSidePanel();
 
@@ -58,14 +58,14 @@ const BookmarksPage = () => {
 			if (!sidePanelRef.current) return;
 			const isInside = sidePanelRef.current.contains(event.target as Node);
 			if (!isInside) {
-				setShowDetail(false);
+				closeDetail();
 			}
 		}
 		document.addEventListener("mousedown", handleClickOutside);
 		return () => {
 			document.removeEventListener("mousedown", handleClickOutside);
 		};
-	}, [setShowDetail]);
+	}, [closeDetail]);
 
 	return (
 		<div className={styles.container}>

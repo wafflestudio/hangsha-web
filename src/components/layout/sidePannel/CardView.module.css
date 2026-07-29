@@ -77,26 +77,6 @@
   display: none;
 }
 
-.deadlineChip {
-  font-size: 13px;
-  font-weight: 600;
-  color: #333333;
-  padding: 4px 8px;
-  background-color: #ffffff;
-  border: 1px solid #e0e0e0;
-  border-radius: 6px;
-  white-space: nowrap;
-}
-
-.categoryChip {
-  font-size: 13px;
-  font-weight: 500;
-  color: #111111;
-  padding: 5px 10px;
-  border-radius: 6px;
-  white-space: nowrap;
-}
-
 .orgText {
   font-size: 13px;
   font-weight: 400;
@@ -157,8 +137,7 @@
     margin-bottom: 8px;
   }
 
-  .deadlineChip,
-  .categoryChip {
+  .chipsList .cardChip {
     font-size: 12px;
     padding: 3px 8px;
   }
@@ -235,16 +214,6 @@
     display: flex;
     gap: 12px;
   }
-
-  /* .categoryChip {
-    border-radius: 10px;
-    font-size: 13px;
-  }
-  .deadlineChip {
-    border: none;
-    font-size: 13px;
-    font-weight: 500;
-  } */
 
   .orgText {
     display: none;

@@ -1,8 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Views, type View } from "react-big-calendar";
-import { useQueryClient } from "@tanstack/react-query";
-import PullToRefresh from "react-simple-pull-to-refresh";
+import { Views } from "react-big-calendar";
 import styles from "./CalendarView.module.css";
 import type { CalendarEvent, Event, Semester } from "@types";
 import DetailView from "@/components/layout/sidePannel/DetailView";
@@ -27,6 +25,9 @@ import {
 	useDayEvents,
 } from "@/contexts/useCalendarEvents";
 import { useTimetable } from "@/contexts/TimetableContext";
+import { useMainPanelQuery } from "@/pages/calendar/hooks/useMainPanelQuery";
+import { useCalendarViewQuery } from "@/pages/calendar/hooks/useCalendarViewQuery";
+import { formatDateToYYYYMMDD } from "@/util/calendar/dateFormatter";
 
 const getSemesterByDate = (date: Date): Semester => {
 	const month = date.getMonth() + 1;
@@ -49,20 +50,20 @@ const CalendarView = () => {
 
 	const { globalCategory, globalOrg, globalStatus } = useFilter();
 	// detail 보이는 뷰 조정
-	const { showDetail, setShowDetail, clickedEventId, setClickedEventId } =
-		useDetail();
+	const { showDetail, clickedEventId, openDetail } = useDetail();
+	const {
+		search: panelSearch,
+		showEventList,
+		eventListDate,
+		openEventList,
+		closePanel,
+	} = useMainPanelQuery();
+	const { calendarView, setCalendarView } = useCalendarViewQuery();
 	const { excludedKeywords, interestCategories } = useUserData();
 	const { initializeDefaultOverlay } = useTimetable();
 
 	// 현재 기준점이 되는 날짜
 	const [currentDate, setCurrentDate] = useState<Date>(new Date());
-
-	// 캘린더 뷰 모드 추적 (월/주/일)
-	const [currentView, setCurrentView] = useState<View>(Views.MONTH);
-
-	// 월별 뷰 - 날짜 사이드 뷰
-	const [showSideMonth, setShowSideMonth] = useState<boolean>(false);
-	const [clickedDate, setClickedDate] = useState<Date>(new Date());
 
 	/** ----------------------  FETCH MONTH / WEEK / DAY data -------------------- */
 
@@ -96,6 +97,7 @@ const CalendarView = () => {
 		interestCategories,
 	);
 
+
 	useEffect(() => {
 		const today = new Date();
 		void initializeDefaultOverlay(
@@ -103,15 +105,6 @@ const CalendarView = () => {
 			getSemesterByDate(today),
 		);
 	}, [initializeDefaultOverlay]);
-
-	const queryClient = useQueryClient();
-	const handleRefresh = async () => {
-		await Promise.all([
-			queryClient.invalidateQueries({ queryKey: ["monthEvents"] }),
-			queryClient.invalidateQueries({ queryKey: ["weekEvents"] }),
-			queryClient.invalidateQueries({ queryKey: ["dayEvents"] }),
-		]);
-	};
 
 	// Flatten byDate buckets in chronological key order : preserve each date bucket's internal sequence
 	// 중복 시 첫 event만 keep : multi-day event sits at the position of its earliest bucket
@@ -138,23 +131,19 @@ const CalendarView = () => {
 
 	// click handler
 	const onShowMoreClick = (date: Date, view: string) => {
-		// showSideMonth on, showDetailView off
+		// Open the event list and close detail panel
 		if (view === Views.MONTH) {
-			setShowSideMonth(true);
+			openEventList(date);
 		}
-		setShowDetail(false);
-		setClickedDate(date);
 		setDayDate(date);
 	};
 	const onSelectEvent = (event: CalendarEvent) => {
-		// showSideMonth off, showDetailView on
-		setShowSideMonth(false);
-		setShowDetail(true);
-		setClickedEventId(event.resource.event.id);
+		// Open the selected event detail.
+		openDetail(event.resource.event.id);
 	};
 
 	const handleCloseSideMonth = () => {
-		setShowSideMonth(false);
+		closePanel();
 	};
 
 	// 모바일 너비일 때 일별/사이드뷰/디테일뷰가 보이면 /main/day로 redirect
@@ -167,13 +156,34 @@ const CalendarView = () => {
 		return () => window.removeEventListener("resize", checkIsMobile);
 	}, []);
 	useEffect(() => {
-		if (
-			isMobile &&
-			(currentView === Views.DAY || showSideMonth || showDetail)
-		) {
-			navigate("/main/day");
+		if (!isMobile) return;
+		if (calendarView !== Views.DAY && !showEventList && !showDetail) return;
+
+		let nextSearch = panelSearch;
+		if (calendarView === Views.DAY && !showEventList && !showDetail) {
+			const nextParams = new URLSearchParams(panelSearch);
+			nextParams.set("panel", "events");
+			nextParams.set("date", formatDateToYYYYMMDD(dayDate));
+			nextParams.delete("eventId");
+			nextSearch = nextParams.toString();
 		}
-	}, [isMobile, currentView, showSideMonth, showDetail, navigate]);
+
+		navigate(
+			{
+				pathname: "/main/day",
+				search: nextSearch ? `?${nextSearch}` : "",
+			},
+			{ replace: true },
+		);
+	}, [
+		isMobile,
+		calendarView,
+		showEventList,
+		showDetail,
+		panelSearch,
+		dayDate,
+		navigate,
+	]);
 
 	// clicking outside of sideview (that is not event or anything else) created
 	const sidePanelRef = useRef<HTMLDivElement>(null);
@@ -190,8 +200,7 @@ const CalendarView = () => {
 			const isInside = sidePanelRef.current.contains(event.target as Node);
 			// If clicked OUTSIDE, close both panels
 			if (!isInside) {
-				setShowSideMonth(false);
-				setShowDetail(false);
+				closePanel();
 			}
 		}
 		document.addEventListener("mousedown", handleClickOutside);
@@ -199,7 +208,7 @@ const CalendarView = () => {
 		return () => {
 			document.removeEventListener("mousedown", handleClickOutside);
 		};
-	}, [setShowDetail]);
+	}, [closePanel]);
 
 	return (
 		<div className={styles.container}>
@@ -207,28 +216,28 @@ const CalendarView = () => {
 			<div className={styles.calendarContainer}>
 				<div className={styles.calendarWrapper}>
 					{isMobile ? (
-						<PullToRefresh onRefresh={handleRefresh} pullDownThreshold={70}>
 							<MyCalendar
 								monthEvents={MONTH_EVENTS}
 								weekEvents={WEEK_EVENTS}
 								dayEvents={dayViewEvents}
+								view={calendarView}
 								onShowMoreClick={onShowMoreClick}
 								onSelectEvent={onSelectEvent}
-								onViewChange={setCurrentView}
+								onViewChange={setCalendarView}
 							/>
-						</PullToRefresh>
 					) : (
 						<MyCalendar
 							monthEvents={MONTH_EVENTS}
 							weekEvents={WEEK_EVENTS}
 							dayEvents={dayViewEvents}
+							view={calendarView}
 							onShowMoreClick={onShowMoreClick}
 							onSelectEvent={onSelectEvent}
-							onViewChange={setCurrentView}
+							onViewChange={setCalendarView}
 						/>
 					)}
 				</div>
-				{showSideMonth && (
+				{showEventList && eventListDate && (
 					<div
 						className={styles.sidePanel}
 						ref={sidePanelRef}
@@ -237,7 +246,11 @@ const CalendarView = () => {
 						{!isMobile && (
 							<SidePanelResizeHandle onMouseDown={handleResizeStart} />
 						)}
-						<EventCardView day={clickedDate} onClose={handleCloseSideMonth} />
+						<EventCardView
+							day={eventListDate}
+							onClose={handleCloseSideMonth}
+							onDateChange={openEventList}
+						/>
 					</div>
 				)}
 
@@ -257,8 +270,8 @@ const CalendarView = () => {
 			<FilterSheet />
 			<BottomNav />
 			<MainRouteTutorial
-				isDayView={currentView === Views.DAY}
-				isWeekView={currentView === Views.WEEK}
+				isDayView={calendarView === Views.DAY}
+				isWeekView={calendarView === Views.WEEK}
 			/>
 		</div>
 	);

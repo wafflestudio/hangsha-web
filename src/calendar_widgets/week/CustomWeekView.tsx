@@ -5,8 +5,13 @@ import type {
 	NavigateAction,
 	ViewStatic,
 } from "react-big-calendar";
+import { Views } from "react-big-calendar";
 
-import type { Event, CalendarEvent, GetCoursesResponse } from "../../util/types";
+import type {
+	Event,
+	CalendarEvent,
+	GetCoursesResponse,
+} from "../../util/types";
 import {
 	config,
 	flattenEventsToBlocks,
@@ -16,6 +21,7 @@ import { WeekGrid } from "./WeekGrid";
 import { PeriodBars } from "./PeriodBar";
 import AllDayBar from "./AllDayBar";
 import styles from "./WeekView.module.css";
+import calendarEventMapper from "@/util/calendar/calendarEventMapper";
 
 interface CustomWeekViewProps {
 	date: Date;
@@ -27,6 +33,30 @@ interface CustomWeekViewProps {
 }
 
 type Rect = { left: number; width: number };
+
+function useElementHeight<T extends HTMLElement>(
+	elementRef: React.RefObject<T | null>,
+) {
+	const [height, setHeight] = useState(0);
+
+	useLayoutEffect(() => {
+		const el = elementRef.current;
+		if (!el) return;
+
+		const update = () => {
+			setHeight(el.getBoundingClientRect().height);
+		};
+
+		update();
+
+		const ro = new ResizeObserver(update);
+		ro.observe(el);
+
+		return () => ro.disconnect();
+	}, [elementRef]);
+
+	return height;
+}
 
 function useAnchorRect<T extends HTMLElement>(
 	anchorRef: React.RefObject<T | null>,
@@ -101,10 +131,11 @@ function CustomWeekView({
 						cevent.end.getMonth(),
 						cevent.end.getDate(),
 					);
-					const differentDate = (startDay.getFullYear() !== endDay.getFullYear() 
-						&& startDay.getMonth() !== endDay.getMonth() 
-						&& startDay.getDate() !== endDay.getDate());
-					
+					const differentDate =
+						startDay.getFullYear() !== endDay.getFullYear() &&
+						startDay.getMonth() !== endDay.getMonth() &&
+						startDay.getDate() !== endDay.getDate();
+
 					isAllDay = Boolean(cevent.allDay) || differentDate || sameMinute;
 				}
 
@@ -144,7 +175,10 @@ function CustomWeekView({
 
 	const handleSelectBlock = useCallback(
 		(calendarEventLike: CalendarEvent | Event) => {
-			const raw = calendarEventLike as Event;
+			const raw =
+				"resource" in calendarEventLike
+					? calendarEventLike.resource.event
+					: calendarEventLike;
 			const found = (events ?? []).find(
 				(ce) => ce?.resource?.event?.id === raw.id,
 			);
@@ -154,22 +188,16 @@ function CustomWeekView({
 				return;
 			}
 
-			const start = raw.eventStart || raw.applyStart;
-			const end = raw.eventEnd || raw.applyEnd;
-
-			onSelectEvent?.({
-				start: new Date(start),
-				end: new Date(end),
-				title: raw.title,
-				allDay: true,
-				resource: { event: raw, isPeriodEvent: !raw.eventStart },
-			} as unknown as CalendarEvent);
+			const calendarEvent = calendarEventMapper(raw, Views.WEEK);
+			if (calendarEvent) onSelectEvent?.(calendarEvent);
 		},
 		[events, onSelectEvent],
 	);
 
 	const gridRef = useRef<HTMLDivElement>(null);
+	const periodLayerRef = useRef<HTMLDivElement>(null);
 	const { left, width } = useAnchorRect(gridRef);
+	const periodBarHeight = useElementHeight(periodLayerRef);
 
 	return (
 		<div className={styles.weekView}>
@@ -182,6 +210,11 @@ function CustomWeekView({
 			<div
 				className={styles.timetableLayer}
 				data-tour-id="week-tour-participating-events"
+				style={
+					{
+						"--period-bar-height": `${periodBarHeight}px`,
+					} as React.CSSProperties
+				}
 			>
 				<WeekGrid
 					ref={gridRef}
@@ -194,6 +227,7 @@ function CustomWeekView({
 				/>
 			</div>
 			<div
+				ref={periodLayerRef}
 				className={styles.periodLayer}
 				style={{ left, width }}
 				data-tour-id="week-tour-recruiting-events"

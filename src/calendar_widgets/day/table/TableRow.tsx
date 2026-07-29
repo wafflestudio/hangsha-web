@@ -1,23 +1,17 @@
 import type { CalendarEvent } from "@types";
-import { getDDay } from "@calendarUtil/getDday";
-import { CATEGORY_COLORS } from "@constants";
-import { CATEGORY_LIST } from "@constants";
 // import { formatDateToMMDD } from "@calendarUtil/dateFormatter";
 import { useDetail } from "@contexts/DetailContext";
 import { ApplyDate, StartDate } from "@/components/feature/eventDate/EventDate";
+import { CategoryChip, DdayChip } from "@/components/feature/eventChip/EventChip";
 
 const TableRow = ({ data }: { data: CalendarEvent }) => {
 	const event = data.resource.event;
-	const ddayTargetDate = data?.resource.isPeriodEvent
-		? data.end
-		: data.start;
+	const ddayTargetDate = data.resource.event.applyEnd || null; // 지원 마감 기한
 
-
-	const { setShowDetail, setClickedEventId } = useDetail();
+	const { openDetail } = useDetail();
 
 	const handleClick = () => {
-		setShowDetail(true);
-		setClickedEventId(event.id);
+		openDetail(event.id);
 	};
 
 	return (
@@ -32,21 +26,27 @@ const TableRow = ({ data }: { data: CalendarEvent }) => {
 
 			<td>{event.title}</td>
 			<td>
-				<li>{getDDay(ddayTargetDate)}</li>
+				{ddayTargetDate && <DdayChip targetDate={ddayTargetDate} />}
 			</td>
 			<td>
-				<li style={{ backgroundColor: CATEGORY_COLORS[event.eventTypeId] }}>
-					{CATEGORY_LIST[event.eventTypeId]}
-				</li>
+				<CategoryChip categoryId={event.eventTypeId} compact />
 			</td>
 			<td>
 				{/* {formatDateToMMDD(data.start) === formatDateToMMDD(data.end)
 					? formatDateToMMDD(data.start)
 					: `${formatDateToMMDD(data.start)} ~ ${formatDateToMMDD(data.end)}`} */}
-				<StartDate label={null} eventStart={event.eventStart} eventEnd={event.eventEnd}/>
+				<StartDate
+					label={null}
+					eventStart={event.eventStart}
+					eventEnd={event.eventEnd}
+				/>
 			</td>
 			<td>
-				<ApplyDate label={null} applyStart={event.applyStart} applyEnd={event.applyEnd}/>
+				<ApplyDate
+					label={null}
+					applyStart={event.applyStart}
+					applyEnd={event.applyEnd}
+				/>
 			</td>
 			<td>{event.organization}</td>
 		</tr>

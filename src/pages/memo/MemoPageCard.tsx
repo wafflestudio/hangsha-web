@@ -1,4 +1,4 @@
-import { formatDateDotParsed } from "@/util/Calendar/dateFormatter";
+import { formatDateDotParsed } from "@/util/calendar/dateFormatter";
 import type { Memo } from "@/util/types";
 import {
 	useEffect,
@@ -30,7 +30,7 @@ const MemoPageCard = ({
 	const [isAddingTag, setIsAddingTag] = useState<boolean>(false);
 	const [newTag, setNewTag] = useState<string>("");
 	const { updateMemo } = useUserData();
-	const { setShowDetail, setClickedEventId } = useDetail();
+	const { openDetail } = useDetail();
 	const inputRef = useRef<HTMLInputElement>(null);
 	const textareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -95,8 +95,7 @@ const MemoPageCard = ({
 
 	const handleOpenDetail = () => {
 		if (editMode || isAddingTag) return;
-		setClickedEventId(memo.eventId);
-		setShowDetail(true);
+		openDetail(memo.eventId);
 	};
 
 	return (

@@ -4,8 +4,12 @@ import {
 	TUTORIAL_GUIDES,
 	WEEK_VIEW_TUTORIAL_GUIDES,
 } from "./guides/tutorialRegistry";
+import { DAY_VIEW_MODE_TUTORIAL_ID } from "./guides/dayViewModeGuide";
+import { MAIN_ROUTE_TUTORIAL_ID } from "./guides/mainRouteGuide";
+import { WEEK_VIEW_TUTORIAL_ID } from "./guides/weekViewGuide";
 import { MobileMainRouteTutorial } from "./MobileMainRouteTutorial";
 import { TutorialOverlay } from "./TutorialOverlay";
+import type { GuideDefinitions, TourStep } from "./types";
 
 const TUTORIAL_DESKTOP_MIN_WIDTH = 576;
 
@@ -43,6 +47,25 @@ const getTutorialMode = () => {
 	return "none";
 };
 
+const isCalendarModeStep = (step: TourStep | undefined) =>
+	step?.targetIds.includes("main-tour-view-toggle") === true;
+
+const hasViewSpecificGuide = (guides: GuideDefinitions[]) =>
+	guides.some(
+		(guide) =>
+			guide.id === WEEK_VIEW_TUTORIAL_ID ||
+			guide.id === DAY_VIEW_MODE_TUTORIAL_ID,
+	);
+
+const shouldDeferViewTutorialAfterModeSwitch = (
+	guide: GuideDefinitions,
+	step: TourStep | undefined,
+	guides: GuideDefinitions[],
+) =>
+	guide.id === MAIN_ROUTE_TUTORIAL_ID &&
+	isCalendarModeStep(step) &&
+	hasViewSpecificGuide(guides);
+
 interface MainRouteTutorialProps {
 	isDayView?: boolean;
 	isWeekView?: boolean;
@@ -71,11 +94,25 @@ const MainRouteTutorial = ({
 	if (tutorialMode !== "desktop") return null;
 
 	if (isWeekView) {
-		return <TutorialOverlay guides={WEEK_VIEW_TUTORIAL_GUIDES} />;
+		return (
+			<TutorialOverlay
+				guides={WEEK_VIEW_TUTORIAL_GUIDES}
+				shouldDeferNextGuideAfterClose={
+					shouldDeferViewTutorialAfterModeSwitch
+				}
+			/>
+		);
 	}
 
 	if (isDayView) {
-		return <TutorialOverlay guides={DAY_VIEW_TUTORIAL_GUIDES} />;
+		return (
+			<TutorialOverlay
+				guides={DAY_VIEW_TUTORIAL_GUIDES}
+				shouldDeferNextGuideAfterClose={
+					shouldDeferViewTutorialAfterModeSwitch
+				}
+			/>
+		);
 	}
 
 	return <TutorialOverlay guides={TUTORIAL_GUIDES} />;

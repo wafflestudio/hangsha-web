@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Calendar, type View, Views } from "react-big-calendar";
 import styles from "./Calendar.module.css";
-import { localizer } from "@calendarUtil/calendarLocalizer";
+import { localizer } from "@/util/calendar/calendarLocalizer";
 import type { CalendarEvent, Event } from "@types";
 import Toolbar from "../components/layout/toolbar/Toolbar";
 import MonthEvent from "./month/MonthEvent";
@@ -11,7 +11,8 @@ import CustomDayView from "./day/CustomDayView";
 import CustomWeekView from "./week/CustomWeekView";
 import { useEvents } from "@/contexts/EventContext";
 import { useTimetable } from "@/contexts/TimetableContext";
-import calendarEventMapper from "@/util/Calendar/calendarEventMapper";
+import calendarEventMapper from "@/util/calendar/calendarEventMapper";
+import { sortMonthCalendarEvents } from "@/util/calendar/sortMonthCalendarEvents";
 
 const eventPropGetter = () => {
 	return {
@@ -19,27 +20,34 @@ const eventPropGetter = () => {
 	};
 };
 
+const MOBILE_MAX_WIDTH = 576;
+const DESKTOP_MONTH_VISIBLE_EVENT_ROWS = 3;
+const MOBILE_MONTH_VISIBLE_EVENT_ROWS = 4;
+const getIsMobile = () =>
+	typeof window !== "undefined" && window.innerWidth <= MOBILE_MAX_WIDTH;
+
 interface MyCalendarProps {
 	monthEvents: Event[];
 	weekEvents: Event[];
 	dayEvents: Event[];
+	view: View;
 	onShowMoreClick: (date: Date, view: string) => void;
 	onSelectEvent: (event: CalendarEvent) => void;
-	onViewChange?: (view: View) => void;
+	onViewChange: (view: View) => void;
 }
 
 export const MyCalendar = ({
 	monthEvents,
 	weekEvents,
 	dayEvents,
+	view,
 	onShowMoreClick,
 	onSelectEvent,
 	onViewChange,
 }: MyCalendarProps) => {
 	const { dayDate, setDayDate } = useEvents();
 	const { selectedOverlayCourses, selectedOverlayTimetable } = useTimetable();
-	const [currentView, setCurrentView] = useState<View>(Views.MONTH);
-	const [isMobile, setIsMobile] = useState(false);
+	const [isMobile, setIsMobile] = useState(getIsMobile);
 	const [showTimetableOverlay, setShowTimetableOverlay] = useState(true);
 	const hasTimetableOverlay = selectedOverlayTimetable !== null;
 	const isTimetableOverlayEmpty = selectedOverlayCourses.length <= 0;
@@ -70,7 +78,7 @@ export const MyCalendar = ({
 
 	/** Event Mapping */
 	const currentEvents = useMemo(() => {
-		switch (currentView) {
+		switch (view) {
 			case Views.MONTH:
 				return monthEvents;
 			case Views.WEEK:
@@ -80,23 +88,15 @@ export const MyCalendar = ({
 			default:
 				return monthEvents;
 		}
-	}, [currentView, monthEvents, weekEvents, dayEvents]);
+	}, [view, monthEvents, weekEvents, dayEvents]);
 
 	const CALENDER_EVENTS = useMemo(() => {
-		const mapped = currentEvents.map((e: Event) =>
-			calendarEventMapper(e, currentView),
-		);
-		if (currentView !== Views.MONTH) return mapped;
-		// Single-day events first so they win the lower row slots in the
-		// month-view layout; multi-day strips push down into "+N more".
-		const isSingleDay = (e: (typeof mapped)[number]) =>
-			e.start instanceof Date &&
-			e.end instanceof Date &&
-			e.start.toDateString() === e.end.toDateString();
-		return [...mapped].sort(
-			(a, b) => Number(!isSingleDay(a)) - Number(!isSingleDay(b)),
-		);
-	}, [currentEvents, currentView]);
+		const mapped = currentEvents
+			.map((e: Event) => calendarEventMapper(e, view))
+			.filter((event): event is CalendarEvent => event !== null);
+		if (view !== Views.MONTH) return mapped;
+		return sortMonthCalendarEvents(mapped);
+	}, [currentEvents, view]);
 
 	/** Calendar format */
 	const formats = useMemo(
@@ -146,7 +146,7 @@ export const MyCalendar = ({
 	 */
 	useEffect(() => {
 		const checkIsMobile = () => {
-			setIsMobile(window.innerWidth <= 576);
+			setIsMobile(getIsMobile());
 		};
 
 		checkIsMobile();
@@ -156,6 +156,11 @@ export const MyCalendar = ({
 			window.removeEventListener("resize", checkIsMobile);
 		};
 	}, []);
+
+	const monthMaxRows =
+		(isMobile
+			? MOBILE_MONTH_VISIBLE_EVENT_ROWS
+			: DESKTOP_MONTH_VISIBLE_EVENT_ROWS) + 1;
 
 	/** 날짜 클릭 핸들러 함수 - onDrillDown */
 	const handleDrillDown = useCallback(
@@ -168,8 +173,11 @@ export const MyCalendar = ({
 	const handleSelectEvent = useCallback(
 		(event: CalendarEvent) => {
 			if (isMobile) {
-				handleDrillDown(event.start);
-				return;
+				const date = event.start || event.end || null;
+				if (date) {
+					handleDrillDown(date);
+					return;
+				}
 			}
 			onSelectEvent(event);
 		},
@@ -217,18 +225,15 @@ export const MyCalendar = ({
 					eventPropGetter={eventPropGetter}
 					date={dayDate}
 					// view setup
-					view={currentView}
-					onView={(view) => {
-						setCurrentView(view);
-						onViewChange?.(view);
-					}}
+					view={view}
+					monthMaxRows={monthMaxRows}
+					onView={onViewChange}
 					views={{
 						month: true,
 						week: WeekViewWithOverlay,
 						day: CustomDayView,
 					}}
 					onNavigate={onNavigate}
-					defaultView={Views.MONTH}
 					// 한국어 형식
 					formats={formats}
 					// 더보기 눌렀을 때 popup 나타나기 X, 사이드뷰 나타남

@@ -14,9 +14,9 @@ import {
 	flattenCoursesToBlocks,
 	config,
 } from "../../util/weekly_timetable/layout";
-import calendarEventMapper from "../../util/Calendar/calendarEventMapper";
-import { formatDateToMMDD } from "../../util/Calendar/dateFormatter";
-import { getWeekRangeByDate } from "../../util/Calendar/getWeekRange";
+import calendarEventMapper from "../../util/calendar/calendarEventMapper";
+import { formatDateToMMDD } from "../../util/calendar/dateFormatter";
+import { getWeekRangeByDate } from "../../util/calendar/getWeekRange";
 import { TimetableGrid } from "./TimetableGrid";
 import styles from "./Timetable.module.css";
 import { SlArrowLeft } from "react-icons/sl";
@@ -181,7 +181,8 @@ export default function TimetablePage() {
 		);
 
 		return uniqueWeekEvents
-			.map((event) => calendarEventMapper(event, Views.WEEK) as CalendarEvent)
+			.map((event) => calendarEventMapper(event, Views.WEEK))
+			.filter((event): event is CalendarEvent => event !== null)
 			.filter(
 				(calendarEvent) =>
 					calendarEvent.start >= eventWeekRange.from &&

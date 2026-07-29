@@ -540,24 +540,39 @@ export default function AdminEventsPage() {
 						<div className={styles.formCard}>
 							<p className={styles.cardTitle}>행사 데이터</p>
 							<div className={styles.formGrid}>
-								{fields.map(([key, label, type]) => (
-									<div key={key} className={styles.formField}>
-										<label className={styles.formLabel}>{label}</label>
-										<input
-											type={type}
-											className={styles.formInput}
-											value={form[key]}
-											onChange={(e) => updateForm(key, e.currentTarget.value)}
-										/>
-									</div>
-								))}
+								{fields.map(([key, label, type]) => {
+									const inputId = `admin-event-${key}`;
+
+									return (
+										<div key={key} className={styles.formField}>
+											<label className={styles.formLabel} htmlFor={inputId}>
+												{label}
+											</label>
+											<input
+												id={inputId}
+												type={type}
+												className={styles.formInput}
+												value={form[key]}
+												onChange={(e) => updateForm(key, e.currentTarget.value)}
+											/>
+										</div>
+									);
+								})}
 
 								<div className={`${styles.formField} ${styles.formFieldFull}`}>
-									<label className={styles.formLabel}>상세 HTML</label>
+									<label
+										className={styles.formLabel}
+										htmlFor="admin-event-main-content-html"
+									>
+										상세 HTML
+									</label>
 									<textarea
+										id="admin-event-main-content-html"
 										className={styles.formTextarea}
 										value={form.mainContentHtml}
-										onChange={(e) => updateForm("mainContentHtml", e.currentTarget.value)}
+										onChange={(e) =>
+											updateForm("mainContentHtml", e.currentTarget.value)
+										}
 									/>
 								</div>
 							</div>

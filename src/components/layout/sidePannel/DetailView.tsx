@@ -2,8 +2,6 @@ import { useEvents } from "@contexts/EventContext";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./DetailView.module.css";
-import { getDDay } from "../../../util/Calendar/getDday";
-import { CATEGORY_COLORS, CATEGORY_LIST } from "@constants";
 import { FaAnglesRight, FaLocationDot } from "react-icons/fa6";
 import type { CalendarEvent, EventDetail } from "@types";
 import parse from "html-react-parser";
@@ -14,8 +12,9 @@ import { useAuth } from "@/contexts/AuthProvider";
 import DetailMemo from "./DetailMemo";
 import Modal, { ErrorModal } from "../../ui/Modal";
 import Loading from "../../ui/Loading";
-import calendarEventMapper from "@/util/Calendar/calendarEventMapper";
+import calendarEventMapper from "@/util/calendar/calendarEventMapper";
 import EventDate from "../../feature/eventDate/EventDate";
+import { CategoryChip, DdayChip } from "../../feature/eventChip/EventChip";
 
 const DetailView = ({ eventId }: { eventId: number }) => {
 	const [event, setEvent] = useState<EventDetail>();
@@ -25,7 +24,7 @@ const DetailView = ({ eventId }: { eventId: number }) => {
 	const { toggleBookmark } = useUserData();
 	const { fetchEventById, detailError, isLoadingDetail, clearError } =
 		useEvents();
-	const { setShowDetail } = useDetail();
+	const { closeDetail } = useDetail();
 	const { user } = useAuth();
 	const navigate = useNavigate();
 
@@ -71,9 +70,7 @@ const DetailView = ({ eventId }: { eventId: number }) => {
 	}, [eventId, fetchEventById]);
 
 	// 디데이 계산할 기준 날짜
-	const ddayTargetDate = calendarEvent?.resource.isPeriodEvent
-		? calendarEvent.end
-		: calendarEvent?.start;
+	const ddayTargetDate = calendarEvent?.resource.event.applyEnd || null;
 
 	const [isBookmarked, setIsBookmarked] = useState<boolean>(
 		!!event?.isBookmarked,
@@ -129,11 +126,7 @@ const DetailView = ({ eventId }: { eventId: number }) => {
 					onClose={() => setIsLoginModalOpen(false)}
 				/>
 			)}
-			<button
-				type="button"
-				className={styles.foldBtn}
-				onClick={() => setShowDetail(false)}
-			>
+			<button type="button" className={styles.foldBtn} onClick={closeDetail}>
 				<FaAnglesRight width={28} height={28} color="rgba(171, 171, 171, 1)" />
 			</button>
 
@@ -166,15 +159,8 @@ const DetailView = ({ eventId }: { eventId: number }) => {
 				</div>
 			)}
 			<ul className={styles.chipsList}>
-				<li className={styles.deadlineChip}>{getDDay(ddayTargetDate)}</li>
-				<li
-					className={styles.categoryChip}
-					style={{
-						backgroundColor: CATEGORY_COLORS[event.eventTypeId],
-					}}
-				>
-					{CATEGORY_LIST[event.eventTypeId]}
-				</li>
+				{ddayTargetDate && <DdayChip as="li" targetDate={ddayTargetDate} />}
+				<CategoryChip as="li" categoryId={event.eventTypeId} />
 			</ul>
 			<span className={styles.orgText}>{event.organization}</span>
 			<button

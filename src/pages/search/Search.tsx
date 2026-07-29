@@ -1,16 +1,14 @@
 import { useEffect, useRef, useState, type ChangeEvent } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { Sidebar } from "@/components/layout/filterSideBar/FilterSidebar";
+import { SearchSidebar } from "@/components/layout/filterSideBar/SearchSidebar";
 import SearchNewListItem from "./SearchNewListItem";
 import SearchGridItem from "./SearchGridItem";
 import type { HighlightSearchResult } from "@/util/types";
 import { getEventSearchFull } from "@/api/event";
 import styles from "./Search.module.css";
 import toolbarStyles from "./SearchToolbar.module.css";
-import { FaCalendarAlt } from "react-icons/fa";
 import { IoIosClose, IoIosSearch } from "react-icons/io";
 import BottomNav from "@/components/layout/BottomNav";
-import { FilterSheet } from "@/components/layout/filterSheet/FilterSheet";
 import Loading from "@/components/ui/Loading";
 import Pagination from "@/components/ui/Pagination";
 import DetailView from "@/components/layout/sidePannel/DetailView";
@@ -30,16 +28,13 @@ const SearchView = () => {
 	const [searchParams, setSearchParams] = useSearchParams();
 	const navigate = useNavigate();
 	const { user } = useAuth();
-	const { showDetail, setShowDetail, clickedEventId, setClickedEventId } =
-		useDetail();
+	const { showDetail, closeDetail, clickedEventId, openDetail } = useDetail();
 	const { isMobile, handleResizeStart, sidePanelStyle } =
 		useResizableSidePanel();
 	const sidePanelRef = useRef<HTMLDivElement>(null);
 
 	const query = searchParams.get("q") ?? "";
 	const page = Math.max(1, parseInt(searchParams.get("page") ?? "1", 10));
-	const searchLocationKey = `${query}:${page}`;
-
 	const [inputValue, setInputValue] = useState(query);
 	const [result, setResult] = useState<HighlightSearchResult | null>(null);
 	const [loading, setLoading] = useState(false);
@@ -51,10 +46,6 @@ const SearchView = () => {
 	useEffect(() => {
 		setInputValue(query);
 	}, [query]);
-
-	useEffect(() => {
-		if (searchLocationKey) setShowDetail(false);
-	}, [searchLocationKey, setShowDetail]);
 
 	useEffect(() => {
 		if (!query.trim()) {
@@ -71,13 +62,14 @@ const SearchView = () => {
 
 	useEffect(() => {
 		function handleClickOutside(e: MouseEvent) {
-			if (!sidePanelRef.current?.contains(e.target as Node)) {
-				setShowDetail(false);
+			if (!sidePanelRef.current) return;
+			if (!sidePanelRef.current.contains(e.target as Node)) {
+				closeDetail();
 			}
 		}
 		document.addEventListener("mousedown", handleClickOutside);
 		return () => document.removeEventListener("mousedown", handleClickOutside);
-	}, [setShowDetail]);
+	}, [closeDetail]);
 
 	const handleSearch = () => {
 		const trimmed = inputValue.trim();
@@ -120,19 +112,12 @@ const SearchView = () => {
 					onClose={() => setIsLoginModalOpen(false)}
 				/>
 			)}
-			<Sidebar />
+			<SearchSidebar />
 			<div className={styles.restContainer}>
 				<div className={toolbarStyles.toolbarContainer}>
 					<div className={toolbarStyles.headerRow}>
 						<span>{query ? `'${query}' 검색 결과` : "검색"}</span>
 						<div className={toolbarStyles.btnGroup}>
-							<button type="button" className={toolbarStyles.calendarBtn}>
-								<FaCalendarAlt
-									onClick={() => navigate("/main")}
-									size={25}
-									color="rgba(130,130,130,1)"
-								/>
-							</button>
 							{user && <ProfileButton user={user} />}
 						</div>
 					</div>
@@ -237,10 +222,7 @@ const SearchView = () => {
 									<SearchNewListItem
 										key={item.event.id}
 										item={item}
-										onClick={(id) => {
-											setClickedEventId(id);
-											setShowDetail(true);
-										}}
+										onClick={openDetail}
 										onLoginPrompt={() => setIsLoginModalOpen(true)}
 									/>
 								))}
@@ -251,10 +233,7 @@ const SearchView = () => {
 									<SearchGridItem
 										key={item.event.id}
 										item={item}
-										onClick={(id) => {
-											setClickedEventId(id);
-											setShowDetail(true);
-										}}
+										onClick={openDetail}
 										onLoginPrompt={() => setIsLoginModalOpen(true)}
 									/>
 								))}
@@ -289,7 +268,6 @@ const SearchView = () => {
 				</div>
 			)}
 
-			<FilterSheet />
 			<BottomNav />
 		</div>
 	);

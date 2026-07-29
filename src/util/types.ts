@@ -41,15 +41,15 @@ interface EventBase {
 }
 
 export interface EventDTO extends EventBase {
-	applyStart: string; //  지원 시작 날짜
-	applyEnd: string; // 지원 마감 날짜
-	eventStart: string; // 활동 시작 날짜일시
-	eventEnd: string; // 활동 끝 날짜일시
+	applyStart: string | null; //  지원 시작 날짜
+	applyEnd: string | null; // 지원 마감 날짜
+	eventStart: string | null; // 활동 시작 날짜일시
+	eventEnd: string | null; // 활동 끝 날짜일시
 }
 
 export interface Event extends EventBase {
-	applyStart: Date; //  지원 시작 날짜
-	applyEnd: Date; // 지원 마감 날짜
+	applyStart: Date | null; //  지원 시작 날짜
+	applyEnd: Date | null; // 지원 마감 날짜
 	eventStart: Date | null; // 활동 시작 날짜일시
 	eventEnd: Date | null; // 활동 끝 날짜일시
 }

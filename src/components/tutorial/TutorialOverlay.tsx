@@ -1,6 +1,7 @@
 import {
 	useCallback,
 	useEffect,
+	useRef,
 	useState,
 	type MouseEvent as ReactMouseEvent,
 } from "react";
@@ -11,6 +12,7 @@ import {
 	DEFAULT_BUBBLE_SIZE,
 	getBlockerStyles,
 	getBubbleLayout,
+	getFocusAreaRect,
 	getHighlightedRect,
 } from "./tutorialLayout";
 import { markTutorialSeen } from "./tutorialStorage";
@@ -26,6 +28,11 @@ import { useCalendarViewClickDemo } from "./useCalendarViewClickDemo";
 
 interface TutorialOverlayProps {
 	guides: GuideDefinitions[];
+	shouldDeferNextGuideAfterClose?: (
+		guide: GuideDefinitions,
+		step: TourStep | undefined,
+		guides: GuideDefinitions[],
+	) => boolean;
 }
 
 const canNavigateToStep = (step: TourStep | undefined) =>
@@ -35,7 +42,10 @@ const stopTutorialPointerEvent = (event: ReactMouseEvent<HTMLDivElement>) => {
 	event.stopPropagation();
 };
 
-export const TutorialOverlay = ({ guides }: TutorialOverlayProps) => {
+export const TutorialOverlay = ({
+	guides,
+	shouldDeferNextGuideAfterClose,
+}: TutorialOverlayProps) => {
 	const [activeGuide, setActiveGuide] = useState<GuideDefinitions | null>(() =>
 		getAvailableGuide(guides),
 	);
@@ -43,6 +53,7 @@ export const TutorialOverlay = ({ guides }: TutorialOverlayProps) => {
 	const [currentStepIndex, setCurrentStepIndex] = useState(0);
 	const [targetRect, setTargetRect] = useState<Rect | null>(null);
 	const [bubbleSize, setBubbleSize] = useState<Size>(DEFAULT_BUBBLE_SIZE);
+	const deferNextGuideOpenRef = useRef(false);
 	const activeSteps = activeGuide?.steps ?? [];
 
 	const openNextAvailableGuide = useCallback(() => {
@@ -75,11 +86,25 @@ export const TutorialOverlay = ({ guides }: TutorialOverlayProps) => {
 	);
 
 	const closeTutorial = useCallback(() => {
+		deferNextGuideOpenRef.current =
+			activeGuide !== null &&
+			shouldDeferNextGuideAfterClose?.(
+				activeGuide,
+				activeSteps[currentStepIndex],
+				guides,
+			) === true;
+
 		if (activeGuide) markTutorialSeen(activeGuide.id);
 		setIsOpen(false);
 		setActiveGuide(null);
 		setTargetRect(null);
-	}, [activeGuide]);
+	}, [
+		activeGuide,
+		activeSteps,
+		currentStepIndex,
+		guides,
+		shouldDeferNextGuideAfterClose,
+	]);
 
 	useEffect(() => {
 		if (isOpen && activeGuide) markTutorialSeen(activeGuide.id);
@@ -87,6 +112,11 @@ export const TutorialOverlay = ({ guides }: TutorialOverlayProps) => {
 
 	useEffect(() => {
 		if (isOpen) return;
+		if (deferNextGuideOpenRef.current) {
+			deferNextGuideOpenRef.current = false;
+			return;
+		}
+
 		if (openNextAvailableGuide()) return;
 
 		const observer = new MutationObserver(() => {
@@ -128,7 +158,9 @@ export const TutorialOverlay = ({ guides }: TutorialOverlayProps) => {
 			return;
 		}
 
-		setTargetRect(toRect(target.getBoundingClientRect()));
+		setTargetRect(
+			getFocusAreaRect(toRect(target.getBoundingClientRect()), step.focusArea),
+		);
 	}, [
 		activeGuide,
 		activeSteps,
@@ -182,10 +214,12 @@ export const TutorialOverlay = ({ guides }: TutorialOverlayProps) => {
 			return;
 		}
 
-		target.scrollIntoView({
-			block: "center",
-			inline: "center",
-		});
+		if (step.scrollTargetIntoView !== false) {
+			target.scrollIntoView({
+				block: "center",
+				inline: "center",
+			});
+		}
 
 		const animationFrame = window.requestAnimationFrame(updateTargetRect);
 		const timeoutId = window.setTimeout(updateTargetRect, 120);
