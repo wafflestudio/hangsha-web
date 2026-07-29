@@ -1,0 +1,30 @@
+.chip {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: fit-content;
+	border-radius: 6px;
+	font-size: 13px;
+	line-height: normal;
+	white-space: nowrap;
+}
+
+.outlined {
+	padding: 4px 8px;
+	border: 1px solid #e0e0e0;
+	background-color: #ffffff;
+	color: #333333;
+	font-weight: 600;
+}
+
+.filled {
+	padding: 5px 10px;
+	border: 0;
+	color: #111111;
+	font-weight: 500;
+}
+
+.compact {
+	padding: 4px 8px;
+	font-weight: 600;
+}

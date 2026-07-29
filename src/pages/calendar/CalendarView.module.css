@@ -23,6 +23,10 @@ body {
 	padding-bottom: 64px;
 }
 
+.mainDay.container.detailOpen {
+	padding-bottom: 0;
+}
+
 .calendarContainer {
 	flex-grow: 1;
 	display: flex;

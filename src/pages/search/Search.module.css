@@ -134,6 +134,10 @@ body {
 	.restContainer {
 		padding: 10px 10px 124px 10px;
 	}
+	.sidePanel {
+		width: 100%;
+		max-width: none;
+	}
 	.gridContainer {
 		grid-template-columns: 1fr;
 		gap: 20px;
