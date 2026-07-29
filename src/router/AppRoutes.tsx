@@ -9,6 +9,7 @@ const Login = lazy(() => import("../pages/auth/Login/Login"));
 const LoginHandler = lazy(
 	() => import("../pages/auth/Login/SocialLoginHandler"),
 );
+const SignupSource = lazy(() => import("../pages/auth/OnBoarding/SignUpSource"));
 const EmailSignUp = lazy(() => import("../pages/auth/Signup/EmailSignUp"));
 const CalendarView = lazy(() => import("../pages/calendar/CalendarView"));
 const MainDay = lazy(() => import("../pages/calendar/MainDay"));
@@ -27,7 +28,11 @@ export default function AppRoutes() {
 				<Routes>
 					<Route path="/" element={<Home />} />
 					<Route path="/auth/login" element={<Login />} />
-					<Route path="/auth/signup" element={<EmailSignUp />} />
+          <Route path="/auth/signup" element={<EmailSignUp />} />
+          <Route
+            path="/auth/onbording/sign-up-source"
+            element={<SignupSource />}
+          />
 					{/* <Route path="/auth/complete" element={<CompleteSignUp />} /> */}
 
 					{/* OAuth Redirect */}
