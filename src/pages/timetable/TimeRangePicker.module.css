@@ -158,11 +158,6 @@
 	transform: rotate(90deg);
 }
 
-.error {
-	margin: 16px 8px 0;
-	color: #ff6961;
-	font-size: 13px;
-}
 
 @media (min-width: 680px) {
 	.rangePicker {
@@ -177,10 +172,6 @@
 
 	.divider span {
 		transform: none;
-	}
-
-	.error {
-		grid-column: 1 / -1;
 	}
 }
 

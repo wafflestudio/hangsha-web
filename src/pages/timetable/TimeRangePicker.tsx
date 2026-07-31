@@ -283,7 +283,6 @@ export function TimeRangePicker({
 	minuteStep = 1,
 	className,
 }: TimeRangePickerProps) {
-	const isInvalid = timeToMinutes(endTime) <= timeToMinutes(startTime);
 
 	return (
 		<section
@@ -324,11 +323,6 @@ export function TimeRangePicker({
 				/>
 			</div>
 
-			{isInvalid && (
-				<p className={styles.error} role="alert">
-					종료 시간은 시작 시간보다 늦어야 합니다.
-				</p>
-			)}
 		</section>
 	);
 }

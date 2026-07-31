@@ -294,6 +294,9 @@ export function AddClassPanel({
 					{hasConflict && (
 						<div className={styles.error}>시간이 겹치는 수업이 있습니다.</div>
 					)}
+					{!isTimeRangeValid && (
+						<div className={styles.error}>종료 시간은 시작 시간보다 늦어야 합니다.</div>
+					)}
 				</div>
 
 				<button
