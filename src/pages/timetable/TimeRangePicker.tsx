@@ -72,11 +72,6 @@ function toTimeValue(
 	return `${pad(hour24)}:${pad(minute)}` as TimeValue;
 }
 
-function timeToMinutes(value: TimeValue) {
-	const [hour, minute] = value.split(":").map(Number);
-	return hour * 60 + minute;
-}
-
 function WheelColumn<T extends string | number>({
 	ariaLabel,
 	options,
