@@ -2,18 +2,16 @@ import { useMemo, useRef, useState } from "react";
 import { SlArrowRight } from "react-icons/sl";
 import { TiDelete } from "react-icons/ti";
 import { hasOverlap } from "../../util/weekly_timetable/layout";
-import {
-	dayOfWeekToDay,
-	dayToDayOfWeek,
-} from "../../util/weekly_timetable/time";
+import { dayToDayOfWeek } from "../../util/weekly_timetable/time";
 
 import type {
 	Course,
 	CreateCustomCourseRequest,
 	Day,
+	DayOfWeek,
 	Semester,
-	SlotRow,
 	TimeSlot,
+	MultiDaySlotRow,
 } from "../../util/types";
 import { DAY_LABELS_KO } from "../../util/types";
 import { buildTimeOptions, STEP_MIN } from "../../util/weekly_timetable/time";
@@ -62,22 +60,34 @@ export function AddClassPanel({
 	const [professor, setProfessor] = useState("");
 	const [credit, setCredit] = useState<number | undefined>(undefined);
 
-	const emptyRow = (): SlotRow => ({
+	const emptyRow = (): MultiDaySlotRow => ({
 		rowId: crypto.randomUUID(),
-		dayOfweek: "MON",
+		dayOfweeks: ["MON"],
 		startAt: 8 * 60,
 		endAt: 11 * 60,
 	});
 
-	const [slot, setSlot] = useState<SlotRow[]>([emptyRow()]);
+	const [slot, setSlot] = useState<MultiDaySlotRow[]>([emptyRow()]);
 	const addRow = () => setSlot((prev) => [...prev, emptyRow()]);
 	const removeRow = (rowId: string) =>
 		setSlot((prev) => prev.filter((t) => t.rowId !== rowId));
-	const updateRow = (rowId: string, patch: Partial<SlotRow>) =>
+	const updateRow = (rowId: string, patch: Partial<MultiDaySlotRow>) =>
 		setSlot((prev) =>
 			prev.map((r) =>
-				r.rowId === rowId ? ({ ...r, ...patch } as SlotRow) : r,
+				r.rowId === rowId ? ({ ...r, ...patch } as MultiDaySlotRow) : r,
 			),
+		);
+	const toggleDay = (rowId: string, dayOfweek: DayOfWeek) =>
+		setSlot((prev) =>
+			prev.map((row) => {
+				if (row.rowId !== rowId) return row;
+
+				const dayOfweeks = row.dayOfweeks.includes(dayOfweek)
+					? row.dayOfweeks.filter((day) => day !== dayOfweek)
+					: [...row.dayOfweeks, dayOfweek];
+
+				return { ...row, dayOfweeks };
+			}),
 		);
 
 	const nextIdRef = useRef(0);
@@ -90,6 +100,17 @@ export function AddClassPanel({
 				t.endAt % STEP_MIN === 0,
 		);
 	}, [slot]);
+	const hasSelectedDay = useMemo(
+		() => slot.length > 0 && slot.every((row) => row.dayOfweeks.length > 0),
+		[slot],
+	);
+	const expandedSlots = useMemo(
+		() =>
+			slot.flatMap(({ dayOfweeks, startAt, endAt }) =>
+				dayOfweeks.map((dayOfweek) => ({ dayOfweek, startAt, endAt })),
+			),
+		[slot],
+	);
 
 	const isTitleValid = useMemo(() => {
 		return title.trim().length > 0;
@@ -97,10 +118,14 @@ export function AddClassPanel({
 
 	const hasConflict = useMemo(() => {
 		if (!isTimeRangeValid) return false;
-		return slot.some((s) => hasOverlap(allSlots, s));
-	}, [slot, allSlots, isTimeRangeValid]);
+		return expandedSlots.some(
+			(s, index) =>
+				hasOverlap(allSlots, s) || hasOverlap(expandedSlots.slice(0, index), s),
+		);
+	}, [expandedSlots, allSlots, isTimeRangeValid]);
 
-	const canSave = isTimeRangeValid && isTitleValid && !hasConflict;
+	const canSave =
+		isTimeRangeValid && isTitleValid && hasSelectedDay && !hasConflict;
 
 	const handleSave = () => {
 		if (!timetableId) {
@@ -114,7 +139,7 @@ export function AddClassPanel({
 			semester,
 			courseTitle: title,
 			source: "CUSTOM",
-			timeSlots: slot.map(({ rowId, ...rest }) => rest),
+			timeSlots: expandedSlots,
 			courseNumber: undefined,
 			lectureNumber: undefined,
 			credit,
@@ -187,26 +212,26 @@ export function AddClassPanel({
 						<div key={t.rowId}>
 							<div className={styles.timeslotDelete}>
 								<button
-								type="button"
-								className={styles.deleteBtn}
-								aria-label="시간 삭제"
-								onClick={() => removeRow(t.rowId)}
+									type="button"
+									className={styles.deleteBtn}
+									aria-label="시간 삭제"
+									onClick={() => removeRow(t.rowId)}
 								>
-							    	<TiDelete className={styles.deleteIcon} />
+									<TiDelete className={styles.deleteIcon} />
 								</button>
 							</div>
 
 							<div className={styles.dayButtons}>
 								{DAYS.map((d) => {
-									const active = dayOfWeekToDay(t.dayOfweek) === d;
+									const dayOfweek = dayToDayOfWeek(d);
+									const active = t.dayOfweeks.includes(dayOfweek);
 									return (
 										<button
 											key={d}
 											type="button"
 											className={`${styles.dayBtn} ${active ? styles.isActive : ""}`}
-											onClick={() =>
-												updateRow(t.rowId, { dayOfweek: dayToDayOfWeek(d) })
-											}
+											aria-pressed={active}
+											onClick={() => toggleDay(t.rowId, dayOfweek)}
 										>
 											{DAY_LABELS_KO[d]}
 										</button>
@@ -262,6 +287,9 @@ export function AddClassPanel({
 
 					{!isTitleValid && (
 						<div className={styles.error}>과목 이름은 필수입니다.</div>
+					)}
+					{!hasSelectedDay && (
+						<div className={styles.error}>요일을 하나 이상 선택해주세요.</div>
 					)}
 					{hasConflict && (
 						<div className={styles.error}>시간이 겹치는 수업이 있습니다.</div>
