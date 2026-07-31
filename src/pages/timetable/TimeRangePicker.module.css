@@ -1,0 +1,182 @@
+.rangePicker {
+	--selection-background: #f3f4f6;
+	--primary-text: #1f2329;
+	--secondary-text: #7b818a;
+	--accent: #1677ff;
+
+	width: min(100%, 720px);
+	box-sizing: border-box;
+	padding: 12px 0;
+	color: var(--primary-text);
+	background: transparent;
+	border: 0;
+	box-shadow: none;
+	font-family:
+		-apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Pretendard",
+		"Noto Sans KR", sans-serif;
+}
+
+.pickerSection {
+	min-width: 0;
+}
+
+.sectionHeader {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin-bottom: 12px;
+	padding-inline: 8px;
+}
+
+.sectionLabel {
+	color: var(--secondary-text);
+	font-size: 14px;
+	font-weight: 650;
+	letter-spacing: -0.01em;
+}
+
+.timeOutput {
+	color: var(--accent);
+	font-size: 14px;
+	font-variant-numeric: tabular-nums;
+	font-weight: 700;
+}
+
+.timeWheel {
+	--wheel-height: calc(var(--item-height) * var(--visible-items));
+
+	position: relative;
+	display: grid;
+	grid-template-columns: 1.3fr 0.85fr 0.85fr;
+	min-width: 0;
+	height: var(--wheel-height);
+	margin: 0;
+	padding: 0;
+	overflow: hidden;
+	border: 0;
+	border-radius: 18px;
+	isolation: isolate;
+	-webkit-mask-image: linear-gradient(
+		to bottom,
+		transparent,
+		#000 28%,
+		#000 72%,
+		transparent
+	);
+	mask-image: linear-gradient(
+		to bottom,
+		transparent,
+		#000 28%,
+		#000 72%,
+		transparent
+	);
+}
+
+.selectionBand {
+	position: absolute;
+	z-index: -1;
+	top: 50%;
+	right: 0;
+	left: 0;
+	height: var(--item-height);
+	background: var(--selection-background);
+	border-radius: 14px;
+	transform: translateY(-50%);
+}
+
+.wheelColumn {
+	height: var(--wheel-height);
+	overflow-x: hidden;
+	overflow-y: auto;
+	overscroll-behavior: contain;
+	scrollbar-width: none;
+	scroll-snap-type: y mandatory;
+	touch-action: pan-y;
+	-webkit-overflow-scrolling: touch;
+}
+
+.wheelColumn::-webkit-scrollbar {
+	display: none;
+}
+
+.wheelColumn:focus-visible {
+	border-radius: 14px;
+	outline: 2px solid var(--accent);
+	outline-offset: -2px;
+}
+
+.wheelSpacer {
+	width: 100%;
+	scroll-snap-align: none;
+}
+
+.wheelItem {
+	display: flex;
+	width: 100%;
+	height: var(--item-height);
+	align-items: center;
+	justify-content: center;
+	padding: 0 8px;
+	color: var(--primary-text);
+	background: transparent;
+	border: 0;
+	font: inherit;
+	font-size: 16px;
+	font-variant-numeric: tabular-nums;
+	font-weight: 500;
+	line-height: 1;
+	opacity: 1;
+	scroll-snap-align: center;
+	scroll-snap-stop: always;
+	cursor: pointer;
+	transition:
+		opacity 140ms ease,
+		transform 140ms ease;
+}
+
+.wheelItem[data-distance="1"] {
+	opacity: 0.48;
+	transform: scale(0.9);
+}
+
+.wheelItem[data-distance="2"],
+.wheelItem[data-distance="3"] {
+	opacity: 0.18;
+	transform: scale(0.82);
+}
+
+.divider {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 42px;
+	color: var(--secondary-text);
+	font-size: 20px;
+}
+
+.divider span {
+	transform: rotate(90deg);
+}
+
+
+@media (min-width: 680px) {
+	.rangePicker {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) 40px minmax(0, 1fr);
+		align-items: center;
+	}
+
+	.divider {
+		height: auto;
+	}
+
+	.divider span {
+		transform: none;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.wheelItem {
+		transition: none;
+	}
+}
