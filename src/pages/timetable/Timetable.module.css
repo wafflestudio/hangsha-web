@@ -119,8 +119,13 @@
 }
 
 .panel {
-  border-left: 1px solid #eee;
-  padding: 16px;
+	box-sizing: border-box;
+	min-height: 0;
+	height: 100vh;
+	overflow-y: auto;
+	overscroll-behavior: contain;
+	border-left: 1px solid #eee;
+	padding: 16px;
 }
 
 .addClassPanelDim {
@@ -176,9 +181,9 @@
 }
 
 .timeRange {
-  display: flex;
-  gap: 10px;
-  align-items: center;
+	display: flex;
+	gap: 10px;
+	align-items: center;
 }
 
 .timeRange select {
@@ -210,12 +215,26 @@
 }
 
 .link {
-  margin-top: 8px;
-  background: none;
+  margin-top: 20px;
+  margin-bottom: 10px;
+  padding: 5px 10px;
   border: none;
-  color: #d00;
+  border-radius: 50px;
+  background: #aeaeae;
+  color: #ffffff;
   cursor: pointer;
-  padding: 0;
+  font-size: 16px;
+  font-weight: 400;
+  transition: background-color 0.15s ease;
+}
+
+.link:hover {
+  background: #737373;
+}
+
+.link:focus-visible {
+  outline: 2px solid #555555;
+  outline-offset: 2px;
 }
 
 .timeslotDelete {
@@ -223,9 +242,22 @@
   justify-content: flex-end;
 }
 
+.deleteBtn {
+  display: lfex;
+  padding: 5px;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.deleteIcon {
+  width: 24px;
+  height: 24px;
+  opacity: 0.4;
+}
 .error {
   margin-top: 8px;
-  font-size: 12px;
+  font-size: 14px;
   color: #d00;
 }
 
@@ -558,6 +590,7 @@
     right: 0;
     bottom: calc(64px + env(safe-area-inset-bottom));
     z-index: 1200;
+    height: auto;
     max-height: min(72dvh, 620px);
     overflow-y: auto;
     padding: 18px 20px 22px;
@@ -570,14 +603,14 @@
 
   .panel h2 {
     margin: 8px 0 18px;
-    font-size: 18px;
+    font-size: 20px;
     font-weight: 700;
   }
 
   .field {
     gap: 8px;
     margin-bottom: 12px;
-    font-size: 13px;
+    font-size: 14px;
     font-weight: 600;
   }
 
@@ -587,7 +620,7 @@
     width: 100%;
     padding: 11px 12px;
     border-radius: 8px;
-    font-size: 14px;
+    font-size: 16px;
   }
 
   .dayButtons {
@@ -600,23 +633,10 @@
     min-width: 0;
     padding: 7px 0;
     border-radius: 8px;
-    font-size: 12px;
+    font-size: 16px;
   }
 
-  .timeRange {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
-    gap: 8px;
-  }
-
-  .timeRange select {
-    width: 100%;
-    min-width: 0;
-    padding: 9px 10px;
-    font-size: 13px;
-  }
-
-  .gridWrap {
+	.gridWrap {
     width: 100%;
     min-width: 0;
     background: #ffffff;
