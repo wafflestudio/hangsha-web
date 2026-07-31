@@ -2,21 +2,21 @@ import { useMemo, useRef, useState } from "react";
 import { SlArrowRight } from "react-icons/sl";
 import { TiDelete } from "react-icons/ti";
 import { hasOverlap } from "../../util/weekly_timetable/layout";
-import {
-	dayOfWeekToDay,
-	dayToDayOfWeek,
-} from "../../util/weekly_timetable/time";
+import { dayToDayOfWeek } from "../../util/weekly_timetable/time";
 
 import type {
 	Course,
 	CreateCustomCourseRequest,
 	Day,
+	DayOfWeek,
 	Semester,
-	SlotRow,
 	TimeSlot,
+	MultiDaySlotRow,
 } from "../../util/types";
 import { DAY_LABELS_KO } from "../../util/types";
 import { buildTimeOptions, STEP_MIN } from "../../util/weekly_timetable/time";
+import { TimeRangePicker, type TimeValue } from "./TimeRangePicker";
+import { TimeSelect } from "./TimeSelect";
 import styles from "./Timetable.module.css";
 
 type Props = {
@@ -25,10 +25,26 @@ type Props = {
 	allSlots: TimeSlot[];
 	year: number;
 	semester: Semester;
+	isMobile: boolean;
 	setIsClicked: (isClicked: boolean) => void;
 };
 
 const DAYS: Day[] = [0, 1, 2, 3, 4, 5, 6];
+
+const minutesToTimeValue = (minutes: number): TimeValue => {
+	const hour = Math.floor(minutes / 60);
+	const minute = minutes % 60;
+
+	return `${String(hour).padStart(2, "0")}:${String(minute).padStart(
+		2,
+		"0",
+	)}` as TimeValue;
+};
+
+const timeValueToMinutes = (time: TimeValue) => {
+	const [hour, minute] = time.split(":").map(Number);
+	return hour * 60 + minute;
+};
 
 export function AddClassPanel({
 	timetableId,
@@ -36,6 +52,7 @@ export function AddClassPanel({
 	allSlots,
 	year,
 	semester,
+	isMobile,
 	setIsClicked,
 }: Props) {
 	const timeOptions = useMemo(() => buildTimeOptions(STEP_MIN), []);
@@ -43,22 +60,34 @@ export function AddClassPanel({
 	const [professor, setProfessor] = useState("");
 	const [credit, setCredit] = useState<number | undefined>(undefined);
 
-	const emptyRow = (): SlotRow => ({
+	const emptyRow = (): MultiDaySlotRow => ({
 		rowId: crypto.randomUUID(),
-		dayOfweek: "MON",
+		dayOfweeks: ["MON"],
 		startAt: 8 * 60,
 		endAt: 11 * 60,
 	});
 
-	const [slot, setSlot] = useState<SlotRow[]>([emptyRow()]);
+	const [slot, setSlot] = useState<MultiDaySlotRow[]>([emptyRow()]);
 	const addRow = () => setSlot((prev) => [...prev, emptyRow()]);
 	const removeRow = (rowId: string) =>
 		setSlot((prev) => prev.filter((t) => t.rowId !== rowId));
-	const updateRow = (rowId: string, patch: Partial<SlotRow>) =>
+	const updateRow = (rowId: string, patch: Partial<MultiDaySlotRow>) =>
 		setSlot((prev) =>
 			prev.map((r) =>
-				r.rowId === rowId ? ({ ...r, ...patch } as SlotRow) : r,
+				r.rowId === rowId ? ({ ...r, ...patch } as MultiDaySlotRow) : r,
 			),
+		);
+	const toggleDay = (rowId: string, dayOfweek: DayOfWeek) =>
+		setSlot((prev) =>
+			prev.map((row) => {
+				if (row.rowId !== rowId) return row;
+
+				const dayOfweeks = row.dayOfweeks.includes(dayOfweek)
+					? row.dayOfweeks.filter((day) => day !== dayOfweek)
+					: [...row.dayOfweeks, dayOfweek];
+
+				return { ...row, dayOfweeks };
+			}),
 		);
 
 	const nextIdRef = useRef(0);
@@ -71,6 +100,17 @@ export function AddClassPanel({
 				t.endAt % STEP_MIN === 0,
 		);
 	}, [slot]);
+	const hasSelectedDay = useMemo(
+		() => slot.length > 0 && slot.every((row) => row.dayOfweeks.length > 0),
+		[slot],
+	);
+	const expandedSlots = useMemo(
+		() =>
+			slot.flatMap(({ dayOfweeks, startAt, endAt }) =>
+				dayOfweeks.map((dayOfweek) => ({ dayOfweek, startAt, endAt })),
+			),
+		[slot],
+	);
 
 	const isTitleValid = useMemo(() => {
 		return title.trim().length > 0;
@@ -78,17 +118,16 @@ export function AddClassPanel({
 
 	const hasConflict = useMemo(() => {
 		if (!isTimeRangeValid) return false;
-		return slot.some((s) => hasOverlap(allSlots, s));
-	}, [slot, allSlots, isTimeRangeValid]);
+		return expandedSlots.some(
+			(s, index) =>
+				hasOverlap(allSlots, s) || hasOverlap(expandedSlots.slice(0, index), s),
+		);
+	}, [expandedSlots, allSlots, isTimeRangeValid]);
 
-	const canSave = isTimeRangeValid && isTitleValid && !hasConflict;
+	const canSave =
+		isTimeRangeValid && isTitleValid && hasSelectedDay && !hasConflict;
 
 	const handleSave = () => {
-		const conflict = slot.some((s) => hasOverlap(allSlots, s));
-		if (conflict) {
-			alert("시간이 겹치는 수업은 추가할 수 없습니다.");
-			return;
-		}
 		if (!timetableId) {
 			alert("시간표를 먼저 추가해주세요.");
 			return;
@@ -100,7 +139,7 @@ export function AddClassPanel({
 			semester,
 			courseTitle: title,
 			source: "CUSTOM",
-			timeSlots: slot.map(({ rowId, ...rest }) => rest),
+			timeSlots: expandedSlots,
 			courseNumber: undefined,
 			lectureNumber: undefined,
 			credit,
@@ -165,27 +204,34 @@ export function AddClassPanel({
 				</label>
 
 				<div>
-					<div>
+					<div className={styles.field}>
 						<div>시간 (필수)</div>
 					</div>
 
 					{slot.map((t) => (
 						<div key={t.rowId}>
 							<div className={styles.timeslotDelete}>
-								<TiDelete onClick={() => removeRow(t.rowId)} />
+								<button
+									type="button"
+									className={styles.deleteBtn}
+									aria-label="시간 삭제"
+									onClick={() => removeRow(t.rowId)}
+								>
+									<TiDelete className={styles.deleteIcon} />
+								</button>
 							</div>
 
 							<div className={styles.dayButtons}>
 								{DAYS.map((d) => {
-									const active = dayOfWeekToDay(t.dayOfweek) === d;
+									const dayOfweek = dayToDayOfWeek(d);
+									const active = t.dayOfweeks.includes(dayOfweek);
 									return (
 										<button
 											key={d}
 											type="button"
 											className={`${styles.dayBtn} ${active ? styles.isActive : ""}`}
-											onClick={() =>
-												updateRow(t.rowId, { dayOfweek: dayToDayOfWeek(d) })
-											}
+											aria-pressed={active}
+											onClick={() => toggleDay(t.rowId, dayOfweek)}
 										>
 											{DAY_LABELS_KO[d]}
 										</button>
@@ -193,35 +239,45 @@ export function AddClassPanel({
 								})}
 							</div>
 
-							<div className={styles.timeRange}>
-								<select
-									value={t.startAt}
-									onChange={(e) =>
-										updateRow(t.rowId, { startAt: Number(e.target.value) })
+							{isMobile ? (
+								<TimeRangePicker
+									startTime={minutesToTimeValue(t.startAt)}
+									endTime={minutesToTimeValue(t.endAt)}
+									minuteStep={STEP_MIN}
+									onChange={({ startTime, endTime }) =>
+										updateRow(t.rowId, {
+											startAt: timeValueToMinutes(startTime),
+											endAt: timeValueToMinutes(endTime),
+										})
 									}
-								>
-									{timeOptions.map((o) => (
-										<option key={o.value} value={o.value}>
-											{o.label}
-										</option>
-									))}
-								</select>
+								/>
+							) : (
+								<div className={styles.timeRange}>
+									<TimeSelect
+										ariaLabel="수업 시작 시간"
+										value={t.startAt}
+										options={timeOptions}
+										onChange={(startAt) =>
+											updateRow(t.rowId, {
+												startAt,
+											})
+										}
+									/>
 
-								<span className={styles.tilde}>~</span>
+									<span className={styles.tilde}>~</span>
 
-								<select
-									value={t.endAt}
-									onChange={(e) =>
-										updateRow(t.rowId, { endAt: Number(e.target.value) })
-									}
-								>
-									{timeOptions.map((o) => (
-										<option key={o.value} value={o.value}>
-											{o.label}
-										</option>
-									))}
-								</select>
-							</div>
+									<TimeSelect
+										ariaLabel="수업 종료 시간"
+										value={t.endAt}
+										options={timeOptions}
+										onChange={(endAt) =>
+											updateRow(t.rowId, {
+												endAt,
+											})
+										}
+									/>
+								</div>
+							)}
 						</div>
 					))}
 
@@ -229,15 +285,17 @@ export function AddClassPanel({
 						+ 시간 추가
 					</button>
 
-					{!isTimeRangeValid && (
-						<div className={styles.error}>
-							시간 범위가 잘못되었습니다. (종료가 시작보다 늦어야 하고 5분
-							단위여야 합니다.)
-						</div>
-					)}
-
 					{!isTitleValid && (
 						<div className={styles.error}>과목 이름은 필수입니다.</div>
+					)}
+					{!hasSelectedDay && (
+						<div className={styles.error}>요일을 하나 이상 선택해주세요.</div>
+					)}
+					{hasConflict && (
+						<div className={styles.error}>시간이 겹치는 수업이 있습니다.</div>
+					)}
+					{!isTimeRangeValid && (
+						<div className={styles.error}>종료 시간은 시작 시간보다 늦어야 합니다.</div>
 					)}
 				</div>
 
