@@ -179,14 +179,21 @@ export function AddClassPanel({
 				</label>
 
 				<div>
-					<div>
+					<div className={styles.field}>
 						<div>시간 (필수)</div>
 					</div>
 
 					{slot.map((t) => (
 						<div key={t.rowId}>
 							<div className={styles.timeslotDelete}>
-								<TiDelete onClick={() => removeRow(t.rowId)} />
+								<button
+								type="button"
+								className={styles.deleteBtn}
+								aria-label="시간 삭제"
+								onClick={() => removeRow(t.rowId)}
+								>
+							    	<TiDelete className={styles.deleteIcon} />
+								</button>
 							</div>
 
 							<div className={styles.dayButtons}>

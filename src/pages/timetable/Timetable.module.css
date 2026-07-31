@@ -228,9 +228,22 @@
   justify-content: flex-end;
 }
 
+.deleteBtn {
+  display: lfex;
+  padding: 5px;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.deleteIcon {
+  width: 24px;
+  height: 24px;
+  opacity: 0.4;
+}
 .error {
   margin-top: 8px;
-  font-size: 12px;
+  font-size: 14px;
   color: #d00;
 }
 
@@ -576,14 +589,14 @@
 
   .panel h2 {
     margin: 8px 0 18px;
-    font-size: 18px;
+    font-size: 20px;
     font-weight: 700;
   }
 
   .field {
     gap: 8px;
     margin-bottom: 12px;
-    font-size: 13px;
+    font-size: 14px;
     font-weight: 600;
   }
 
@@ -593,7 +606,7 @@
     width: 100%;
     padding: 11px 12px;
     border-radius: 8px;
-    font-size: 14px;
+    font-size: 16px;
   }
 
   .dayButtons {
@@ -606,7 +619,7 @@
     min-width: 0;
     padding: 7px 0;
     border-radius: 8px;
-    font-size: 12px;
+    font-size: 16px;
   }
 
 	.gridWrap {
