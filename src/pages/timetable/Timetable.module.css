@@ -215,12 +215,26 @@
 }
 
 .link {
-  margin-top: 8px;
-  background: none;
+  margin-top: 20px;
+  margin-bottom: 10px;
+  padding: 5px 10px;
   border: none;
-  color: #d00;
+  border-radius: 50px;
+  background: #aeaeae;
+  color: #ffffff;
   cursor: pointer;
-  padding: 0;
+  font-size: 16px;
+  font-weight: 400;
+  transition: background-color 0.15s ease;
+}
+
+.link:hover {
+  background: #737373;
+}
+
+.link:focus-visible {
+  outline: 2px solid #555555;
+  outline-offset: 2px;
 }
 
 .timeslotDelete {
