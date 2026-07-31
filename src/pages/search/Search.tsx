@@ -20,6 +20,7 @@ import { useDetail } from "@/contexts/DetailContext";
 import { useAuth } from "@/contexts/AuthProvider";
 import { ProfileButton } from "@/components/layout/toolbar/Toolbar";
 import Modal from "@/components/ui/Modal";
+import { filterEventTimeVariants } from "@/util/calendar/filterEventTimeVariants";
 
 const DEFAULT_PAGE_SIZE = 20;
 const PAGE_GROUP_SIZE = 5;
@@ -50,15 +51,54 @@ const SearchView = () => {
 	useEffect(() => {
 		if (!query.trim()) {
 			setResult(null);
+			setLoading(false);
+			setError(false);
 			return;
 		}
-		setLoading(true);
-		setError(false);
-		getEventSearchFull({ query, page, size: pageSize })
-			.then(setResult)
-			.catch(() => setError(true))
-			.finally(() => setLoading(false));
-	}, [query, page, pageSize]);
+
+		let cancelled = false;
+		const fetchResults = async () => {
+			setLoading(true);
+			setError(false);
+			try {
+				const firstResult = await getEventSearchFull({
+					query,
+					page: 1,
+					size: DEFAULT_PAGE_SIZE,
+				});
+				const fullResult =
+					firstResult.items.length < firstResult.total
+						? await getEventSearchFull({
+								query,
+								page: 1,
+								size: firstResult.total,
+							})
+						: firstResult;
+				if (cancelled) return;
+
+				const items = filterEventTimeVariants(
+					fullResult.items,
+					(item) => item.event,
+				);
+				setResult({
+					...fullResult,
+					page: 1,
+					size: items.length,
+					total: items.length,
+					items,
+				});
+			} catch {
+				if (!cancelled) setError(true);
+			} finally {
+				if (!cancelled) setLoading(false);
+			}
+		};
+
+		void fetchResults();
+		return () => {
+			cancelled = true;
+		};
+	}, [query]);
 
 	useEffect(() => {
 		function handleClickOutside(e: MouseEvent) {
@@ -82,6 +122,8 @@ const SearchView = () => {
 	};
 
 	const totalPages = result ? Math.ceil(result.total / pageSize) : 0;
+	const pageItems =
+		result?.items.slice((page - 1) * pageSize, page * pageSize) ?? [];
 	const currentGroupStart =
 		Math.floor((page - 1) / PAGE_GROUP_SIZE) * PAGE_GROUP_SIZE + 1;
 	const currentGroupEnd = Math.min(
@@ -218,7 +260,7 @@ const SearchView = () => {
 						<div className={styles.resultCount}>총 {result.total}개 결과</div>
 						{viewMode === "list" ? (
 							<div className={styles.listContainer}>
-								{result.items.map((item) => (
+								{pageItems.map((item) => (
 									<SearchNewListItem
 										key={item.event.id}
 										item={item}
@@ -229,7 +271,7 @@ const SearchView = () => {
 							</div>
 						) : (
 							<div className={styles.gridContainer}>
-								{result.items.map((item) => (
+								{pageItems.map((item) => (
 									<SearchGridItem
 										key={item.event.id}
 										item={item}

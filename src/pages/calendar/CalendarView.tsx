@@ -28,6 +28,7 @@ import { useTimetable } from "@/contexts/TimetableContext";
 import { useMainPanelQuery } from "@/pages/calendar/hooks/useMainPanelQuery";
 import { useCalendarViewQuery } from "@/pages/calendar/hooks/useCalendarViewQuery";
 import { formatDateToYYYYMMDD } from "@/util/calendar/dateFormatter";
+import { filterEventTimeVariants } from "@/util/calendar/filterEventTimeVariants";
 
 const getSemesterByDate = (date: Date): Semester => {
 	const month = date.getMonth() + 1;
@@ -97,7 +98,6 @@ const CalendarView = () => {
 		interestCategories,
 	);
 
-
 	useEffect(() => {
 		const today = new Date();
 		void initializeDefaultOverlay(
@@ -121,7 +121,10 @@ const CalendarView = () => {
 		return Array.from(seen.values());
 	};
 
-	const MONTH_EVENTS = flattenByDate(monthViewData?.byDate);
+	const MONTH_EVENTS = filterEventTimeVariants(
+		flattenByDate(monthViewData?.byDate),
+		(event) => event,
+	);
 	const WEEK_EVENTS = flattenByDate(weekViewData?.byDate);
 
 	// Day context data doesn't need additional transformation; it is returned as Event[]
@@ -216,15 +219,15 @@ const CalendarView = () => {
 			<div className={styles.calendarContainer}>
 				<div className={styles.calendarWrapper}>
 					{isMobile ? (
-							<MyCalendar
-								monthEvents={MONTH_EVENTS}
-								weekEvents={WEEK_EVENTS}
-								dayEvents={dayViewEvents}
-								view={calendarView}
-								onShowMoreClick={onShowMoreClick}
-								onSelectEvent={onSelectEvent}
-								onViewChange={setCalendarView}
-							/>
+						<MyCalendar
+							monthEvents={MONTH_EVENTS}
+							weekEvents={WEEK_EVENTS}
+							dayEvents={dayViewEvents}
+							view={calendarView}
+							onShowMoreClick={onShowMoreClick}
+							onSelectEvent={onSelectEvent}
+							onViewChange={setCalendarView}
+						/>
 					) : (
 						<MyCalendar
 							monthEvents={MONTH_EVENTS}
