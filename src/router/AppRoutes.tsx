@@ -1,17 +1,5 @@
 import { lazy, Suspense } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
-import Home from "../pages/auth/Home";
-import Login from "../pages/auth/Login/Login";
-import LoginHandler from "../pages/auth/Login/SocialLoginHandler";
-import SignUpSource from "../pages/auth/OnBoarding/SignUpSource";
-import EmailSignUp from "../pages/auth/Signup/EmailSignUp";
-import CalendarView from "../pages/calendar/CalendarView";
-import MainDay from "../pages/calendar/MainDay";
-import TimetablePage from "../pages/timetable/TimetablePage";
-import SearchView from "@/pages/search/Search";
-import BookmarksPage from "@/pages/bookmark/Bookmark";
-import MemoPage from "@/pages/memo/Memo";
-import MyPage from "@/pages/mypage/MyPage";
 import AdminRoute from "@/router/AdminRoute";
 import PageViewTracker from "@/router/PageViewTracker";
 import Loading from "@/components/ui/Loading";
@@ -35,24 +23,12 @@ export default function AppRoutes() {
 	return (
 		<>
 			<PageViewTracker />
-<<<<<<< HEAD
-			<Routes>
-				<Route path="/" element={<Home />} />
-				<Route path="/auth/login" element={<Login />} />
-				<Route path="/auth/signup" element={<EmailSignUp />} />
-				<Route
-					path="/auth/onbording/sign-up-source"
-					element={<SignUpSource />}
-				/>
-				{/* <Route path="/auth/complete" element={<CompleteSignUp />} /> */}
-=======
 			<Suspense fallback={<Loading />}>
 				<Routes>
 					<Route path="/" element={<Home />} />
 					<Route path="/auth/login" element={<Login />} />
 					<Route path="/auth/signup" element={<EmailSignUp />} />
 					{/* <Route path="/auth/complete" element={<CompleteSignUp />} /> */}
->>>>>>> 42f9b27 (fix: PR check)
 
 					{/* OAuth Redirect */}
 					<Route path="/auth/callback" element={<LoginHandler />} />
