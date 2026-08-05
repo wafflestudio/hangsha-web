@@ -171,6 +171,11 @@ export type TimeSlot = {
 	endAt: number;
 };
 
+export type MultiDaySlotRow = Omit<TimeSlot, "dayOfweek"> & {
+	rowId: string;
+	dayOfweeks: DayOfWeek[];
+};
+
 export type SlotRow = TimeSlot & { rowId: string };
 
 export const DAY_LABELS_KO: Record<Day, string> = {
