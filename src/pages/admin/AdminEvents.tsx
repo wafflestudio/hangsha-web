@@ -9,6 +9,8 @@ import {
 	type AdminEventCreateRequest,
 	type AdminEventPatchRequest,
 } from "@/api/adminEvent";
+import { AdminTokenService } from "@/api/adminTokenService";
+import { FiLogOut } from "react-icons/fi";
 import { useState } from "react";
 import styles from "./AdminEvents.module.css";
 
@@ -331,6 +333,11 @@ export default function AdminEventsPage() {
 		}
 	};
 
+	const handleAdminLogout = () => {
+		AdminTokenService.clearToken();
+		window.location.replace("/sync");
+	};
+
 	const fields: [keyof AdminEventForm, string, string][] = [
 		["title", "제목", "text"],
 		["imageUrl", "이미지 URL", "text"],
@@ -358,7 +365,18 @@ export default function AdminEventsPage() {
 	return (
 		<div className={styles.page}>
 			<div className={styles.inner}>
-				<h1 className={styles.pageTitle}>행샤 어드민</h1>
+				<div className={styles.pageHeader}>
+					<h1 className={styles.pageTitle}>행샤 어드민</h1>
+					<button
+						type="button"
+						className={styles.logoutButton}
+						onClick={handleAdminLogout}
+						aria-label="어드민 로그아웃"
+						title="어드민 로그아웃"
+					>
+						<FiLogOut aria-hidden="true" />
+					</button>
+				</div>
 
 				<div className={styles.layout}>
 					{/* ── 왼쪽 패널 ── */}
