@@ -8,7 +8,7 @@ import {
 	type SetStateAction,
 } from "react";
 
-import styles from "./MemoPageCard.module.css";
+import styles from "./MemoCard.module.css";
 import { HiOutlinePencilAlt } from "react-icons/hi";
 import { IoMdAdd, IoMdClose, IoMdDoneAll } from "react-icons/io";
 import { FaBookmark, FaCheck, FaTrashCan } from "react-icons/fa6";
@@ -20,17 +20,26 @@ const resizeTextarea = (textarea: HTMLTextAreaElement) => {
 	const minHeight = Number.parseFloat(getComputedStyle(textarea).minHeight);
 	textarea.style.height = `${Math.max(
 		minHeight,
-		Math.min(textarea.scrollHeight, 150),
+		textarea.scrollHeight,
 	)}px`;
 };
 
-const MemoPageCard = ({
-	memo,
-	onDelete,
-}: {
-	memo: Memo;
-	onDelete: Dispatch<SetStateAction<number | null>>;
-}) => {
+type MemoCardProps =
+	| {
+		memo: Memo;
+		onDelete: Dispatch<SetStateAction<number | null>>;
+		variant?: "page";
+	}
+	| {
+		memo: Memo;
+		onDelete?: never;
+		variant: "widget";
+	};
+
+const MemoCard = (props: MemoCardProps) => {
+	const { memo } = props;
+	const isWidget = props.variant === "widget";
+	const onDelete = isWidget ? undefined : props.onDelete;
 	const [editMode, setEditMode] = useState<boolean>(false);
 	const [content, setContent] = useState<string>(memo.content);
 	const [tagNames, setTagNames] = useState<string[]>(
@@ -107,18 +116,22 @@ const MemoPageCard = ({
 	};
 
 	return (
-		// biome-ignore lint/a11y/useSemanticElements: div cannot be button because card contains a textarea, inputs, and nested buttons
+		// biome-ignore lint/a11y/noStaticElementInteractions: page cards need a click handler but contain nested interactive controls
 		<div
-			className={styles.cardContainer}
-			onClick={handleOpenDetail}
-			onKeyDown={(e) => {
-				if (e.key === "Enter" || e.key === " ") {
-					e.preventDefault();
-					handleOpenDetail();
-				}
-			}}
-			role="button"
-			tabIndex={0}
+			className={`${styles.cardContainer} ${isWidget ? styles.widgetCardContainer : ""}`}
+			onClick={isWidget ? undefined : handleOpenDetail}
+			onKeyDown={
+				isWidget
+					? undefined
+					: (e) => {
+							if (e.key === "Enter" || e.key === " ") {
+								e.preventDefault();
+								handleOpenDetail();
+							}
+						}
+			}
+			role={isWidget ? undefined : "button"}
+			tabIndex={isWidget ? undefined : 0}
 		>
 			<div className={styles.cardWrapper}>
 				<div className={styles.cardHeader}>
@@ -132,18 +145,22 @@ const MemoPageCard = ({
 					<span aria-hidden="true">|</span>
 					<span>경력개발센터</span>
 				</div>
-				<textarea
-					ref={textareaRef}
-					className={`${styles.memoTextarea} ${editMode ? styles.activeTextarea : ""}`}
-					rows={1}
-					value={content}
-					onChange={(e) => {
-						setContent(e.currentTarget.value);
-						resizeTextarea(e.currentTarget);
-					}}
-					onClick={(e) => e.stopPropagation()}
-					disabled={!editMode}
-				/>
+				{isWidget ? (
+					<span className={styles.memoContent}>{content}</span>
+				) : (
+					<textarea
+						ref={textareaRef}
+						className={`${styles.memoTextarea} ${editMode ? styles.activeTextarea : ""}`}
+						rows={1}
+						value={content}
+						onChange={(e) => {
+							setContent(e.currentTarget.value);
+							resizeTextarea(e.currentTarget);
+						}}
+						onClick={(e) => e.stopPropagation()}
+						disabled={!editMode}
+					/>
+				)}
 				{editMode && (
 					<div className={styles.tagsContainer}>
 						<ul className={styles.chips}>
@@ -209,12 +226,12 @@ const MemoPageCard = ({
 						</button>
 					</div>
 				)}
-				{!editMode ? (
+				{!isWidget && !editMode ? (
 					<div className={styles.buttonsRow}>
 						<FaTrashCan
 							onClick={(e) => {
 								e.stopPropagation();
-								onDelete(memo.id);
+								onDelete?.(memo.id);
 							}}
 							className={styles.deleteBtn}
 							size={22}
@@ -231,6 +248,7 @@ const MemoPageCard = ({
 						/>
 					</div>
 				) : (
+					!isWidget &&
 					<IoMdDoneAll
 						onClick={(e) => {
 							e.stopPropagation();
@@ -246,4 +264,4 @@ const MemoPageCard = ({
 	);
 };
 
-export default MemoPageCard;
+export default MemoCard;

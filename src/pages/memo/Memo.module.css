@@ -4,78 +4,11 @@
     sans-serif;
 }
 
-/* --- Memo Cards ---*/
-.cardWrapper {
-  display: flex;
-  flex-direction: column;
-  width: 220px;
-  min-width: 220px;
-  flex-shrink: 0;
-  background-color: transparent;
-}
-
 .notFound {
   display: flex;
   justify-content: center;
   align-items: center;
   width: 100%;
-}
-
-.memoContent {
-  font-size: 15px;
-  font-weight: 400;
-  color: #111111;
-  line-height: 1.5;
-
-  display: -webkit-box;
-  -webkit-line-clamp: 4;
-  line-clamp: 4;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  text-overflow: ellipsis;
-
-  height: 6em;
-  margin-bottom: 12px;
-}
-
-.memoTitle {
-  font-size: 14px;
-  font-weight: 700;
-  color: #999999;
-  margin-bottom: 4px;
-
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  display: block;
-}
-
-.memoDate {
-  font-size: 13px;
-  color: #999999;
-  margin-bottom: 12px;
-  display: block;
-}
-
-.chips {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  gap: 6px;
-  padding: 0;
-  margin: 0;
-  list-style: none;
-}
-
-.chip {
-  display: inline-block;
-  padding: 4px 8px;
-  background-color: #eaeaea;
-  border-radius: 4px;
-
-  font-size: 12px;
-  font-weight: 500;
-  color: #666666;
 }
 
 /*--Mypage start--*/
