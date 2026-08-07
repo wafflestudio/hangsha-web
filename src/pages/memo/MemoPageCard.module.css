@@ -1,201 +1,203 @@
 .cardContainer {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  min-width: fit-content;
-
-  margin-bottom: 24px;
-}
-
-.memoDate {
-  font-size: 14px;
-  color: #888888;
-  margin-bottom: 8px;
-  margin-left: 4px;
+	box-sizing: border-box;
+	width: 100%;
+	padding-right: 10px;
+	margin-bottom: 24px;
+	cursor: pointer;
 }
 
 .cardWrapper {
-  position: relative; /* Needed for absolute positioning of the icon */
-  display: flex;
-  flex-direction: column;
-  background-color: #ffffff;
-  border-radius: 16px;
-  padding: 15px 25px;
-
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-  border: 1px solid #f0f0f0;
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	width: 100%;
+	padding: 10px;
+	background: #ffffff;
+	transition: box-shadow 0.2s ease;
 }
 
-.memoTextarea {
-  align-self: center;
-  width: 100%;
-  max-height: 150px;
-  overflow-y: auto;
-
-  font-family: inherit;
-  font-size: 16px;
-  line-height: 1.6;
-  color: #111111;
-
-  resize: none;
-  outline: none;
-  transition: all 0.2s ease;
-
-  /* DEFAULT STATE  */
-  background-color: transparent;
-  border: 1px solid transparent;
-  padding: 10px;
-  margin-bottom: 16px;
+.cardContainer:hover .cardWrapper {
+	box-shadow: 3px 5px 7px rgba(0, 0, 0, 0.15);
 }
 
-.memoTextarea:disabled {
-  color: #111111;
-  opacity: 1;
-  cursor: default;
-  -webkit-text-fill-color: #111111;
+.cardHeader {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	padding: 10px 0;
 }
 
-.activeTextarea {
-  width: 100%;
-  border: 1px solid #bbbbbb;
-  border-radius: 8px;
+.statusDot {
+	width: 23px;
+	height: 23px;
+	flex: 0 0 auto;
+	border-radius: 50%;
+	background: #57d5eb;
 }
 
-.tagsContainer {
-  display: flex;
-  align-items: center;
-  flex-flow: row wrap;
-  gap: 8px;
-  padding: 0;
+.memoDate {
+	flex: 1;
+	font-size: 16px;
+	font-weight: 300;
+	line-height: 23px;
+	color: rgba(0, 0, 0, 0.6);
+}
+
+.bookmarkIcon {
+	width: 23px;
+	height: 23px;
+	color: #a6a6a6;
 }
 
 .memoTitle {
-  font-size: 16px;
-  font-weight: 600;
-  color: #8b8b8b;
-  margin-bottom: 12px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  cursor: pointer;
+	display: -webkit-box;
+	overflow: hidden;
+	margin: 0;
+	font-size: 16px;
+	font-weight: 600;
+	line-height: 1.5;
+	color: #000000;
+	text-overflow: ellipsis;
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: 2;
 }
 
-.memoTitle:hover {
-  text-decoration: underline;
+.memoMetadata {
+	display: flex;
+	gap: 6px;
+	font-size: 14px;
+	font-weight: 300;
+	line-height: 1.5;
+	color: rgba(0, 0, 0, 0.6);
+}
+
+.memoTextarea {
+	width: 100%;
+	min-height: 30px;
+	max-height: 150px;
+	padding: 0;
+	margin: 0;
+	overflow-y: auto;
+	font: inherit;
+	font-size: 16px;
+	line-height: 1.5;
+	color: #000000;
+	resize: none;
+	background: transparent;
+	border: 1px solid transparent;
+	border-radius: 4px;
+	outline: none;
+}
+
+.memoTextarea:disabled {
+	color: #000000;
+	cursor: pointer;
+	opacity: 1;
+	-webkit-text-fill-color: #000000;
+}
+
+.activeTextarea {
+	padding: 8px;
+	border-color: #bbbbbb;
+}
+
+.tagsContainer {
+	display: flex;
+	align-items: center;
+	flex-wrap: wrap;
+	gap: 8px;
 }
 
 .chips {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  list-style: none;
-  padding: 0;
-  margin: 0;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+	padding: 0;
+	margin: 0;
+	list-style: none;
 }
 
 .chip,
 .addLabel {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-
-  padding: 6px 12px;
-  background-color: #eaeaea;
-  border-radius: 6px;
-  font-size: 13px;
-  color: #666666;
+	display: flex;
+	align-items: center;
+	gap: 4px;
+	padding: 6px 12px;
+	font-size: 13px;
+	color: #666666;
+	background: #eaeaea;
+	border-radius: 6px;
 }
 
 .addLabel {
-  padding: 5px 12px;
+	padding: 5px 12px;
 }
 
 .addInput {
-  background: none;
-  border: 0px;
-  outline: none;
-  field-sizing: content;
-  max-width: 400px;
-  resize: none;
+	max-width: 400px;
+	font: inherit;
+	background: none;
+	border: 0;
+	outline: none;
+	resize: none;
+	field-sizing: content;
 }
-.addIcon {
-  cursor: pointer;
-  outline: none;
+
+.addIcon,
+.deleteTagIcon {
+	cursor: pointer;
 }
 
 .deleteTagIcon {
-  cursor: pointer;
-  color: #999999;
-  font-size: 14px;
-  transition: color 0.2s;
+	font-size: 14px;
+	color: #999999;
 }
 
 .deleteTagIcon:hover {
-  color: #ff5555;
+	color: #ff5555;
 }
 
 .buttonsRow {
-  position: absolute;
-  bottom: 20px;
-  right: 20px;
-  display: flex;
-  flex-flow: row nowrap;
-  justify-content: end;
-  align-items: center;
-  gap: 6px;
+	display: flex;
+	align-items: center;
+	justify-content: flex-end;
+	gap: 10px;
+	padding: 10px 0;
+	margin-top: auto;
+	opacity: 0.5;
 }
 
-.deleteBtn {
-  cursor: pointer;
-  transition: transform 0.1s;
+.deleteBtn,
+.editIcon,
+.checkIcon {
+	cursor: pointer;
+	transition: transform 0.1s ease;
 }
 
-.editIcon {
-  cursor: pointer;
-  transition: transform 0.1s;
-}
-
-.editIcon:active {
-  transform: scale(0.9);
+.deleteBtn:active,
+.editIcon:active,
+.checkIcon:active {
+	transform: scale(0.9);
 }
 
 .checkIcon {
-  position: absolute;
-  bottom: 20px;
-  right: 20px;
-  cursor: pointer;
+	align-self: flex-end;
+	margin-top: auto;
+	margin-right: 2px;
+	margin-bottom: 10px;
+	opacity: 0.5;
 }
 
 .addTagBtn {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  width: 28px;
-  height: 28px;
-
-  background-color: #eaeaea;
-  border-radius: 50%;
-  border: none;
-  cursor: pointer;
-  transition: background-color 0.2s;
-  padding: 0;
-}
-
-.addTagBtn:active {
-  background-color: #d0d0d0;
-}
-
-@media (max-width: 576px) {
-  .memoTitle {
-    font-size: 15px;
-  }
-  .memoTextarea {
-    font-size: 15px;
-  }
-  .cardWrapper {
-    padding: 10px 10px;
-  }
-  .tagsContainer {
-    margin-right: 60px;
-  }
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 28px;
+	height: 28px;
+	padding: 0;
+	background: #eaeaea;
+	border: 0;
+	border-radius: 50%;
+	cursor: pointer;
 }
