@@ -63,8 +63,9 @@ body {
 }
 
 .memosPage .memosHeader {
-  width: 80%;
-  justify-content: center;
+	justify-content: flex-start;
+	gap: 30px;
+	width: 80%;
 }
 
 .memosLeft {
@@ -87,10 +88,9 @@ body {
 
 .row {
   display: flex;
-  flex-grow: 1;
   flex-direction: row;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   gap: 14px;
 }
 
