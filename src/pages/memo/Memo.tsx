@@ -2,11 +2,10 @@ import { useUserData } from "@/contexts/UserDataContext";
 import { useAuth } from "@/contexts/AuthProvider";
 import styles from "./Memo.module.css";
 import type { Memo } from "@/util/types";
-import { formatDateDotParsed } from "@/util/calendar/dateFormatter";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
 import Navigationbar from "@/components/layout/Navigationbar";
 import { useNavigate } from "react-router-dom";
-import MemoPageCard from "./MemoPageCard";
+import MemoCard from "./MemoCard";
 import { useEffect, useRef, useState } from "react";
 import Modal from "@/components/ui/Modal";
 import Loading from "@/components/ui/Loading";
@@ -17,25 +16,6 @@ import {
 	SidePanelResizeHandle,
 	useResizableSidePanel,
 } from "@/components/layout/sidePannel/SidePanelResize";
-
-const MemoWidgetCard = ({ memo }: { memo: Memo }) => {
-	return (
-		<div className={styles.cardWrapper}>
-			<span className={styles.memoContent}>{memo.content}</span>
-			<span className={styles.memoTitle}>{memo.eventTitle}</span>
-			<span className={styles.memoDate}>
-				{formatDateDotParsed(memo.createdAt)}
-			</span>
-			<ul className={styles.chips}>
-				{memo.tags.map((t) => (
-					<li key={t.id} className={styles.chip}>
-						{t.name}
-					</li>
-				))}
-			</ul>
-		</div>
-	);
-};
 
 export const MemoWidget = () => {
 	const { eventMemos } = useUserData();
@@ -56,7 +36,7 @@ export const MemoWidget = () => {
 			</div>
 			<div className={styles.cardsRow}>
 				{eventMemos.map((m: Memo) => (
-					<MemoWidgetCard key={m.id} memo={m} />
+					<MemoCard key={m.id} memo={m} variant="widget" />
 				))}
 			</div>
 			{(!eventMemos || eventMemos.length === 0) && (
@@ -133,7 +113,7 @@ const MemoPage = () => {
 				</div>
 				<div className={styles.cardsColumn}>
 					{eventMemos.map((m: Memo) => (
-						<MemoPageCard memo={m} onDelete={setDeletingMemoId} key={m.id} />
+						<MemoCard memo={m} onDelete={setDeletingMemoId} key={m.id} />
 					))}
 				</div>
 				{(!eventMemos || eventMemos.length === 0) && (
