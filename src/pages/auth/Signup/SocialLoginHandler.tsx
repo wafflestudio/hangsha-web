@@ -13,7 +13,7 @@ const LoginHandler = () => {
 		const isNewUser = url.searchParams.get("isNewUser") === "true";
 
 		if (!accessToken) {
-			navigate("/auth/login", { replace: true });
+			navigate("/", { replace: true });
 			return;
 		}
 
@@ -25,7 +25,7 @@ const LoginHandler = () => {
 				});
 			} catch (e) {
 				console.error(e);
-				navigate("/auth/login", { replace: true });
+				navigate("/", { replace: true });
 			}
 		};
 
