@@ -170,7 +170,7 @@ export default function EmailSignUp() {
 				</form>
 				<div className={styles.loginLink}>
 					<p className={styles.loginText}>이미 계정이 있으신가요?</p>
-					<Link to="/auth/login" className={styles.loginText}>
+					<Link to="/" className={styles.loginText}>
 						로그인하러 가기
 					</Link>
 				</div>
