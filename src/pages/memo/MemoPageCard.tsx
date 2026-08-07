@@ -11,9 +11,18 @@ import {
 import styles from "./MemoPageCard.module.css";
 import { HiOutlinePencilAlt } from "react-icons/hi";
 import { IoMdAdd, IoMdClose, IoMdDoneAll } from "react-icons/io";
-import { FaCheck, FaTrashCan } from "react-icons/fa6";
+import { FaBookmark, FaCheck, FaTrashCan } from "react-icons/fa6";
 import { useUserData } from "@/contexts/UserDataContext";
 import { useDetail } from "@/contexts/DetailContext";
+
+const resizeTextarea = (textarea: HTMLTextAreaElement) => {
+	textarea.style.height = "0px";
+	const minHeight = Number.parseFloat(getComputedStyle(textarea).minHeight);
+	textarea.style.height = `${Math.max(
+		minHeight,
+		Math.min(textarea.scrollHeight, 150),
+	)}px`;
+};
 
 const MemoPageCard = ({
 	memo,
@@ -40,8 +49,7 @@ const MemoPageCard = ({
 		requestAnimationFrame(() => {
 			const el = textareaRef.current;
 			if (!el) return;
-			el.style.height = "auto";
-			el.style.height = `${Math.min(el.scrollHeight, 150)}px`;
+			resizeTextarea(el);
 		});
 	}, [memo]);
 
@@ -53,7 +61,7 @@ const MemoPageCard = ({
 	}, [isAddingTag]);
 
 	const tagsChanged =
-		JSON.stringify(tagNames.sort()) !==
+		JSON.stringify([...tagNames].sort()) !==
 		JSON.stringify(memo.tags.map((m) => m.name).sort());
 
 	const isContentChanged = content !== memo.content;
@@ -112,29 +120,36 @@ const MemoPageCard = ({
 			role="button"
 			tabIndex={0}
 		>
-			<span className={styles.memoDate}>
-				{formatDateDotParsed(memo.createdAt)}
-			</span>
 			<div className={styles.cardWrapper}>
+				<div className={styles.cardHeader}>
+					<span className={styles.statusDot} aria-hidden="true" />
+					<span className={styles.memoDate}>D-0</span>
+					<FaBookmark className={styles.bookmarkIcon} aria-hidden="true" />
+				</div>
+				<span className={styles.memoTitle}>{memo.eventTitle}</span>
+				<div className={styles.memoMetadata}>
+					<span>{formatDateDotParsed(memo.createdAt)}</span>
+					<span aria-hidden="true">|</span>
+					<span>경력개발센터</span>
+				</div>
 				<textarea
 					ref={textareaRef}
 					className={`${styles.memoTextarea} ${editMode ? styles.activeTextarea : ""}`}
+					rows={1}
 					value={content}
 					onChange={(e) => {
 						setContent(e.currentTarget.value);
-						e.currentTarget.style.height = "auto";
-						e.currentTarget.style.height = `${Math.min(e.currentTarget.scrollHeight, 150)}px`;
+						resizeTextarea(e.currentTarget);
 					}}
 					onClick={(e) => e.stopPropagation()}
 					disabled={!editMode}
 				/>
-				<span className={styles.memoTitle}>{memo.eventTitle}</span>
-				<div className={styles.tagsContainer}>
-					<ul className={styles.chips}>
-						{tagNames.map((t) => (
-							<li key={t} className={styles.chip}>
-								<span>{t}</span>
-								{editMode && (
+				{editMode && (
+					<div className={styles.tagsContainer}>
+						<ul className={styles.chips}>
+							{tagNames.map((t) => (
+								<li key={t} className={styles.chip}>
+									<span>{t}</span>
 									<IoMdClose
 										className={styles.deleteTagIcon}
 										onClick={(e) => {
@@ -142,48 +157,46 @@ const MemoPageCard = ({
 											handleDeleteTag(t);
 										}}
 									/>
-								)}
-							</li>
-						))}
-					</ul>
-					{isAddingTag && (
-						<div className={styles.addLabel}>
-							<input
-								ref={inputRef}
-								className={styles.addInput}
-								value={newTag}
-								onChange={(e) => setNewTag(e.currentTarget.value)}
-								onClick={(e) => e.stopPropagation()}
-								onKeyDown={(e) => {
-									e.stopPropagation();
-									if (e.key === "Enter" && !e.nativeEvent.isComposing) {
-										e.preventDefault();
+								</li>
+							))}
+						</ul>
+						{isAddingTag && (
+							<div className={styles.addLabel}>
+								<input
+									ref={inputRef}
+									className={styles.addInput}
+									value={newTag}
+									onChange={(e) => setNewTag(e.currentTarget.value)}
+									onClick={(e) => e.stopPropagation()}
+									onKeyDown={(e) => {
+										e.stopPropagation();
+										if (e.key === "Enter" && !e.nativeEvent.isComposing) {
+											e.preventDefault();
+											handleAddTag();
+										}
+									}}
+								/>
+								<FaCheck
+									onClick={(e) => {
+										e.stopPropagation();
 										handleAddTag();
-									}
-								}}
-							/>
-							<FaCheck
-								onClick={(e) => {
-									e.stopPropagation();
-									handleAddTag();
-								}}
-								className={styles.addIcon}
-								size={12}
-								color="#666666"
-								role="button"
-								tabIndex={0}
-								aria-label="Add tag"
-								onKeyDown={(e) => {
-									e.stopPropagation();
-									if (e.key === "Enter" && !e.nativeEvent.isComposing) {
-										e.preventDefault();
-										handleAddTag();
-									}
-								}}
-							/>
-						</div>
-					)}
-					{editMode && (
+									}}
+									className={styles.addIcon}
+									size={12}
+									color="#666666"
+									role="button"
+									tabIndex={0}
+									aria-label="Add tag"
+									onKeyDown={(e) => {
+										e.stopPropagation();
+										if (e.key === "Enter" && !e.nativeEvent.isComposing) {
+											e.preventDefault();
+											handleAddTag();
+										}
+									}}
+								/>
+							</div>
+						)}
 						<button
 							type="button"
 							className={styles.addTagBtn}
@@ -194,8 +207,8 @@ const MemoPageCard = ({
 						>
 							<IoMdAdd size={18} color="#666666" />
 						</button>
-					)}
-				</div>
+					</div>
+				)}
 				{!editMode ? (
 					<div className={styles.buttonsRow}>
 						<FaTrashCan
