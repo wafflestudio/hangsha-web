@@ -1,16 +1,14 @@
 import { useEffect, useRef, useState, type ChangeEvent } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { Sidebar } from "@/components/layout/filterSideBar/FilterSidebar";
+import { SearchSidebar } from "@/components/layout/filterSideBar/SearchSidebar";
 import SearchNewListItem from "./SearchNewListItem";
 import SearchGridItem from "./SearchGridItem";
 import type { HighlightSearchResult } from "@/util/types";
 import { getEventSearchFull } from "@/api/event";
 import styles from "./Search.module.css";
 import toolbarStyles from "./SearchToolbar.module.css";
-import { FaCalendarAlt } from "react-icons/fa";
 import { IoIosClose, IoIosSearch } from "react-icons/io";
 import BottomNav from "@/components/layout/BottomNav";
-import { FilterSheet } from "@/components/layout/filterSheet/FilterSheet";
 import Loading from "@/components/ui/Loading";
 import Pagination from "@/components/ui/Pagination";
 import DetailView from "@/components/layout/sidePannel/DetailView";
@@ -22,6 +20,7 @@ import { useDetail } from "@/contexts/DetailContext";
 import { useAuth } from "@/contexts/AuthProvider";
 import { ProfileButton } from "@/components/layout/toolbar/Toolbar";
 import Modal from "@/components/ui/Modal";
+import { filterEventTimeVariants } from "@/util/calendar/filterEventTimeVariants";
 
 const DEFAULT_PAGE_SIZE = 20;
 const PAGE_GROUP_SIZE = 5;
@@ -52,15 +51,54 @@ const SearchView = () => {
 	useEffect(() => {
 		if (!query.trim()) {
 			setResult(null);
+			setLoading(false);
+			setError(false);
 			return;
 		}
-		setLoading(true);
-		setError(false);
-		getEventSearchFull({ query, page, size: pageSize })
-			.then(setResult)
-			.catch(() => setError(true))
-			.finally(() => setLoading(false));
-	}, [query, page, pageSize]);
+
+		let cancelled = false;
+		const fetchResults = async () => {
+			setLoading(true);
+			setError(false);
+			try {
+				const firstResult = await getEventSearchFull({
+					query,
+					page: 1,
+					size: DEFAULT_PAGE_SIZE,
+				});
+				const fullResult =
+					firstResult.items.length < firstResult.total
+						? await getEventSearchFull({
+								query,
+								page: 1,
+								size: firstResult.total,
+							})
+						: firstResult;
+				if (cancelled) return;
+
+				const items = filterEventTimeVariants(
+					fullResult.items,
+					(item) => item.event,
+				);
+				setResult({
+					...fullResult,
+					page: 1,
+					size: items.length,
+					total: items.length,
+					items,
+				});
+			} catch {
+				if (!cancelled) setError(true);
+			} finally {
+				if (!cancelled) setLoading(false);
+			}
+		};
+
+		void fetchResults();
+		return () => {
+			cancelled = true;
+		};
+	}, [query]);
 
 	useEffect(() => {
 		function handleClickOutside(e: MouseEvent) {
@@ -84,6 +122,8 @@ const SearchView = () => {
 	};
 
 	const totalPages = result ? Math.ceil(result.total / pageSize) : 0;
+	const pageItems =
+		result?.items.slice((page - 1) * pageSize, page * pageSize) ?? [];
 	const currentGroupStart =
 		Math.floor((page - 1) / PAGE_GROUP_SIZE) * PAGE_GROUP_SIZE + 1;
 	const currentGroupEnd = Math.min(
@@ -114,19 +154,12 @@ const SearchView = () => {
 					onClose={() => setIsLoginModalOpen(false)}
 				/>
 			)}
-			<Sidebar />
+			<SearchSidebar />
 			<div className={styles.restContainer}>
 				<div className={toolbarStyles.toolbarContainer}>
 					<div className={toolbarStyles.headerRow}>
 						<span>{query ? `'${query}' 검색 결과` : "검색"}</span>
 						<div className={toolbarStyles.btnGroup}>
-							<button type="button" className={toolbarStyles.calendarBtn}>
-								<FaCalendarAlt
-									onClick={() => navigate("/main")}
-									size={25}
-									color="rgba(130,130,130,1)"
-								/>
-							</button>
 							{user && <ProfileButton user={user} />}
 						</div>
 					</div>
@@ -227,7 +260,7 @@ const SearchView = () => {
 						<div className={styles.resultCount}>총 {result.total}개 결과</div>
 						{viewMode === "list" ? (
 							<div className={styles.listContainer}>
-								{result.items.map((item) => (
+								{pageItems.map((item) => (
 									<SearchNewListItem
 										key={item.event.id}
 										item={item}
@@ -238,7 +271,7 @@ const SearchView = () => {
 							</div>
 						) : (
 							<div className={styles.gridContainer}>
-								{result.items.map((item) => (
+								{pageItems.map((item) => (
 									<SearchGridItem
 										key={item.event.id}
 										item={item}
@@ -277,7 +310,6 @@ const SearchView = () => {
 				</div>
 			)}
 
-			<FilterSheet />
 			<BottomNav />
 		</div>
 	);

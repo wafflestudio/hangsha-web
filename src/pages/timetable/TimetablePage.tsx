@@ -181,7 +181,8 @@ export default function TimetablePage() {
 		);
 
 		return uniqueWeekEvents
-			.map((event) => calendarEventMapper(event, Views.WEEK) as CalendarEvent)
+			.map((event) => calendarEventMapper(event, Views.WEEK))
+			.filter((event): event is CalendarEvent => event !== null)
 			.filter(
 				(calendarEvent) =>
 					calendarEvent.start >= eventWeekRange.from &&
@@ -326,6 +327,7 @@ export default function TimetablePage() {
 					allSlots={allSlots}
 					year={year}
 					semester={semester}
+					isMobile={isMobile}
 					setIsClicked={setIsAddClassPanelOpen}
 				/>
 			)}

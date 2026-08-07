@@ -15,8 +15,8 @@ type Filters = {
 // react-big-calendar's date math (.getMonth(), .getDate(), etc.) works.
 const reviveEvent = (event: Event): Event => ({
 	...event,
-	applyStart: new Date(event.applyStart),
-	applyEnd: new Date(event.applyEnd),
+	applyStart: event.applyStart ? new Date(event.applyStart) : null,
+	applyEnd: event.applyEnd ? new Date(event.applyEnd) : null,
 	eventStart: event.eventStart ? new Date(event.eventStart) : null,
 	eventEnd: event.eventEnd ? new Date(event.eventEnd) : null,
 });

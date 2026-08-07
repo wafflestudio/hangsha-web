@@ -1,8 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Views } from "react-big-calendar";
-import { useQueryClient } from "@tanstack/react-query";
-import PullToRefresh from "react-simple-pull-to-refresh";
 import styles from "./CalendarView.module.css";
 import type { CalendarEvent, Event, Semester } from "@types";
 import DetailView from "@/components/layout/sidePannel/DetailView";
@@ -30,6 +28,7 @@ import { useTimetable } from "@/contexts/TimetableContext";
 import { useMainPanelQuery } from "@/pages/calendar/hooks/useMainPanelQuery";
 import { useCalendarViewQuery } from "@/pages/calendar/hooks/useCalendarViewQuery";
 import { formatDateToYYYYMMDD } from "@/util/calendar/dateFormatter";
+import { filterEventTimeVariants } from "@/util/calendar/filterEventTimeVariants";
 
 const getSemesterByDate = (date: Date): Semester => {
 	const month = date.getMonth() + 1;
@@ -70,7 +69,6 @@ const CalendarView = () => {
 	/** ----------------------  FETCH MONTH / WEEK / DAY data -------------------- */
 
 	const navigate = useNavigate();
-	const queryClient = useQueryClient();
 
 	const filters = useMemo(
 		() => ({
@@ -100,14 +98,6 @@ const CalendarView = () => {
 		interestCategories,
 	);
 
-	const handleRefresh = async () => {
-		await Promise.all([
-			queryClient.invalidateQueries({ queryKey: ["monthEvents"] }),
-			queryClient.invalidateQueries({ queryKey: ["weekEvents"] }),
-			queryClient.invalidateQueries({ queryKey: ["dayEvents"] }),
-		]);
-	};
-
 	useEffect(() => {
 		const today = new Date();
 		void initializeDefaultOverlay(
@@ -131,7 +121,10 @@ const CalendarView = () => {
 		return Array.from(seen.values());
 	};
 
-	const MONTH_EVENTS = flattenByDate(monthViewData?.byDate);
+	const MONTH_EVENTS = filterEventTimeVariants(
+		flattenByDate(monthViewData?.byDate),
+		(event) => event,
+	);
 	const WEEK_EVENTS = flattenByDate(weekViewData?.byDate);
 
 	// Day context data doesn't need additional transformation; it is returned as Event[]
@@ -226,17 +219,15 @@ const CalendarView = () => {
 			<div className={styles.calendarContainer}>
 				<div className={styles.calendarWrapper}>
 					{isMobile ? (
-						<PullToRefresh onRefresh={handleRefresh} pullDownThreshold={70}>
-							<MyCalendar
-								monthEvents={MONTH_EVENTS}
-								weekEvents={WEEK_EVENTS}
-								dayEvents={dayViewEvents}
-								view={calendarView}
-								onShowMoreClick={onShowMoreClick}
-								onSelectEvent={onSelectEvent}
-								onViewChange={setCalendarView}
-							/>
-						</PullToRefresh>
+						<MyCalendar
+							monthEvents={MONTH_EVENTS}
+							weekEvents={WEEK_EVENTS}
+							dayEvents={dayViewEvents}
+							view={calendarView}
+							onShowMoreClick={onShowMoreClick}
+							onSelectEvent={onSelectEvent}
+							onViewChange={setCalendarView}
+						/>
 					) : (
 						<MyCalendar
 							monthEvents={MONTH_EVENTS}

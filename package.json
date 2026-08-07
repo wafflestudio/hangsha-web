@@ -3,6 +3,10 @@
 	"private": true,
 	"version": "0.0.0",
 	"type": "module",
+	"packageManager": "yarn@1.22.22",
+	"engines": {
+		"node": "^20.19.0 || >=22.12.0"
+	},
 	"scripts": {
 		"dev": "vite",
 		"devM": "vite --host",
@@ -42,7 +46,7 @@
 		"patch-package": "^8.0.1",
 		"postinstall-postinstall": "^2.1.0",
 		"typescript": "~5.9.3",
-		"vite": "^7.2.4",
+		"vite": "^7.3.5",
 		"vite-tsconfig-paths": "^6.0.4"
 	}
 }

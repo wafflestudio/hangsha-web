@@ -7,6 +7,13 @@
 	z-index: 10;
 }
 
+@media (min-width: 577px) {
+	.timetableLayer {
+		box-sizing: border-box;
+		padding-bottom: var(--period-bar-height, 0px);
+	}
+}
+
 .periodLayer {
 	position: fixed;
 	left: 0;
