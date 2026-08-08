@@ -116,9 +116,9 @@ function CustomWeekView({
 			})
 			.map((cevent: CalendarEvent) => {
 				let isAllDay = false;
-				const sameMinute =
-					Math.floor(cevent.start.getTime() / 60000) ===
-					Math.floor(cevent.end.getTime() / 60000);
+				const isTwentyThreeHoursFiftyNineMinutes =
+					cevent.end.getTime() - cevent.start.getTime() ===
+					(23 * 60 + 59) * 60 * 1000;
 
 				if (cevent.start && cevent.end) {
 					const startDay = new Date(
@@ -132,11 +132,14 @@ function CustomWeekView({
 						cevent.end.getDate(),
 					);
 					const differentDate =
-						startDay.getFullYear() !== endDay.getFullYear() &&
-						startDay.getMonth() !== endDay.getMonth() &&
+						startDay.getFullYear() !== endDay.getFullYear() ||
+						startDay.getMonth() !== endDay.getMonth() ||
 						startDay.getDate() !== endDay.getDate();
 
-					isAllDay = Boolean(cevent.allDay) || differentDate || sameMinute;
+					isAllDay =
+						Boolean(cevent.allDay) ||
+						differentDate ||
+						isTwentyThreeHoursFiftyNineMinutes;
 				}
 
 				return {
