@@ -313,6 +313,10 @@ export default function TimetablePage() {
 				시간표 변경
 			</button>
 
+			<button type="button" className={styles.snuttLinkButton}>
+				SNUTT 연동
+			</button>
+
 			{hasTimetable && !isAddClassPanelOpen && (
 				<button
 					type="button"

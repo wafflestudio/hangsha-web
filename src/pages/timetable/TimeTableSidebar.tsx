@@ -230,6 +230,17 @@ export const TimeTableSidebar = ({
 						);
 					})}
 				</ul>
+
+				<button type="button" className={styles.snuttImportButton}>
+					<span className={styles.snuttSparkles} aria-hidden="true">
+						<img src="/assets/snutt-sparkle-1.svg" alt="" />
+						<img src="/assets/snutt-sparkle-2.svg" alt="" />
+						<img src="/assets/snutt-sparkle-3.svg" alt="" />
+						<img src="/assets/snutt-sparkle-4.svg" alt="" />
+						<img src="/assets/snutt-sparkle-5.svg" alt="" />
+					</span>
+					<span className={styles.snuttImportLabel}>SNUTT 시간표 불러오기</span>
+				</button>
 			</div>
 
 			<div className={styles.sectionTitle} style={{ marginTop: "40px" }}>
