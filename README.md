@@ -89,6 +89,8 @@ Create a `.env.development` file (one is already included) or set these variable
 |----------|-------------|
 | `VITE_API_URL` | Base path for API requests (default: `/api/v1`) |
 | `VITE_SOCIAL_LOGIN_BASE_URL` | Social OAuth authorization server base URL |
+| `VITE_SNUTT_BASE_URL` | SNUTT popup base URL (dev: `https://snutt-dev.wafflestudio.com`, prod: `https://snutt.wafflestudio.com`) |
+| `VITE_SNUTT_CALLBACK_ORIGIN` | Registered Hangsha origin sent to the SNUTT popup |
 
 ### Build for Production
 
