@@ -19,6 +19,7 @@ import {
 import { useDetail } from "@/contexts/DetailContext";
 import { useAuth } from "@/contexts/AuthProvider";
 import { useFilter } from "@/contexts/FilterContext";
+import { useUserData } from "@/contexts/UserDataContext";
 import { FilterSheet } from "@/components/layout/filterSheet/FilterSheet";
 import {
 	FilterButton,
@@ -36,6 +37,9 @@ const SearchView = () => {
 	const { user } = useAuth();
 	const { globalStatus, globalOrg, globalCategory, setFilterSheetShowing } =
 		useFilter();
+	// 제외 키워드는 서버가 알아서 걸러주므로 파라미터로 보내지 않지만,
+	// 목록에 반영하려면 값이 바뀔 때 재조회가 필요해 deps로만 사용한다.
+	const { excludedKeywords } = useUserData();
 	const { showDetail, closeDetail, clickedEventId, openDetail } = useDetail();
 	const { isMobile, handleResizeStart, sidePanelStyle } =
 		useResizableSidePanel();
@@ -114,7 +118,7 @@ const SearchView = () => {
 		return () => {
 			cancelled = true;
 		};
-	}, [query, globalStatus, globalOrg, globalCategory]);
+	}, [query, globalStatus, globalOrg, globalCategory, excludedKeywords]);
 
 	useEffect(() => {
 		function handleClickOutside(e: MouseEvent) {
