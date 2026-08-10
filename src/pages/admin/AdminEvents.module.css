@@ -240,6 +240,46 @@
 	flex-wrap: wrap;
 }
 
+.draftTextInput {
+	width: 100%;
+	min-height: 96px;
+	margin: 0 0 10px;
+	padding: 10px 12px;
+	border: 1.5px solid #efefef;
+	border-radius: 10px;
+	background-color: #fafafa;
+	color: #222222;
+	font: inherit;
+	font-size: 12px;
+	line-height: 1.5;
+	resize: vertical;
+	box-sizing: border-box;
+}
+
+.draftTextInput:focus {
+	outline: none;
+	border-color: #c0c0c0;
+	background-color: #ffffff;
+}
+
+.draftImageOption {
+	display: flex;
+	align-items: center;
+	gap: 7px;
+	margin-top: 10px;
+	color: #555555;
+	font-size: 12px;
+	font-weight: 600;
+	cursor: pointer;
+}
+
+.draftImageOption input {
+	width: 15px;
+	height: 15px;
+	margin: 0;
+	accent-color: #2a2a2a;
+}
+
 .fileLabel {
 	display: inline-flex;
 	align-items: center;
@@ -370,7 +410,7 @@
 	background-color: #ffffff;
 	border-radius: 20px;
 	padding: 22px;
-	height: 100%;
+	min-height: 100%;
 	box-sizing: border-box;
 	display: flex;
 	flex-direction: column;
@@ -397,11 +437,65 @@
 	min-height: 0;
 }
 
+.sessionsHeader {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+
+.sessionHint {
+	margin: 0;
+	color: #999999;
+	font-size: 12px;
+}
+
+.sessionList {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+}
+
+.sessionRow {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr) auto;
+	gap: 8px;
+	align-items: center;
+}
+
+@media (max-width: 860px) {
+	.sessionRow {
+		grid-template-columns: 1fr;
+	}
+}
+
 .formLabel {
 	font-size: 11.5px;
 	font-weight: 700;
 	color: #999999;
 	letter-spacing: 0.01em;
+}
+
+.booleanField {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	height: 40px;
+	padding: 0 12px;
+	border: 1.5px solid #efefef;
+	border-radius: 10px;
+	background-color: #fafafa;
+	color: #222222;
+	font-size: 13px;
+	font-weight: 500;
+	box-sizing: border-box;
+	cursor: pointer;
+}
+
+.booleanField input {
+	width: 16px;
+	height: 16px;
+	margin: 0;
+	accent-color: #2a2a2a;
 }
 
 .formInput {
