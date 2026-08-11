@@ -131,7 +131,26 @@
   align-items: center;
 }
 .locationRow > span {
-  font-size: 14px;
-  font-weight: 500;
-  color: #555555;
+	font-size: 14px;
+	font-weight: 500;
+	color: #555555;
+}
+
+.eventInfoErrorButton {
+	display: inline-flex;
+	align-items: center;
+	align-self: flex-end;
+	gap: 5px;
+	margin: 16px 12px 14px 0;
+	padding: 0;
+	border: none;
+	background: transparent;
+	color: #7d7d7d;
+	font-size: 14px;
+	font-weight: 600;
+	cursor: pointer;
+}
+
+.eventInfoErrorButton:hover {
+	color: #444444;
 }
