@@ -189,9 +189,9 @@ export default function TimetablePage() {
 					calendarEvent.end <= eventWeekRange.to,
 			)
 			.map((calendarEvent) => {
-				const sameMinute =
-					Math.floor(calendarEvent.start.getTime() / 60000) ===
-					Math.floor(calendarEvent.end.getTime() / 60000);
+				const isTwentyThreeHoursFiftyNineMinutes =
+					calendarEvent.end.getTime() - calendarEvent.start.getTime() ===
+					(23 * 60 + 59) * 60 * 1000;
 				const startDay = new Date(
 					calendarEvent.start.getFullYear(),
 					calendarEvent.start.getMonth(),
@@ -209,7 +209,10 @@ export default function TimetablePage() {
 
 				return {
 					...calendarEvent,
-					allDay: Boolean(calendarEvent.allDay) || differentDate || sameMinute,
+					allDay:
+						Boolean(calendarEvent.allDay) ||
+						differentDate ||
+						isTwentyThreeHoursFiftyNineMinutes,
 				};
 			})
 			.filter(

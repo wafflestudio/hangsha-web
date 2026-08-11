@@ -5,9 +5,8 @@ import PageViewTracker from "@/router/PageViewTracker";
 import Loading from "@/components/ui/Loading";
 
 const Home = lazy(() => import("../pages/auth/Home"));
-const Login = lazy(() => import("../pages/auth/Login/Login"));
 const LoginHandler = lazy(
-	() => import("../pages/auth/Login/SocialLoginHandler"),
+	() => import("../pages/auth/Signup/SocialLoginHandler"),
 );
 const SignupSource = lazy(() => import("../pages/auth/OnBoarding/SignUpSource"));
 const EmailSignUp = lazy(() => import("../pages/auth/Signup/EmailSignUp"));
@@ -27,7 +26,7 @@ export default function AppRoutes() {
 			<Suspense fallback={<Loading />}>
 				<Routes>
 					<Route path="/" element={<Home />} />
-					<Route path="/auth/login" element={<Login />} />
+					<Route path="/auth/login" element={<Home />} />
           <Route path="/auth/signup" element={<EmailSignUp />} />
           <Route
             path="/auth/onbording/sign-up-source"
