@@ -180,7 +180,7 @@ export const toSnuttImportData = (
 
 	return {
 		timetable: {
-			name: timetable.title.trim() || "SNUTT 시간표",
+			name: `${timetable.title.trim() || "SNUTT 시간표"} (SNUTT)`,
 			year: timetable.year,
 			semester: semesterMap[timetable.semester],
 		},
