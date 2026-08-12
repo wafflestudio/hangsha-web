@@ -1,4 +1,5 @@
 import { formatDateDotParsed } from "@/util/calendar/dateFormatter";
+import { getDDay } from "@/util/calendar/getDday";
 import type { Memo } from "@/util/types";
 import {
 	useEffect,
@@ -11,7 +12,7 @@ import {
 import styles from "./MemoCard.module.css";
 import { HiOutlinePencilAlt } from "react-icons/hi";
 import { IoMdAdd, IoMdClose, IoMdDoneAll } from "react-icons/io";
-import { FaBookmark, FaCheck, FaTrashCan } from "react-icons/fa6";
+import { FaBookmark, FaCheck, FaRegBookmark, FaTrashCan } from "react-icons/fa6";
 import { useUserData } from "@/contexts/UserDataContext";
 import { useDetail } from "@/contexts/DetailContext";
 
@@ -74,6 +75,8 @@ const MemoCard = (props: MemoCardProps) => {
 		JSON.stringify(memo.tags.map((m) => m.name).sort());
 
 	const isContentChanged = content !== memo.content;
+	const memoDate = memo.createdAt ? formatDateDotParsed(memo.createdAt) : null;
+	const organizationName = memo.organization?.name;
 
 	const handleDeleteTag = (tagName: string) => {
 		setTagNames((prev) => prev.filter((t) => t !== tagName));
@@ -135,15 +138,25 @@ const MemoCard = (props: MemoCardProps) => {
 		>
 			<div className={styles.cardWrapper}>
 				<div className={styles.cardHeader}>
+					{/* Category ID is not included in the memo response yet. */}
 					<span className={styles.statusDot} aria-hidden="true" />
-					<span className={styles.memoDate}>D-0</span>
-					<FaBookmark className={styles.bookmarkIcon} aria-hidden="true" />
+					<span className={styles.memoDate}>
+						{memo.applyEnd ? getDDay(memo.applyEnd) : ""}
+					</span>
+					{memo.isBookmarked ? (
+						<FaBookmark className={styles.bookmarkIcon} aria-label="찜한 행사" />
+					) : (
+						<FaRegBookmark
+							className={styles.bookmarkIcon}
+							aria-label="찜하지 않은 행사"
+						/>
+					)}
 				</div>
 				<span className={styles.memoTitle}>{memo.eventTitle}</span>
 				<div className={styles.memoMetadata}>
-					<span>{formatDateDotParsed(memo.createdAt)}</span>
-					<span aria-hidden="true">|</span>
-					<span>경력개발센터</span>
+					{memoDate && <span>{memoDate}</span>}
+					{memoDate && organizationName && <span aria-hidden="true">|</span>}
+					{organizationName && <span>{organizationName}</span>}
 				</div>
 				{isWidget ? (
 					<span className={styles.memoContent}>{content}</span>
