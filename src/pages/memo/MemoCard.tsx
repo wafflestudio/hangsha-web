@@ -12,7 +12,7 @@ import {
 import styles from "./MemoCard.module.css";
 import { HiOutlinePencilAlt } from "react-icons/hi";
 import { IoMdAdd, IoMdClose, IoMdDoneAll } from "react-icons/io";
-import { FaBookmark, FaCheck, FaRegBookmark, FaTrashCan } from "react-icons/fa6";
+import { FaCheck, FaTrashCan } from "react-icons/fa6";
 import { useUserData } from "@/contexts/UserDataContext";
 import { useDetail } from "@/contexts/DetailContext";
 
@@ -143,14 +143,15 @@ const MemoCard = (props: MemoCardProps) => {
 					<span className={styles.memoDate}>
 						{memo.applyEnd ? getDDay(memo.applyEnd) : ""}
 					</span>
-					{memo.isBookmarked ? (
-						<FaBookmark className={styles.bookmarkIcon} aria-label="찜한 행사" />
-					) : (
-						<FaRegBookmark
-							className={styles.bookmarkIcon}
-							aria-label="찜하지 않은 행사"
-						/>
-					)}
+					<img
+						src={
+							memo.isBookmarked
+								? "/assets/Bookmarked.svg"
+								: "/assets/notBookmarked.svg"
+						}
+						className={styles.bookmarkIcon}
+						alt={memo.isBookmarked ? "찜한 행사" : "찜하지 않은 행사"}
+					/>
 				</div>
 				<span className={styles.memoTitle}>{memo.eventTitle}</span>
 				<div className={styles.memoMetadata}>
