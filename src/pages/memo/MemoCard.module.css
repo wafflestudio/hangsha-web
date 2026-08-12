@@ -62,7 +62,14 @@
 .bookmarkIcon {
 	width: 23px;
 	height: 23px;
-	color: #a6a6a6;
+}
+
+.bookmarkButton {
+	display: flex;
+	padding: 0;
+	background: none;
+	border: 0;
+	cursor: pointer;
 }
 
 .memoTitle {

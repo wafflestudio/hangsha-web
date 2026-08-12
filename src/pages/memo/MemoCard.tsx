@@ -6,6 +6,7 @@ import {
 	useRef,
 	useState,
 	type Dispatch,
+	type MouseEvent,
 	type SetStateAction,
 } from "react";
 
@@ -48,7 +49,7 @@ const MemoCard = (props: MemoCardProps) => {
 	);
 	const [isAddingTag, setIsAddingTag] = useState<boolean>(false);
 	const [newTag, setNewTag] = useState<string>("");
-	const { updateMemo } = useUserData();
+	const { updateMemo, toggleBookmark } = useUserData();
 	const { openDetail } = useDetail();
 	const inputRef = useRef<HTMLInputElement>(null);
 	const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -118,6 +119,13 @@ const MemoCard = (props: MemoCardProps) => {
 		openDetail(memo.eventId);
 	};
 
+	const handleToggleBookmark = async (
+		event: MouseEvent<HTMLButtonElement>,
+	) => {
+		event.stopPropagation();
+		await toggleBookmark(memo.eventId);
+	};
+
 	return (
 		// biome-ignore lint/a11y/noStaticElementInteractions: page cards need a click handler but contain nested interactive controls
 		<div
@@ -143,15 +151,21 @@ const MemoCard = (props: MemoCardProps) => {
 					<span className={styles.memoDate}>
 						{memo.applyEnd ? getDDay(memo.applyEnd) : ""}
 					</span>
-					<img
-						src={
-							memo.isBookmarked
-								? "/assets/Bookmarked.svg"
-								: "/assets/notBookmarked.svg"
-						}
-						className={styles.bookmarkIcon}
-						alt={memo.isBookmarked ? "찜한 행사" : "찜하지 않은 행사"}
-					/>
+					<button
+						type="button"
+						className={styles.bookmarkButton}
+						onClick={handleToggleBookmark}
+					>
+						<img
+							src={
+								memo.isBookmarked
+									? "/assets/Bookmarked.svg"
+									: "/assets/notBookmarked.svg"
+							}
+							className={styles.bookmarkIcon}
+							alt={memo.isBookmarked ? "찜한 행사" : "찜하지 않은 행사"}
+						/>
+					</button>
 				</div>
 				<span className={styles.memoTitle}>{memo.eventTitle}</span>
 				<div className={styles.memoMetadata}>
