@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, type ChangeEvent } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { SearchSidebar } from "@/components/layout/filterSideBar/SearchSidebar";
+import { Sidebar } from "@/components/layout/filterSideBar/FilterSidebar";
 import SearchNewListItem from "./SearchNewListItem";
 import SearchGridItem from "./SearchGridItem";
 import type { HighlightSearchResult } from "@/util/types";
@@ -18,7 +18,13 @@ import {
 } from "@/components/layout/sidePannel/SidePanelResize";
 import { useDetail } from "@/contexts/DetailContext";
 import { useAuth } from "@/contexts/AuthProvider";
-import { ProfileButton } from "@/components/layout/toolbar/Toolbar";
+import { useFilter } from "@/contexts/FilterContext";
+import { useUserData } from "@/contexts/UserDataContext";
+import { FilterSheet } from "@/components/layout/filterSheet/FilterSheet";
+import {
+	FilterButton,
+	ProfileButton,
+} from "@/components/layout/toolbar/Toolbar";
 import Modal from "@/components/ui/Modal";
 import { filterEventTimeVariants } from "@/util/calendar/filterEventTimeVariants";
 
@@ -29,6 +35,11 @@ const SearchView = () => {
 	const [searchParams, setSearchParams] = useSearchParams();
 	const navigate = useNavigate();
 	const { user } = useAuth();
+	const { globalStatus, globalOrg, globalCategory, setFilterSheetShowing } =
+		useFilter();
+	// 제외 키워드는 서버가 알아서 걸러주므로 파라미터로 보내지 않지만,
+	// 목록에 반영하려면 값이 바뀔 때 재조회가 필요해 deps로만 사용한다.
+	const { excludedKeywords } = useUserData();
 	const { showDetail, closeDetail, clickedEventId, openDetail } = useDetail();
 	const { isMobile, handleResizeStart, sidePanelStyle } =
 		useResizableSidePanel();
@@ -57,6 +68,13 @@ const SearchView = () => {
 		}
 
 		let cancelled = false;
+		// 사이드바/필터시트에서 고른 값을 서버 파라미터 형태로 변환
+		const filters = {
+			statusId: globalStatus.map((g) => g.id),
+			orgId: globalOrg.map((g) => g.id),
+			eventTypeId: globalCategory.map((g) => g.id),
+		};
+
 		const fetchResults = async () => {
 			setLoading(true);
 			setError(false);
@@ -65,6 +83,7 @@ const SearchView = () => {
 					query,
 					page: 1,
 					size: DEFAULT_PAGE_SIZE,
+					...filters,
 				});
 				const fullResult =
 					firstResult.items.length < firstResult.total
@@ -72,6 +91,7 @@ const SearchView = () => {
 								query,
 								page: 1,
 								size: firstResult.total,
+								...filters,
 							})
 						: firstResult;
 				if (cancelled) return;
@@ -98,7 +118,7 @@ const SearchView = () => {
 		return () => {
 			cancelled = true;
 		};
-	}, [query]);
+	}, [query, globalStatus, globalOrg, globalCategory, excludedKeywords]);
 
 	useEffect(() => {
 		function handleClickOutside(e: MouseEvent) {
@@ -122,10 +142,11 @@ const SearchView = () => {
 	};
 
 	const totalPages = result ? Math.ceil(result.total / pageSize) : 0;
+	const safePage = totalPages > 0 ? Math.min(page, totalPages) : 1;
 	const pageItems =
-		result?.items.slice((page - 1) * pageSize, page * pageSize) ?? [];
+		result?.items.slice((safePage - 1) * pageSize, safePage * pageSize) ?? [];
 	const currentGroupStart =
-		Math.floor((page - 1) / PAGE_GROUP_SIZE) * PAGE_GROUP_SIZE + 1;
+		Math.floor((safePage - 1) / PAGE_GROUP_SIZE) * PAGE_GROUP_SIZE + 1;
 	const currentGroupEnd = Math.min(
 		totalPages,
 		currentGroupStart + PAGE_GROUP_SIZE - 1,
@@ -154,12 +175,14 @@ const SearchView = () => {
 					onClose={() => setIsLoginModalOpen(false)}
 				/>
 			)}
-			<SearchSidebar />
+			<Sidebar />
 			<div className={styles.restContainer}>
 				<div className={toolbarStyles.toolbarContainer}>
 					<div className={toolbarStyles.headerRow}>
 						<span>{query ? `'${query}' 검색 결과` : "검색"}</span>
 						<div className={toolbarStyles.btnGroup}>
+							{/** 모바일뷰 전용 필터 버튼 */}
+							<FilterButton onFilterSet={() => setFilterSheetShowing(true)} />
 							{user && <ProfileButton user={user} />}
 						</div>
 					</div>
@@ -283,7 +306,7 @@ const SearchView = () => {
 						)}
 						{totalPages > 1 && (
 							<Pagination
-								page={page}
+								page={safePage}
 								totalPages={totalPages}
 								currentGroupStart={currentGroupStart}
 								currentGroupEnd={currentGroupEnd}
@@ -310,6 +333,7 @@ const SearchView = () => {
 				</div>
 			)}
 
+			<FilterSheet />
 			<BottomNav />
 		</div>
 	);

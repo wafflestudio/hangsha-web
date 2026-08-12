@@ -160,7 +160,6 @@ export function TimetableGrid({
 							config={config}
 							// onSelectBlock={onSelectBlock}
 							onRemoveBlock={onRemoveBlock}
-							isSimplified={isSimplified}
 							eventBlocks={isSimplified ? eventBlocksByDay[d] : []}
 							onSelectEvent={onSelectEvent}
 						/>
@@ -178,7 +177,6 @@ function DayColumn<T>({
 	config,
 	onSelectBlock,
 	onRemoveBlock,
-	isSimplified,
 	eventBlocks,
 	onSelectEvent,
 }: {
@@ -188,7 +186,6 @@ function DayColumn<T>({
 	config: GridConfig;
 	onSelectBlock?: (id: number, item: T) => void;
 	onRemoveBlock?: (timetableId: number, enrollId: number) => Promise<void>;
-	isSimplified: boolean;
 	eventBlocks: LayoutedBlock[];
 	onSelectEvent?: (event: Event) => void;
 }) {
@@ -199,9 +196,7 @@ function DayColumn<T>({
 			{blocks.map((b) => (
 				<button
 					key={b.id}
-					className={`${styles.block} ${
-						isSimplified ? styles.simplifiedBlock : ""
-					}`}
+					className={styles.block}
 					style={{
 						top: b.top,
 						height: b.height,

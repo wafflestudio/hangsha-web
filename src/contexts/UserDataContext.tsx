@@ -20,7 +20,6 @@ interface UserDataContextType {
 	excludedKeywordLoading: boolean;
 	
 	refreshUserData: () => Promise<void>;
-	// fetchInterestCategories: () => void;
 	saveInterestPreferences: (categories: Category[]) => Promise<void>;
 	addExcludedKeyword: (keyword: string) => Promise<void>;
 	deleteExcludedKeyword: (id: number) => Promise<void>;
@@ -89,18 +88,6 @@ export const UserDataProvider = ({ children }: { children: ReactNode }) => {
 			setEventMemos([]);
 		}
 	}, [isAuthenticated, fetchAll]);
-
-	// get interestCategories & update
-	/*		
-	const fetchInterestCategories = async () => {
-		try {
-			const newInterestCategories = await userService.getInterestCategories();
-			setInterestCategories(newInterestCategories);
-		} catch (e) {
-			console.error("error in fetching interest categories", e);
-		}
-	}
-		*/
 
 	const toggleBookmark = async (event: Event) => {
 		const isBookmarked = bookmarkedEvents.some((b) => b.id === event.id);
@@ -215,7 +202,6 @@ export const UserDataProvider = ({ children }: { children: ReactNode }) => {
 				memoLoading,
 				excludedKeywordLoading,
 				refreshUserData: fetchAll,
-				// fetchInterestCategories,
 				saveInterestPreferences,
 				toggleBookmark,
 				getMemoByTag,

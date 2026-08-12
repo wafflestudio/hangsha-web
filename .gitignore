@@ -32,3 +32,4 @@ settings.json
 
 # use yarn instead of npm
 package-lock.json
+.gstack/
