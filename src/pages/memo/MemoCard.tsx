@@ -174,6 +174,15 @@ const MemoCard = (props: MemoCardProps) => {
 						disabled={!editMode}
 					/>
 				)}
+				{!editMode && memo.tags.length > 0 && (
+					<div className={styles.memoTags}>
+						{memo.tags.map((tag) => (
+							<span key={tag.id} className={styles.memoTag}>
+								# {tag.name}
+							</span>
+						))}
+					</div>
+				)}
 				{editMode && (
 					<div className={styles.tagsContainer}>
 						<ul className={styles.chips}>
