@@ -3,6 +3,7 @@ import { useAuth } from "@/contexts/AuthProvider";
 import styles from "./Memo.module.css";
 import type { Memo } from "@/util/types";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
+import { FiArrowUpRight } from "react-icons/fi";
 import Navigationbar from "@/components/layout/Navigationbar";
 import { useNavigate } from "react-router-dom";
 import MemoCard from "./MemoCard";
@@ -112,15 +113,27 @@ const MemoPage = () => {
 					</div>
 				</div>
 				<div className={styles.cardsColumn}>
-					{eventMemos.map((m: Memo) => (
-						<MemoCard memo={m} onDelete={setDeletingMemoId} key={m.id} />
-					))}
+					{eventMemos.length > 0 ? (
+						eventMemos.map((m: Memo) => (
+							<MemoCard memo={m} onDelete={setDeletingMemoId} key={m.id} />
+						))
+					) : (
+						<>
+							<div className={styles.emptyMemoCard}>
+								<strong>현재 작성된 메모가 없습니다!</strong>
+								<span>원하는 행사를 찾고 메모를 남겨보세요.</span>
+							</div>
+							<button
+								type="button"
+								className={styles.calendarShortcut}
+								onClick={() => navigate("/main")}
+							>
+								<span>캘린더로 바로 가기</span>
+								<FiArrowUpRight size={24} aria-hidden="true" />
+							</button>
+						</>
+					)}
 				</div>
-				{(!eventMemos || eventMemos.length === 0) && (
-					<span
-						className={styles.noneText}
-					>{`아직 메모가 없습니다.\n다녀온 행사나 관심있는 행사에 대한 메모를 작성해보세요!`}</span>
-				)}
 			</div>
 			{deletingMemoId && (
 				<Modal
