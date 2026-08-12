@@ -113,7 +113,13 @@ export const UserDataProvider = ({ children }: { children: ReactNode }) => {
 
 			const newBookmarks = await userService.getBookmarks(1);
 			setBookmarkedEvents(newBookmarks);
-
+			setEventMemos((prevMemos) =>
+				prevMemos.map((memo) =>
+					memo.eventId === event.id
+						? { ...memo, isBookmarked: !isBookmarked }
+						: memo,
+				),
+			);
 		} catch (error) {
 			console.error(error);
 		}
