@@ -92,6 +92,13 @@ Create a `.env.development` file (one is already included) or set these variable
 | `VITE_SNUTT_BASE_URL` | SNUTT popup base URL (dev: `https://snutt-dev.wafflestudio.com`, prod: `https://snutt.wafflestudio.com`) |
 | `VITE_SNUTT_CALLBACK_ORIGIN` | Registered Hangsha origin sent to the SNUTT popup |
 
+The dev deployment builds in `development` mode and therefore uses the values
+from `.env.development`. For the production deployment, configure
+`VITE_SNUTT_BASE_URL` and `VITE_SNUTT_CALLBACK_ORIGIN` in the repository's
+**Settings → Secrets and variables → Actions → Variables**. `deploy-prod.yml`
+passes them to the production Vite build through the reusable deployment
+workflow.
+
 ### Build for Production
 
 ```bash
