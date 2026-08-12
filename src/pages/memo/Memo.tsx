@@ -112,7 +112,11 @@ const MemoPage = () => {
 						<img src="/assets/pencil.svg" alt="pencil icon" />
 					</div>
 				</div>
-				<div className={styles.cardsColumn}>
+				<div
+					className={`${styles.cardsColumn} ${
+						eventMemos.length === 0 ? styles.emptyCardsColumn : ""
+					}`}
+				>
 					{eventMemos.length > 0 ? (
 						eventMemos.map((m: Memo) => (
 							<MemoCard memo={m} onDelete={setDeletingMemoId} key={m.id} />

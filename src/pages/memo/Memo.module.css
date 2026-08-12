@@ -110,6 +110,10 @@ body {
   display: none;
 }
 
+.emptyCardsColumn {
+	row-gap: 24px;
+}
+
 .emptyMemoCard,
 .calendarShortcut {
 	box-sizing: border-box;
@@ -242,6 +246,25 @@ body {
   .cardsColumn {
     gap: 0;
   }
+
+	.emptyCardsColumn {
+		row-gap: 11px;
+	}
+
+	.emptyMemoCard,
+	.calendarShortcut {
+		min-height: 180px;
+		padding: 16px;
+	}
+
+	.emptyMemoCard strong,
+	.calendarShortcut {
+		font-size: 20px;
+	}
+
+	.emptyMemoCard span {
+		font-size: 14px;
+	}
   .cardsRow {
     padding-left: 0;
   }
