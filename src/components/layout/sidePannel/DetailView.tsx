@@ -185,7 +185,15 @@ const DetailView = ({ eventId }: { eventId: number }) => {
 			</div>
 
 			{/* ----- Memo & Tag Section ----- */}
-			<div ref={memoWrapperRef} data-tour-id="detail-tour-memo">
+			{/* biome-ignore lint/a11y/noStaticElementInteractions: memo wrapper handles pointer events to prevent the parent panel's outside-click handler from closing it */}
+			<div
+				ref={memoWrapperRef}
+				data-tour-id="detail-tour-memo"
+				onMouseDown={(event) => {
+					event.stopPropagation();
+					setIsMemoExpanded(true);
+				}}
+			>
 				<DetailMemo
 					eventId={eventId}
 					isMemoExpanded={isMemoExpanded}

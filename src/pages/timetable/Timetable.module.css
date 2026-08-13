@@ -393,19 +393,6 @@
   opacity: 0.85;
 }
 
-.simplifiedBlock {
-  background: #000000;
-  opacity: 0.15;
-  pointer-events: none;
-  z-index: 10;
-}
-
-.simplifiedBlock .blockRemove,
-.simplifiedBlock .blockTitle,
-.simplifiedBlock .blockTime {
-  display: none;
-}
-
 .eventBlock {
   position: absolute;
   box-sizing: border-box;
@@ -696,10 +683,6 @@
     border-radius: 0;
     font-size: 11px;
     line-height: 1.25;
-  }
-
-  .blockRemove {
-    display: none;
   }
 
   .blockTitle {
