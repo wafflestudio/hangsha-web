@@ -36,6 +36,12 @@
 	box-shadow: none;
 }
 
+@media (max-width: 576px) {
+	.cardContainer:hover .cardWrapper {
+		box-shadow: none;
+	}
+}
+
 .cardHeader {
 	display: flex;
 	align-items: center;
