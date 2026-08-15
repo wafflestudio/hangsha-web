@@ -16,6 +16,8 @@ interface TimeTableSidebarProps {
 	onSelectTimetable: (timetable: Timetable) => void;
 	onRename: (timetableId: number, body: PatchTimetableRequest) => void;
 	onDelete: (timetableId: number) => void;
+	onSnuttImport: () => void;
+	isSnuttImporting: boolean;
 }
 
 export const TimeTableSidebar = ({
@@ -28,6 +30,8 @@ export const TimeTableSidebar = ({
 	onSelectTimetable,
 	onRename,
 	onDelete,
+	onSnuttImport,
+	isSnuttImporting,
 }: TimeTableSidebarProps) => {
 	const { user } = useAuth();
 	const [editingId, setEditingId] = useState<number | null>(null);
@@ -230,6 +234,24 @@ export const TimeTableSidebar = ({
 						);
 					})}
 				</ul>
+
+				<button
+					type="button"
+					className={styles.snuttImportButton}
+					onClick={onSnuttImport}
+					disabled={isSnuttImporting}
+				>
+					<span className={styles.snuttSparkles} aria-hidden="true">
+						<img src="/assets/snutt-sparkle-1.svg" alt="" />
+						<img src="/assets/snutt-sparkle-2.svg" alt="" />
+						<img src="/assets/snutt-sparkle-3.svg" alt="" />
+						<img src="/assets/snutt-sparkle-4.svg" alt="" />
+						<img src="/assets/snutt-sparkle-5.svg" alt="" />
+					</span>
+					<span className={styles.snuttImportLabel}>
+						{isSnuttImporting ? "시간표 불러오는 중..." : "SNUTT 시간표 불러오기"}
+					</span>
+				</button>
 			</div>
 
 			<div className={styles.sectionTitle} style={{ marginTop: "40px" }}>
