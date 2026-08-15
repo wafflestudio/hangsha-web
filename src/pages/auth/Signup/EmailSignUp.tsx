@@ -291,6 +291,11 @@ function EmailSignupForm() {
 							value={email}
 							onChange={(event) => setEmail(event.target.value)}
 						/>
+						{errorMessage && (
+							<p className={styles.validation} role="alert">
+								{errorMessage}
+							</p>
+						)}
 						<button
 							className={styles.submit}
 							type="submit"
@@ -344,6 +349,11 @@ function EmailSignupForm() {
 								/>
 							))}
 						</fieldset>
+						{errorMessage && (
+							<p className={styles.validation} role="alert">
+								{errorMessage}
+							</p>
+						)}
 						<button
 							className={styles.submit}
 							type="button"
@@ -419,6 +429,11 @@ function EmailSignupForm() {
 								상세 내용 보기
 							</button>
 						</div>
+						{errorMessage && (
+							<p className={styles.validation} role="alert">
+								{errorMessage}
+							</p>
+						)}
 						<button
 							className={styles.submit}
 							type="submit"
@@ -429,11 +444,6 @@ function EmailSignupForm() {
 					</form>
 				)}
 
-				{errorMessage && (
-					<p className={styles.error} role="alert">
-						{errorMessage}
-					</p>
-				)}
 				<div className={styles.loginLink}>
 					<span>이미 계정이 있으신가요?</span>
 					<Link to="/auth/login">로그인하러 가기</Link>
