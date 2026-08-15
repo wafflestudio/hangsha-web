@@ -114,6 +114,7 @@ export interface Memo {
 	id: number;
 	eventId: number;
 	eventTitle: string;
+	categoryId: number;
 	content: string;
 	tags: MemoTag[];
 	createdAt?: Date;

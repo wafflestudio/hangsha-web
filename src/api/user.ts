@@ -1,4 +1,7 @@
-import { transformEvent } from "@/util/calendar/transformEvent";
+import {
+	transformCategoryId,
+	transformEvent,
+} from "@/util/calendar/transformEvent";
 import type { Category, EventDTO, Memo } from "@types";
 import api from "./axios";
 
@@ -82,6 +85,7 @@ type MemoDTO = Omit<Memo, "createdAt" | "updatedAt" | "applyEnd"> & {
 const mapMemoDTO = (m: MemoDTO): Memo => {
 	return {
 		...m,
+		categoryId: transformCategoryId(m.categoryId),
 		createdAt: m.createdAt ? new Date(m.createdAt) : undefined,
 		updatedAt: m.updatedAt ? new Date(m.updatedAt) : undefined,
 		applyEnd:
