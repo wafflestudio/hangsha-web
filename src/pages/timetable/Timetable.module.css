@@ -80,6 +80,10 @@
   box-shadow: 0 8px 24px rgba(0, 192, 232, 0.24);
 }
 
+.snuttLinkButton {
+  display: none;
+}
+
 .leftSidebar {
   border-right: 1px solid #eee;
   padding: 16px;
@@ -558,6 +562,34 @@
     top: auto;
     bottom: calc(124px + env(safe-area-inset-bottom));
     transform: none;
+  }
+
+  .snuttLinkButton {
+    position: fixed;
+    right: 20px;
+    bottom: calc(172px + env(safe-area-inset-bottom));
+    z-index: 1000;
+    display: inline-flex;
+    width: 106px;
+    height: 36px;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    border: none;
+    border-radius: 100px;
+    background: rgba(11, 206, 132, 0.6);
+    color: #ffffff;
+    cursor: pointer;
+    font-family: Roboto, "Pretendard", "Apple SD Gothic Neo", sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    letter-spacing: 0.15px;
+    line-height: 24px;
+  }
+
+  .snuttLinkButton:focus-visible {
+    outline: 2px solid #0bce84;
+    outline-offset: 2px;
   }
 
   .addClassPanelDim {
