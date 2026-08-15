@@ -31,10 +31,43 @@ export const uploadProfileImg = async (file: File) => {
 	return data;
 };
 
-export const signup = async (email: string, password: string) => {
+export interface EmailVerificationCodeResponse {
+	expiresAt: string;
+}
+
+export interface EmailVerificationResult {
+	signupToken: string;
+	expiresAt: string;
+}
+
+export const sendEmailVerificationCode = async (email: string) => {
+	const response = await api.post<EmailVerificationCodeResponse>(
+		"/auth/email/send-code",
+		{ email },
+	);
+	return response.data;
+};
+
+export const verifyEmailVerificationCode = async (
+	email: string,
+	code: string,
+) => {
+	const response = await api.post<EmailVerificationResult>(
+		"/auth/email/verify-code",
+		{ email, code },
+	);
+	return response.data;
+};
+
+export const signup = async (
+	email: string,
+	password: string,
+	signupToken: string,
+) => {
 	const response = await api.post<AuthTokens>("/auth/register", {
 		email,
 		password,
+		signupToken,
 	});
 
 	TokenService.setToken(response.data.accessToken);
