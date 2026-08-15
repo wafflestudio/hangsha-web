@@ -1,5 +1,6 @@
 import { formatDateDotParsed } from "@/util/calendar/dateFormatter";
 import { getDDay } from "@/util/calendar/getDday";
+import { CATEGORY_COLORS } from "@/util/constants";
 import type { Memo } from "@/util/types";
 import {
 	useEffect,
@@ -146,8 +147,11 @@ const MemoCard = (props: MemoCardProps) => {
 		>
 			<div className={styles.cardWrapper}>
 				<div className={styles.cardHeader}>
-					{/* Category ID is not included in the memo response yet. */}
-					<span className={styles.statusDot} aria-hidden="true" />
+					<span
+						className={styles.statusDot}
+						style={{ backgroundColor: CATEGORY_COLORS[memo.categoryId] }}
+						aria-hidden="true"
+					/>
 					<span className={styles.memoDate}>
 						{memo.applyEnd ? getDDay(memo.applyEnd) : ""}
 					</span>
