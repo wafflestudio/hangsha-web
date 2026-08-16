@@ -6,7 +6,7 @@ import {
 } from "react-big-calendar";
 import TimeGrid from "react-big-calendar/lib/TimeGrid";
 import styles from "./DayView.module.css";
-import { useDayView } from "@contexts/DayViewContext";
+import { useCalendarViewMode } from "@contexts/CalendarViewModeContext";
 import Table from "./table";
 import type { CalendarEvent } from "@types";
 import GalleryView from "./gallery/GalleryView";
@@ -24,7 +24,7 @@ const CustomDayView = ({
 	events,
 	...props
 }: CustomDayViewProps) => {
-	const { dayViewMode } = useDayView();
+	const { calendarViewMode } = useCalendarViewMode();
 
 	const range = useMemo(() => {
 		return CustomDayView.range(date);
@@ -88,10 +88,10 @@ const CustomDayView = ({
 		const maxHour = Math.min(
 			latest.getMinutes() === 0 && latest.getSeconds() === 0
 				? latest.getHours() + 2 // 1 padding by default
-				: latest.getHours() + 3
-			, 23);
-		
-			
+				: latest.getHours() + 3,
+			23,
+		);
+
 		const maxTime =
 			maxHour >= 24
 				? dayEnd
@@ -109,7 +109,7 @@ const CustomDayView = ({
 
 	return (
 		<div className={styles.dayViewWrapper}>
-			{dayViewMode === "Calendar" && (
+			{calendarViewMode === "Calendar" && (
 				<TimeGrid
 					date={date}
 					localizer={localizer}
@@ -124,13 +124,21 @@ const CustomDayView = ({
 					dayLayoutAlgorithm="no-overlap"
 				/>
 			)}
-			{dayViewMode === "List" && (
+			{calendarViewMode === "List" && (
 				<Table
-					theadData={["찜", "제목", "D-day", "카테고리", "행사 날짜", "지원 기간", "주최기관"]}
+					theadData={[
+						"찜",
+						"제목",
+						"D-day",
+						"카테고리",
+						"행사 날짜",
+						"지원 기간",
+						"주최기관",
+					]}
 					tbodyData={events}
 				/>
 			)}
-			{dayViewMode === "Grid" && <GalleryView events={events} />}
+			{calendarViewMode === "Grid" && <GalleryView events={events} />}
 		</div>
 	);
 };
