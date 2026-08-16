@@ -1,4 +1,4 @@
-import { useEffect, useState, type MouseEvent } from "react";
+import type { MouseEvent } from "react";
 import type { CalendarEvent } from "@types";
 // import { formatDateToMMDD } from "@calendarUtil/dateFormatter";
 import { useDetail } from "@contexts/DetailContext";
@@ -8,7 +8,7 @@ import {
 	DdayChip,
 } from "@/components/feature/eventChip/EventChip";
 import { useAuth } from "@/contexts/AuthProvider";
-import { useUserData } from "@/contexts/UserDataContext";
+import { useBookmarkStatus, useUserData } from "@/contexts/UserDataContext";
 import styles from "./Table.module.css";
 
 const TableRow = ({ data }: { data: CalendarEvent }) => {
@@ -18,11 +18,7 @@ const TableRow = ({ data }: { data: CalendarEvent }) => {
 	const { openDetail } = useDetail();
 	const { user } = useAuth();
 	const { toggleBookmark } = useUserData();
-	const [isBookmarked, setIsBookmarked] = useState(event.isBookmarked || false);
-
-	useEffect(() => {
-		setIsBookmarked(event.isBookmarked || false);
-	}, [event.isBookmarked]);
+	const isBookmarked = useBookmarkStatus(event);
 
 	const handleClick = () => {
 		openDetail(event.id);
@@ -31,13 +27,10 @@ const TableRow = ({ data }: { data: CalendarEvent }) => {
 		mouseEvent.stopPropagation();
 		if (!user) return;
 
-		const previousState = isBookmarked;
-		setIsBookmarked(!previousState);
 		try {
 			await toggleBookmark(event);
 		} catch (error) {
 			console.error("Failed to toggle bookmark", error);
-			setIsBookmarked(previousState);
 		}
 	};
 

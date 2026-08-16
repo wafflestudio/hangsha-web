@@ -1,8 +1,8 @@
 import type { CalendarEvent, Event } from "@types";
-import { useEffect, useState, type MouseEvent } from "react";
+import type { MouseEvent } from "react";
 import { useDetail } from "@contexts/DetailContext";
 import { useAuth } from "@/contexts/AuthProvider";
-import { useUserData } from "@/contexts/UserDataContext";
+import { useBookmarkStatus, useUserData } from "@/contexts/UserDataContext";
 import {
 	CategoryChip,
 	DdayChip,
@@ -25,23 +25,16 @@ const MobileEventListItem = ({ event }: { event: Event }) => {
 	const { user } = useAuth();
 	const { toggleBookmark } = useUserData();
 	const date = formatDateRange(event.eventStart, event.eventEnd);
-	const [isBookmarked, setIsBookmarked] = useState(event.isBookmarked || false);
-
-	useEffect(() => {
-		setIsBookmarked(event.isBookmarked || false);
-	}, [event.isBookmarked]);
+	const isBookmarked = useBookmarkStatus(event);
 
 	const handleToggleBookmark = async (mouseEvent: MouseEvent) => {
 		mouseEvent.stopPropagation();
 		if (!user) return;
 
-		const previousState = isBookmarked;
-		setIsBookmarked(!previousState);
 		try {
 			await toggleBookmark(event);
 		} catch (error) {
 			console.error("Failed to toggle bookmark", error);
-			setIsBookmarked(previousState);
 		}
 	};
 
