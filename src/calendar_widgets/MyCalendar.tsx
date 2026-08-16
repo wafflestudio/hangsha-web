@@ -23,6 +23,7 @@ import { sortMonthCalendarEvents } from "@/util/calendar/sortMonthCalendarEvents
 import { useCalendarViewMode } from "@/contexts/CalendarViewModeContext";
 import Table from "./day/table";
 import GalleryView from "./day/gallery/GalleryView";
+import MobileEventList from "./day/table/MobileEventList";
 
 const eventPropGetter = () => {
 	return {
@@ -134,7 +135,11 @@ export const MyCalendar = ({
 			);
 
 			return calendarViewMode === "List" ? (
-				<Table theadData={TABLE_HEADERS} tbodyData={events} />
+				isMobile ? (
+					<MobileEventList events={events} />
+				) : (
+					<Table theadData={TABLE_HEADERS} tbodyData={events} />
+				)
 			) : (
 				<GalleryView events={events} />
 			);
@@ -146,7 +151,7 @@ export const MyCalendar = ({
 			navigate: month.navigate,
 			title: month.title,
 		});
-	}, [calendarViewMode]);
+	}, [calendarViewMode, isMobile]);
 
 	const onNavigate = useCallback(
 		(newDate: Date) => {
