@@ -1,5 +1,8 @@
 import type { CalendarEvent, Event } from "@types";
+import { useEffect, useState, type MouseEvent } from "react";
 import { useDetail } from "@contexts/DetailContext";
+import { useAuth } from "@/contexts/AuthProvider";
+import { useUserData } from "@/contexts/UserDataContext";
 import {
 	CategoryChip,
 	DdayChip,
@@ -19,7 +22,28 @@ const formatDateRange = (start: Date | null, end: Date | null) => {
 
 const MobileEventListItem = ({ event }: { event: Event }) => {
 	const { openDetail } = useDetail();
+	const { user } = useAuth();
+	const { toggleBookmark } = useUserData();
 	const date = formatDateRange(event.eventStart, event.eventEnd);
+	const [isBookmarked, setIsBookmarked] = useState(event.isBookmarked || false);
+
+	useEffect(() => {
+		setIsBookmarked(event.isBookmarked || false);
+	}, [event.isBookmarked]);
+
+	const handleToggleBookmark = async (mouseEvent: MouseEvent) => {
+		mouseEvent.stopPropagation();
+		if (!user) return;
+
+		const previousState = isBookmarked;
+		setIsBookmarked(!previousState);
+		try {
+			await toggleBookmark(event);
+		} catch (error) {
+			console.error("Failed to toggle bookmark", error);
+			setIsBookmarked(previousState);
+		}
+	};
 
 	return (
 		// biome-ignore lint/a11y/useSemanticElements: the card needs a non-button wrapper to match the existing search result layout
@@ -35,15 +59,21 @@ const MobileEventListItem = ({ event }: { event: Event }) => {
 				}
 			}}
 		>
-			<div className={`${styles.aBookmarkColumn} ${styles.aBookmarkBtn}`}>
-				<img
-					src={
-						event.isBookmarked
-							? "/assets/Bookmarked.svg"
-							: "/assets/notBookmarked.svg"
-					}
-					alt={event.isBookmarked ? "bookmarked" : "not bookmarked"}
-				/>
+			<div className={styles.aBookmarkColumn}>
+				<button
+					type="button"
+					className={styles.aBookmarkBtn}
+					onClick={handleToggleBookmark}
+				>
+					<img
+						src={
+							isBookmarked
+								? "/assets/Bookmarked.svg"
+								: "/assets/notBookmarked.svg"
+						}
+						alt={isBookmarked ? "Remove bookmark" : "Add bookmark"}
+					/>
+				</button>
 			</div>
 			<div className={styles.aContent}>
 				<h2 className={styles.aTitle}>{event.title}</h2>
