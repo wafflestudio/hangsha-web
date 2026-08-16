@@ -6,13 +6,14 @@ import {
 } from "react-big-calendar";
 import { useAuth } from "@contexts/AuthProvider";
 import styles from "./Toolbar.module.css";
-import { useDayView } from "@contexts/DayViewContext";
+import { useCalendarViewMode } from "@contexts/CalendarViewModeContext";
 import type { User } from "@/util/types";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import FilterIcon from "/assets/filter.svg";
 import { useFilter } from "@/contexts/FilterContext";
 import SearchButton from "./SearchButton";
+import CalendarModeToggle from "./CalendarModeToggle";
 
 interface ToolbarProps {
 	view: View;
@@ -73,7 +74,7 @@ const Toolbar: React.FC<ToolbarProps> = ({
 	isTimetableOverlayEmpty = false,
 }) => {
 	const { user } = useAuth();
-	const { dayViewMode, setDayViewMode } = useDayView();
+	const { calendarViewMode, setCalendarViewMode } = useCalendarViewMode();
 	const { setFilterSheetShowing } = useFilter();
 
 	return (
@@ -161,16 +162,20 @@ const Toolbar: React.FC<ToolbarProps> = ({
 								>
 									<span className={styles.timetableToggleThumb} />
 								</button>
-								{showTimetableOverlay && isTimetableOverlayEmpty && hasTimetableOverlay && (
-									<span className={styles.timetableToggleLabel}>
-										현재 시간표에 수업이 없습니다!
-									</span>
-								)}
-								{showTimetableOverlay && isTimetableOverlayEmpty && !hasTimetableOverlay && (
-									<span className={styles.timetableToggleLabel}>
-										현재 시간표가 없습니다!
-									</span>
-								)}
+								{showTimetableOverlay &&
+									isTimetableOverlayEmpty &&
+									hasTimetableOverlay && (
+										<span className={styles.timetableToggleLabel}>
+											현재 시간표에 수업이 없습니다!
+										</span>
+									)}
+								{showTimetableOverlay &&
+									isTimetableOverlayEmpty &&
+									!hasTimetableOverlay && (
+										<span className={styles.timetableToggleLabel}>
+											현재 시간표가 없습니다!
+										</span>
+									)}
 							</div>
 						)}
 						{/** 모바일뷰 전용 필터 버튼 */}
@@ -179,44 +184,10 @@ const Toolbar: React.FC<ToolbarProps> = ({
 				</div>
 
 				<div className={styles.rightGroup}>
-					{/* 일별 뷰 전용 모드 전환 토글 */}
-					{view === Views.DAY && (
-						<div
-							className={styles.viewToggleGroup}
-							data-tour-id="day-tour-view-mode-toggle"
-						>
-							{/* 리스트 버튼 */}
-							<button
-								type="button"
-								onClick={() => setDayViewMode("List")}
-								className={`${styles.toggleBtn} ${dayViewMode === "List" ? styles.toggleBtnActive : ""}`}
-							>
-								<img
-									alt="list icon, three rows of a small circle and a longer line"
-									src="/assets/list.svg"
-								/>
-							</button>
-							{/* 갤러리 (grid) 버튼 */}
-							<button
-								type="button"
-								onClick={() => setDayViewMode("Grid")}
-								className={`${styles.toggleBtn} ${dayViewMode === "Grid" ? styles.toggleBtnActive : ""}`}
-							>
-								<img
-									alt="grid icon, four rectangles of 2x2 layout"
-									src="/assets/grid.svg"
-								/>
-							</button>
-							{/* 캘린더 버튼 */}
-							<button
-								type="button"
-								onClick={() => setDayViewMode("Calendar")}
-								className={`${styles.toggleBtn} ${dayViewMode === "Calendar" ? styles.toggleBtnActive : ""}`}
-							>
-								<img alt="calendar icon" src="/assets/calendar.svg" />
-							</button>
-						</div>
-					)}
+					<CalendarModeToggle
+						mode={calendarViewMode}
+						onModeChange={setCalendarViewMode}
+					/>
 					<div className={styles.profileRow}>
 						<SearchButton />
 						<span className={styles.profileBtn}>
