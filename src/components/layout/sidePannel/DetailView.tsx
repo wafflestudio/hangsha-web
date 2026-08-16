@@ -10,7 +10,7 @@ import {
 import type { CalendarEvent, EventDetail } from "@types";
 import parse from "html-react-parser";
 import { sanitizeDetail } from "@/util/sanitizeDetail";
-import { useUserData } from "@/contexts/UserDataContext";
+import { useBookmarkStatus, useUserData } from "@/contexts/UserDataContext";
 import { useDetail } from "@/contexts/DetailContext";
 import { useAuth } from "@/contexts/AuthProvider";
 import DetailMemo from "./DetailMemo";
@@ -27,6 +27,7 @@ const DetailView = ({ eventId }: { eventId: number }) => {
 		event ? calendarEventMapper(event, "day") : null,
 	);
 	const { toggleBookmark } = useUserData();
+	const isBookmarked = useBookmarkStatus(event);
 	const { fetchEventById, detailError, isLoadingDetail, clearError } =
 		useEvents();
 	const { closeDetail } = useDetail();
@@ -78,16 +79,6 @@ const DetailView = ({ eventId }: { eventId: number }) => {
 	// 디데이 계산할 기준 날짜
 	const ddayTargetDate = calendarEvent?.resource.event.applyEnd || null;
 
-	const [isBookmarked, setIsBookmarked] = useState<boolean>(
-		!!event?.isBookmarked,
-	);
-
-	useEffect(() => {
-		if (event) {
-			setIsBookmarked(event.isBookmarked ? event.isBookmarked : false);
-		}
-	}, [event]);
-
 	if (!event) return <Loading />;
 
 	const handleToggleBookmark = async () => {
@@ -96,16 +87,10 @@ const DetailView = ({ eventId }: { eventId: number }) => {
 			return;
 		}
 
-		const previousState = isBookmarked;
-
-		// optimistic update
-		setIsBookmarked(!previousState);
-
 		try {
 			await toggleBookmark(event);
 		} catch (e) {
 			console.error("Failed to toggle bookmark", e);
-			setIsBookmarked(previousState);
 		}
 	};
 
