@@ -5,9 +5,9 @@ import { IoIosClose } from "react-icons/io";
 
 interface ModalProps {
 	content: string;
-	leftText: string;
+	leftText?: string;
 	rightText?: string | null;
-	onLeftClick: () => void;
+	onLeftClick?: () => void;
 	onRightClick?: (() => void) | null;
 	onClose: (() => void) | null;
 	children?: ReactNode;
@@ -36,25 +36,29 @@ const Modal = ({
 				)}
 				<span className={styles.modalContent}>{content}</span>
 				{children}
-				<div className={styles.buttonsRow}>
-					<button
-						className={`${rightText ? styles.leftBtn : styles.linkBtn}`}
-						type="button"
-						onClick={onLeftClick}
-					>
-						{!rightText && <FaExternalLinkAlt />}
-						<span>{leftText}</span>
-					</button>
-					{rightText && onRightClick && (
-						<button
-							className={styles.rightBtn}
-							type="button"
-							onClick={onRightClick}
-						>
-							{rightText}
-						</button>
-					)}
-				</div>
+				{(leftText || (rightText && onRightClick)) && (
+					<div className={styles.buttonsRow}>
+						{leftText && onLeftClick && (
+							<button
+								className={`${rightText ? styles.leftBtn : styles.linkBtn}`}
+								type="button"
+								onClick={onLeftClick}
+							>
+								{!rightText && <FaExternalLinkAlt />}
+								<span>{leftText}</span>
+							</button>
+						)}
+						{rightText && onRightClick && (
+							<button
+								className={styles.rightBtn}
+								type="button"
+								onClick={onRightClick}
+							>
+								{rightText}
+							</button>
+						)}
+					</div>
+				)}
 			</div>
 		</div>
 	);

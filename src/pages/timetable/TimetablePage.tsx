@@ -460,8 +460,6 @@ export default function TimetablePage() {
 			{snuttImportMessage && (
 				<Modal
 					content={snuttImportMessage}
-					leftText="확인"
-					onLeftClick={() => setSnuttImportMessage(null)}
 					onClose={() => setSnuttImportMessage(null)}
 				/>
 			)}
