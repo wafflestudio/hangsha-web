@@ -1,5 +1,5 @@
 import { transformEvent } from "@/util/calendar/transformEvent";
-import type { Category, EventDTO, Memo, MemoTag } from "@types";
+import type { CategoryType, EventDTO, Memo, MemoTag } from "@types";
 import api from "./axios";
 
 // --- Excluded Keywords ---
@@ -51,25 +51,39 @@ export const removeBookmark = async (eventId: number) => {
 // --- Interests ---
 export const getInterestCategories = async () => {
 	const res = await api.get<{
-		items: { category: Category; priority: number }[];
+		items: {
+			categoryType: CategoryType;
+			categoryId: number;
+			name: string;
+			sortOrder: number;
+			priority: number;
+		}[];
 	}>("/users/me/interest-categories");
 	const sortedCategories = res.data.items
 		.sort((a, b) => a.priority - b.priority)
-		.map((item) => item.category);
+		.map(({ categoryId, name, sortOrder, categoryType }) => ({
+			id: categoryId,
+			name,
+			sortOrder,
+			categoryType,
+		}));
 	return sortedCategories;
 };
 
 export const addInterestCategories = async (
-	items: { categoryId: number; priority: number }[],
+	items: { categoryType: CategoryType; categoryId: number; priority: number }[],
 ) => {
 	return api.put("/users/me/interest-categories", { items });
 };
 
-/*
-export const removeInterestCategory = async (categoryId: number) => {
-	await api.delete(`/users/me/interest-categories/${categoryId}`);
+export const removeInterestCategory = async (
+	categoryId: number,
+	categoryType: CategoryType,
+) => {
+	await api.delete(`/users/me/interest-categories/${categoryId}`, {
+		params: { categoryType },
+	});
 };
-*/
 
 // --- Memos ---
 interface MemoDTO {
