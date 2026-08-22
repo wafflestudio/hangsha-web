@@ -8,14 +8,15 @@ import {
 	useEffect,
 	useState,
 } from "react";
-import { getCategoryGroups, getOrganizations } from "@api/event";
-import type { Category, CategoryGroupWithCategories } from "@types";
+import { getEventStatuses, getEventTypes, getOrganizations } from "@api/event";
+import type { Category } from "@types";
 
 interface FilterContextType {
 	filterSheetShowing: boolean;
 	setFilterSheetShowing: (value: boolean) => void;
 
-	categoryGroups: CategoryGroupWithCategories[];
+	eventStatuses: Category[];
+	eventTypes: Category[];
 	organizations: Category[];
 	refreshMetadata: () => Promise<void>;
 	isLoadingMeta: boolean;
@@ -38,22 +39,14 @@ export const FilterContextProvider = ({
 }: {
 	children: ReactNode;
 }) => {
-	const [categoryGroups, setCategoryGroups] = useState<
-		CategoryGroupWithCategories[]
-	>([]);
-	// 모집중
-	const isApplying: Category = 
-		categoryGroups.find((g) => g.group.id===1)?.categories.find(c => c.id === 2) 
-		|| {
-          "id": 2,
-          "groupId": 1,
-          "name": "모집중",
-          "sortOrder": 2,
-        };
+	const [eventStatuses, setEventStatuses] = useState<Category[]>([]);
+	const [eventTypes, setEventTypes] = useState<Category[]>([]);
 	const [organizations, setOrganizations] = useState<Category[]>([]);
 	const [isLoadingMeta, setIsLoadingMeta] = useState(false);
 
-	const [globalStatus, setGlobalStatus] = useState<Category[]>([isApplying]);
+	const [globalStatus, setGlobalStatus] = useState<Category[]>([
+		{ id: 2, name: "모집중", sortOrder: 2, categoryType: "EVENT_STATUS" },
+	]);
 	const [globalOrg, setGlobalOrg] = useState<Category[]>([]);
 	const [globalCategory, setGlobalCategory] = useState<Category[]>([]);
 
@@ -64,12 +57,19 @@ export const FilterContextProvider = ({
 	const refreshMetadata = useCallback(async () => {
 		setIsLoadingMeta(true);
 		try {
-			const [groupsData, orgsData] = await Promise.all([
-				getCategoryGroups(),
+			const [statusesData, typesData, orgsData] = await Promise.all([
+				getEventStatuses(),
+				getEventTypes(),
 				getOrganizations(),
 			]);
-			setCategoryGroups(groupsData);
+			setEventStatuses(statusesData);
+			setEventTypes(typesData);
 			setOrganizations(orgsData);
+			setGlobalStatus((current) =>
+				current.length === 1 && current[0].id === 2
+					? [statusesData.find((status) => status.id === 2) ?? current[0]]
+					: current,
+			);
 		} catch (err) {
 			console.error("Failed to load metadata", err);
 			setFilterError("Failed to load categories.");
@@ -89,7 +89,8 @@ export const FilterContextProvider = ({
 			value={{
 				filterSheetShowing,
 				setFilterSheetShowing,
-				categoryGroups,
+				eventStatuses,
+				eventTypes,
 				organizations,
 				isLoadingMeta,
 				refreshMetadata,

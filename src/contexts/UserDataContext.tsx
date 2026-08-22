@@ -108,6 +108,7 @@ export const UserDataProvider = ({ children }: { children: ReactNode }) => {
 
 	const saveInterestPreferences = async (categories: Category[]) => {
 		const items = categories.map((category, index) => ({
+			categoryType: category.categoryType,
 			categoryId: category.id,
 			priority: index + 1,
 		}));

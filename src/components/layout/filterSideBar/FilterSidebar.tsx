@@ -34,7 +34,7 @@ export const Sidebar = () => {
 		deleteExcludedKeyword,
 		excludedKeywordLoading,
 	} = useUserData();
-	const { categoryGroups, isLoadingMeta } = useFilter();
+	const { eventStatuses, eventTypes, organizations, isLoadingMeta } = useFilter();
 	const {
 		globalCategory,
 		globalOrg,
@@ -71,14 +71,11 @@ export const Sidebar = () => {
 	const commitOnComposeEndRef = useRef(false);
 
 	// 모집중, 등
-	const STATUS_LIST =
-		categoryGroups.find((g) => g.group.id === 1)?.categories || [];
+	const STATUS_LIST = eventStatuses;
 	// 행사 카테고리
-	const CATEGORY_LIST =
-		categoryGroups.find((g) => g.group.id === 3)?.categories || [];
+	const CATEGORY_LIST = eventTypes;
 	// 주체 기관
-	const ORG_LIST =
-		categoryGroups.find((g) => g.group.id === 2)?.categories || [];
+	const ORG_LIST = organizations;
 
 	const filterDict: Filter[] = [
 		{
@@ -284,7 +281,7 @@ export const Sidebar = () => {
 												key={option.id}
 												type="button"
 												style={
-													option.groupId === 3
+							option.categoryType === "EVENT_TYPE"
 														? {
 																backgroundColor:
 																	CATEGORY_BUTTON_COLORS[idx + 1],

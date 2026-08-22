@@ -34,7 +34,9 @@ export const FilterSheet = () => {
 	const {
         filterSheetShowing,
         setFilterSheetShowing,
-        categoryGroups,
+        eventStatuses,
+		eventTypes,
+		organizations,
         isLoadingMeta,
 		globalCategory,
 		globalOrg,
@@ -88,9 +90,9 @@ export const FilterSheet = () => {
 	}, [filterSheetShowing]);
 
 	// Lists from context
-	const STATUS_LIST = categoryGroups.find((g) => g.group.id === 1)?.categories || [];
-	const ORG_LIST = categoryGroups.find((g) => g.group.id === 2)?.categories || [];
-	const CATEGORY_LIST = categoryGroups.find((g) => g.group.id === 3)?.categories || [];
+	const STATUS_LIST = eventStatuses;
+	const ORG_LIST = organizations;
+	const CATEGORY_LIST = eventTypes;
 
     const getListForTab = (tab: TabKey): Category[] => {
 		if (tab === "category") return CATEGORY_LIST;

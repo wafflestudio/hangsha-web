@@ -2,12 +2,6 @@
 export const STATUS_NUMBER = 3;
 // '기타' index
 export const CATEGORY_OTHER_INDEX = 7;
-// 카테고리 최소 index
-export const CATEGORY_MIN_INDEX = 4;
-// 카테고리 최대 index
-export const CATEGORY_MAX_INDEX = 10;
-
-
 export const CATEGORY_COLORS: Record<number, string> = {
 	1: "rgba(255, 140, 40, 0.6)",
 	2: "rgba(186, 158, 49, 0.6)",
