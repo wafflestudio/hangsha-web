@@ -21,7 +21,7 @@ export const BookmarkWidget = () => {
 			<div className={styles.bookmarksHeader}>
 				<div className={styles.headerLeft}>
 					<span>내 찜 목록</span>
-					<img src="/assets/Bookmarked.svg" alt="filled bookmark icon" />
+					<img src="/assets/bookmark.svg" alt="bookmark icon" />
 				</div>
 				<FaChevronRight
 					className={styles.backBtn}
@@ -82,7 +82,7 @@ const BookmarksPage = () => {
 					/>
 					<div className={styles.row}>
 						<span>내 찜 목록</span>
-						<img src="/assets/Bookmarked.svg" alt="filled bookmark icon" />
+						<img src="/assets/bookmark.svg" alt="bookmark icon" />
 					</div>
 				</div>
 				<div className={styles.cardsColumn}>

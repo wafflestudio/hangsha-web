@@ -80,7 +80,7 @@ const EventCard = ({ event, onLoginPrompt, fullWidth = false }: { event: Event; 
 		setIsBookmarked(!previousState);
 
 		try {
-			await toggleBookmark(event);
+			await toggleBookmark(event.id);
 		} catch (e) {
 			console.error("Failed to toggle bookmark", e);
 			setIsBookmarked(previousState);
