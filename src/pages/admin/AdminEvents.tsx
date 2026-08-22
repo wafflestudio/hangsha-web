@@ -12,8 +12,8 @@ import {
 	type AdminEventPatchRequest,
 } from "@/api/adminEvent";
 import { AdminTokenService } from "@/api/adminTokenService";
-import { getCategoryGroups } from "@/api/event";
-import type { Category, CategoryGroupWithCategories } from "@/util/types";
+import { getEventStatuses, getEventTypes, getOrganizations } from "@/api/event";
+import type { Category } from "@/util/types";
 import { FiLogOut } from "react-icons/fi";
 import { useEffect, useState } from "react";
 import styles from "./AdminEvents.module.css";
@@ -149,9 +149,9 @@ export default function AdminEventsPage() {
 	const [organizationMode, setOrganizationMode] = useState<"select" | "custom">(
 		"select",
 	);
-	const [categoryGroups, setCategoryGroups] = useState<
-		CategoryGroupWithCategories[]
-	>([]);
+	const [eventStatuses, setEventStatuses] = useState<Category[]>([]);
+	const [eventTypes, setEventTypes] = useState<Category[]>([]);
+	const [organizations, setOrganizations] = useState<Category[]>([]);
 	const [message, setMessage] = useState("");
 	const [isLoading, setIsLoading] = useState(false);
 	const [overrideFields, setOverrideFields] = useState<string[]>([]);
@@ -162,9 +162,15 @@ export default function AdminEventsPage() {
 	};
 
 	useEffect(() => {
-		void getCategoryGroups().then(setCategoryGroups).catch(() => {
-			setMessage("카테고리 목록을 불러오지 못했습니다.");
-		});
+		void Promise.all([getEventStatuses(), getEventTypes(), getOrganizations()])
+			.then(([statuses, types, orgs]) => {
+				setEventStatuses(statuses);
+				setEventTypes(types);
+				setOrganizations(orgs);
+			})
+			.catch(() => {
+				setMessage("카테고리 목록을 불러오지 못했습니다.");
+			});
 	}, []);
 
 	const updateSession = (index: number, key: keyof SessionForm, value: string) => {
@@ -298,9 +304,9 @@ export default function AdminEventsPage() {
 						: String(draft.eventTypeId),
 				mainContentHtml: draft.mainContentHtml ?? prev.mainContentHtml,
 			}));
-			const matchedOrganization = categoryGroups
-				.find((group) => group.group.name === "주체기관")
-				?.categories.find((category) => category.name === draft.organization);
+			const matchedOrganization = organizations.find(
+				(organization) => organization.name === draft.organization,
+			);
 			setOrganizationMode(matchedOrganization ? "select" : "custom");
 			if (matchedOrganization) {
 				setForm((prev) => ({
@@ -468,13 +474,11 @@ export default function AdminEventsPage() {
 		["applyLink", "신청 링크", "text"],
 	];
 
-	const categoriesByGroup = (groupName: string): Category[] =>
-		categoryGroups.find((item) => item.group.name === groupName)?.categories ?? [];
 	const categorySelectFields: [TextFormField, string, Category[]][] = [
-		["statusId", "모집 상태", categoriesByGroup("모집현황")],
-		["eventTypeId", "행사 유형", categoriesByGroup("프로그램 유형")],
+		["statusId", "모집 상태", eventStatuses],
+		["eventTypeId", "행사 유형", eventTypes],
 	];
-	const organizationOptions = categoriesByGroup("주체기관");
+	const organizationOptions = organizations;
 
 	return (
 		<div className={styles.page}>
