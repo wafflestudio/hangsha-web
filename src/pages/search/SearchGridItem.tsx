@@ -41,7 +41,7 @@ const SearchGridItem = ({ item, onClick, onLoginPrompt }: GridItemProps) => {
 		const previousState = isBookmarked;
 		setIsBookmarked(!previousState);
 		try {
-			await toggleBookmark(event.id);
+			await toggleBookmark(event);
 		} catch (err) {
 			console.error("Failed to toggle bookmark", err);
 			setIsBookmarked(previousState);

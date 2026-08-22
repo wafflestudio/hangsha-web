@@ -24,7 +24,7 @@ interface UserDataContextType {
 	saveInterestPreferences: (categories: Category[]) => Promise<void>;
 	addExcludedKeyword: (keyword: string) => Promise<void>;
 	deleteExcludedKeyword: (id: number) => Promise<void>;
-	toggleBookmark: (eventId: number) => Promise<void>;
+	toggleBookmark: (event: Event | number) => Promise<void>;
 	getMemoByTag: (tagId: number) => Promise<Memo[]>;
 	addMemo: (
 		eventId: number,

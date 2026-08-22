@@ -88,7 +88,7 @@ const DetailView = ({ eventId }: { eventId: number }) => {
 		}
 
 		try {
-			await toggleBookmark(event.id);
+			await toggleBookmark(event);
 		} catch (e) {
 			console.error("Failed to toggle bookmark", e);
 		}
