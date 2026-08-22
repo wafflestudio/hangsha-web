@@ -14,4 +14,7 @@ jobs:
       distribution_id: E1UQAE6HOA8O14
       ga_measurement_id: ${{ vars.VITE_GA_MEASUREMENT_ID_PROD }}
       social_login_base_url: ${{ vars.VITE_SOCIAL_LOGIN_BASE_URL_PROD }}
+      environment: production
+      snutt_base_url: ${{ vars.VITE_SNUTT_BASE_URL }}
+      snutt_callback_origin: ${{ vars.VITE_SNUTT_CALLBACK_ORIGIN }}
     secrets: inherit

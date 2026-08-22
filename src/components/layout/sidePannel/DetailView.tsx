@@ -2,7 +2,11 @@ import { useEvents } from "@contexts/EventContext";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./DetailView.module.css";
-import { FaAnglesRight, FaLocationDot } from "react-icons/fa6";
+import {
+	FaAnglesRight,
+	FaLocationDot,
+	FaTriangleExclamation,
+} from "react-icons/fa6";
 import type { CalendarEvent, EventDetail } from "@types";
 import parse from "html-react-parser";
 import { sanitizeDetail } from "@/util/sanitizeDetail";
@@ -15,6 +19,7 @@ import Loading from "../../ui/Loading";
 import calendarEventMapper from "@/util/calendar/calendarEventMapper";
 import EventDate from "../../feature/eventDate/EventDate";
 import { CategoryChip, DdayChip } from "../../feature/eventChip/EventChip";
+import BugReportModal from "@/components/feature/bugReport/BugReportModal";
 
 const DetailView = ({ eventId }: { eventId: number }) => {
 	const [event, setEvent] = useState<EventDetail>();
@@ -33,6 +38,7 @@ const DetailView = ({ eventId }: { eventId: number }) => {
 
 	const [isMemoExpanded, setIsMemoExpanded] = useState<boolean>(false);
 	const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+	const [isBugReportModalOpen, setIsBugReportModalOpen] = useState(false);
 	const memoWrapperRef = useRef<HTMLDivElement>(null);
 
 	// detect outside clicks - expand memo
@@ -126,6 +132,9 @@ const DetailView = ({ eventId }: { eventId: number }) => {
 					onClose={() => setIsLoginModalOpen(false)}
 				/>
 			)}
+			{isBugReportModalOpen && (
+				<BugReportModal onClose={() => setIsBugReportModalOpen(false)} />
+			)}
 			<button type="button" className={styles.foldBtn} onClick={closeDetail}>
 				<FaAnglesRight width={28} height={28} color="rgba(171, 171, 171, 1)" />
 			</button>
@@ -176,13 +185,29 @@ const DetailView = ({ eventId }: { eventId: number }) => {
 			</div>
 
 			{/* ----- Memo & Tag Section ----- */}
-			<div ref={memoWrapperRef} data-tour-id="detail-tour-memo">
+			{/* biome-ignore lint/a11y/noStaticElementInteractions: memo wrapper handles pointer events to prevent the parent panel's outside-click handler from closing it */}
+			<div
+				ref={memoWrapperRef}
+				data-tour-id="detail-tour-memo"
+				onMouseDown={(event) => {
+					event.stopPropagation();
+					setIsMemoExpanded(true);
+				}}
+			>
 				<DetailMemo
 					eventId={eventId}
 					isMemoExpanded={isMemoExpanded}
 					setIsMemoExpanded={setIsMemoExpanded}
 				/>
 			</div>
+			<button
+				type="button"
+				className={styles.eventInfoErrorButton}
+				onClick={() => setIsBugReportModalOpen(true)}
+			>
+				<FaTriangleExclamation size={17} />
+				행사 정보 오류 제보하기
+			</button>
 		</div>
 	);
 };

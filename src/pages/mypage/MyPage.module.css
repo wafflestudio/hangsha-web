@@ -46,116 +46,6 @@
 	box-sizing: border-box;
 }
 
-.bugReportSection {
-	display: flex;
-	flex-direction: column;
-	gap: 14px;
-	width: 100%;
-	padding: 24px 20px;
-	border-top: 1px solid #eeeeee;
-	box-sizing: border-box;
-}
-
-.bugReportHeader {
-	display: flex;
-	flex-direction: column;
-	gap: 6px;
-}
-
-.bugReportTitle {
-	display: flex;
-	align-items: center;
-	gap: 8px;
-	color: #222222;
-}
-
-.bugReportTitle strong {
-	font-size: 20px;
-	font-weight: 700;
-	line-height: 1.2;
-}
-
-.bugReportHeader span {
-	color: #777777;
-	font-size: 13px;
-	font-weight: 500;
-	line-height: 1.4;
-	word-break: keep-all;
-}
-
-.bugReportForm {
-	display: flex;
-	flex-direction: column;
-	gap: 10px;
-}
-
-.bugReportInput,
-.bugReportTextarea {
-	width: 100%;
-	border: 1px solid #e1e1e1;
-	border-radius: 8px;
-	background-color: #ffffff;
-	color: #222222;
-	font-size: 14px;
-	font-weight: 500;
-	outline: none;
-}
-
-.bugReportInput {
-	height: 42px;
-	padding: 0 12px;
-}
-
-.bugReportTextarea {
-	min-height: 120px;
-	padding: 12px;
-	resize: vertical;
-	line-height: 1.5;
-}
-
-.bugReportInput::placeholder,
-.bugReportTextarea::placeholder {
-	color: #9b9b9b;
-}
-
-.bugReportInput:focus,
-.bugReportTextarea:focus {
-	border-color: #9a9a9a;
-}
-
-.bugReportInput:disabled,
-.bugReportTextarea:disabled {
-	background-color: #f8f8f8;
-	cursor: not-allowed;
-}
-
-.bugReportSubmitButton {
-	display: inline-flex;
-	align-items: center;
-	justify-content: center;
-	align-self: flex-end;
-	min-width: 96px;
-	min-height: 40px;
-	padding: 0 16px;
-	border: none;
-	border-radius: 8px;
-	background-color: #494949;
-	color: #ffffff;
-	font-size: 14px;
-	font-weight: 700;
-	cursor: pointer;
-	transition: background-color 0.2s;
-}
-
-.bugReportSubmitButton:hover {
-	background-color: #303030;
-}
-
-.bugReportSubmitButton:disabled {
-	cursor: not-allowed;
-	opacity: 0.6;
-}
-
 .logoutSection {
 	display: flex;
 	align-items: center;
@@ -530,16 +420,9 @@
 		width: 100%;
 		padding: 24px 20px;
 	}
-	.bugReportSection {
-		padding: 24px 0;
-	}
-	.bugReportTitle strong,
 	.logoutText strong,
 	.accountDeletionText strong {
 		font-size: 17px;
-	}
-	.bugReportSubmitButton {
-		width: 100%;
 	}
 	.logoutSection {
 		align-items: flex-start;

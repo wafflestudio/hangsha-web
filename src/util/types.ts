@@ -254,6 +254,10 @@ export interface SearchParams {
 	query: string;
 	page?: number;
 	size?: number;
+	// 아래 : 필터링
+	statusId?: number[]; // 모집 상태
+	eventTypeId?: number[]; // 카테고리
+	orgId?: number[]; // 주체 기관
 }
 export interface SearchResultDTO {
 	page: number;

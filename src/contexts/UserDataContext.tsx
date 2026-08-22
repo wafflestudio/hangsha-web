@@ -20,7 +20,6 @@ interface UserDataContextType {
 	excludedKeywordLoading: boolean;
 	
 	refreshUserData: () => Promise<void>;
-	// fetchInterestCategories: () => void;
 	saveInterestPreferences: (categories: Category[]) => Promise<void>;
 	addExcludedKeyword: (keyword: string) => Promise<void>;
 	deleteExcludedKeyword: (id: number) => Promise<void>;
@@ -224,7 +223,6 @@ export const UserDataProvider = ({ children }: { children: ReactNode }) => {
 				memoLoading,
 				excludedKeywordLoading,
 				refreshUserData: fetchAll,
-				// fetchInterestCategories,
 				saveInterestPreferences,
 				toggleBookmark,
 				getMemoByTag,
