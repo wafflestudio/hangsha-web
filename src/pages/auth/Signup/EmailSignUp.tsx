@@ -219,10 +219,13 @@ function EmailSignupForm() {
 		const passwordErrors = getPasswordErrors(password);
 		if (
 			passwordErrors.length ||
-			password !== confirmPassword ||
-			!privacyAgreed
+			password !== confirmPassword
 		) {
 			setErrorMessage("입력한 정보를 다시 확인해주세요.");
+			return;
+		}
+		if (!privacyAgreed) {
+			setErrorMessage("개인정보 약관에 동의해야 회원가입이 가능합니다.");
 			return;
 		}
 		if (
