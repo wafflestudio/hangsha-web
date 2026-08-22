@@ -48,17 +48,18 @@
 	padding: 8px 16px;
 	font-size: 16px;
 	color: #111;
+	box-shadow:
+		0 2px 0 rgba(0, 0, 0, 0.04),
+		0 6px 14px rgba(0, 0, 0, 0.06);
 }
 .input::placeholder {
 	color: #828282;
 }
 .input:focus,
 .codeInput:focus {
-	outline: 3px solid rgba(0, 0, 0, 0.12);
-	outline-offset: 1px;
-}
-.inputError {
-	border-color: #d92d20;
+	border-color: #c6c6c6;
+	outline: none;
+	box-shadow: 0 5px 12px -2px rgba(0, 0, 0, 0.15);
 }
 .submit,
 .resend {
@@ -85,8 +86,8 @@
 .error,
 .validation {
 	margin: -8px 0 0;
-	text-align: center;
-	font-size: 16px;
+	text-align: left;
+	font-size: 14px;
 	line-height: 1.5;
 }
 .timer,
