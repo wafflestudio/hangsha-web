@@ -96,7 +96,6 @@ type MemoDTO = Omit<Memo, "createdAt" | "updatedAt" | "applyEnd"> & {
 const mapMemoDTO = (m: MemoDTO): Memo => {
 	return {
 		...m,
-		categoryId: m.categoryId,
 		createdAt: m.createdAt ? new Date(m.createdAt) : undefined,
 		updatedAt: m.updatedAt ? new Date(m.updatedAt) : undefined,
 		applyEnd:
