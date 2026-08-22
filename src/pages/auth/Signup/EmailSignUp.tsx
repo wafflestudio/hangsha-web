@@ -258,7 +258,6 @@ function EmailSignupForm() {
 	};
 
 	const passwordErrors = getPasswordErrors(password);
-	const isPasswordValid = password.length > 0 && passwordErrors.length === 0;
 	const passwordsMatch =
 		confirmPassword.length > 0 && password === confirmPassword;
 
@@ -381,7 +380,7 @@ function EmailSignupForm() {
 						</label>
 						<input
 							id="signup-password"
-							className={`${styles.input} ${password && !isPasswordValid ? styles.inputError : ""}`}
+							className={styles.input}
 							type="password"
 							autoComplete="new-password"
 							placeholder="비밀번호"
@@ -402,7 +401,7 @@ function EmailSignupForm() {
 						</label>
 						<input
 							id="signup-password-confirm"
-							className={`${styles.input} ${confirmPassword && !passwordsMatch ? styles.inputError : ""}`}
+							className={styles.input}
 							type="password"
 							autoComplete="new-password"
 							placeholder="비밀번호 확인"
