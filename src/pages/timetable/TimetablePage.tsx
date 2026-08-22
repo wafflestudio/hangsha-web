@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo, useRef } from "react";
 import { Views } from "react-big-calendar";
 import { useTimetable } from "../../contexts/TimetableContext";
 import { useEvents } from "../../contexts/EventContext";
@@ -27,6 +27,11 @@ import BottomNav from "@/components/layout/BottomNav";
 import { useAuth } from "@/contexts/AuthProvider";
 import { useNavigate } from "react-router-dom";
 import Modal from "@/components/ui/Modal";
+import {
+	createSnuttPickerUrl,
+	parseSnuttTimetableSelectedMessage,
+	SNUTT_ORIGIN,
+} from "@/util/snuttTimetable";
 
 const getSemesterByDate = (date: Date): Semester => {
 	const month = date.getMonth() + 1;
@@ -61,6 +66,7 @@ export default function TimetablePage() {
 		deleteTimetable,
 		loadCourses,
 		addCustomCourse,
+		importSnuttTimetable,
 		// updateCustomCourse,
 		deleteCourse,
 	} = useTimetable();
@@ -80,6 +86,11 @@ export default function TimetablePage() {
 	const [isEventOverlayOn, setIsEventOverlayOn] = useState(false);
 	const [isMobile, setIsMobile] = useState(false);
 	const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+	const [isSnuttImporting, setIsSnuttImporting] = useState(false);
+	const [snuttImportMessage, setSnuttImportMessage] = useState<string | null>(
+		null,
+	);
+	const snuttPopupRef = useRef<Window | null>(null);
 
 	const handleAddTimetable = async () => {
 		if (!user) {
@@ -232,6 +243,73 @@ export default function TimetablePage() {
 		setIsMobileTimetableSidebarOpen(true);
 	};
 
+	const openSnuttPicker = () => {
+		if (!user) {
+			setIsLoginModalOpen(true);
+			return;
+		}
+
+		if (isSnuttImporting) return;
+		if (snuttPopupRef.current && !snuttPopupRef.current.closed) {
+			snuttPopupRef.current.focus();
+			return;
+		}
+
+		const popup = window.open(
+			createSnuttPickerUrl(),
+			"snutt-timetable-picker",
+			"popup=yes,width=1000,height=800,resizable=yes,scrollbars=yes",
+		);
+
+		if (!popup) {
+			setSnuttImportMessage("팝업이 차단되어 시간표를 불러올 수 없어요. 팝업을 허용한 뒤 다시 시도해 주세요.");
+			return;
+		}
+
+		snuttPopupRef.current = popup;
+	};
+
+	useEffect(() => {
+		const handleMessage = (event: MessageEvent<unknown>) => {
+			const snuttTimetable = parseSnuttTimetableSelectedMessage(event.data);
+			if (
+				event.origin !== SNUTT_ORIGIN ||
+				event.source !== snuttPopupRef.current ||
+				isSnuttImporting ||
+				!snuttTimetable
+			) {
+				return;
+			}
+
+			snuttPopupRef.current = null;
+			setIsSnuttImporting(true);
+			void importSnuttTimetable(snuttTimetable)
+				.then(({ importedTimetable, importedCourseCount, excludedCourseCount }) => {
+					if (
+						importedTimetable.year !== year ||
+						importedTimetable.semester !== semester
+					) {
+						setYear(importedTimetable.year);
+						setSemester(importedTimetable.semester);
+					}
+					setSnuttImportMessage(
+						excludedCourseCount > 0
+							? `SNUTT 시간표를 불러왔어요. 수업 ${importedCourseCount}개를 저장했고, 시간 정보가 없는 수업 ${excludedCourseCount}개는 제외했어요.`
+							: `SNUTT 시간표를 불러왔어요. 수업 ${importedCourseCount}개를 저장했어요.`,
+					);
+				})
+				.catch(() => {
+					setSnuttImportMessage(
+						"시간표를 저장하지 못했어요. 생성된 시간표는 되돌렸으니 잠시 후 다시 시도해 주세요.",
+					);
+				})
+				.finally(() => setIsSnuttImporting(false));
+		};
+
+		window.addEventListener("message", handleMessage);
+		return () => window.removeEventListener("message", handleMessage);
+	}, [importSnuttTimetable, isSnuttImporting, semester, year]);
+
 	return (
 		<div
 			className={`${styles.page} ${
@@ -248,6 +326,8 @@ export default function TimetablePage() {
 				onSelectTimetable={selectTimetable}
 				onRename={updateTimetableName}
 				onDelete={deleteTimetable}
+				onSnuttImport={openSnuttPicker}
+				isSnuttImporting={isSnuttImporting}
 				isOpen={isSidebarOpen}
 				onOpenChange={setIsSidebarOpen}
 			/>
@@ -313,6 +393,15 @@ export default function TimetablePage() {
 				시간표 변경
 			</button>
 
+			<button
+				type="button"
+				className={styles.snuttLinkButton}
+				onClick={openSnuttPicker}
+				disabled={isSnuttImporting}
+			>
+				{isSnuttImporting ? "시간표 불러오는 중..." : "SNUTT 연동"}
+			</button>
+
 			{hasTimetable && !isAddClassPanelOpen && (
 				<button
 					type="button"
@@ -365,6 +454,15 @@ export default function TimetablePage() {
 					leftText="로그인 ·회원가입 페이지로 이동"
 					onLeftClick={() => navigate("/")}
 					onClose={() => setIsLoginModalOpen(false)}
+				/>
+			)}
+
+			{snuttImportMessage && (
+				<Modal
+					content={snuttImportMessage}
+					leftText="확인"
+					onLeftClick={() => setSnuttImportMessage(null)}
+					onClose={() => setSnuttImportMessage(null)}
 				/>
 			)}
 

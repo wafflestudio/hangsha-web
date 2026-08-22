@@ -1,5 +1,6 @@
 import type { Event, EventDTO } from "@types";
 
+
 export const transformEvent = (dto: EventDTO): Event => {
 	const today = new Date();
 	return {

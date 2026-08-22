@@ -88,13 +88,23 @@ export interface MemoTag {
 	name: string;
 }
 
+export interface MemoOrganization {
+	id: number;
+	name: string;
+}
+
 export interface Memo {
 	id: number;
 	eventId: number;
 	eventTitle: string;
+	categoryId: number;
 	content: string;
 	tags: MemoTag[];
-	createdAt: Date;
+	createdAt?: Date;
+	updatedAt?: Date;
+	applyEnd?: Date | null;
+	organization?: MemoOrganization | null;
+	isBookmarked: boolean;
 }
 
 // 시간표 전체
@@ -293,7 +303,7 @@ export interface FetchDayEventArgs {
 	orgId?: number[];
 }
 
-export type DayViewMode = "List" | "Grid" | "Calendar";
+export type CalendarViewMode = "List" | "Grid" | "Calendar";
 
 export interface ApiErrorResponse {
 	code: string;

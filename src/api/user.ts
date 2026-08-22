@@ -1,5 +1,5 @@
 import { transformEvent } from "@/util/calendar/transformEvent";
-import type { CategoryType, EventDTO, Memo, MemoTag } from "@types";
+import type { CategoryType, EventDTO, Memo } from "@types";
 import api from "./axios";
 
 // --- Excluded Keywords ---
@@ -86,25 +86,25 @@ export const removeInterestCategory = async (
 };
 
 // --- Memos ---
-interface MemoDTO {
-	id: number;
-	eventId: number;
-	eventTitle: string;
-	content: string;
-	tags: MemoTag[];
-	createdAt: string;
-	updatedAt: string;
-}
+type MemoDTO = Omit<Memo, "createdAt" | "updatedAt" | "applyEnd"> & {
+	createdAt?: string;
+	updatedAt?: string;
+	applyEnd?: string | null;
+};
 
 // helper mapping func
-const mapMemoDTO = (m: MemoDTO) => {
+const mapMemoDTO = (m: MemoDTO): Memo => {
 	return {
-		id: m.id,
-		eventId: m.eventId,
-		eventTitle: m.eventTitle,
-		content: m.content,
-		tags: m.tags,
-		createdAt: new Date(m.createdAt),
+		...m,
+		categoryId: m.categoryId,
+		createdAt: m.createdAt ? new Date(m.createdAt) : undefined,
+		updatedAt: m.updatedAt ? new Date(m.updatedAt) : undefined,
+		applyEnd:
+			m.applyEnd === null
+				? null
+				: m.applyEnd
+					? new Date(m.applyEnd)
+					: undefined,
 	};
 };
 
