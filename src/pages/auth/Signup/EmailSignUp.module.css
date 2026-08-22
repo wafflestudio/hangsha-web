@@ -5,158 +5,251 @@
 
 .page {
 	min-height: 100vh;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	padding: 24px;
-	background: #fff;
-}
-
-.box {
-	width: 100%;
-	max-width: 520px;
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-}
-
-.header {
-	text-align: center;
-	margin-bottom: 54px;
-}
-
-.title {
-	margin: 0;
-	font-size: 28px;
-	font-weight: 700;
-	letter-spacing: -0.03em;
-	color: #111;
-}
-
-.subtitle {
-	margin: 8px 0 0;
-	font-size: 14px;
-	font-weight: 600;
-	letter-spacing: -0.01em;
-	color: #333;
-}
-
-/* 폼 레이아웃 */
-.form {
-	width: 100%;
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	gap: 14px;
-}
-
-/* 인풋: pill */
-.input {
-	width: min(440px, 100%);
-	height: 48px;
-	border-radius: 9999px;
-	border: 1px solid #e6e6e6;
-	background: #fff;
-	padding: 0 18px;
-	font-size: 14px;
-	font-weight: 600;
-	letter-spacing: -0.01em;
-	outline: none;
-	color: #111;
-}
-
-.input::placeholder {
-	color: #9a9a9a;
-	font-weight: 600;
-}
-
-.input:focus {
-	border-color: #cfcfcf;
-	box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.04);
-}
-
-/* 에러 입력(빨간 테두리) */
-.inputError {
-	border-color: #ff2d55;
-}
-
-/* 에러 pill: 사진처럼 연핑크 + 좌측 아이콘 */
-.errorPill {
-	width: min(440px, 100%);
-	min-height: 44px;
-	display: flex;
-	align-items: center;
-	gap: 10px;
-
-	border-radius: 9999px;
-	border: 1px solid #ff2d55;
-	background: #ffe9ef;
-
-	padding: 10px 16px;
-	color: #111;
-	font-size: 13px;
-	font-weight: 700;
-	letter-spacing: -0.01em;
-}
-
-.errorPill::before {
-	content: "!";
-	flex: 0 0 auto;
-	width: 24px;
-	height: 24px;
-	border-radius: 9999px;
-
 	display: grid;
 	place-items: center;
-
-	border: 2px solid #ff2d55;
-	color: #ff2d55;
-	font-weight: 900;
-	line-height: 1;
-	background: transparent;
+	padding: 24px;
+	background: #fff;
+	color: #000;
 }
-
-/* 제출 버튼: 검정 pill + 은은한 그라데이션/그림자 */
-.submit {
-	width: min(440px, 100%);
-	height: 52px;
-	border-radius: 9999px;
-	border: none;
+.box {
+	width: min(400px, 100%);
+}
+.header {
+	margin-bottom: 24px;
+	text-align: center;
+}
+.title {
+	margin: 0;
+	font-size: 24px;
+	font-weight: 600;
+	letter-spacing: -0.24px;
+	line-height: 1.5;
+}
+.subtitle {
+	margin: 4px 0 0;
+	font-size: 16px;
+	line-height: 1.5;
+}
+.form {
+	display: flex;
+	flex-direction: column;
+	gap: 24px;
+}
+.input,
+.submit,
+.resend {
+	width: 100%;
+	height: 40px;
+	border-radius: 20px;
+	font: inherit;
+}
+.input {
+	border: 1px solid #c6c6c6;
+	padding: 8px 16px;
+	font-size: 16px;
+	color: #111;
+	box-shadow:
+		0 2px 0 rgba(0, 0, 0, 0.04),
+		0 6px 14px rgba(0, 0, 0, 0.06);
+}
+.input::placeholder {
+	color: #828282;
+}
+.input:focus,
+.codeInput:focus {
+	border-color: #c6c6c6;
+	outline: none;
+	box-shadow: 0 5px 12px -2px rgba(0, 0, 0, 0.15);
+}
+.submit,
+.resend {
+	border: 0;
 	cursor: pointer;
-
-	background: linear-gradient(90deg, #000 0%, #101010 50%, #000 100%);
+	font-size: 16px;
+	font-weight: 500;
+}
+.submit {
+	background: #000;
 	color: #fff;
+}
+.resend {
+	background: #696969;
+	color: #fff;
+}
+.submit:disabled,
+.resend:disabled {
+	cursor: not-allowed;
+	opacity: 0.52;
+}
+.guide,
+.timer,
+.error,
+.validation {
+	margin: -8px 0 0;
+	text-align: left;
 	font-size: 14px;
-	font-weight: 800;
-	letter-spacing: -0.01em;
-
-	margin-top: 8px;
-	box-shadow: 0 10px 22px rgba(0, 0, 0, 0.12);
+	line-height: 1.5;
 }
-
-.submit:active {
-	transform: translateY(1px);
-	box-shadow: 0 7px 16px rgba(0, 0, 0, 0.12);
+.timer,
+.validation {
+	color: #d92d20;
 }
-
-
-.loginLink {
+.codeInputs {
+	display: grid;
+	grid-template-columns: repeat(6, 1fr);
+	gap: 15px;
+	margin: 0;
+	padding: 0;
+	border: 0;
+}
+.codeInput {
+	min-width: 0;
+	height: 72px;
+	border: 1px solid #c6c6c6;
+	border-radius: 10px;
+	text-align: center;
+	font-size: 28px;
+	font-weight: 600;
+}
+.agreement {
 	display: flex;
 	align-items: center;
+	justify-content: space-between;
+	gap: 12px;
+	font-size: 16px;
+}
+.checkboxLabel {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	cursor: pointer;
+}
+.checkboxLabel input {
+	width: 16px;
+	height: 16px;
+	margin: 0;
+	accent-color: #000;
+}
+.policyButton {
+	border: 0;
+	padding: 0;
+	background: transparent;
+	color: #757575;
+	font: inherit;
+	cursor: pointer;
+	text-decoration: underline;
+	white-space: nowrap;
+}
+.loginLink {
+	display: flex;
+	justify-content: center;
 	gap: 8px;
 	margin-top: 24px;
+	color: #8a8a8a;
+	font-size: 14px;
 }
-.loginText {
-	margin: 0;
-  	border: 0;
-  	background: transparent;
-  	color: #8a8a8a;
-  	font-size: 14px;
-  	font-weight: 500;
-  	cursor: pointer;
+.loginLink a {
+	color: inherit;
+}
+.srOnly {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	overflow: hidden;
+	clip: rect(0, 0, 0, 0);
+	white-space: nowrap;
 }
 
-.loginText:active {
-  color: #666666;
-  text-decoration: underline;
+.modalBackdrop {
+	position: fixed;
+	inset: 0;
+	z-index: 10;
+	display: grid;
+	place-items: center;
+	padding: 24px;
+	background: rgba(0, 0, 0, 0.45);
+}
+.modal {
+	width: min(680px, 100%);
+	max-height: min(720px, calc(100vh - 48px));
+	display: flex;
+	flex-direction: column;
+	border-radius: 16px;
+	background: #fff;
+	padding: 24px;
+	box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+}
+.modalHeader {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 16px;
+}
+.modalHeader h2 {
+	margin: 0;
+	font-size: 20px;
+}
+.modalHeader button {
+	border: 0;
+	background: transparent;
+	cursor: pointer;
+	font-size: 28px;
+	line-height: 1;
+}
+.policyContent {
+	overflow-y: auto;
+	margin: 20px 0;
+	font-size: 14px;
+	line-height: 1.6;
+}
+.policyContent h3 {
+	margin: 20px 0 8px;
+	font-size: 16px;
+}
+.policyContent p,
+.policyContent ul {
+	margin: 8px 0;
+}
+.policyContent table {
+	width: 100%;
+	border-collapse: collapse;
+	font-size: 13px;
+}
+.policyContent th,
+.policyContent td {
+	border: 1px solid #d7d7d7;
+	padding: 8px;
+	vertical-align: top;
+	text-align: left;
+}
+.policyContent th {
+	background: #f5f5f5;
+}
+.modalConfirm {
+	height: 40px;
+	border: 0;
+	border-radius: 20px;
+	background: #000;
+	color: #fff;
+	cursor: pointer;
+	font: inherit;
+}
+
+@media (max-width: 480px) {
+	.page {
+		padding: 20px;
+	}
+	.codeInputs {
+		gap: 8px;
+	}
+	.codeInput {
+		height: 60px;
+		font-size: 24px;
+	}
+	.agreement {
+		align-items: flex-start;
+	}
+	.checkboxLabel {
+		gap: 8px;
+	}
 }
