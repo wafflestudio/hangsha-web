@@ -1,8 +1,5 @@
-import {
-	transformCategoryId,
-	transformEvent,
-} from "@/util/calendar/transformEvent";
-import type { Category, EventDTO, Memo } from "@types";
+import { transformEvent } from "@/util/calendar/transformEvent";
+import type { CategoryType, EventDTO, Memo } from "@types";
 import api from "./axios";
 
 // --- Excluded Keywords ---
@@ -54,25 +51,39 @@ export const removeBookmark = async (eventId: number) => {
 // --- Interests ---
 export const getInterestCategories = async () => {
 	const res = await api.get<{
-		items: { category: Category; priority: number }[];
+		items: {
+			categoryType: CategoryType;
+			categoryId: number;
+			name: string;
+			sortOrder: number;
+			priority: number;
+		}[];
 	}>("/users/me/interest-categories");
 	const sortedCategories = res.data.items
 		.sort((a, b) => a.priority - b.priority)
-		.map((item) => item.category);
+		.map(({ categoryId, name, sortOrder, categoryType }) => ({
+			id: categoryId,
+			name,
+			sortOrder,
+			categoryType,
+		}));
 	return sortedCategories;
 };
 
 export const addInterestCategories = async (
-	items: { categoryId: number; priority: number }[],
+	items: { categoryType: CategoryType; categoryId: number; priority: number }[],
 ) => {
 	return api.put("/users/me/interest-categories", { items });
 };
 
-/*
-export const removeInterestCategory = async (categoryId: number) => {
-	await api.delete(`/users/me/interest-categories/${categoryId}`);
+export const removeInterestCategory = async (
+	categoryId: number,
+	categoryType: CategoryType,
+) => {
+	await api.delete(`/users/me/interest-categories/${categoryId}`, {
+		params: { categoryType },
+	});
 };
-*/
 
 // --- Memos ---
 type MemoDTO = Omit<Memo, "createdAt" | "updatedAt" | "applyEnd"> & {
@@ -85,7 +96,7 @@ type MemoDTO = Omit<Memo, "createdAt" | "updatedAt" | "applyEnd"> & {
 const mapMemoDTO = (m: MemoDTO): Memo => {
 	return {
 		...m,
-		categoryId: transformCategoryId(m.categoryId),
+		categoryId: m.categoryId,
 		createdAt: m.createdAt ? new Date(m.createdAt) : undefined,
 		updatedAt: m.updatedAt ? new Date(m.updatedAt) : undefined,
 		applyEnd:

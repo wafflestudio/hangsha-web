@@ -197,8 +197,8 @@ const ProfileCard = ({ onClickInterest }: { onClickInterest: () => void }) => {
 					<ul className={styles.preferenceChips}>
 						{interestCategories.map((cat, idx) => (
 							<li
-								className={`${styles.preferenceChip} ${cat.groupId === 3 && styles.category} ${cat.groupId === 2 && styles.organization}`}
-								key={cat.id}
+								className={`${styles.preferenceChip} ${cat.categoryType === "EVENT_TYPE" && styles.category} ${cat.categoryType === "ORGANIZATION" && styles.organization}`}
+								key={`${cat.categoryType}-${cat.id}`}
 							>
 								{`${idx + 1}순위: ${cat.name}`}
 							</li>
