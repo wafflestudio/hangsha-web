@@ -1,5 +1,12 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import {
+	type ComponentProps,
+	useCallback,
+	useEffect,
+	useMemo,
+	useState,
+} from "react";
 import { Calendar, type View, Views } from "react-big-calendar";
+import Month from "react-big-calendar/lib/Month";
 import styles from "./Calendar.module.css";
 import { localizer } from "@/util/calendar/calendarLocalizer";
 import type { CalendarEvent, Event } from "@types";
@@ -13,6 +20,10 @@ import { useEvents } from "@/contexts/EventContext";
 import { useTimetable } from "@/contexts/TimetableContext";
 import calendarEventMapper from "@/util/calendar/calendarEventMapper";
 import { sortMonthCalendarEvents } from "@/util/calendar/sortMonthCalendarEvents";
+import { useCalendarViewMode } from "@/contexts/CalendarViewModeContext";
+import Table from "./day/table";
+import GalleryView from "./day/gallery/GalleryView";
+import MobileEventList from "./day/table/MobileEventList";
 
 const eventPropGetter = () => {
 	return {
@@ -25,6 +36,22 @@ const DESKTOP_MONTH_VISIBLE_EVENT_ROWS = 3;
 const MOBILE_MONTH_VISIBLE_EVENT_ROWS = 4;
 const getIsMobile = () =>
 	typeof window !== "undefined" && window.innerWidth <= MOBILE_MAX_WIDTH;
+
+const TABLE_HEADERS = [
+	"찜",
+	"제목",
+	"D-day",
+	"카테고리",
+	"행사 날짜",
+	"지원 기간",
+	"주최기관",
+];
+
+type MonthComponent = typeof Month & {
+	range: (date: Date, options: unknown) => Date[];
+	navigate: (date: Date, action: unknown, options: unknown) => Date;
+	title: (date: Date, options: unknown) => string;
+};
 
 interface MyCalendarProps {
 	monthEvents: Event[];
@@ -46,6 +73,7 @@ export const MyCalendar = ({
 	onViewChange,
 }: MyCalendarProps) => {
 	const { dayDate, setDayDate } = useEvents();
+	const { calendarViewMode } = useCalendarViewMode();
 	const { selectedOverlayCourses, selectedOverlayTimetable } = useTimetable();
 	const [isMobile, setIsMobile] = useState(getIsMobile);
 	const [showTimetableOverlay, setShowTimetableOverlay] = useState(true);
@@ -53,21 +81,77 @@ export const MyCalendar = ({
 	const isTimetableOverlayEmpty = selectedOverlayCourses.length <= 0;
 
 	const WeekViewWithOverlay = useMemo(() => {
-		const WeekView = (weekProps: Record<string, unknown>) => (
-			<CustomWeekView
-				{...weekProps}
-				timetableOverlayCourses={showTimetableOverlay ? selectedOverlayCourses : []}
-			/>
-		);
+		const WeekView = (weekProps: Record<string, unknown>) =>
+			calendarViewMode === "List" ? (
+				<Table
+					theadData={TABLE_HEADERS}
+					tbodyData={(weekProps.events as CalendarEvent[]) ?? []}
+				/>
+			) : calendarViewMode === "Grid" ? (
+				<GalleryView events={(weekProps.events as CalendarEvent[]) ?? []} />
+			) : (
+				<CustomWeekView
+					{...weekProps}
+					timetableOverlayCourses={
+						showTimetableOverlay ? selectedOverlayCourses : []
+					}
+				/>
+			);
 
 		return Object.assign(WeekView, {
-			range: (CustomWeekView as typeof CustomWeekView & { range: unknown }).range,
+			range: (CustomWeekView as typeof CustomWeekView & { range: unknown })
+				.range,
 			navigate: (
 				CustomWeekView as typeof CustomWeekView & { navigate: unknown }
 			).navigate,
-			title: (CustomWeekView as typeof CustomWeekView & { title: unknown }).title,
+			title: (CustomWeekView as typeof CustomWeekView & { title: unknown })
+				.title,
 		});
-	}, [selectedOverlayCourses, showTimetableOverlay]);
+	}, [calendarViewMode, selectedOverlayCourses, showTimetableOverlay]);
+
+	const MonthViewWithModes = useMemo(() => {
+		const MonthView = (monthProps: ComponentProps<typeof Month>) => {
+			if (calendarViewMode === "Calendar") {
+				return <Month {...monthProps} />;
+			}
+
+			const monthStart = new Date(
+				monthProps.date.getFullYear(),
+				monthProps.date.getMonth(),
+				1,
+			);
+			const monthEnd = new Date(
+				monthProps.date.getFullYear(),
+				monthProps.date.getMonth() + 1,
+				0,
+				23,
+				59,
+				59,
+				999,
+			);
+			const events = (monthProps.events as CalendarEvent[]).filter(
+				(event: CalendarEvent) =>
+					event.start <= monthEnd && event.end >= monthStart,
+			);
+
+			return calendarViewMode === "List" ? (
+				isMobile ? (
+					<MobileEventList events={events} />
+				) : (
+					<Table theadData={TABLE_HEADERS} tbodyData={events} />
+				)
+			) : (
+				<GalleryView events={events} />
+			);
+		};
+
+		const month = Month as MonthComponent;
+		return Object.assign(MonthView, {
+			range: month.range,
+			navigate: month.navigate,
+			title: month.title,
+		});
+	}, [calendarViewMode, isMobile]);
 
 	const onNavigate = useCallback(
 		(newDate: Date) => {
@@ -229,7 +313,7 @@ export const MyCalendar = ({
 					monthMaxRows={monthMaxRows}
 					onView={onViewChange}
 					views={{
-						month: true,
+						month: MonthViewWithModes,
 						week: WeekViewWithOverlay,
 						day: CustomDayView,
 					}}

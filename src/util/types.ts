@@ -320,7 +320,7 @@ export interface FetchDayEventArgs {
 	orgId?: number[];
 }
 
-export type DayViewMode = "List" | "Grid" | "Calendar";
+export type CalendarViewMode = "List" | "Grid" | "Calendar";
 
 export interface ApiErrorResponse {
 	code: string;

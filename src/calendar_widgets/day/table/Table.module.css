@@ -43,3 +43,18 @@ table tbody td:nth-child(6) {
 .table tbody tr:hover {
 	background-color: #f9f9f9;
 }
+
+.bookmarkButton {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 0;
+	border: 0;
+	background: transparent;
+	cursor: pointer;
+}
+
+.bookmarkButton img {
+	width: 23px;
+	height: 23px;
+}

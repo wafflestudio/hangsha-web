@@ -3,10 +3,13 @@ import styles from "./CardView.module.css";
 import { getDDay } from "@/util/calendar/getDday";
 import { CATEGORY_COLORS, CATEGORY_LIST } from "@constants";
 import type { Event } from "@types";
-import { useUserData } from "@/contexts/UserDataContext";
+import { useBookmarkStatus, useUserData } from "@/contexts/UserDataContext";
 import { StartDate } from "@/components/feature/eventDate/EventDate";
 import { useAuth } from "@/contexts/AuthProvider";
-import { CategoryChip, DdayChip } from "@/components/feature/eventChip/EventChip";
+import {
+	CategoryChip,
+	DdayChip,
+} from "@/components/feature/eventChip/EventChip";
 
 const MobileChipsList = ({ event }: { event: Event }) => {
 	const ddayTargetDate = event.applyEnd || null;
@@ -39,7 +42,7 @@ const MobileChipsList = ({ event }: { event: Event }) => {
 					onPointerCancel={cancelPress}
 					onClick={(e) => {
 						e.stopPropagation();
-						setExpanded(prev => !prev);
+						setExpanded((prev) => !prev);
 						if (expanded) {
 							e.stopPropagation();
 							setExpanded(false);
@@ -51,47 +54,58 @@ const MobileChipsList = ({ event }: { event: Event }) => {
 					</span>
 				</button>
 			</li>
-			{ddayTargetDate && <span className={styles.ddayTargetDate}>{`지원 ${getDDay(ddayTargetDate)}`}</span>}
+			{ddayTargetDate && (
+				<span
+					className={styles.ddayTargetDate}
+				>{`지원 ${getDDay(ddayTargetDate)}`}</span>
+			)}
 		</ul>
-	)
-}
-
-const EventCard = ({ event, onLoginPrompt, fullWidth = false }: { event: Event; onLoginPrompt?: () => void; fullWidth?: boolean; }) => {
-	const ddayTargetDate = event.applyEnd;
-	const {user} = useAuth();
-
-	const [isBookmarked, setIsBookmarked] = useState<boolean>(
-		event.isBookmarked || false,
 	);
+};
+
+const EventCard = ({
+	event,
+	onLoginPrompt,
+	fullWidth = false,
+}: {
+	event: Event;
+	onLoginPrompt?: () => void;
+	fullWidth?: boolean;
+}) => {
+	const ddayTargetDate = event.applyEnd;
+	const { user } = useAuth();
+
 	const { toggleBookmark } = useUserData();
+	const isBookmarked = useBookmarkStatus(event);
 
 	const handleToggleBookmark = async (
 		e: React.MouseEvent<HTMLButtonElement>,
 	) => {
-		const previousState = isBookmarked;
 		e.stopPropagation();
 
-		if (!user) {	
+		if (!user) {
 			onLoginPrompt?.();
 			return;
 		}
 
-		// optimistic update
-		setIsBookmarked(!previousState);
-
 		try {
-			await toggleBookmark(event.id);
+			await toggleBookmark(event);
 		} catch (e) {
 			console.error("Failed to toggle bookmark", e);
-			setIsBookmarked(previousState);
 		}
 	};
 
 	return (
-		<div className={`${styles.cardWrapper} ${fullWidth ? styles.fullWidth : ""}`}>
+		<div
+			className={`${styles.cardWrapper} ${fullWidth ? styles.fullWidth : ""}`}
+		>
 			<div className={styles.mobileRow}>
 				<MobileChipsList event={event} />
-				<button type="button" className={styles.bookmarkBtn} onClick={handleToggleBookmark}>
+				<button
+					type="button"
+					className={styles.bookmarkBtn}
+					onClick={handleToggleBookmark}
+				>
 					<img
 						src={
 							isBookmarked
@@ -104,12 +118,20 @@ const EventCard = ({ event, onLoginPrompt, fullWidth = false }: { event: Event; 
 			</div>
 			<h1 className={styles.eventTitle}>{event.title}</h1>
 			<div className={styles.mobileDateOrg}>
-				<StartDate label={null} eventStart={event.eventStart} eventEnd={event.eventEnd} />
+				<StartDate
+					label={null}
+					eventStart={event.eventStart}
+					eventEnd={event.eventEnd}
+				/>
 				<span className={styles.orgText}>{event.organization}</span>
 			</div>
 			<ul className={styles.chipsList}>
 				{ddayTargetDate && (
-					<DdayChip as="li" className={styles.cardChip} targetDate={ddayTargetDate} />
+					<DdayChip
+						as="li"
+						className={styles.cardChip}
+						targetDate={ddayTargetDate}
+					/>
 				)}
 				<CategoryChip
 					as="li"
