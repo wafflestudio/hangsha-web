@@ -2,6 +2,7 @@ import {
 	createContext,
 	useContext,
 	useEffect,
+	useRef,
 	useState,
 	useCallback,
 	type ReactNode,
@@ -16,6 +17,16 @@ import type {
 } from "../util/types";
 import * as timetableApi from "../api/timetable";
 import { useAuth } from "./AuthProvider";
+import {
+	toSnuttImportData,
+	type SnuttFullTimetable,
+} from "../util/snuttTimetable";
+
+export type SnuttImportResult = {
+	importedTimetable: Timetable;
+	importedCourseCount: number;
+	excludedCourseCount: number;
+};
 
 interface TimetableContextType {
 	// state
@@ -50,6 +61,9 @@ interface TimetableContextType {
 		body: string,
 	) => Promise<void>;
 	deleteCourse: (timetableId: number, enrollId: number) => Promise<void>;
+	importSnuttTimetable: (
+		timetable: SnuttFullTimetable,
+	) => Promise<SnuttImportResult>;
 }
 
 const TimetableContext = createContext<TimetableContextType | undefined>(
@@ -63,6 +77,7 @@ export const TimetableProvider = ({ children }: { children: ReactNode }) => {
 	const [currentTimetable, setCurrentTimetable] = useState<Timetable | null>(
 		null,
 	);
+	const preferredTimetableIdRef = useRef<number | null>(null);
 	const [courses, setCourses] = useState<GetCoursesResponse[]>([]);
 	const [selectedOverlayTimetable, setSelectedOverlayTimetable] =
 		useState<Timetable | null>(null);
@@ -87,7 +102,9 @@ export const TimetableProvider = ({ children }: { children: ReactNode }) => {
 
 				// 기본 선택
 				if (res.length > 0) {
-					const defaultTimetable = res[0];
+					const defaultTimetable =
+						res.find((timetable) => timetable.id === preferredTimetableIdRef.current) ??
+						res[0];
 					const defaultCourses = await loadCoursesByTimetableId(
 						defaultTimetable.id,
 					);
@@ -221,6 +238,39 @@ export const TimetableProvider = ({ children }: { children: ReactNode }) => {
 		await loadCourses(timetableId);
 	};
 
+	const importSnuttTimetable = async (snuttTimetable: SnuttFullTimetable) => {
+		const { timetable, courses: coursesToImport, excludedCourseCount } =
+			toSnuttImportData(snuttTimetable);
+		const newTimetable = await timetableApi.addTimetable(timetable);
+
+		try {
+			for (const course of coursesToImport) {
+				await timetableApi.addCustomCourse(newTimetable.id, course);
+			}
+
+			const importedCourses = await loadCoursesByTimetableId(newTimetable.id);
+			preferredTimetableIdRef.current = newTimetable.id;
+			setTimetables((prev) => [...prev, newTimetable]);
+			setCurrentTimetable(newTimetable);
+			setCourses(importedCourses);
+			setSelectedOverlayTimetable(newTimetable);
+			setSelectedOverlayCourses(importedCourses);
+
+			return {
+				importedTimetable: newTimetable,
+				importedCourseCount: coursesToImport.length,
+				excludedCourseCount,
+			};
+		} catch (error) {
+			try {
+				await timetableApi.deleteTimetable(newTimetable.id);
+			} catch {
+				// The original import error is more useful to the user.
+			}
+			throw error;
+		}
+	};
+
 	// --- Auth change reset ---
 	useEffect(() => {
 		if (!isAuthenticated) {
@@ -255,6 +305,7 @@ export const TimetableProvider = ({ children }: { children: ReactNode }) => {
 				addCustomCourse,
 				updateCustomCourse,
 				deleteCourse,
+				importSnuttTimetable,
 			}}
 		>
 			{children}

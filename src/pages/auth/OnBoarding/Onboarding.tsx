@@ -17,7 +17,7 @@ export default function Onboarding({
 		saveInterestPreferences,
 	} = useUserData();
 	const {
-		categoryGroups,
+		eventTypes,
 		organizations,
 		isLoadingMeta,
 		filterError,
@@ -34,24 +34,24 @@ export default function Onboarding({
 	}, [interestCategories]);
 
 	const MAX_PREFERENCE = 3;
-	const programTypes =
-		categoryGroups.find((group) => group.group.id === 3)?.categories ?? [];
+	const programTypes = eventTypes;
 
 	const isSelectedPreference = (target: Category) =>
 		selectedPreferences.some(
 			(preference) =>
-				preference.id === target.id && preference.groupId === target.groupId,
+				preference.id === target.id &&
+				preference.categoryType === target.categoryType,
 		);
 
 	const togglePreference = (pref: Category) => {
 		setSelectedPreferences((prev) => {
 			const exists = prev.some(
-				(p) => p.id === pref.id && p.groupId === pref.groupId,
+				(p) => p.id === pref.id && p.categoryType === pref.categoryType,
 			);
 
 			if (exists) {
 				return prev.filter(
-					(p) => !(p.id === pref.id && p.groupId === pref.groupId),
+					(p) => !(p.id === pref.id && p.categoryType === pref.categoryType),
 				);
 			}
 
@@ -94,7 +94,7 @@ export default function Onboarding({
 			<div className={styles.onbSelectedWrap}>
 				{selectedPreferences.map((preference, index) => (
 					<span
-						key={`${preference.groupId}-${preference.id}`}
+						key={`${preference.categoryType}-${preference.id}`}
 						className={styles.onbRankPill}
 					>
 						<span className={styles.onbRankLabel}>{index + 1}순위:</span>

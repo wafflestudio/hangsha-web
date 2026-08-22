@@ -76,31 +76,19 @@ export interface CalendarEvent {
 
 export interface Category {
 	id: number;
-	groupId: number; // 1: 모집현황, 2: 주체기관, 3: 프로그램 유형
 	name: string;
 	sortOrder: number;
+	categoryType: CategoryType;
 }
 
-export interface CategoryGroup {
-	id: number;
-	name: string; // 모집현황 | 주체기관 | 프로그램 유형
-	sortOrder: number; // 각각 1, 2, 3
-}
-
-export interface CategoryGroupWithCategories {
-	group: CategoryGroup; // 대분류 이름, 우선순위, 아이디 등
-	categories: Category[]; // 실제 분류에 속하는 카테고리
-}
-
-export interface CategoryGroupWithCategoriesResponse {
-	items: CategoryGroupWithCategories[];
-}
-
-export interface OrgsResponse {
-	items: Category[];
-}
+export type CategoryType = "EVENT_STATUS" | "EVENT_TYPE" | "ORGANIZATION";
 
 export interface MemoTag {
+	id: number;
+	name: string;
+}
+
+export interface MemoOrganization {
 	id: number;
 	name: string;
 }
@@ -109,9 +97,14 @@ export interface Memo {
 	id: number;
 	eventId: number;
 	eventTitle: string;
+	categoryId: number;
 	content: string;
 	tags: MemoTag[];
-	createdAt: Date;
+	createdAt?: Date;
+	updatedAt?: Date;
+	applyEnd?: Date | null;
+	organization?: MemoOrganization | null;
+	isBookmarked: boolean;
 }
 
 // 시간표 전체
@@ -310,7 +303,7 @@ export interface FetchDayEventArgs {
 	orgId?: number[];
 }
 
-export type DayViewMode = "List" | "Grid" | "Calendar";
+export type CalendarViewMode = "List" | "Grid" | "Calendar";
 
 export interface ApiErrorResponse {
 	code: string;

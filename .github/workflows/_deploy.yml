@@ -15,6 +15,17 @@ on:
       social_login_base_url:
         required: true
         type: string
+      environment:
+        required: true
+        type: string
+      snutt_base_url:
+        required: false
+        type: string
+        default: ""
+      snutt_callback_origin:
+        required: false
+        type: string
+        default: ""
 
 jobs:
   deploy:
@@ -33,12 +44,23 @@ jobs:
       - name: Install dependencies
         run: yarn install --frozen-lockfile
 
-      - name: Build & Export
+      - name: Build & Export (development)
+        if: ${{ inputs.environment == 'development' }}
+        run: yarn build --mode development
+        env:
+          VITE_GA_MEASUREMENT_ID: ${{ inputs.ga_measurement_id }}
+          VITE_API_URL: ${{ vars.VITE_API_URL }}
+          VITE_SOCIAL_LOGIN_BASE_URL: ${{ inputs.social_login_base_url }}
+
+      - name: Build & Export (production)
+        if: ${{ inputs.environment == 'production' }}
         run: yarn build
         env:
           VITE_GA_MEASUREMENT_ID: ${{ inputs.ga_measurement_id }}
           VITE_API_URL: ${{ vars.VITE_API_URL }}
           VITE_SOCIAL_LOGIN_BASE_URL: ${{ inputs.social_login_base_url }}
+          VITE_SNUTT_BASE_URL: ${{ inputs.snutt_base_url }}
+          VITE_SNUTT_CALLBACK_ORIGIN: ${{ inputs.snutt_callback_origin }}
 
       - name: Deploy to S3 and Invalidate Cloudfront
         env:

@@ -2,11 +2,11 @@ import { useUserData } from "@/contexts/UserDataContext";
 import { useAuth } from "@/contexts/AuthProvider";
 import styles from "./Memo.module.css";
 import type { Memo } from "@/util/types";
-import { formatDateDotParsed } from "@/util/calendar/dateFormatter";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
+import { FiArrowUpRight } from "react-icons/fi";
 import Navigationbar from "@/components/layout/Navigationbar";
 import { useNavigate } from "react-router-dom";
-import MemoPageCard from "./MemoPageCard";
+import MemoCard from "./MemoCard";
 import { useEffect, useRef, useState } from "react";
 import Modal from "@/components/ui/Modal";
 import Loading from "@/components/ui/Loading";
@@ -17,25 +17,6 @@ import {
 	SidePanelResizeHandle,
 	useResizableSidePanel,
 } from "@/components/layout/sidePannel/SidePanelResize";
-
-const MemoWidgetCard = ({ memo }: { memo: Memo }) => {
-	return (
-		<div className={styles.cardWrapper}>
-			<span className={styles.memoContent}>{memo.content}</span>
-			<span className={styles.memoTitle}>{memo.eventTitle}</span>
-			<span className={styles.memoDate}>
-				{formatDateDotParsed(memo.createdAt)}
-			</span>
-			<ul className={styles.chips}>
-				{memo.tags.map((t) => (
-					<li key={t.id} className={styles.chip}>
-						{t.name}
-					</li>
-				))}
-			</ul>
-		</div>
-	);
-};
 
 export const MemoWidget = () => {
 	const { eventMemos } = useUserData();
@@ -56,7 +37,7 @@ export const MemoWidget = () => {
 			</div>
 			<div className={styles.cardsRow}>
 				{eventMemos.map((m: Memo) => (
-					<MemoWidgetCard key={m.id} memo={m} />
+					<MemoCard key={m.id} memo={m} variant="widget" />
 				))}
 			</div>
 			{(!eventMemos || eventMemos.length === 0) && (
@@ -131,16 +112,32 @@ const MemoPage = () => {
 						<img src="/assets/pencil.svg" alt="pencil icon" />
 					</div>
 				</div>
-				<div className={styles.cardsColumn}>
-					{eventMemos.map((m: Memo) => (
-						<MemoPageCard memo={m} onDelete={setDeletingMemoId} key={m.id} />
-					))}
+				<div
+					className={`${styles.cardsColumn} ${
+						eventMemos.length === 0 ? styles.emptyCardsColumn : ""
+					}`}
+				>
+					{eventMemos.length > 0 ? (
+						eventMemos.map((m: Memo) => (
+							<MemoCard memo={m} onDelete={setDeletingMemoId} key={m.id} />
+						))
+					) : (
+						<>
+							<div className={styles.emptyMemoCard}>
+								<strong>현재 작성된 메모가 없습니다!</strong>
+								<span>원하는 행사를 찾고 메모를 남겨보세요.</span>
+							</div>
+							<button
+								type="button"
+								className={styles.calendarShortcut}
+								onClick={() => navigate("/main")}
+							>
+								<span>캘린더로 바로 가기</span>
+								<FiArrowUpRight size={24} aria-hidden="true" />
+							</button>
+						</>
+					)}
 				</div>
-				{(!eventMemos || eventMemos.length === 0) && (
-					<span
-						className={styles.noneText}
-					>{`아직 메모가 없습니다.\n다녀온 행사나 관심있는 행사에 대한 메모를 작성해보세요!`}</span>
-				)}
 			</div>
 			{deletingMemoId && (
 				<Modal
