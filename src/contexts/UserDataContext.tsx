@@ -24,7 +24,7 @@ interface UserDataContextType {
 	saveInterestPreferences: (categories: Category[]) => Promise<void>;
 	addExcludedKeyword: (keyword: string) => Promise<void>;
 	deleteExcludedKeyword: (id: number) => Promise<void>;
-	toggleBookmark: (event: Event) => Promise<void>;
+	toggleBookmark: (eventId: number) => Promise<void>;
 	getMemoByTag: (tagId: number) => Promise<Memo[]>;
 	addMemo: (
 		eventId: number,
@@ -109,9 +109,9 @@ export const UserDataProvider = ({ children }: { children: ReactNode }) => {
 		);
 		try {
 			if (isBookmarked) {
-				await userService.removeBookmark(event.id);
+				await userService.removeBookmark(eventId);
 			} else {
-				await userService.addBookmark(event.id);
+				await userService.addBookmark(eventId);
 			}
 
 			const newBookmarks = await userService.getBookmarks(1);
