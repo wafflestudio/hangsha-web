@@ -24,7 +24,7 @@ interface UserDataContextType {
 	saveInterestPreferences: (categories: Category[]) => Promise<void>;
 	addExcludedKeyword: (keyword: string) => Promise<void>;
 	deleteExcludedKeyword: (id: number) => Promise<void>;
-	toggleBookmark: (eventId: number) => Promise<void>;
+	toggleBookmark: (event: Event | number) => Promise<void>;
 	getMemoByTag: (tagId: number) => Promise<Memo[]>;
 	addMemo: (
 		eventId: number,
@@ -95,17 +95,31 @@ export const UserDataProvider = ({ children }: { children: ReactNode }) => {
 		}
 	}, [isAuthenticated, fetchAll]);
 
-	const toggleBookmark = async (event: Event) => {
+	const toggleBookmark = async (event: Event | number) => {
+		const eventId = typeof event === "number" ? event : event.id;
+		const memo = eventMemos.find((memo) => memo.eventId === eventId);
 		const isBookmarked = isBookmarksLoaded
 			? bookmarkedEvents.some(
-					(bookmarkedEvent) => bookmarkedEvent.id === event.id,
+					(bookmarkedEvent) => bookmarkedEvent.id === eventId,
 				)
-			: Boolean(event.isBookmarked);
+			: typeof event === "number"
+				? Boolean(memo?.isBookmarked)
+				: Boolean(event.isBookmarked);
 		const previousBookmarks = bookmarkedEvents;
+		const previousMemos = eventMemos;
 		setBookmarkedEvents((current) =>
 			isBookmarked
-				? current.filter((bookmarkedEvent) => bookmarkedEvent.id !== event.id)
-				: [...current, { ...event, isBookmarked: true }],
+				? current.filter((bookmarkedEvent) => bookmarkedEvent.id !== eventId)
+				: typeof event === "number"
+					? current
+					: [...current, { ...event, isBookmarked: true }],
+		);
+		setEventMemos((current) =>
+			current.map((memo) =>
+				memo.eventId === eventId
+					? { ...memo, isBookmarked: !isBookmarked }
+					: memo,
+			),
 		);
 		try {
 			if (isBookmarked) {
@@ -118,6 +132,7 @@ export const UserDataProvider = ({ children }: { children: ReactNode }) => {
 			setBookmarkedEvents(newBookmarks);
 		} catch (error) {
 			setBookmarkedEvents(previousBookmarks);
+			setEventMemos(previousMemos);
 			console.error(error);
 			throw error;
 		}

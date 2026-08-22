@@ -40,7 +40,7 @@ const SearchNewListItem = ({ item, onClick, onLoginPrompt }: ItemProps) => {
 		const previousState = isBookmarked;
 		setIsBookmarked(!previousState);
 		try {
-			await toggleBookmark(event.id);
+			await toggleBookmark(event);
 		} catch (err) {
 			console.error("Failed to toggle bookmark", err);
 			setIsBookmarked(previousState);
