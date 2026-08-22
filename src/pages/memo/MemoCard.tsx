@@ -149,7 +149,7 @@ const MemoCard = (props: MemoCardProps) => {
 				<div className={styles.cardHeader}>
 					<span
 						className={styles.statusDot}
-						style={{ backgroundColor: CATEGORY_COLORS[memo.categoryId] }}
+						style={{ backgroundColor: CATEGORY_COLORS[memo.eventTypeId] ?? CATEGORY_COLORS[7] }}
 						aria-hidden="true"
 					/>
 					<span className={styles.memoDate}>
