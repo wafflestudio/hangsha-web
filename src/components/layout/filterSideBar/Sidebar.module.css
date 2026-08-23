@@ -389,6 +389,184 @@ body::-webkit-scrollbar {
   gap: 6px;
 }
 
+.snuttImportButton {
+  position: relative;
+  display: flex;
+  width: 100%;
+  height: 60px;
+  align-items: center;
+  justify-content: center;
+  margin-top: 4px;
+  overflow: visible;
+  border: none;
+  border-radius: 30px;
+  background: transparent;
+  color: #111111;
+  cursor: pointer;
+  font: inherit;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.5;
+  opacity: 0.6;
+  transition: opacity 180ms ease;
+}
+
+.snuttImportButton:hover,
+.snuttImportButton:focus-visible {
+  opacity: 1;
+}
+
+.snuttImportButton:focus-visible {
+  outline: 2px solid #0bce84;
+  outline-offset: 2px;
+}
+
+.snuttSparkles {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 36px;
+  height: 36px;
+  z-index: 0;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+}
+
+.snuttImportLabel {
+  position: relative;
+  z-index: 1;
+  word-break: keep-all;
+}
+
+.snuttSparkles img {
+  position: absolute;
+  --sparkle-rotation: 0deg;
+  --burst-x: 0px;
+  --burst-y: 0px;
+  --end-x: 0px;
+  --end-y: 0px;
+  --sparkle-spin: 240deg;
+  --end-spin: 360deg;
+  opacity: 0;
+  transform: rotate(var(--sparkle-rotation));
+  transform-origin: center;
+}
+
+.snuttSparkles img:nth-child(1) {
+  top: 2px;
+  left: 3px;
+  width: 20px;
+  height: 20px;
+  --sparkle-rotation: -36.69deg;
+  --burst-x: -50px;
+  --burst-y: -15px;
+  --end-x: -60px;
+  --end-y: -30px;
+  --sparkle-spin: 300deg;
+  --end-spin: 480deg;
+}
+
+.snuttSparkles img:nth-child(2) {
+  top: 2px;
+  left: 2px;
+  width: 16px;
+  height: 16px;
+  --sparkle-rotation: 12.19deg;
+  --burst-x: 50px;
+  --burst-y: -7px;
+  --end-x: 100px;
+  --end-y: -20px;
+  --sparkle-spin: -280deg;
+  --end-spin: -450deg;
+}
+
+.snuttSparkles img:nth-child(3) {
+  top: 3px;
+  left: 2px;
+  width: 14px;
+  height: 14px;
+  --sparkle-rotation: 11.34deg;
+  --burst-x: -100px;
+  --burst-y: 15px;
+  --end-x: -200px;
+  --end-y: 20px;
+  --sparkle-spin: 240deg;
+  --end-spin: 400deg;
+}
+
+.snuttSparkles img:nth-child(4) {
+  top: 2px;
+  left: 2px;
+  width: 16px;
+  height: 16px;
+  --sparkle-rotation: 10.8deg;
+  --burst-x: 110px;
+  --burst-y: 10px;
+  --end-x: 200px;
+  --end-y: 0px;
+  --sparkle-spin: -320deg;
+  --end-spin: -500deg;
+}
+
+.snuttSparkles img:nth-child(5) {
+  top: 3px;
+  left: 3px;
+  width: 13px;
+  height: 13px;
+  --sparkle-rotation: -18deg;
+  --burst-x: 18px;
+  --burst-y: 35px;
+  --end-x: 40px;
+  --end-y: 40px;
+  --sparkle-spin: 360deg;
+  --end-spin: 540deg;
+}
+
+.snuttImportButton:hover .snuttSparkles img,
+.snuttImportButton:focus-visible .snuttSparkles img {
+  animation: snutt-sparkle-burst 900ms cubic-bezier(0.2, 0.8, 0.2, 1) infinite;
+}
+
+.snuttImportButton:hover .snuttSparkles img:nth-child(2),
+.snuttImportButton:focus-visible .snuttSparkles img:nth-child(2) {
+  animation-delay: 40ms;
+}
+
+.snuttImportButton:hover .snuttSparkles img:nth-child(3),
+.snuttImportButton:focus-visible .snuttSparkles img:nth-child(3) {
+  animation-delay: 80ms;
+}
+
+.snuttImportButton:hover .snuttSparkles img:nth-child(4),
+.snuttImportButton:focus-visible .snuttSparkles img:nth-child(4) {
+  animation-delay: 120ms;
+}
+
+.snuttImportButton:hover .snuttSparkles img:nth-child(5),
+.snuttImportButton:focus-visible .snuttSparkles img:nth-child(5) {
+  animation-delay: 160ms;
+}
+
+@keyframes snutt-sparkle-burst {
+  0% {
+    opacity: 0;
+    transform: translate(10px, 8px) scale(0.2) rotate(var(--sparkle-rotation));
+  }
+  18% {
+    opacity: 1;
+  }
+  48% {
+    opacity: 1;
+    transform: translate(var(--burst-x), var(--burst-y)) scale(1.12)
+      rotate(calc(var(--sparkle-rotation) + var(--sparkle-spin)));
+  }
+  100% {
+    opacity: 0;
+    transform: translate(var(--end-x), var(--end-y)) scale(0.55)
+      rotate(calc(var(--sparkle-rotation) + var(--end-spin)));
+  }
+}
+
 .listItem {
   position: relative;
   display: flex;
@@ -623,5 +801,19 @@ body::-webkit-scrollbar {
   }
   .hiddenSidebar {
     display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .snuttImportButton,
+  .snuttSparkles img {
+    transition: none;
+  }
+
+  .snuttImportButton:hover .snuttSparkles img,
+  .snuttImportButton:focus-visible .snuttSparkles img {
+    animation: none;
+    opacity: 1;
+    transform: rotate(var(--sparkle-rotation));
   }
 }

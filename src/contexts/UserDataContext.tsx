@@ -12,18 +12,19 @@ import { useAuth } from "./AuthProvider";
 
 interface UserDataContextType {
 	bookmarkedEvents: Event[];
+	isBookmarksLoaded: boolean;
 	interestCategories: Category[];
 	excludedKeywords: { id: number; keyword: string }[];
 	eventMemos: Memo[];
 
 	memoLoading: boolean;
 	excludedKeywordLoading: boolean;
-	
+
 	refreshUserData: () => Promise<void>;
 	saveInterestPreferences: (categories: Category[]) => Promise<void>;
 	addExcludedKeyword: (keyword: string) => Promise<void>;
 	deleteExcludedKeyword: (id: number) => Promise<void>;
-	toggleBookmark: (event: Event) => Promise<void>;
+	toggleBookmark: (event: Event | number) => Promise<void>;
 	getMemoByTag: (tagId: number) => Promise<Memo[]>;
 	addMemo: (
 		eventId: number,
@@ -50,13 +51,16 @@ export const UserDataProvider = ({ children }: { children: ReactNode }) => {
 		{ id: number; keyword: string }[]
 	>([]);
 	const [bookmarkedEvents, setBookmarkedEvents] = useState<Event[]>([]);
+	const [isBookmarksLoaded, setIsBookmarksLoaded] = useState(false);
 	const [interestCategories, setInterestCategories] = useState<Category[]>([]);
 	const [eventMemos, setEventMemos] = useState<Memo[]>([]);
 	const [memoLoading, setMemoLoading] = useState<boolean>(false);
-	const [excludedKeywordLoading, setExcludedKeywordLoading] = useState<boolean>(false);
+	const [excludedKeywordLoading, setExcludedKeywordLoading] =
+		useState<boolean>(false);
 
 	const fetchAll = useCallback(async () => {
 		if (!isAuthenticated) return;
+		setIsBookmarksLoaded(false);
 		try {
 			setMemoLoading(true);
 			// Parallel fetch
@@ -71,6 +75,7 @@ export const UserDataProvider = ({ children }: { children: ReactNode }) => {
 			setBookmarkedEvents(bookmarksData);
 			setInterestCategories(interestsData);
 			setEventMemos(memoData);
+			setIsBookmarksLoaded(true);
 		} catch (error) {
 			console.error("Failed to load user data", error);
 		} finally {
@@ -84,30 +89,58 @@ export const UserDataProvider = ({ children }: { children: ReactNode }) => {
 		} else {
 			setExcludedKeywords([]);
 			setBookmarkedEvents([]);
+			setIsBookmarksLoaded(false);
 			setInterestCategories([]);
 			setEventMemos([]);
 		}
 	}, [isAuthenticated, fetchAll]);
 
-	const toggleBookmark = async (event: Event) => {
-		const isBookmarked = bookmarkedEvents.some((b) => b.id === event.id);
+	const toggleBookmark = async (event: Event | number) => {
+		const eventId = typeof event === "number" ? event : event.id;
+		const memo = eventMemos.find((memo) => memo.eventId === eventId);
+		const isBookmarked = isBookmarksLoaded
+			? bookmarkedEvents.some(
+					(bookmarkedEvent) => bookmarkedEvent.id === eventId,
+				)
+			: typeof event === "number"
+				? Boolean(memo?.isBookmarked)
+				: Boolean(event.isBookmarked);
+		const previousBookmarks = bookmarkedEvents;
+		const previousMemos = eventMemos;
+		setBookmarkedEvents((current) =>
+			isBookmarked
+				? current.filter((bookmarkedEvent) => bookmarkedEvent.id !== eventId)
+				: typeof event === "number"
+					? current
+					: [...current, { ...event, isBookmarked: true }],
+		);
+		setEventMemos((current) =>
+			current.map((memo) =>
+				memo.eventId === eventId
+					? { ...memo, isBookmarked: !isBookmarked }
+					: memo,
+			),
+		);
 		try {
 			if (isBookmarked) {
-				await userService.removeBookmark(event.id);
+				await userService.removeBookmark(eventId);
 			} else {
-				await userService.addBookmark(event.id);
+				await userService.addBookmark(eventId);
 			}
 
 			const newBookmarks = await userService.getBookmarks(1);
 			setBookmarkedEvents(newBookmarks);
-
 		} catch (error) {
+			setBookmarkedEvents(previousBookmarks);
+			setEventMemos(previousMemos);
 			console.error(error);
+			throw error;
 		}
 	};
 
 	const saveInterestPreferences = async (categories: Category[]) => {
 		const items = categories.map((category, index) => ({
+			categoryType: category.categoryType,
 			categoryId: category.id,
 			priority: index + 1,
 		}));
@@ -197,6 +230,7 @@ export const UserDataProvider = ({ children }: { children: ReactNode }) => {
 			value={{
 				excludedKeywords,
 				bookmarkedEvents,
+				isBookmarksLoaded,
 				interestCategories,
 				eventMemos,
 				memoLoading,
@@ -221,4 +255,16 @@ export const useUserData = () => {
 	const context = useContext(UserDataContext);
 	if (!context) throw new Error("useUserData error");
 	return context;
+};
+
+export const useBookmarkStatus = (
+	event: Pick<Event, "id" | "isBookmarked"> | undefined,
+) => {
+	const { bookmarkedEvents, isBookmarksLoaded } = useUserData();
+	if (!event) return false;
+	return isBookmarksLoaded
+		? bookmarkedEvents.some(
+				(bookmarkedEvent) => bookmarkedEvent.id === event.id,
+			)
+		: Boolean(event.isBookmarked);
 };
