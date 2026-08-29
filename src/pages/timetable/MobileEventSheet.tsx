@@ -121,6 +121,7 @@ export function MobileEventSheet({
 		() => Math.max(1, ...positionedPeriods.map((item) => item.lane + 1)),
 		[positionedPeriods],
 	);
+	const hasEvents = positionedPeriods.length > 0 || positionedAllDay.length > 0;
 
 	const onPointerDown = (event: PointerEvent<HTMLButtonElement>) => {
 		dragStartY.current = event.clientY;
@@ -162,40 +163,37 @@ export function MobileEventSheet({
 			</button>
 
 			<div className={styles.content} aria-hidden={!isExpanded}>
-				<header className={styles.header}>
-					<h2>기간제 행사 타임라인</h2>
-				</header>
-
-				<div
-					className={styles.timeline}
-					style={{ "--period-lane-count": periodLaneCount } as CSSProperties}
-				>
-					{positionedPeriods.length === 0 ? (
-						<p className={styles.empty}>이번 주 기간제 행사가 없어요.</p>
-					) : (
-						positionedPeriods.map((item) => (
-							<PeriodItem key={item.event.resource.event.id} item={item} />
-						))
-					)}
-				</div>
-
-				<div className={styles.allDaySection}>
-					<h3>종일 행사</h3>
-					<div className={styles.weekLabels} aria-hidden="true">
-						{["월", "화", "수", "목", "금"].map((label) => (
-							<span key={label}>{label}</span>
-						))}
-					</div>
-					<div className={styles.allDayGrid}>
-						{positionedAllDay.length === 0 ? (
-							<p className={styles.empty}>이번 주 종일 행사가 없어요.</p>
-						) : (
-							positionedAllDay.map((item) => (
-								<AllDayItem key={item.event.resource.event.id} item={item} />
-							))
+				{hasEvents ? (
+					<>
+						{positionedPeriods.length > 0 && (
+							<div
+								className={styles.timeline}
+								style={
+									{ "--period-lane-count": periodLaneCount } as CSSProperties
+								}
+							>
+								{positionedPeriods.map((item) => (
+									<PeriodItem key={item.event.resource.event.id} item={item} />
+								))}
+							</div>
 						)}
-					</div>
-				</div>
+
+						{positionedAllDay.length > 0 && (
+							<div className={styles.allDaySection}>
+								<div className={styles.allDayGrid}>
+									{positionedAllDay.map((item) => (
+										<AllDayItem
+											key={item.event.resource.event.id}
+											item={item}
+										/>
+									))}
+								</div>
+							</div>
+						)}
+					</>
+				) : (
+					<p className={styles.empty}>이번 주 행사가 없어요.</p>
+				)}
 			</div>
 		</section>
 	);

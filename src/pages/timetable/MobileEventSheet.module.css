@@ -63,20 +63,6 @@
 	pointer-events: auto;
 }
 
-.header {
-	padding: 7px 0 10px;
-	border-bottom: 1px solid #d8d8d8;
-}
-
-.header h2,
-.allDaySection h3 {
-	margin: 0;
-	color: #111;
-	font-size: 16px;
-	font-weight: 600;
-	line-height: 1.5;
-}
-
 .timeline {
 	display: grid;
 	grid-template-columns: repeat(5, minmax(0, 1fr));
@@ -145,27 +131,18 @@
 
 .allDaySection {
 	flex: 0 0 auto;
-	padding-top: 12px;
+	padding-top: 10px;
 }
 
-.weekLabels,
 .allDayGrid {
 	display: grid;
 	grid-template-columns: repeat(5, minmax(0, 1fr));
 	gap: 3px;
 }
 
-.weekLabels {
-	margin-top: 8px;
-	color: #828282;
-	font-size: 11px;
-	text-align: center;
-}
-
 .allDayGrid {
 	grid-auto-rows: 30px;
-	min-height: 38px;
-	margin-top: 5px;
+	min-height: 30px;
 }
 
 .allDayItem {
@@ -183,9 +160,7 @@
 }
 
 .empty {
-	grid-column: 1 / -1;
-	margin: 0;
-	align-self: center;
+	margin: auto 0;
 	color: #828282;
 	font-size: 12px;
 	text-align: center;
