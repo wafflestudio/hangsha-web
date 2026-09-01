@@ -16,7 +16,7 @@ import { HiOutlinePencilAlt } from "react-icons/hi";
 import { IoMdAdd, IoMdClose, IoMdDoneAll } from "react-icons/io";
 import { FaCheck, FaTrashCan } from "react-icons/fa6";
 import { useUserData } from "@/contexts/UserDataContext";
-import { useDetail } from "@/contexts/DetailContext";
+import { useNavigate } from "react-router-dom";
 
 const resizeTextarea = (textarea: HTMLTextAreaElement) => {
 	textarea.style.height = "0px";
@@ -51,7 +51,7 @@ const MemoCard = (props: MemoCardProps) => {
 	const [isAddingTag, setIsAddingTag] = useState<boolean>(false);
 	const [newTag, setNewTag] = useState<string>("");
 	const { updateMemo, toggleBookmark } = useUserData();
-	const { openDetail } = useDetail();
+	const navigate = useNavigate();
 	const inputRef = useRef<HTMLInputElement>(null);
 	const textareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -117,7 +117,7 @@ const MemoCard = (props: MemoCardProps) => {
 
 	const handleOpenDetail = () => {
 		if (editMode || isAddingTag) return;
-		openDetail(memo.eventId);
+		navigate(`/events/${memo.eventId}`);
 	};
 
 	const handleToggleBookmark = async (

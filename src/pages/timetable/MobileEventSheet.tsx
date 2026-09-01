@@ -17,6 +17,7 @@ type Props = {
 	periodEvents: CalendarEvent[];
 	allDayEvents: CalendarEvent[];
 	weekDate: Date;
+	onSelectEvent: (event: CalendarEvent) => void;
 };
 
 type PositionedEvent = {
@@ -104,6 +105,7 @@ export function MobileEventSheet({
 	periodEvents,
 	allDayEvents,
 	weekDate,
+	onSelectEvent,
 }: Props) {
 	const [isExpanded, setIsExpanded] = useState(false);
 	const dragStartY = useRef<number | null>(null);
@@ -173,7 +175,11 @@ export function MobileEventSheet({
 								}
 							>
 								{positionedPeriods.map((item) => (
-									<PeriodItem key={item.event.resource.event.id} item={item} />
+									<PeriodItem
+										key={item.event.resource.event.id}
+										item={item}
+										onSelectEvent={onSelectEvent}
+									/>
 								))}
 							</div>
 						)}
@@ -185,6 +191,7 @@ export function MobileEventSheet({
 										<AllDayItem
 											key={item.event.resource.event.id}
 											item={item}
+											onSelectEvent={onSelectEvent}
 										/>
 									))}
 								</div>
@@ -199,7 +206,13 @@ export function MobileEventSheet({
 	);
 }
 
-function PeriodItem({ item }: { item: PositionedEvent }) {
+function PeriodItem({
+	item,
+	onSelectEvent,
+}: {
+	item: PositionedEvent;
+	onSelectEvent: (event: CalendarEvent) => void;
+}) {
 	const categoryId = item.event.resource.event.eventTypeId;
 	const color =
 		CATEGORY_TEXT_COLORS[categoryId] ??
@@ -213,18 +226,30 @@ function PeriodItem({ item }: { item: PositionedEvent }) {
 	} as CSSProperties;
 
 	return (
-		<div className={styles.periodItem} style={style} title={item.event.title}>
+		<button
+			type="button"
+			className={styles.periodItem}
+			style={style}
+			title={item.event.title}
+			onClick={() => onSelectEvent(item.event)}
+		>
 			<span className={styles.periodTitle}>{item.event.title}</span>
 			<span
 				className={`${styles.periodLine} ${item.continuesBefore ? styles.arrowLeft : ""} ${
 					item.continuesAfter ? styles.arrowRight : ""
 				}`}
 			/>
-		</div>
+		</button>
 	);
 }
 
-function AllDayItem({ item }: { item: PositionedEvent }) {
+function AllDayItem({
+	item,
+	onSelectEvent,
+}: {
+	item: PositionedEvent;
+	onSelectEvent: (event: CalendarEvent) => void;
+}) {
 	const categoryId = item.event.resource.event.eventTypeId;
 	const color =
 		CATEGORY_COLORS[categoryId] ?? CATEGORY_COLORS[CATEGORY_OTHER_INDEX];
@@ -235,8 +260,14 @@ function AllDayItem({ item }: { item: PositionedEvent }) {
 	} as CSSProperties;
 
 	return (
-		<div className={styles.allDayItem} style={style} title={item.event.title}>
+		<button
+			type="button"
+			className={styles.allDayItem}
+			style={style}
+			title={item.event.title}
+			onClick={() => onSelectEvent(item.event)}
+		>
 			{item.event.title}
-		</div>
+		</button>
 	);
 }

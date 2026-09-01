@@ -267,6 +267,10 @@ export default function TimetablePage() {
 		setIsMobileTimetableSidebarOpen(true);
 	};
 
+	const openEventDetail = (event: CalendarEvent) => {
+		navigate(`/events/${event.resource.event.id}`);
+	};
+
 	const openSnuttPicker = () => {
 		if (!user) {
 			setIsLoginModalOpen(true);
@@ -496,6 +500,7 @@ export default function TimetablePage() {
 					periodEvents={periodWeekEvents}
 					allDayEvents={allDayWeekEvents}
 					weekDate={eventWeekDate}
+					onSelectEvent={openEventDetail}
 				/>
 			)}
 		</div>

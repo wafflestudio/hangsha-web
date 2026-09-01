@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type ChangeEvent } from "react";
+import { useEffect, useState, type ChangeEvent } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { Sidebar } from "@/components/layout/filterSideBar/FilterSidebar";
 import SearchNewListItem from "./SearchNewListItem";
@@ -11,12 +11,6 @@ import { IoIosClose, IoIosSearch } from "react-icons/io";
 import BottomNav from "@/components/layout/BottomNav";
 import Loading from "@/components/ui/Loading";
 import Pagination from "@/components/ui/Pagination";
-import DetailView from "@/components/layout/sidePannel/DetailView";
-import {
-	SidePanelResizeHandle,
-	useResizableSidePanel,
-} from "@/components/layout/sidePannel/SidePanelResize";
-import { useDetail } from "@/contexts/DetailContext";
 import { useAuth } from "@/contexts/AuthProvider";
 import { useFilter } from "@/contexts/FilterContext";
 import { useUserData } from "@/contexts/UserDataContext";
@@ -40,10 +34,6 @@ const SearchView = () => {
 	// 제외 키워드는 서버가 알아서 걸러주므로 파라미터로 보내지 않지만,
 	// 목록에 반영하려면 값이 바뀔 때 재조회가 필요해 deps로만 사용한다.
 	const { excludedKeywords } = useUserData();
-	const { showDetail, closeDetail, clickedEventId, openDetail } = useDetail();
-	const { isMobile, handleResizeStart, sidePanelStyle } =
-		useResizableSidePanel();
-	const sidePanelRef = useRef<HTMLDivElement>(null);
 
 	const query = searchParams.get("q") ?? "";
 	const page = Math.max(1, parseInt(searchParams.get("page") ?? "1", 10));
@@ -119,17 +109,6 @@ const SearchView = () => {
 			cancelled = true;
 		};
 	}, [query, globalStatus, globalOrg, globalCategory, excludedKeywords]);
-
-	useEffect(() => {
-		function handleClickOutside(e: MouseEvent) {
-			if (!sidePanelRef.current) return;
-			if (!sidePanelRef.current.contains(e.target as Node)) {
-				closeDetail();
-			}
-		}
-		document.addEventListener("mousedown", handleClickOutside);
-		return () => document.removeEventListener("mousedown", handleClickOutside);
-	}, [closeDetail]);
 
 	const handleSearch = () => {
 		const trimmed = inputValue.trim();
@@ -287,7 +266,7 @@ const SearchView = () => {
 									<SearchNewListItem
 										key={item.event.id}
 										item={item}
-										onClick={openDetail}
+									onClick={(eventId) => navigate(`/events/${eventId}`)}
 										onLoginPrompt={() => setIsLoginModalOpen(true)}
 									/>
 								))}
@@ -298,7 +277,7 @@ const SearchView = () => {
 									<SearchGridItem
 										key={item.event.id}
 										item={item}
-										onClick={openDetail}
+									onClick={(eventId) => navigate(`/events/${eventId}`)}
 										onLoginPrompt={() => setIsLoginModalOpen(true)}
 									/>
 								))}
@@ -319,19 +298,6 @@ const SearchView = () => {
 					</>
 				)}
 			</div>
-
-			{showDetail && clickedEventId !== undefined && (
-				<div
-					className={styles.sidePanel}
-					ref={sidePanelRef}
-					style={sidePanelStyle}
-				>
-					{!isMobile && (
-						<SidePanelResizeHandle onMouseDown={handleResizeStart} />
-					)}
-					<DetailView eventId={clickedEventId} />
-				</div>
-			)}
 
 			<FilterSheet />
 			<BottomNav />

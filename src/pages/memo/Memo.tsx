@@ -7,16 +7,10 @@ import { FiArrowUpRight } from "react-icons/fi";
 import Navigationbar from "@/components/layout/Navigationbar";
 import { useNavigate } from "react-router-dom";
 import MemoCard from "./MemoCard";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import Modal from "@/components/ui/Modal";
 import Loading from "@/components/ui/Loading";
 import BottomNav from "@/components/layout/BottomNav";
-import { useDetail } from "@/contexts/DetailContext";
-import DetailView from "@/components/layout/sidePannel/DetailView";
-import {
-	SidePanelResizeHandle,
-	useResizableSidePanel,
-} from "@/components/layout/sidePannel/SidePanelResize";
 
 export const MemoWidget = () => {
 	const { eventMemos } = useUserData();
@@ -54,26 +48,6 @@ const MemoPage = () => {
 	const [deletingMemoId, setDeletingMemoId] = useState<number | null>(null);
 	const { user } = useAuth();
 	const navigate = useNavigate();
-	const { showDetail, closeDetail, clickedEventId } = useDetail();
-	const { isMobile, handleResizeStart, sidePanelStyle } =
-		useResizableSidePanel();
-
-	const sidePanelRef = useRef<HTMLDivElement>(null);
-
-	useEffect(() => {
-		function handleClickOutside(event: MouseEvent) {
-			if (!sidePanelRef.current) return;
-			const isInside = sidePanelRef.current.contains(event.target as Node);
-			if (!isInside) {
-				closeDetail();
-			}
-		}
-		document.addEventListener("mousedown", handleClickOutside);
-		return () => {
-			document.removeEventListener("mousedown", handleClickOutside);
-		};
-	}, [closeDetail]);
-
 	const handleDelete = async () => {
 		if (deletingMemoId) await deleteMemo(deletingMemoId);
 		setDeletingMemoId(null);
@@ -148,18 +122,6 @@ const MemoPage = () => {
 					onRightClick={() => setDeletingMemoId(null)}
 					onClose={() => setDeletingMemoId(null)}
 				/>
-			)}
-			{showDetail && clickedEventId !== undefined && (
-				<div
-					className={styles.sidePanel}
-					ref={sidePanelRef}
-					style={sidePanelStyle}
-				>
-					{!isMobile && (
-						<SidePanelResizeHandle onMouseDown={handleResizeStart} />
-					)}
-					<DetailView eventId={clickedEventId} />
-				</div>
 			)}
 			<BottomNav />
 		</div>

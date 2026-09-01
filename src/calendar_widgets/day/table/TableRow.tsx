@@ -1,7 +1,7 @@
 import type { MouseEvent } from "react";
 import type { CalendarEvent } from "@types";
 // import { formatDateToMMDD } from "@calendarUtil/dateFormatter";
-import { useDetail } from "@contexts/DetailContext";
+import { useNavigate } from "react-router-dom";
 import { ApplyDate, StartDate } from "@/components/feature/eventDate/EventDate";
 import {
 	CategoryChip,
@@ -15,13 +15,13 @@ const TableRow = ({ data }: { data: CalendarEvent }) => {
 	const event = data.resource.event;
 	const ddayTargetDate = data.resource.event.applyEnd || null; // 지원 마감 기한
 
-	const { openDetail } = useDetail();
+	const navigate = useNavigate();
 	const { user } = useAuth();
 	const { toggleBookmark } = useUserData();
 	const isBookmarked = useBookmarkStatus(event);
 
 	const handleClick = () => {
-		openDetail(event.id);
+		navigate(`/events/${event.id}`);
 	};
 	const handleToggleBookmark = async (mouseEvent: MouseEvent) => {
 		mouseEvent.stopPropagation();
