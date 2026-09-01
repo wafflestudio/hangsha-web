@@ -1,6 +1,6 @@
 import type { CalendarEvent, Event } from "@types";
 import type { MouseEvent } from "react";
-import { useDetail } from "@contexts/DetailContext";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthProvider";
 import { useBookmarkStatus, useUserData } from "@/contexts/UserDataContext";
 import {
@@ -21,7 +21,7 @@ const formatDateRange = (start: Date | null, end: Date | null) => {
 };
 
 const MobileEventListItem = ({ event }: { event: Event }) => {
-	const { openDetail } = useDetail();
+	const navigate = useNavigate();
 	const { user } = useAuth();
 	const { toggleBookmark } = useUserData();
 	const date = formatDateRange(event.eventStart, event.eventEnd);
@@ -44,11 +44,11 @@ const MobileEventListItem = ({ event }: { event: Event }) => {
 			className={styles.variantA}
 			role="button"
 			tabIndex={0}
-			onClick={() => openDetail(event.id)}
+			onClick={() => navigate(`/events/${event.id}`)}
 			onKeyDown={(keyboardEvent) => {
 				if (keyboardEvent.key === "Enter" || keyboardEvent.key === " ") {
 					keyboardEvent.preventDefault();
-					openDetail(event.id);
+					navigate(`/events/${event.id}`);
 				}
 			}}
 		>

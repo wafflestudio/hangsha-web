@@ -1,0 +1,36 @@
+.page {
+	position: relative;
+	height: 100dvh;
+	overflow: hidden;
+	background: #ffffff;
+}
+
+.detailPanel {
+	position: absolute;
+	top: 0;
+	right: 0;
+	height: 100%;
+	overflow: hidden;
+	border-left: 1px solid #e0e0e0;
+	background-color: #ffffff;
+	box-shadow: -4px 0 24px rgba(0, 0, 0, 0.05);
+	z-index: 500;
+	animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+	from {
+		transform: translateX(100%);
+		opacity: 0;
+	}
+	to {
+		transform: translateX(0);
+		opacity: 1;
+	}
+}
+
+@media (max-width: 576px) {
+	.detailPanel {
+		width: 100%;
+	}
+}

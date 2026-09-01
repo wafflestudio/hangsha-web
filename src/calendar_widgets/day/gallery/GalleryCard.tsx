@@ -1,13 +1,13 @@
 import EventCard from "@/components/layout/sidePannel/EventCard";
 import type { Event } from "@types";
-import { useDetail } from "@/contexts/DetailContext";
+import { useNavigate } from "react-router-dom";
 import styles from "../../../components/layout/sidePannel/CardView.module.css";
 
 const GalleryCard = ({ event }: { event: Event }) => {
-	const { openDetail } = useDetail();
+	const navigate = useNavigate();
 
 	const handleClick = () => {
-		openDetail(event.id);
+		navigate(`/events/${event.id}`);
 	};
 
 	return (

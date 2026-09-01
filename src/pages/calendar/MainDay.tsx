@@ -2,10 +2,8 @@ import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import styles from "./CalendarView.module.css";
 import EventCardView from "@/components/layout/sidePannel/EventCardView";
-import DetailView from "@/components/layout/sidePannel/DetailView";
 import BottomNav from "@/components/layout/BottomNav";
 import { useEvents } from "@/contexts/EventContext";
-import { useDetail } from "@/contexts/DetailContext";
 import { FilterSheet } from "@/components/layout/filterSheet/FilterSheet";
 import { useMainPanelQuery } from "@/pages/calendar/hooks/useMainPanelQuery";
 
@@ -15,7 +13,6 @@ const MainDay = () => {
 	const navigate = useNavigate();
 	const location = useLocation();
 	const { dayDate } = useEvents();
-	const { showDetail, clickedEventId } = useDetail();
 	const { eventListDate, openEventList } = useMainPanelQuery();
 
 	useEffect(() => {
@@ -37,23 +34,16 @@ const MainDay = () => {
 	};
 
 	return (
-		<div
-			className={`${styles.container} ${styles.mainDay} ${showDetail ? styles.detailOpen : ""}`}
-		>
+		<div className={`${styles.container} ${styles.mainDay}`}>
 			<div className={styles.calendarContainer}>
 				<EventCardView
 					day={eventListDate ?? dayDate}
 					onClose={handleClose}
 					onDateChange={openEventList}
 				/>
-				{showDetail && clickedEventId !== undefined && (
-					<div className={`${styles.sidePanel} ${styles.detailPanel}`}>
-						<DetailView eventId={clickedEventId} />
-					</div>
-				)}
 			</div>
 			<FilterSheet />
-			{!showDetail && <BottomNav />}
+			<BottomNav />
 		</div>
 	);
 };

@@ -13,6 +13,7 @@ const EmailSignUp = lazy(() => import("../pages/auth/Signup/EmailSignUp"));
 const CalendarView = lazy(() => import("../pages/calendar/CalendarView"));
 const MainDay = lazy(() => import("../pages/calendar/MainDay"));
 const TimetablePage = lazy(() => import("../pages/timetable/TimetablePage"));
+const EventDetailPage = lazy(() => import("@/pages/event/EventDetailPage"));
 const SearchView = lazy(() => import("@/pages/search/Search"));
 const BookmarksPage = lazy(() => import("@/pages/bookmark/Bookmark"));
 const MemoPage = lazy(() => import("@/pages/memo/Memo"));
@@ -43,6 +44,7 @@ export default function AppRoutes() {
 
 					{/* Timetable page */}
 					<Route path="/timetable" element={<TimetablePage />} />
+					<Route path="/events/:eventId" element={<EventDetailPage />} />
 
 					{/* Search page */}
 					<Route path="/search" element={<SearchView />} />

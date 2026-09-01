@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { FaAngleLeft, FaAngleRight, FaAnglesRight } from "react-icons/fa6";
 import styles from "./EventCardView.module.css";
 import CardView from "./EventCard";
-import { useDetail } from "@/contexts/DetailContext";
 import calendarEventMapper from "@/util/calendar/calendarEventMapper";
 import { Views } from "react-big-calendar";
 import type { CalendarEvent, Event } from "@/util/types";
@@ -28,7 +27,6 @@ const EventCardView = ({
 }) => {
 	const navigate = useNavigate();
 	const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
-	const { openDetail } = useDetail();
 	const { globalCategory, globalOrg, globalStatus, setFilterSheetShowing } =
 		useFilter();
 	const { excludedKeywords, interestCategories } = useUserData();
@@ -85,7 +83,7 @@ const EventCardView = ({
 	};
 
 	const handleDetailClick = (id: number) => {
-		openDetail(id);
+		navigate(`/events/${id}`);
 	};
 
 	return (

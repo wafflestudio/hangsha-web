@@ -81,7 +81,18 @@
 	position: relative;
 	min-width: 0;
 	align-items: center;
+	border: 0;
+	padding: 0;
+	background: transparent;
 	color: var(--event-color);
+	cursor: pointer;
+	text-align: left;
+}
+
+.periodItem:focus-visible,
+.allDayItem:focus-visible {
+	outline: 2px solid #111;
+	outline-offset: 2px;
 }
 
 .periodTitle {
@@ -150,8 +161,10 @@
 	min-width: 0;
 	align-items: center;
 	overflow: hidden;
+	border: 0;
 	padding: 0 5px;
 	color: #fff;
+	cursor: pointer;
 	font-size: 11px;
 	font-weight: 600;
 	line-height: 1.2;

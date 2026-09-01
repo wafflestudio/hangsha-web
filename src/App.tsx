@@ -3,7 +3,6 @@ import { EventProvider } from "@contexts/EventContext";
 import { FilterContextProvider } from "@contexts/FilterContext";
 import { UserDataProvider } from "@contexts/UserDataContext";
 import { CalendarViewModeProvider } from "@contexts/CalendarViewModeContext";
-import { DetailContextProvider } from "./contexts/DetailContext";
 
 import AppRoutes from "./router/AppRoutes";
 import { TimetableProvider } from "./contexts/TimetableContext";
@@ -16,13 +15,11 @@ function App() {
 				<UserDataProvider>
 					<FilterContextProvider>
 						<CalendarViewModeProvider>
-							<DetailContextProvider>
-								<TimetableProvider>
-									<SidePanelResizeProvider>
-										<AppRoutes />
-									</SidePanelResizeProvider>
-								</TimetableProvider>
-							</DetailContextProvider>
+							<TimetableProvider>
+								<SidePanelResizeProvider>
+									<AppRoutes />
+								</SidePanelResizeProvider>
+							</TimetableProvider>
 						</CalendarViewModeProvider>
 					</FilterContextProvider>
 				</UserDataProvider>
