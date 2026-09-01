@@ -25,8 +25,8 @@ type PositionedEvent = {
 	start: number;
 	end: number;
 	lane: number;
-	continuesBefore: boolean;
-	continuesAfter: boolean;
+	startsInWeek: boolean;
+	endsInWeek: boolean;
 };
 
 const DAY_COUNT = 5;
@@ -80,8 +80,8 @@ function layoutEvents(
 				start: Math.max(0, dayIndex(event.start, weekStart)),
 				end: Math.min(DAY_COUNT - 1, dayIndex(displayEnd, weekStart)),
 				lane: 0,
-				continuesBefore: event.start < weekStart,
-				continuesAfter: event.end > weekEnd,
+				startsInWeek: event.start >= weekStart,
+				endsInWeek: event.end <= weekEnd,
 			};
 		})
 		.filter((event) => event.end >= 0 && event.start < DAY_COUNT)
@@ -224,6 +224,12 @@ function PeriodItem({
 		"--lane": item.lane,
 		"--event-color": color,
 	} as CSSProperties;
+	const labelAlignment =
+		item.start <= 1
+			? styles.labelLeft
+			: item.start >= DAY_COUNT - 2
+				? styles.labelRight
+				: styles.labelCenter;
 
 	return (
 		<button
@@ -233,12 +239,14 @@ function PeriodItem({
 			title={item.event.title}
 			onClick={() => onSelectEvent(item.event)}
 		>
-			<span className={styles.periodTitle}>{item.event.title}</span>
 			<span
-				className={`${styles.periodLine} ${item.continuesBefore ? styles.arrowLeft : ""} ${
-					item.continuesAfter ? styles.arrowRight : ""
+				className={`${styles.periodLine} ${item.startsInWeek ? styles.arrowLeft : ""} ${
+					item.endsInWeek ? styles.arrowRight : ""
 				}`}
 			/>
+			<span className={`${styles.periodLabel} ${labelAlignment}`}>
+				<span className={styles.periodTitle}>{item.event.title}</span>
+			</span>
 		</button>
 	);
 }
@@ -267,7 +275,7 @@ function AllDayItem({
 			title={item.event.title}
 			onClick={() => onSelectEvent(item.event)}
 		>
-			{item.event.title}
+			<span className={styles.allDayTitle}>{item.event.title}</span>
 		</button>
 	);
 }
