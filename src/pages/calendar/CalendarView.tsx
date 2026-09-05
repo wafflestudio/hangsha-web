@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { Views } from "react-big-calendar";
 import styles from "./CalendarView.module.css";
 import type { CalendarEvent, Event, Semester } from "@types";
-import DetailView from "@/components/layout/sidePannel/DetailView";
 import EventCardView from "@/components/layout/sidePannel/EventCardView";
 import { MyCalendar } from "@/calendar_widgets/MyCalendar";
 import { Sidebar } from "@/components/layout/filterSideBar/FilterSidebar";
@@ -12,7 +11,6 @@ import {
 	useResizableSidePanel,
 } from "@/components/layout/sidePannel/SidePanelResize";
 
-import { useDetail } from "@contexts/DetailContext";
 import { useEvents } from "@contexts/EventContext";
 import { useFilter } from "@contexts/FilterContext";
 import { useUserData } from "@/contexts/UserDataContext";
@@ -50,8 +48,6 @@ const CalendarView = () => {
 	} = useEvents();
 
 	const { globalCategory, globalOrg, globalStatus } = useFilter();
-	// detail 보이는 뷰 조정
-	const { showDetail, clickedEventId, openDetail } = useDetail();
 	const {
 		search: panelSearch,
 		showEventList,
@@ -141,8 +137,7 @@ const CalendarView = () => {
 		setDayDate(date);
 	};
 	const onSelectEvent = (event: CalendarEvent) => {
-		// Open the selected event detail.
-		openDetail(event.resource.event.id);
+		navigate(`/events/${event.resource.event.id}`);
 	};
 
 	const handleCloseSideMonth = () => {
@@ -160,10 +155,10 @@ const CalendarView = () => {
 	}, []);
 	useEffect(() => {
 		if (!isMobile) return;
-		if (calendarView !== Views.DAY && !showEventList && !showDetail) return;
+		if (calendarView !== Views.DAY && !showEventList) return;
 
 		let nextSearch = panelSearch;
-		if (calendarView === Views.DAY && !showEventList && !showDetail) {
+		if (calendarView === Views.DAY && !showEventList) {
 			const nextParams = new URLSearchParams(panelSearch);
 			nextParams.set("panel", "events");
 			nextParams.set("date", formatDateToYYYYMMDD(dayDate));
@@ -182,7 +177,6 @@ const CalendarView = () => {
 		isMobile,
 		calendarView,
 		showEventList,
-		showDetail,
 		panelSearch,
 		dayDate,
 		navigate,
@@ -257,18 +251,6 @@ const CalendarView = () => {
 					</div>
 				)}
 
-				{showDetail && clickedEventId !== undefined && (
-					<div
-						className={`${styles.sidePanel} ${styles.detailPanel}`}
-						ref={sidePanelRef}
-						style={sidePanelStyle}
-					>
-						{!isMobile && (
-							<SidePanelResizeHandle onMouseDown={handleResizeStart} />
-						)}
-						<DetailView eventId={clickedEventId} />
-					</div>
-				)}
 			</div>
 			<FilterSheet />
 			<BottomNav />

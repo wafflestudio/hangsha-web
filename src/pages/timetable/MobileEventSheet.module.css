@@ -1,0 +1,219 @@
+.sheet {
+	position: fixed;
+	left: 0;
+	right: 0;
+	bottom: calc(64px + env(safe-area-inset-bottom));
+	z-index: 90;
+	border-radius: 20px 20px 0 0;
+	background: rgba(245, 245, 245, 0.96);
+	box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.1);
+	transition:
+		height 220ms ease,
+		background-color 220ms ease;
+}
+
+.collapsed {
+	height: 18px;
+}
+
+.expanded {
+	height: min(52dvh, 462px);
+	background: rgba(255, 255, 255, 0.94);
+}
+
+.grabberButton {
+	display: flex;
+	width: 100%;
+	height: 24px;
+	align-items: center;
+	justify-content: center;
+	border: 0;
+	border-radius: 20px 20px 0 0;
+	padding: 0;
+	background: transparent;
+	cursor: grab;
+	touch-action: none;
+}
+
+.grabberButton:active {
+	cursor: grabbing;
+}
+
+.grabber {
+	width: 38px;
+	height: 4px;
+	border-radius: 999px;
+	background: #9b9b9b;
+}
+
+.content {
+	display: flex;
+	height: calc(100% - 24px);
+	flex-direction: column;
+	overflow-y: auto;
+	padding: 0 20px 16px;
+	opacity: 0;
+	pointer-events: none;
+	transition: opacity 140ms ease;
+	overscroll-behavior: contain;
+}
+
+.expanded .content {
+	opacity: 1;
+	pointer-events: auto;
+}
+
+.timeline {
+	display: grid;
+	grid-template-columns: repeat(5, minmax(0, 1fr));
+	grid-auto-rows: 35px;
+	position: relative;
+	min-height: calc(var(--period-lane-count, 1) * 35px + 24px);
+	flex: 0 0 auto;
+	padding: 10px 0 14px;
+	border-bottom: 1px solid #ececec;
+}
+
+.periodItem {
+	display: flex;
+	grid-column: var(--start) / span var(--span);
+	grid-row: calc(var(--lane) + 1);
+	position: relative;
+	min-width: 0;
+	align-items: center;
+	border: 0;
+	padding: 0;
+	background: transparent;
+	color: var(--event-color);
+	cursor: pointer;
+	text-align: left;
+}
+
+.periodItem:focus-visible,
+.allDayItem:focus-visible {
+	outline: 2px solid #111;
+	outline-offset: 2px;
+}
+
+
+.periodLabel {
+	position: absolute;
+	top: 0;
+	display: inline-flex;
+	align-items: center;
+	max-width: 80%;
+	overflow: hidden;
+	border-radius: 999px;
+	padding: 8px;
+	background-color: rgba(255, 255, 255, 0.94);
+	font-size: 14px;
+	font-weight: 700;
+	line-height: 1;
+	transform: translateY(3px);
+}
+
+.labelLeft {
+	left: 15px;
+}
+
+.labelCenter {
+	left: 50%;
+	transform: translate(-50%, 3px);
+}
+
+.labelRight {
+	right: 15px;
+}
+
+.periodTitle {
+	display: block;
+	max-width: 100%;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.periodLine {
+	position: absolute;
+	left: 0;
+	right: 0;
+	height: 3px;
+	border-radius: 99px;
+	background: currentColor;
+}
+
+.arrowLeft::before,
+.arrowRight::after {
+	position: absolute;
+	top: 50%;
+	width: 10px;
+	height: 10px;
+	border-top: 3px solid currentColor;
+	border-right: 3px solid currentColor;
+	content: "";
+}
+
+.arrowLeft::before {
+	left: 0;
+	transform: translate(-1px, -50%) rotate(-135deg);
+}
+
+.arrowRight::after {
+	right: 0;
+	transform: translate(1px, -50%) rotate(45deg);
+}
+
+.allDaySection {
+	flex: 0 0 auto;
+	padding-top: 10px;
+}
+
+.allDayGrid {
+	display: grid;
+	grid-template-columns: repeat(5, minmax(0, 1fr));
+	gap: 3px;
+}
+
+.allDayGrid {
+	grid-auto-rows: 30px;
+	min-height: 30px;
+}
+
+.allDayItem {
+	display: flex;
+	min-width: 0;
+	align-items: center;
+	overflow: hidden;
+	border: 0;
+	padding: 0 5px;
+	color: #fff;
+	cursor: pointer;
+	font-size: 14px;
+	font-weight: 600;
+	line-height: 1.2;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.allDayTitle {
+	display: block;
+	width: 100%;
+	min-width: 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.empty {
+	margin: auto 0;
+	color: #828282;
+	font-size: 14px;
+	text-align: center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.sheet,
+	.content {
+		transition: none;
+	}
+}

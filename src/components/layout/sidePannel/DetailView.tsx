@@ -11,7 +11,6 @@ import type { CalendarEvent, EventDetail } from "@types";
 import parse from "html-react-parser";
 import { sanitizeDetail } from "@/util/sanitizeDetail";
 import { useBookmarkStatus, useUserData } from "@/contexts/UserDataContext";
-import { useDetail } from "@/contexts/DetailContext";
 import { useAuth } from "@/contexts/AuthProvider";
 import DetailMemo from "./DetailMemo";
 import Modal, { ErrorModal } from "../../ui/Modal";
@@ -21,7 +20,13 @@ import EventDate from "../../feature/eventDate/EventDate";
 import { CategoryChip, DdayChip } from "../../feature/eventChip/EventChip";
 import BugReportModal from "@/components/feature/bugReport/BugReportModal";
 
-const DetailView = ({ eventId }: { eventId: number }) => {
+const DetailView = ({
+	eventId,
+	onClose,
+}: {
+	eventId: number;
+	onClose: () => void;
+}) => {
 	const [event, setEvent] = useState<EventDetail>();
 	const [calendarEvent, setCalendarEvent] = useState<CalendarEvent | null>(
 		event ? calendarEventMapper(event, "day") : null,
@@ -30,7 +35,6 @@ const DetailView = ({ eventId }: { eventId: number }) => {
 	const isBookmarked = useBookmarkStatus(event);
 	const { fetchEventById, detailError, isLoadingDetail, clearError } =
 		useEvents();
-	const { closeDetail } = useDetail();
 	const { user } = useAuth();
 	const navigate = useNavigate();
 
@@ -120,7 +124,7 @@ const DetailView = ({ eventId }: { eventId: number }) => {
 			{isBugReportModalOpen && (
 				<BugReportModal onClose={() => setIsBugReportModalOpen(false)} />
 			)}
-			<button type="button" className={styles.foldBtn} onClick={closeDetail}>
+			<button type="button" className={styles.foldBtn} onClick={onClose}>
 				<FaAnglesRight width={28} height={28} color="rgba(171, 171, 171, 1)" />
 			</button>
 

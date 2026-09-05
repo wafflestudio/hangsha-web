@@ -23,6 +23,7 @@ import { SlArrowLeft } from "react-icons/sl";
 import { TimeTableSidebar } from "./TimeTableSidebar";
 import TimeTableToolbar from "./TimeTableToolbar";
 import { MobileTimetableSidebar } from "./MobileTimetableSidebar";
+import { MobileEventSheet } from "./MobileEventSheet";
 import BottomNav from "@/components/layout/BottomNav";
 import { useAuth } from "@/contexts/AuthProvider";
 import { useNavigate } from "react-router-dom";
@@ -183,7 +184,7 @@ export default function TimetablePage() {
 		void fetchWeekEvents(params);
 	}, [eventWeekDate, fetchWeekEvents, globalCategory, globalOrg, globalStatus]);
 
-	const weekCalendarEvents = useMemo(() => {
+	const mappedWeekCalendarEvents = useMemo(() => {
 		const rawWeekEvents = Object.values(weekViewData?.byDate || {}).flatMap(
 			(bucket) => bucket.events,
 		);
@@ -196,8 +197,8 @@ export default function TimetablePage() {
 			.filter((event): event is CalendarEvent => event !== null)
 			.filter(
 				(calendarEvent) =>
-					calendarEvent.start >= eventWeekRange.from &&
-					calendarEvent.end <= eventWeekRange.to,
+					calendarEvent.start <= eventWeekRange.to &&
+					calendarEvent.end >= eventWeekRange.from,
 			)
 			.map((calendarEvent) => {
 				const isTwentyThreeHoursFiftyNineMinutes =
@@ -225,13 +226,36 @@ export default function TimetablePage() {
 						differentDate ||
 						isTwentyThreeHoursFiftyNineMinutes,
 				};
-			})
-			.filter(
+			});
+	}, [eventWeekRange, weekViewData]);
+
+	const weekCalendarEvents = useMemo(
+		() =>
+			mappedWeekCalendarEvents.filter(
 				(calendarEvent) =>
 					calendarEvent.resource.isPeriodEvent === false &&
 					calendarEvent.allDay === false,
-			);
-	}, [eventWeekRange, weekViewData]);
+			),
+		[mappedWeekCalendarEvents],
+	);
+
+	const periodWeekEvents = useMemo(
+		() =>
+			mappedWeekCalendarEvents.filter(
+				(calendarEvent) => calendarEvent.resource.isPeriodEvent === true,
+			),
+		[mappedWeekCalendarEvents],
+	);
+
+	const allDayWeekEvents = useMemo(
+		() =>
+			mappedWeekCalendarEvents.filter(
+				(calendarEvent) =>
+					calendarEvent.resource.isPeriodEvent === false &&
+					calendarEvent.allDay === true,
+			),
+		[mappedWeekCalendarEvents],
+	);
 
 	const openAddClassPanel = () => {
 		setIsMobileTimetableSidebarOpen(false);
@@ -241,6 +265,10 @@ export default function TimetablePage() {
 	const openMobileTimetableSidebar = () => {
 		setIsAddClassPanelOpen(false);
 		setIsMobileTimetableSidebarOpen(true);
+	};
+
+	const openEventDetail = (event: CalendarEvent) => {
+		navigate(`/events/${event.resource.event.id}`);
 	};
 
 	const openSnuttPicker = () => {
@@ -467,6 +495,14 @@ export default function TimetablePage() {
 			)}
 
 			<BottomNav />
+			{isMobile && (
+				<MobileEventSheet
+					periodEvents={periodWeekEvents}
+					allDayEvents={allDayWeekEvents}
+					weekDate={eventWeekDate}
+					onSelectEvent={openEventDetail}
+				/>
+			)}
 		</div>
 	);
 }

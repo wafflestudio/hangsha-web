@@ -1,16 +1,9 @@
-import { useEffect, useRef } from "react";
 import { useUserData } from "@/contexts/UserDataContext";
 import styles from "./Bookmarks.module.css";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
 import Navigationbar from "@/components/layout/Navigationbar";
 import { useNavigate } from "react-router-dom";
 import GalleryCard from "../../calendar_widgets/day/gallery/GalleryCard";
-import { useDetail } from "@/contexts/DetailContext";
-import DetailView from "@/components/layout/sidePannel/DetailView";
-import {
-	SidePanelResizeHandle,
-	useResizableSidePanel,
-} from "@/components/layout/sidePannel/SidePanelResize";
 
 export const BookmarkWidget = () => {
 	const { bookmarkedEvents } = useUserData();
@@ -47,26 +40,6 @@ const BookmarksPage = () => {
 	const { bookmarkedEvents } = useUserData();
 	const navigate = useNavigate();
 
-	const { showDetail, closeDetail, clickedEventId } = useDetail();
-	const { isMobile, handleResizeStart, sidePanelStyle } =
-		useResizableSidePanel();
-
-	const sidePanelRef = useRef<HTMLDivElement>(null);
-
-	useEffect(() => {
-		function handleClickOutside(event: MouseEvent) {
-			if (!sidePanelRef.current) return;
-			const isInside = sidePanelRef.current.contains(event.target as Node);
-			if (!isInside) {
-				closeDetail();
-			}
-		}
-		document.addEventListener("mousedown", handleClickOutside);
-		return () => {
-			document.removeEventListener("mousedown", handleClickOutside);
-		};
-	}, [closeDetail]);
-
 	return (
 		<div className={styles.container}>
 			<div className={styles.bookmarksPage}>
@@ -96,18 +69,6 @@ const BookmarksPage = () => {
 					>{`아직 찜된 행사가 없습니다.\n관심있는 행사를 찜해보세요!`}</span>
 				)}
 			</div>
-			{showDetail && clickedEventId !== undefined && (
-				<div
-					className={styles.sidePanel}
-					ref={sidePanelRef}
-					style={sidePanelStyle}
-				>
-					{!isMobile && (
-						<SidePanelResizeHandle onMouseDown={handleResizeStart} />
-					)}
-					<DetailView eventId={clickedEventId} />
-				</div>
-			)}
 		</div>
 	);
 };
