@@ -8,7 +8,9 @@ const Home = lazy(() => import("../pages/auth/Home"));
 const LoginHandler = lazy(
 	() => import("../pages/auth/Signup/SocialLoginHandler"),
 );
-const SignupSource = lazy(() => import("../pages/auth/OnBoarding/SignUpSource"));
+const SignupSource = lazy(
+	() => import("../pages/auth/OnBoarding/SignUpSource"),
+);
 const EmailSignUp = lazy(() => import("../pages/auth/Signup/EmailSignUp"));
 const CalendarView = lazy(() => import("../pages/calendar/CalendarView"));
 const MainDay = lazy(() => import("../pages/calendar/MainDay"));
@@ -16,9 +18,9 @@ const TimetablePage = lazy(() => import("../pages/timetable/TimetablePage"));
 const EventDetailPage = lazy(() => import("@/pages/event/EventDetailPage"));
 const SearchView = lazy(() => import("@/pages/search/Search"));
 const BookmarksPage = lazy(() => import("@/pages/bookmark/Bookmark"));
-const MemoPage = lazy(() => import("@/pages/memo/Memo"));
 const MyPage = lazy(() => import("@/pages/mypage/MyPage"));
 const AdminEventsPage = lazy(() => import("@/pages/admin/AdminEvents"));
+const MyReviews = lazy(() => import("@/pages/review/MyReviews"));
 
 export default function AppRoutes() {
 	return (
@@ -28,11 +30,11 @@ export default function AppRoutes() {
 				<Routes>
 					<Route path="/" element={<Home />} />
 					<Route path="/auth/login" element={<Home />} />
-          <Route path="/auth/signup" element={<EmailSignUp />} />
-          <Route
-            path="/auth/onbording/sign-up-source"
-            element={<SignupSource />}
-          />
+					<Route path="/auth/signup" element={<EmailSignUp />} />
+					<Route
+						path="/auth/onbording/sign-up-source"
+						element={<SignupSource />}
+					/>
 					{/* <Route path="/auth/complete" element={<CompleteSignUp />} /> */}
 
 					{/* OAuth Redirect */}
@@ -49,10 +51,12 @@ export default function AppRoutes() {
 					{/* Search page */}
 					<Route path="/search" element={<SearchView />} />
 
-					{/* Mypage & bookmark & memo */}
+					{/* Mypage & bookmark & 내 후기 */}
 					<Route path="/my" element={<MyPage />} />
 					<Route path="/bookmark" element={<BookmarksPage />} />
-					<Route path="/memo" element={<MemoPage />} />
+					<Route path="/review" element={<MyReviews />} />
+					{/* 기존 메모 경로는 후기 모음으로 흘려보낸다 */}
+					<Route path="/memo" element={<Navigate to="/review" replace />} />
 
 					{/* Admin page */}
 					<Route

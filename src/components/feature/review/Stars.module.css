@@ -1,0 +1,29 @@
+.row {
+	display: inline-flex;
+	align-items: center;
+	gap: 2px;
+	margin: 0;
+	padding: 0;
+	border: none;
+	min-inline-size: 0;
+	line-height: 1;
+}
+
+.starBtn {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	padding: 2px;
+	border: none;
+	background: none;
+	cursor: pointer;
+	transition: transform 0.12s ease;
+}
+
+.starBtn:hover {
+	transform: scale(1.15);
+}
+
+.starBtn:active {
+	transform: scale(0.95);
+}

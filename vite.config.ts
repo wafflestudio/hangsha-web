@@ -4,10 +4,12 @@ import tsconfigPaths from "vite-tsconfig-paths";
 
 // https://vite.dev/config/
 export default defineConfig(({ mode }) => {
+	// 로컬 백엔드로 붙이려면 VITE_PROXY_TARGET=http://localhost:8082
 	const apiTarget =
-		mode === "production"
+		process.env.VITE_PROXY_TARGET ??
+		(mode === "production"
 			? "https://hangsha-api.wafflestudio.com"
-			: "https://hangsha-api-dev.wafflestudio.com";
+			: "https://hangsha-api-dev.wafflestudio.com");
 
 	console.log("mode", mode);
 

@@ -13,10 +13,10 @@ export const DETAIL_VIEW_TOUR_STEPS: TourStep[] = [
 		blockTargetInteraction: true,
 	},
 	{
-		targetIds: ["detail-tour-memo"],
-		title: "행사 메모",
+		targetIds: ["detail-tour-review"],
+		title: "행사 후기",
 		description:
-			"관심 있는 행사에 메모와 태그를 남겨보세요. 참여 후기는 물론, 참가 계획도 기록할 수 있습니다.",
+			"다녀온 행사에 별점과 후기를 남겨보세요. 다음 참가자에게 큰 도움이 됩니다.",
 		placement: "left",
 		waitForTarget: true,
 		blockTargetInteraction: true,
@@ -27,6 +27,6 @@ export const DETAIL_VIEW_GUIDE: GuideDefinitions = {
 	id: DETAIL_VIEW_TUTORIAL_ID,
 	page: "/main",
 	requiresAuth: false,
-	requiredTargetIds: ["detail-tour-bookmark", "detail-tour-memo"],
+	requiredTargetIds: ["detail-tour-bookmark", "detail-tour-review"],
 	steps: DETAIL_VIEW_TOUR_STEPS,
 };
