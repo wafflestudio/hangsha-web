@@ -1,0 +1,222 @@
+.section {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+
+.toggle {
+	align-self: flex-start;
+	padding: 0;
+	border: none;
+	background: none;
+	cursor: pointer;
+	font-family: inherit;
+	font-size: 12px;
+	font-weight: 600;
+	color: #7c7c7c;
+}
+
+.toggle:hover {
+	color: #f59300;
+}
+
+.thread {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+	padding-top: 10px;
+	border-top: 1px dashed #f0f0f0;
+}
+
+.list {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+}
+
+/* ----- 댓글 한 줄 ----- */
+
+.row {
+	display: flex;
+	gap: 8px;
+}
+
+.avatar {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	flex-shrink: 0;
+	width: 24px;
+	height: 24px;
+	border-radius: 50%;
+	font-size: 10px;
+	font-weight: 700;
+}
+
+.body {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+	min-width: 0;
+	flex: 1;
+}
+
+.meta {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+}
+
+.author {
+	font-size: 12px;
+	font-weight: 600;
+	color: #222222;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.badge {
+	flex-shrink: 0;
+	padding: 2px 6px;
+	border-radius: 4px;
+	background: #fff5e6;
+	font-size: 10px;
+	font-weight: 600;
+	color: #e08c1a;
+}
+
+.time {
+	font-size: 11px;
+	color: #a8a8a8;
+}
+
+.deleteBtn {
+	display: inline-flex;
+	margin-left: auto;
+	padding: 2px;
+	border: none;
+	background: none;
+	cursor: pointer;
+	color: #d0d0d0;
+}
+
+.deleteBtn:hover {
+	color: #e2517a;
+}
+
+.content {
+	margin: 0;
+	font-size: 12.5px;
+	line-height: 1.6;
+	color: #333333;
+	white-space: pre-wrap;
+	word-break: break-word;
+}
+
+.likeBtn {
+	display: inline-flex;
+	align-items: center;
+	align-self: flex-start;
+	gap: 4px;
+	padding: 0;
+	border: none;
+	background: none;
+	cursor: pointer;
+	font-family: inherit;
+	font-size: 11px;
+	font-weight: 500;
+	color: #9a9a9a;
+}
+
+.likeBtn:hover,
+.liked {
+	color: #e2517a;
+}
+
+.empty {
+	margin: 0;
+	padding: 4px 0;
+	font-size: 12px;
+	color: #b4b4b4;
+}
+
+/* ----- 입력 폼 ----- */
+
+.form {
+	box-sizing: border-box;
+	display: flex;
+	flex-direction: column;
+	gap: 7px;
+}
+
+.input {
+	box-sizing: border-box;
+	width: 100%;
+	min-height: 44px;
+	padding: 9px 11px;
+	border: 1px solid #ececec;
+	border-radius: 9px;
+	background: #fafafa;
+	resize: vertical;
+	font-family: inherit;
+	font-size: 12.5px;
+	line-height: 1.55;
+	color: #222222;
+}
+
+.input::placeholder {
+	color: #b4b4b4;
+}
+
+.input:focus {
+	outline: none;
+	border-color: #ffcc80;
+	background: #ffffff;
+}
+
+.formActions {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+}
+
+.anonToggle {
+	display: inline-flex;
+	align-items: center;
+	gap: 5px;
+	margin-right: auto;
+	cursor: pointer;
+	font-size: 11.5px;
+	font-weight: 500;
+	color: #7c7c7c;
+	user-select: none;
+}
+
+.anonToggle input {
+	width: 13px;
+	height: 13px;
+	accent-color: #ffa726;
+	cursor: pointer;
+}
+
+.submitBtn {
+	padding: 6px 13px;
+	border: none;
+	border-radius: 7px;
+	background: #ffa726;
+	cursor: pointer;
+	font-family: inherit;
+	font-size: 11.5px;
+	font-weight: 600;
+	color: #ffffff;
+}
+
+.submitBtn:hover:not(:disabled) {
+	background: #f59300;
+}
+
+.submitBtn:disabled {
+	background: #e2e2e2;
+	cursor: default;
+}

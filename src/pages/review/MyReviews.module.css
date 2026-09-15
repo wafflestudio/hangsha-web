@@ -1,0 +1,331 @@
+.main {
+	display: flex;
+	flex-direction: row;
+	width: 100vw;
+	height: 100vh;
+	overflow: hidden;
+	background-color: #ffffff;
+}
+
+.notFound {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 100%;
+}
+
+.page {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	width: 100%;
+	height: 100vh;
+	overflow: hidden;
+	background-color: #ffffff;
+}
+
+/* ----- header ----- */
+
+.header {
+	position: relative;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 80%;
+	padding: 24px 0 16px;
+}
+
+.backBtn {
+	position: absolute;
+	left: 0;
+	display: inline-flex;
+	align-items: center;
+	padding: 4px;
+	border: none;
+	background: none;
+	cursor: pointer;
+	color: #ababab;
+}
+
+.backBtn:hover {
+	color: #555555;
+}
+
+.headerCenter {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
+
+.headerTitle {
+	font-size: 20px;
+	font-weight: 700;
+	line-height: 1.2;
+	color: #111111;
+}
+
+.headerCenter img {
+	width: 20px;
+	height: 20px;
+}
+
+/* ----- 요약 스트립 ----- */
+
+.summary {
+	box-sizing: border-box;
+	display: flex;
+	align-items: center;
+	gap: 22px;
+	width: 80%;
+	padding: 14px 18px;
+	border: 1px solid #f0f0f0;
+	border-radius: 12px;
+	background: #fffdf8;
+}
+
+.summaryItem {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
+
+.summaryLabel {
+	font-size: 12px;
+	font-weight: 500;
+	color: #9a9a9a;
+}
+
+.summaryValue {
+	font-size: 15px;
+	font-weight: 700;
+	color: #ffa726;
+}
+
+.summaryRating {
+	display: inline-flex;
+	align-items: center;
+	gap: 7px;
+}
+
+.summaryDivider {
+	width: 1px;
+	height: 16px;
+	background: #ececec;
+}
+
+/* ----- 목록 ----- */
+
+.listWrapper {
+	display: flex;
+	flex-direction: column;
+	width: 80%;
+	padding: 18px 0 90px;
+	overflow-y: auto;
+	-ms-overflow-style: none;
+	scrollbar-width: none;
+}
+
+.listWrapper::-webkit-scrollbar {
+	display: none;
+}
+
+.list {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.card {
+	box-sizing: border-box;
+	display: flex;
+	flex-direction: column;
+	gap: 9px;
+	padding: 16px;
+	border: 1px solid #f0f0f0;
+	border-radius: 12px;
+	background: #ffffff;
+}
+
+.cardHead {
+	display: flex;
+	align-items: flex-start;
+	gap: 10px;
+}
+
+.eventTitle {
+	flex: 1;
+	min-width: 0;
+	padding: 0;
+	border: none;
+	background: none;
+	cursor: pointer;
+	text-align: left;
+	font-family: inherit;
+	font-size: 14px;
+	font-weight: 700;
+	line-height: 1.4;
+	color: #111111;
+}
+
+.eventTitle:hover {
+	color: #f59300;
+	text-decoration: underline;
+}
+
+.deleteBtn {
+	display: inline-flex;
+	flex-shrink: 0;
+	padding: 4px;
+	border: none;
+	background: none;
+	cursor: pointer;
+	color: #cccccc;
+}
+
+.deleteBtn:hover {
+	color: #e2517a;
+}
+
+.ratingRow {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
+
+.ratingValue {
+	font-size: 13px;
+	font-weight: 700;
+	color: #ffa726;
+}
+
+.vis {
+	padding: 2px 7px;
+	border-radius: 5px;
+	font-size: 10.5px;
+	font-weight: 600;
+}
+
+.anon {
+	background: #f0f0f0;
+	color: #8b8b8b;
+}
+
+.pub {
+	background: #fff5e6;
+	color: #e08c1a;
+}
+
+.time {
+	margin-left: auto;
+	font-size: 11px;
+	color: #a8a8a8;
+}
+
+.content {
+	margin: 0;
+	font-size: 13px;
+	line-height: 1.6;
+	color: #333333;
+	white-space: pre-wrap;
+	word-break: break-word;
+}
+
+.likeBtn {
+	display: inline-flex;
+	align-items: center;
+	gap: 5px;
+	align-self: flex-start;
+	padding: 0;
+	border: none;
+	background: none;
+	cursor: pointer;
+	font-family: inherit;
+	font-size: 12px;
+	font-weight: 500;
+	color: #9a9a9a;
+}
+
+.likeBtn:hover {
+	color: #e2517a;
+}
+
+.liked {
+	color: #e2517a;
+}
+
+.noneText {
+	align-self: center;
+	padding-top: 60px;
+	text-align: center;
+	font-size: 14px;
+	line-height: 1.7;
+	color: #888888;
+	white-space: pre-line;
+}
+
+/* ----- 상세 사이드 패널 ----- */
+
+.sidePanel {
+	position: absolute;
+	right: 0;
+	top: 0;
+	max-width: 50%;
+	height: 100vh;
+	border-left: 1px solid #e0e0e0;
+	background-color: #ffffff;
+	box-shadow: -4px 0 24px rgba(0, 0, 0, 0.05);
+	z-index: 120;
+	overflow-y: auto;
+	flex-shrink: 0;
+	animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+	from {
+		transform: translateX(100%);
+		opacity: 0;
+	}
+	to {
+		transform: translateX(0);
+		opacity: 1;
+	}
+}
+
+@media (max-width: 1024px) {
+	.sidePanel {
+		width: 340px;
+	}
+}
+
+@media (max-width: 576px) {
+	.header,
+	.summary,
+	.listWrapper {
+		width: 92%;
+	}
+
+	.header {
+		padding: 18px 0 14px;
+	}
+
+	.headerTitle {
+		font-size: 17px;
+	}
+
+	.summary {
+		gap: 14px;
+		padding: 12px 14px;
+	}
+
+	.card {
+		padding: 14px;
+	}
+
+	.sidePanel {
+		width: 100%;
+		max-width: 100%;
+	}
+}

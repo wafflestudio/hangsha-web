@@ -12,7 +12,7 @@ import parse from "html-react-parser";
 import { sanitizeDetail } from "@/util/sanitizeDetail";
 import { useBookmarkStatus, useUserData } from "@/contexts/UserDataContext";
 import { useAuth } from "@/contexts/AuthProvider";
-import DetailMemo from "./DetailMemo";
+import EventReviews from "@/components/feature/review/EventReviews";
 import Modal, { ErrorModal } from "../../ui/Modal";
 import Loading from "../../ui/Loading";
 import calendarEventMapper from "@/util/calendar/calendarEventMapper";
@@ -41,30 +41,8 @@ const DetailView = ({
 	// for scrolling to top on re-render
 	const scrollRef = useRef<HTMLDivElement>(null);
 
-	const [isMemoExpanded, setIsMemoExpanded] = useState<boolean>(false);
 	const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 	const [isBugReportModalOpen, setIsBugReportModalOpen] = useState(false);
-	const memoWrapperRef = useRef<HTMLDivElement>(null);
-
-	// detect outside clicks - expand memo
-	useEffect(() => {
-		function handleClickOutside(event: MouseEvent) {
-			if (!memoWrapperRef.current) return;
-
-			const isInside = memoWrapperRef.current.contains(event.target as Node);
-
-			if (isInside) {
-				setIsMemoExpanded(true);
-			} else {
-				setIsMemoExpanded(false);
-			}
-		}
-
-		document.addEventListener("mousedown", handleClickOutside);
-		return () => {
-			document.removeEventListener("mousedown", handleClickOutside);
-		};
-	}, []);
 
 	// load events
 	useEffect(() => {
@@ -173,20 +151,16 @@ const DetailView = ({
 				{parse(sanitizeDetail(event.detail))}
 			</div>
 
-			{/* ----- Memo & Tag Section ----- */}
-			{/* biome-ignore lint/a11y/noStaticElementInteractions: memo wrapper handles pointer events to prevent the parent panel's outside-click handler from closing it */}
+			{/* ----- Review Section ----- */}
+			{/* biome-ignore lint/a11y/noStaticElementInteractions: review wrapper stops pointer events so the parent panel's outside-click handler doesn't close it */}
 			<div
-				ref={memoWrapperRef}
-				data-tour-id="detail-tour-memo"
-				onMouseDown={(event) => {
-					event.stopPropagation();
-					setIsMemoExpanded(true);
-				}}
+				data-tour-id="detail-tour-review"
+				onMouseDown={(e) => e.stopPropagation()}
 			>
-				<DetailMemo
+				<EventReviews
 					eventId={eventId}
-					isMemoExpanded={isMemoExpanded}
-					setIsMemoExpanded={setIsMemoExpanded}
+					eventTitle={event.title}
+					onRequireLogin={() => setIsLoginModalOpen(true)}
 				/>
 			</div>
 			<button

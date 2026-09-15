@@ -30,7 +30,7 @@ const NAV_ITEMS: NavItem[] = [
 		label: "행사 후기",
 		icon: "/assets/bottom_reviews.svg",
 		activeIcon: "/assets/bottom_reviews_active.svg",
-		path: "/memo",
+		path: "/review",
 	},
 	{
 		key: "profile",
