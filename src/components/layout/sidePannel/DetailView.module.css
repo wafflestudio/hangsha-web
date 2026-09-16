@@ -154,3 +154,35 @@
 .eventInfoErrorButton:hover {
 	color: #444444;
 }
+
+/* ----- 후기 → 게시판으로 건너가는 버튼 ----- */
+
+.talkAboutEventButton {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 8px;
+	width: calc(100% - 24px);
+	margin: 18px 12px 0;
+	padding: 14px 0;
+	border: 1px solid #e6e6e6;
+	border-radius: 12px;
+	background: #ffffff;
+	cursor: pointer;
+	font-family: inherit;
+	font-size: 15px;
+	font-weight: 700;
+	color: #333333;
+}
+
+.talkAboutEventButton:hover {
+	border-color: #222222;
+	background: #fafafa;
+	color: #111111;
+}
+
+@media (max-width: 576px) {
+	.talkAboutEventButton {
+		font-size: 14px;
+	}
+}

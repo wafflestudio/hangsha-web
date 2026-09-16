@@ -69,6 +69,13 @@ async function shoot(page, kind, name) {
 	await page.screenshot({ path: join(OUT, kind, `${name}.png`) });
 	console.log(`  ✓ ${kind}/${name}.png`);
 }
+async function safeClick(locator) {
+	await locator.scrollIntoViewIfNeeded().catch(() => {});
+	await locator
+		.evaluate((el) => el.scrollIntoView({ block: "center", behavior: "instant" }))
+		.catch(() => {});
+	await locator.click({ force: true });
+}
 async function crop(locator, kind, name) {
 	await locator.screenshot({ path: join(OUT, kind, `${name}.png`) });
 	console.log(`  ✓ ${kind}/${name}.png`);
@@ -102,7 +109,7 @@ async function run(browser, kind) {
 		await page.goto(`${BASE}/review`, { waitUntil: "networkidle" });
 		await settle(page, 2000);
 		await shoot(page, kind, "01-toggle-review");
-		await page.getByRole("tab", { name: "게시판" }).click();
+		await safeClick(page.getByRole("tab", { name: "게시판" }));
 		await settle(page, 900);
 		await shoot(page, kind, "02-toggle-board");
 		await page.goto(`${BASE}/board`, { waitUntil: "networkidle" });
@@ -133,12 +140,12 @@ async function run(browser, kind) {
 	);
 	await settle(page, 400);
 	await shoot(page, kind, "07-comment-typing");
-	await page.getByRole("button", { name: "등록", exact: true }).first().click();
+	await safeClick(page.getByRole("button", { name: "등록", exact: true }).first());
 	await settle(page, 900);
 	await crop(article, kind, "08-comment-added");
 
 	// --- 대댓글 (게시판은 1단 대댓글 유지) ---
-	await page.getByRole("button", { name: "답글", exact: true }).first().click();
+	await safeClick(page.getByRole("button", { name: "답글", exact: true }).first());
 	await settle(page, 600);
 	await crop(article, kind, "09-reply-form");
 
@@ -156,7 +163,7 @@ async function run(browser, kind) {
 			"창업 아이템 얘기 들어보고 싶어서 가려는데 혼자 가기 좀 그래서요. 관심 있으면 댓글 주세요!",
 		);
 	await page.getByPlaceholder("#태그 (쉼표로 구분)").fill("팀빌딩, 창업");
-	await page.getByText("익명으로 작성").click();
+	await safeClick(page.getByText("익명으로 작성"));
 	await settle(page, 400);
 	await shoot(page, kind, "11-post-write-filled");
 

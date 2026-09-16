@@ -399,3 +399,45 @@
 		margin-left: 16px;
 	}
 }
+
+/* ----- 글이 걸린 행사 (누르면 행사 상세로) ----- */
+
+.eventBtn {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	align-self: flex-start;
+	max-width: 100%;
+	margin: 0 0 14px;
+	padding: 9px 14px 9px 18px;
+	border: 1px solid #e6e6e6;
+	border-radius: 999px;
+	background: #f7f7f7;
+	cursor: pointer;
+	font-family: inherit;
+	color: #333333;
+}
+
+.eventBtn:hover {
+	border-color: #222222;
+	background: #ffffff;
+	color: #111111;
+}
+
+.eventBtnText {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	font-size: 14px;
+	font-weight: 600;
+}
+
+@media (max-width: 576px) {
+	.eventBtn {
+		font-size: 13px;
+	}
+
+	.eventBtnText {
+		font-size: 13px;
+	}
+}

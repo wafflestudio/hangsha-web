@@ -167,23 +167,20 @@ const PostDetail = () => {
 						>
 							게시판
 						</button>
-						{post.eventTitle && (
-							<>
-								<FaChevronRight size={10} className={styles.crumbSep} />
-								<button
-									type="button"
-									className={styles.crumb}
-									onClick={() =>
-										navigate(`/main?panel=detail&eventId=${post.eventId}`)
-									}
-								>
-									{post.eventTitle}
-								</button>
-							</>
-						)}
 					</nav>
 
 					<h1 className={styles.postTitle}>{post.title}</h1>
+
+					{post.eventTitle && (
+						<button
+							type="button"
+							className={styles.eventBtn}
+							onClick={() => navigate(`/events/${post.eventId}`)}
+						>
+							<span className={styles.eventBtnText}>{post.eventTitle}</span>
+							<FaChevronRight size={11} />
+						</button>
+					)}
 					<div className={styles.postMeta}>
 						<span className={styles.postAuthor}>{post.author}</span>
 						<span className={styles.dot}>·</span>

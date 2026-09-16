@@ -13,10 +13,12 @@ import BottomNav from "@/components/layout/BottomNav";
 import { useBoard } from "@/contexts/BoardContext";
 import {
 	formatRelative,
+	MOCK_EVENT_TITLES,
 	MOCK_HOT_EVENTS,
 	MOCK_UPCOMING,
 	type Post,
 } from "@/components/feature/board/boardMock";
+import EventSelect from "@/components/feature/board/EventSelect";
 import styles from "./BoardHome.module.css";
 
 const PostRow = ({
@@ -77,17 +79,29 @@ export const BoardFeed = ({ hideRail = false }: { hideRail?: boolean }) => {
 	const navigate = useNavigate();
 	const { posts } = useBoard();
 	const [query, setQuery] = useState("");
+	// 검색어와 별개로 "이 행사 글만" 좁혀 보는 필터 (피드백: 행사별 검색)
+	const [eventFilter, setEventFilter] = useState<number | null>(null);
 
 	const keyword = query.trim();
+	const byEvent = eventFilter
+		? posts.filter((p) => p.eventId === eventFilter)
+		: posts;
 	const filtered = keyword
-		? posts.filter(
+		? byEvent.filter(
 				(p) =>
 					p.title.includes(keyword) ||
 					p.content.includes(keyword) ||
 					p.tags.some((t) => t.includes(keyword)) ||
 					(p.eventTitle?.includes(keyword) ?? false),
 			)
-		: posts;
+		: byEvent;
+
+	const eventName = eventFilter ? MOCK_EVENT_TITLES[eventFilter] : null;
+	const listTitle = keyword
+		? `'${keyword}' 검색 결과`
+		: eventName
+			? `'${eventName}' 글`
+			: "인기 글";
 
 	return (
 		<div className={`${styles.layout} ${hideRail ? styles.noRail : ""}`}>
@@ -102,10 +116,20 @@ export const BoardFeed = ({ hideRail = false }: { hideRail?: boolean }) => {
 					/>
 				</div>
 
+				<div className={styles.filterRow}>
+					<span className={styles.filterLabel}>행사</span>
+					<div className={styles.filterSelect}>
+						<EventSelect
+							value={eventFilter}
+							onChange={setEventFilter}
+							placeholder="행사로 좁혀보기"
+							emptyLabel="전체 행사"
+						/>
+					</div>
+				</div>
+
 				<div className={styles.listHeader}>
-					<h2 className={styles.listTitle}>
-						{keyword ? `'${keyword}' 검색 결과` : "인기 글"}
-					</h2>
+					<h2 className={styles.listTitle}>{listTitle}</h2>
 					<button
 						type="button"
 						className={styles.writeBtn}

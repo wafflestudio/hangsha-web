@@ -4,6 +4,7 @@ import Navigationbar from "@/components/layout/Navigationbar";
 import BottomNav from "@/components/layout/BottomNav";
 import { useBoard } from "@/contexts/BoardContext";
 import { MOCK_EVENT_TITLES } from "@/components/feature/board/boardMock";
+import EventSelect from "@/components/feature/board/EventSelect";
 import styles from "./PostWrite.module.css";
 
 const MIN_CONTENT = 10;
@@ -13,9 +14,12 @@ const PostWrite = () => {
 	const [searchParams] = useSearchParams();
 	const { addPost } = useBoard();
 
-	// ?eventId=768 이면 그 행사 게시판에 고정, 없으면 주제 채널을 고른다
+	// ?eventId=768 이면 그 행사를 미리 고른 상태로 연다. 행사 상세의
+	// "이 행사에 대해서 얘기하기"가 이 경로로 들어온다. 열고 나서 바꿀 수 있다.
 	const eventIdParam = searchParams.get("eventId");
-	const eventId = eventIdParam ? Number(eventIdParam) : null;
+	const [eventId, setEventId] = useState<number | null>(
+		eventIdParam ? Number(eventIdParam) : null,
+	);
 	const eventTitle = eventId ? (MOCK_EVENT_TITLES[eventId] ?? null) : null;
 
 	const [title, setTitle] = useState("");
@@ -47,12 +51,11 @@ const PostWrite = () => {
 				<div className={styles.form}>
 					<h1 className={styles.heading}>글쓰기</h1>
 
-					{eventTitle && (
-						<>
-							<span className={styles.label}>행사 게시판</span>
-							<span className={styles.eventChip}>{eventTitle}</span>
-						</>
-					)}
+					<span className={styles.label}>행사 선택</span>
+					<EventSelect value={eventId} onChange={setEventId} />
+					<span className={styles.hint}>
+						행사를 고르면 그 행사 게시판에 올라갑니다. 고르지 않아도 됩니다.
+					</span>
 
 					<span className={styles.label}>제목</span>
 					<input

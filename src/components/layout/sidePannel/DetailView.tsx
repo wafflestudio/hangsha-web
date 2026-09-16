@@ -5,6 +5,7 @@ import styles from "./DetailView.module.css";
 import {
 	FaAnglesRight,
 	FaLocationDot,
+	FaRegComments,
 	FaTriangleExclamation,
 } from "react-icons/fa6";
 import type { CalendarEvent, EventDetail } from "@types";
@@ -163,6 +164,16 @@ const DetailView = ({
 					onRequireLogin={() => setIsLoginModalOpen(true)}
 				/>
 			</div>
+			{/* 후기 아래, 게시판으로 건너가는 자리. 누르면 이 행사가 이미 선택된
+			    글쓰기 화면이 열린다. */}
+			<button
+				type="button"
+				className={styles.talkAboutEventButton}
+				onClick={() => navigate(`/board/write?eventId=${eventId}`)}
+			>
+				<FaRegComments size={17} />이 행사에 대해서 얘기하기
+			</button>
+
 			<button
 				type="button"
 				className={styles.eventInfoErrorButton}

@@ -447,3 +447,31 @@
 		font-size: 16px;
 	}
 }
+
+/* ----- 행사별 필터 (검색창 아래) ----- */
+
+.filterRow {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	margin-top: 12px;
+}
+
+.filterLabel {
+	flex-shrink: 0;
+	font-size: 13px;
+	font-weight: 700;
+	color: #666666;
+}
+
+.filterSelect {
+	flex: 1;
+	min-width: 0;
+	max-width: 420px;
+}
+
+@media (max-width: 576px) {
+	.filterSelect {
+		max-width: none;
+	}
+}
