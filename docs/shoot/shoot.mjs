@@ -80,6 +80,13 @@ async function shoot(page, kind, name) {
 	await page.screenshot({ path: join(OUT, kind, `${name}.png`) });
 	console.log(`  ✓ ${kind}/${name}.png`);
 }
+async function safeClick(locator) {
+	await locator.scrollIntoViewIfNeeded().catch(() => {});
+	await locator.evaluate((el) =>
+		el.scrollIntoView({ block: "center", behavior: "instant" }),
+	).catch(() => {});
+	await locator.click({ force: true });
+}
 async function crop(locator, kind, name) {
 	await locator.screenshot({ path: join(OUT, kind, `${name}.png`) });
 	console.log(`  ✓ ${kind}/${name}.png`);
@@ -92,7 +99,7 @@ async function run(browser, kind) {
 	const section = page.getByTestId("event-reviews");
 
 	// --- 1. 상세 패널: 후기 섹션 ---
-	await page.goto(`${BASE}/main?panel=detail&eventId=809`, {
+	await page.goto(`${BASE}/events/809`, {
 		waitUntil: "networkidle",
 	});
 	await settle(page, 2500);
@@ -102,12 +109,12 @@ async function run(browser, kind) {
 	await crop(section, kind, "02-review-section");
 
 	// --- 2. 후기 작성 폼 (익명 체크박스) ---
-	await page.getByRole("button", { name: "후기 달기" }).click();
+	await safeClick(page.getByRole("button", { name: "후기 달기" }));
 	await settle(page, 700);
 	await section.scrollIntoViewIfNeeded();
 	await crop(section, kind, "03-composer-open");
 
-	await page.getByRole("button", { name: "4점" }).click();
+	await safeClick(page.getByRole("button", { name: "4점" }));
 	await page
 		.locator("textarea")
 		.first()
@@ -117,54 +124,52 @@ async function run(browser, kind) {
 	await settle(page, 300);
 	await crop(section, kind, "04-composer-filled");
 
-	await page.getByText("익명으로 남기기").click();
+	await safeClick(page.getByText("익명으로 남기기"));
 	await settle(page, 300);
 	await crop(section, kind, "05-composer-anonymous");
 
-	await page.getByRole("button", { name: "후기 등록" }).click();
+	await safeClick(page.getByRole("button", { name: "후기 등록" }));
 	await settle(page, 900);
 	await section.scrollIntoViewIfNeeded();
 	await crop(section, kind, "06-submitted-anonymous");
 
-	// --- 3. 댓글 스레드 펼치기 (익명 번호 · 작성자 배지 · 대댓글) ---
-	const threadToggles = page.getByRole("button", { name: /^답글 \d+$/ });
-	await threadToggles.nth(1).click();
+	// --- 3. 댓글 펼치기 (입력창이 목록 위 · 익명 번호 · 작성자 배지) ---
+	await page
+		.getByRole("button", { name: /^댓글 \d+$/ })
+		.nth(1)
+		.click();
 	await settle(page, 700);
 	await section.scrollIntoViewIfNeeded();
 	await crop(section, kind, "07-comments-open");
 
-	// --- 4. 대댓글 달기 (깊이 1단에서 끝) ---
-	await page.getByRole("button", { name: "답글", exact: true }).first().click();
-	await settle(page, 600);
-	await crop(section, kind, "08-reply-form");
-
-	await page
-		.locator("textarea")
-		.nth(1)
-		.fill("저도 같은 게 궁금했어요. 답변 감사합니다!");
-	await page.locator('input[type="checkbox"]').first().check();
+	// --- 4. 댓글 달기 (익명 체크) — 대댓글은 없다 ---
+	const commentBox = page.getByPlaceholder("이 후기에 댓글 남기기").first();
+	await commentBox.fill("저도 같은 게 궁금했어요. 답변 감사합니다!");
+	const form = commentBox.locator("xpath=..");
+	await form.locator('input[type="checkbox"]').check();
 	await settle(page, 300);
-	await crop(section, kind, "09-reply-anonymous");
+	await crop(section, kind, "08-comment-anonymous");
 
-	await page.getByRole("button", { name: "답글 등록" }).click();
+	await form.getByRole("button", { name: "등록" }).click();
 	await settle(page, 900);
-	await crop(section, kind, "10-reply-submitted");
+	await section.scrollIntoViewIfNeeded();
+	await crop(section, kind, "09-comment-submitted");
 
 	// --- 5. 후기 없는 행사 ---
-	await page.goto(`${BASE}/main?panel=detail&eventId=800`, {
+	await page.goto(`${BASE}/events/800`, {
 		waitUntil: "networkidle",
 	});
 	await settle(page, 2500);
 	if (await section.count()) {
 		await section.scrollIntoViewIfNeeded();
 		await settle(page, 400);
-		await crop(section, kind, "11-review-empty");
+		await crop(section, kind, "10-review-empty");
 	}
 
 	// --- 6. 내 후기 목록 (익명/공개 배지) ---
 	await page.goto(`${BASE}/review`, { waitUntil: "networkidle" });
 	await settle(page, 1800);
-	await shoot(page, kind, "12-my-reviews");
+	await shoot(page, kind, "11-my-reviews");
 
 	// --- 7. 마이페이지 "후기 보기" 위젯 ---
 	await page.goto(`${BASE}/my`, { waitUntil: "networkidle" });
@@ -175,7 +180,7 @@ async function run(browser, kind) {
 			el.scrollIntoView({ block: "center", behavior: "instant" }),
 		);
 		await settle(page, 600);
-		await shoot(page, kind, "13-mypage-widget");
+		await shoot(page, kind, "12-mypage-widget");
 	}
 
 	// --- 8. 구 /memo 리다이렉트 ---
@@ -187,7 +192,7 @@ async function run(browser, kind) {
 	if (kind === "mobile") {
 		await page.goto(`${BASE}/main`, { waitUntil: "networkidle" });
 		await settle(page, 2200);
-		await shoot(page, kind, "14-bottom-nav");
+		await shoot(page, kind, "13-bottom-nav");
 	}
 
 	await context.close();
