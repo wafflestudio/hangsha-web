@@ -10,6 +10,8 @@ import Navigationbar from "@/components/layout/Navigationbar";
 import BottomNav from "@/components/layout/BottomNav";
 import Modal from "@/components/ui/Modal";
 import Stars from "@/components/feature/review/Stars";
+import { BoardFeed } from "@/pages/board/BoardHome";
+import { useResizableSidePanel } from "@/components/layout/sidePannel/SidePanelResize";
 import {
 	averageRating,
 	formatRelative,
@@ -80,7 +82,10 @@ const MyReviews = () => {
 	const { myReviews, removeReview, toggleReviewLike } = useReviews();
 	const { user } = useAuth();
 	const navigate = useNavigate();
+	const { isMobile } = useResizableSidePanel();
 	const [deletingId, setDeletingId] = useState<number | null>(null);
+	// 모바일에는 사이드바가 없어 여기서 게시판으로 건너뛴다 (데스크톱은 좌측 사이드바 탭)
+	const [tab, setTab] = useState<"review" | "board">("review");
 
 	const handleDelete = () => {
 		if (deletingId !== null) removeReview(deletingId);
@@ -103,6 +108,7 @@ const MyReviews = () => {
 	}
 
 	const average = averageRating(myReviews);
+	const isBoard = isMobile && tab === "board";
 
 	return (
 		<div className={styles.main}>
@@ -121,12 +127,37 @@ const MyReviews = () => {
 						<FaChevronLeft size={18} />
 					</button>
 					<div className={styles.headerCenter}>
-						<span className={styles.headerTitle}>내 후기 목록</span>
+						<span className={styles.headerTitle}>
+							{isBoard ? "자유게시판" : "내 후기 목록"}
+						</span>
 						<img src="/assets/pencil.svg" alt="" />
 					</div>
 				</div>
 
-				{myReviews.length > 0 && (
+				{isMobile && (
+					<div className={styles.tabs} role="tablist">
+						<button
+							type="button"
+							role="tab"
+							aria-selected={!isBoard}
+							className={`${styles.tab} ${!isBoard ? styles.tabOn : ""}`}
+							onClick={() => setTab("review")}
+						>
+							후기 보기
+						</button>
+						<button
+							type="button"
+							role="tab"
+							aria-selected={isBoard}
+							className={`${styles.tab} ${isBoard ? styles.tabOn : ""}`}
+							onClick={() => setTab("board")}
+						>
+							게시판
+						</button>
+					</div>
+				)}
+
+				{!isBoard && myReviews.length > 0 && (
 					<div className={styles.summary}>
 						<div className={styles.summaryItem}>
 							<span className={styles.summaryLabel}>남긴 후기</span>
@@ -146,7 +177,9 @@ const MyReviews = () => {
 				)}
 
 				<div className={styles.listWrapper}>
-					{myReviews.length > 0 ? (
+					{isBoard ? (
+						<BoardFeed hideRail />
+					) : myReviews.length > 0 ? (
 						<ul className={styles.list}>
 							{myReviews.map((review) => (
 								<ReviewRow

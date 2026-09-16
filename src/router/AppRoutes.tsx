@@ -21,6 +21,9 @@ const BookmarksPage = lazy(() => import("@/pages/bookmark/Bookmark"));
 const MyPage = lazy(() => import("@/pages/mypage/MyPage"));
 const AdminEventsPage = lazy(() => import("@/pages/admin/AdminEvents"));
 const MyReviews = lazy(() => import("@/pages/review/MyReviews"));
+const BoardHome = lazy(() => import("@/pages/board/BoardHome"));
+const PostDetail = lazy(() => import("@/pages/board/PostDetail"));
+const PostWrite = lazy(() => import("@/pages/board/PostWrite"));
 
 export default function AppRoutes() {
 	return (
@@ -57,6 +60,11 @@ export default function AppRoutes() {
 					<Route path="/review" element={<MyReviews />} />
 					{/* 기존 메모 경로는 후기 모음으로 흘려보낸다 */}
 					<Route path="/memo" element={<Navigate to="/review" replace />} />
+
+					{/* 자유 게시판 */}
+					<Route path="/board" element={<BoardHome />} />
+					<Route path="/board/write" element={<PostWrite />} />
+					<Route path="/board/:postId" element={<PostDetail />} />
 
 					{/* Admin page */}
 					<Route

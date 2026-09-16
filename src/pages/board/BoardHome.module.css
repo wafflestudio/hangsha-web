@@ -1,0 +1,449 @@
+.page {
+	display: flex;
+	flex-direction: column;
+	width: 100vw;
+	height: 100vh;
+	overflow: hidden;
+	background: #ffffff;
+}
+
+.scroll {
+	flex: 1;
+	overflow-y: auto;
+	-ms-overflow-style: none;
+	scrollbar-width: none;
+}
+
+.scroll::-webkit-scrollbar {
+	display: none;
+}
+
+/* ----- 2단 레이아웃 ----- */
+
+.layout {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) 320px;
+	gap: 60px;
+	width: min(1400px, 92%);
+	margin: 0 auto;
+	padding: 30px 0 90px;
+}
+
+.noRail {
+	grid-template-columns: minmax(0, 1fr);
+	gap: 0;
+	width: 100%;
+	padding: 0 0 24px;
+}
+
+.mainCol {
+	display: flex;
+	flex-direction: column;
+	min-width: 0;
+}
+
+/* ----- 검색 ----- */
+
+.searchWrap {
+	position: relative;
+	display: flex;
+	align-items: center;
+	margin-bottom: 34px;
+}
+
+.searchIcon {
+	position: absolute;
+	left: 26px;
+	color: #333333;
+	pointer-events: none;
+}
+
+.searchInput {
+	width: 100%;
+	padding: 20px 24px 20px 60px;
+	border: 2px solid #111111;
+	border-radius: 999px;
+	background: #ffffff;
+	font-family: inherit;
+	font-size: 16px;
+	color: #111111;
+}
+
+.searchInput::placeholder {
+	color: #8b8b8b;
+}
+
+.searchInput:focus {
+	outline: none;
+}
+
+/* ----- 목록 헤더 ----- */
+
+.listHeader {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 16px;
+	margin-bottom: 6px;
+}
+
+.listTitle {
+	margin: 0;
+	font-size: 22px;
+	font-weight: 700;
+	color: #111111;
+}
+
+.writeBtn {
+	display: inline-flex;
+	align-items: center;
+	gap: 7px;
+	padding: 11px 20px;
+	border: none;
+	border-radius: 999px;
+	background: #111111;
+	cursor: pointer;
+	font-family: inherit;
+	font-size: 14px;
+	font-weight: 600;
+	color: #ffffff;
+}
+
+.writeBtn:hover {
+	background: #333333;
+}
+
+/* ----- 글 목록 ----- */
+
+.list {
+	display: flex;
+	flex-direction: column;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.row {
+	border-bottom: 1px solid #f0f0f0;
+}
+
+.rowBtn {
+	display: flex;
+	align-items: center;
+	gap: 18px;
+	width: 100%;
+	padding: 17px 4px;
+	border: none;
+	background: none;
+	cursor: pointer;
+	text-align: left;
+	font-family: inherit;
+}
+
+.rowBtn:hover .title {
+	text-decoration: underline;
+}
+
+.event {
+	flex-shrink: 0;
+	width: 210px;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	font-size: 14px;
+	font-weight: 700;
+	color: #3d73c4;
+}
+
+/* 행사에 안 붙은 글도 제목 열이 같은 자리에서 시작하도록 자리를 비워둔다 */
+.rowBtn > .titleCol:first-child {
+	margin-left: 228px;
+}
+
+.titleCol {
+	display: flex;
+	align-items: baseline;
+	gap: 10px;
+	flex: 1;
+	min-width: 0;
+}
+
+.title {
+	min-width: 0;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	font-size: 15px;
+	color: #111111;
+}
+
+.tags {
+	display: flex;
+	flex-shrink: 0;
+	gap: 6px;
+}
+
+.tag {
+	font-size: 12.5px;
+	color: #9a9a9a;
+}
+
+.rowMeta {
+	display: flex;
+	align-items: center;
+	gap: 14px;
+	flex-shrink: 0;
+}
+
+.anonBadge {
+	padding: 3px 8px;
+	border-radius: 5px;
+	background: #f0f0f0;
+	font-size: 11px;
+	font-weight: 600;
+	color: #8b8b8b;
+}
+
+.stat {
+	display: inline-flex;
+	align-items: center;
+	gap: 5px;
+	min-width: 34px;
+	font-size: 13px;
+	color: #9a9a9a;
+}
+
+.liked {
+	color: #e2517a;
+}
+
+.time {
+	min-width: 56px;
+	text-align: right;
+	font-size: 13px;
+	color: #9a9a9a;
+}
+
+.empty {
+	padding: 50px 0;
+	text-align: center;
+	font-size: 14px;
+	color: #a8a8a8;
+}
+
+/* ----- 사이드 레일 ----- */
+
+.rail {
+	display: flex;
+	flex-direction: column;
+	gap: 34px;
+	padding-top: 24px;
+}
+
+.railSection {
+	display: flex;
+	flex-direction: column;
+}
+
+.railTitle {
+	margin: 0 0 14px;
+	font-size: 17px;
+	font-weight: 700;
+	color: #111111;
+}
+
+.railList {
+	display: flex;
+	flex-direction: column;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.railRow {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	padding: 8px 0;
+}
+
+.rank {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	flex-shrink: 0;
+	width: 22px;
+	height: 22px;
+	border-radius: 6px;
+	background: #f2f2f2;
+	font-size: 12px;
+	font-weight: 600;
+	color: #555555;
+}
+
+.railName {
+	flex: 1;
+	min-width: 0;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	font-size: 14px;
+	color: #222222;
+}
+
+.dday {
+	flex-shrink: 0;
+	font-size: 13px;
+	font-weight: 700;
+	color: #e8863a;
+}
+
+.trendUp {
+	flex-shrink: 0;
+	font-size: 10px;
+	color: #e2517a;
+}
+
+.trendNew {
+	flex-shrink: 0;
+	font-size: 11px;
+	font-weight: 700;
+	color: #4caf50;
+}
+
+.postCount {
+	flex-shrink: 0;
+	min-width: 34px;
+	text-align: right;
+	font-size: 13px;
+	color: #9a9a9a;
+}
+
+.railCaption {
+	margin: 12px 0 0;
+	font-size: 12px;
+	color: #b4b4b4;
+}
+
+.railLink {
+	display: inline-flex;
+	align-items: center;
+	justify-content: flex-end;
+	gap: 7px;
+	padding: 0;
+	border: none;
+	background: none;
+	cursor: pointer;
+	font-family: inherit;
+	font-size: 14px;
+	font-weight: 600;
+	color: #555555;
+}
+
+.railLink:hover {
+	color: #111111;
+}
+
+/* ----- 반응형 ----- */
+
+@media (max-width: 1100px) {
+	.layout {
+		grid-template-columns: minmax(0, 1fr);
+		gap: 40px;
+	}
+
+	.rail {
+		padding-top: 0;
+	}
+}
+
+@media (max-width: 576px) {
+	.layout {
+		width: 92%;
+		padding: 18px 0 90px;
+		gap: 30px;
+	}
+
+	/* 후기 페이지 탭 안에 끼워 넣을 때는 바깥 여백을 그쪽에 맡긴다 */
+	.noRail {
+		width: 100%;
+		padding: 0 0 24px;
+	}
+
+	.noRail .searchWrap {
+		margin-bottom: 18px;
+	}
+
+	.searchWrap {
+		margin-bottom: 22px;
+	}
+
+	.searchInput {
+		padding: 14px 18px 14px 46px;
+		font-size: 14px;
+	}
+
+	.searchIcon {
+		left: 18px;
+	}
+
+	.listTitle {
+		font-size: 18px;
+	}
+
+	.writeBtn {
+		padding: 9px 15px;
+		font-size: 13px;
+	}
+
+	/* 모바일은 한 줄에 다 못 넣으니 위아래로 쌓는다. 보이는 항목은 데스크톱과 같다 */
+	.rowBtn {
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 6px;
+		padding: 14px 2px;
+	}
+
+	.event {
+		width: 100%;
+		font-size: 12px;
+	}
+
+	.rowBtn > .titleCol:first-child {
+		margin-left: 0;
+	}
+
+	.titleCol {
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 5px;
+		width: 100%;
+	}
+
+	.title {
+		width: 100%;
+		white-space: normal;
+		font-size: 14.5px;
+		line-height: 1.45;
+	}
+
+	.tags {
+		flex-wrap: wrap;
+	}
+
+	.tag {
+		font-size: 12px;
+	}
+
+	.rowMeta {
+		gap: 10px;
+	}
+
+	.time {
+		min-width: auto;
+	}
+
+	.railTitle {
+		font-size: 16px;
+	}
+}

@@ -401,6 +401,18 @@ export const Sidebar = () => {
 					/>
 					<span>시간표</span>
 				</button>
+				<button
+					type="button"
+					className={styles.pageLink}
+					onClick={() => navigate("/board")}
+				>
+					<img
+						className={styles.icon}
+						src="/assets/bottom_reviews.svg"
+						alt="board icon"
+					/>
+					<span>자유게시판</span>
+				</button>
 			</div>
 			<SidebarLogoutButton onLogout={() => ref.current?.scrollTo(0, 0)} />
 		</div>
