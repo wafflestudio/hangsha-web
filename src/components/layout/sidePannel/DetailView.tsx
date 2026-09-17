@@ -152,6 +152,16 @@ const DetailView = ({
 				{parse(sanitizeDetail(event.detail))}
 			</div>
 
+			{/* 행사 정보와 후기 사이. 정보를 다 본 시점에 게시판으로 건너간다.
+			    누르면 이 행사가 이미 선택된 글쓰기 화면이 열린다. */}
+			<button
+				type="button"
+				className={styles.talkAboutEventButton}
+				onClick={() => navigate(`/board/write?eventId=${eventId}`)}
+			>
+				<FaRegComments size={17} />이 행사에 대해서 얘기하기
+			</button>
+
 			{/* ----- Review Section ----- */}
 			{/* biome-ignore lint/a11y/noStaticElementInteractions: review wrapper stops pointer events so the parent panel's outside-click handler doesn't close it */}
 			<div
@@ -164,16 +174,6 @@ const DetailView = ({
 					onRequireLogin={() => setIsLoginModalOpen(true)}
 				/>
 			</div>
-			{/* 후기 아래, 게시판으로 건너가는 자리. 누르면 이 행사가 이미 선택된
-			    글쓰기 화면이 열린다. */}
-			<button
-				type="button"
-				className={styles.talkAboutEventButton}
-				onClick={() => navigate(`/board/write?eventId=${eventId}`)}
-			>
-				<FaRegComments size={17} />이 행사에 대해서 얘기하기
-			</button>
-
 			<button
 				type="button"
 				className={styles.eventInfoErrorButton}

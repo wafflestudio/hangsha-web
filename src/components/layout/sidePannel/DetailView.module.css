@@ -163,7 +163,7 @@
 	justify-content: center;
 	gap: 8px;
 	width: calc(100% - 24px);
-	margin: 18px 12px 0;
+	margin: 18px 12px 4px;
 	padding: 14px 0;
 	border: 1px solid #e6e6e6;
 	border-radius: 12px;
