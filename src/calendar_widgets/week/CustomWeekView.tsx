@@ -97,6 +97,8 @@ function CustomWeekView({
 	timetableOverlayCourses = [],
 	onSelectEvent,
 }: CustomWeekViewProps) {
+	const [overlapPage, setOverlapPage] = useState(0);
+	const [overlapPageCount, setOverlapPageCount] = useState(1);
 	const WEEK_EVENTS = useMemo(() => {
 		const weekStart = new Date(date);
 		weekStart.setHours(0, 0, 0, 0);
@@ -176,6 +178,31 @@ function CustomWeekView({
 			};
 		}, [WEEK_EVENTS]);
 
+	const overlapDataKey = useMemo(
+		() =>
+			`${date.getTime()}:${timetableEvents
+				.map((event) => event.resource.event.id)
+				.join(",")}`,
+		[date, timetableEvents],
+	);
+	const previousOverlapDataKeyRef = useRef(overlapDataKey);
+
+	useLayoutEffect(() => {
+		if (previousOverlapDataKeyRef.current === overlapDataKey) return;
+		previousOverlapDataKeyRef.current = overlapDataKey;
+		setOverlapPage(0);
+	}, [overlapDataKey]);
+
+	const handleOverlapPageCountChange = useCallback((pageCount: number) => {
+		setOverlapPageCount(pageCount);
+	}, []);
+
+	const handleNextOverlapPage = useCallback(() => {
+		setOverlapPage((currentPage) =>
+			overlapPageCount > 0 ? (currentPage + 1) % overlapPageCount : 0,
+		);
+	}, [overlapPageCount]);
+
 	const handleSelectBlock = useCallback(
 		(calendarEventLike: CalendarEvent | Event) => {
 			const raw =
@@ -203,7 +230,16 @@ function CustomWeekView({
 	const periodBarHeight = useElementHeight(periodLayerRef);
 
 	return (
-		<div className={styles.weekView}>
+		<div
+			className={`${styles.weekView} ${
+				overlapPageCount > 1 ? styles.hasEventPager : ""
+			}`}
+			style={
+				{
+					"--period-bar-height": `${periodBarHeight}px`,
+				} as React.CSSProperties
+			}
+		>
 			<AllDayBar
 				date={date}
 				localizer={localizer}
@@ -215,7 +251,9 @@ function CustomWeekView({
 				data-tour-id="week-tour-participating-events"
 				style={
 					{
-						"--period-bar-height": `${periodBarHeight}px`,
+						"--period-bar-height": `${
+							periodBarHeight + (overlapPageCount > 1 ? 56 : 0)
+						}px`,
 					} as React.CSSProperties
 				}
 			>
@@ -227,6 +265,8 @@ function CustomWeekView({
 					toBlocks={flattenEventsToBlocks}
 					toTimetableOverlayBlocks={flattenCoursesToBlocks}
 					onSelectBlock={handleSelectBlock}
+					overlapPage={overlapPage}
+					onOverlapPageCountChange={handleOverlapPageCountChange}
 				/>
 			</div>
 			<div
@@ -245,6 +285,15 @@ function CustomWeekView({
 					/>
 				</div>
 			</div>
+			{overlapPageCount > 1 && (
+				<button
+					type="button"
+					className={styles.eventPager}
+					onClick={handleNextOverlapPage}
+				>
+					&lt; 행사 넘겨 보기 &gt;
+				</button>
+			)}
 		</div>
 	);
 }

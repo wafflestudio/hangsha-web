@@ -2,6 +2,10 @@
 	position: relative;
 }
 
+.hasEventPager {
+	--period-bar-bottom-offset: 0px;
+}
+
 .timetableLayer {
 	position: relative;
 	z-index: 10;
@@ -18,13 +22,53 @@
 	position: fixed;
 	left: 0;
 	right: 0;
-	bottom: 0;
+	bottom: calc(
+		var(--period-bar-bottom-offset, 0px) +
+		env(safe-area-inset-bottom, 0px)
+	);
 	z-index: 20;
 	pointer-events: none;
-	padding-bottom: env(safe-area-inset-bottom, 0px);
 	overflow-y: auto;
 	overflow-x: hidden;
 	max-height: 200px;
+}
+
+.eventPager {
+	position: fixed;
+	right: 16px;
+	bottom: calc(
+		var(--period-bar-bottom-offset, 0px) +
+		var(--period-bar-height, 0px) +
+		16px +
+		env(safe-area-inset-bottom, 0px)
+	);
+	z-index: 120;
+	border: 1px solid #d9d9d9;
+	border-radius: 999px;
+	padding: 10px 16px;
+	background: #ffffff;
+	box-shadow: 0 4px 14px rgba(0, 0, 0, 0.14);
+	color: #222222;
+	font: inherit;
+	font-size: 14px;
+	font-weight: 600;
+	cursor: pointer;
+}
+
+.eventPager:hover,
+.eventPager:focus-visible {
+	border-color: #999999;
+	background: #f7f7f7;
+}
+
+@media (max-width: 576px) {
+	.hasEventPager {
+		--period-bar-bottom-offset: 64px;
+	}
+
+	.eventPager {
+		right: 16px;
+	}
 }
 
 .inner {

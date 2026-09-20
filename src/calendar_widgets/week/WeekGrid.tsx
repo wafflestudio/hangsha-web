@@ -1,4 +1,4 @@
-import { useMemo, forwardRef, type CSSProperties } from "react";
+import { useEffect, useMemo, forwardRef, type CSSProperties } from "react";
 import {
 	DAY_LABELS_KO,
 	type Day,
@@ -13,7 +13,10 @@ import type {
 	LayoutedBlock,
 	TimetableGridBlock,
 } from "../../util/weekly_timetable/layout";
-import { layoutDayBlocksLane } from "../../util/weekly_timetable/layout";
+import {
+	getOverlapPage,
+	layoutDayBlocksLane,
+} from "../../util/weekly_timetable/layout";
 import { formatAmPmFromMinutes } from "../../util/weekly_timetable/time";
 import { CATEGORY_COLORS } from "@/util/constants";
 import styles from "./WeekGrid.module.css";
@@ -27,6 +30,8 @@ type WeekGridProps = {
 		config: GridConfig,
 	) => TimetableGridBlock<Course>[];
 	onSelectBlock?: (event: Event) => void;
+	overlapPage?: number;
+	onOverlapPageCountChange?: (pageCount: number) => void;
 	dayLabels?: Record<Day, string>;
 };
 
@@ -45,6 +50,8 @@ export const WeekGrid = forwardRef<HTMLDivElement, WeekGridProps>(
 			toBlocks,
 			toTimetableOverlayBlocks,
 			onSelectBlock,
+			overlapPage = 0,
+			onOverlapPageCountChange,
 			dayLabels = DAY_LABELS_KO,
 		},
 		ref,
@@ -73,7 +80,7 @@ export const WeekGrid = forwardRef<HTMLDivElement, WeekGridProps>(
 			return list;
 		}, [config]);
 
-		const blocksByDay = useMemo(() => {
+		const { blocksByDay, overlapPageCount } = useMemo(() => {
 			const map: Record<Day, WeekGridBlock[]> = {
 				0: [],
 				1: [],
@@ -85,18 +92,20 @@ export const WeekGrid = forwardRef<HTMLDivElement, WeekGridProps>(
 			};
 			for (const b of blocks) map[b.day].push(b);
 
-			const laidOut: Record<Day, LayoutedBlock[]> = {
-				0: layoutDayBlocksLane(map[0]),
-				1: layoutDayBlocksLane(map[1]),
-				2: layoutDayBlocksLane(map[2]),
-				3: layoutDayBlocksLane(map[3]),
-				4: layoutDayBlocksLane(map[4]),
-				5: layoutDayBlocksLane(map[5]),
-				6: layoutDayBlocksLane(map[6]),
-			};
+			const paged = Days.map((day) => getOverlapPage(map[day], overlapPage));
+			const laidOut = Object.fromEntries(
+				Days.map((day, index) => [day, layoutDayBlocksLane(paged[index].blocks)]),
+			) as Record<Day, LayoutedBlock[]>;
 
-			return laidOut;
-		}, [blocks]);
+			return {
+				blocksByDay: laidOut,
+				overlapPageCount: Math.max(...paged.map((page) => page.pageCount)),
+			};
+		}, [blocks, overlapPage]);
+
+		useEffect(() => {
+			onOverlapPageCountChange?.(overlapPageCount);
+		}, [onOverlapPageCountChange, overlapPageCount]);
 
 		const timetableOverlayBlocksByDay = useMemo(() => {
 			const map: Record<Day, TimetableGridBlock<Course>[]> = {

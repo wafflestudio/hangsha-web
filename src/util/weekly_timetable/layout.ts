@@ -47,6 +47,11 @@ export type LayoutedBlock = WeekGridBlock & {
 	zIndex: number;
 };
 
+export type OverlapPage = {
+	blocks: WeekGridBlock[];
+	pageCount: number;
+};
+
 function minutesToTop(min: number, cfg: GridConfig) {
 	const startMin = cfg.startHour * 60;
 	return (min - startMin) * cfg.ppm;
@@ -237,4 +242,52 @@ export function layoutDayBlocksLane(blocks: WeekGridBlock[]): LayoutedBlock[] {
 		});
 	}
 	return result;
+}
+
+/**
+ * Keep non-overlapping groups visible while paging only groups that contain
+ * four or more simultaneous events. The source order (blockId) determines
+ * the order within a page, rather than imposing another time-based order.
+ */
+export function getOverlapPage(
+	blocks: WeekGridBlock[],
+	pageIndex: number,
+): OverlapPage {
+	if (blocks.length === 0) return { blocks: [], pageCount: 1 };
+
+	const byTime = [...blocks].sort(
+		(a, b) => a.startMin - b.startMin || a.endMin - b.endMin,
+	);
+	const groups: WeekGridBlock[][] = [];
+	let currentGroup: WeekGridBlock[] = [];
+	let currentGroupEnd = -Infinity;
+
+	for (const block of byTime) {
+		if (currentGroup.length > 0 && block.startMin >= currentGroupEnd) {
+			groups.push(currentGroup);
+			currentGroup = [];
+			currentGroupEnd = -Infinity;
+		}
+
+		currentGroup.push(block);
+		currentGroupEnd = Math.max(currentGroupEnd, block.endMin);
+	}
+	if (currentGroup.length > 0) groups.push(currentGroup);
+
+	let pageCount = 1;
+	const visibleBlocks = groups.flatMap((group) => {
+		const peakOverlap = Math.max(
+			...layoutDayBlocksLane(group).map((block) => block.peakOverlap),
+		);
+
+		if (peakOverlap <= 3) return group;
+
+		const pages = Math.ceil(group.length / 3);
+		pageCount = Math.max(pageCount, pages);
+		const ordered = [...group].sort((a, b) => a.blockId - b.blockId);
+		const activePage = pageIndex % pages;
+		return ordered.slice(activePage * 3, activePage * 3 + 3);
+	});
+
+	return { blocks: visibleBlocks, pageCount };
 }
