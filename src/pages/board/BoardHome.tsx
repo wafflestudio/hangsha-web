@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import {
 	FaChevronRight,
 	FaHeart,
@@ -77,10 +77,7 @@ const TrendMark = ({ trend }: { trend: "up" | "new" | "flat" }) => {
  */
 export const BoardFeed = ({ hideRail = false }: { hideRail?: boolean }) => {
 	const navigate = useNavigate();
-	const location = useLocation();
 	const { posts } = useBoard();
-	// 글 패널이 이미 열린 채로 다른 글을 누르면 히스토리를 쌓지 않고 바꿔친다 (닫기 = 뒤로 한 번)
-	const isPostOpen = /^\/board\/\d+$/.test(location.pathname);
 	const [query, setQuery] = useState("");
 	// 검색어와 별개로 "이 행사 글만" 좁혀 보는 필터 (피드백: 행사별 검색)
 	const [eventFilter, setEventFilter] = useState<number | null>(null);
@@ -149,9 +146,7 @@ export const BoardFeed = ({ hideRail = false }: { hideRail?: boolean }) => {
 							<PostRow
 								key={post.id}
 								post={post}
-								onOpen={(id) =>
-									navigate(`/board/${id}`, { replace: isPostOpen })
-								}
+								onOpen={(id) => navigate(`/board/${id}`)}
 							/>
 						))}
 					</ul>

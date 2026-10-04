@@ -4,7 +4,7 @@ import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 /**
- * 게시글 · 후기 → 우측 사이드 패널 촬영.
+ * 게시글 · 후기 안의 행사 → 우측 사이드 패널 촬영.
  * 실행: yarn dev 띄운 뒤 `node docs/shoot/shoot-panel.mjs` (playwright 필요)
  */
 const BASE = "http://localhost:5173";
@@ -91,7 +91,6 @@ async function expectVisible(locator, what) {
 	if (!ok) failures += 1;
 }
 
-const postPanel = (page) => page.getByRole("complementary", { name: "게시글" });
 const eventPanel = (page) =>
 	page.getByRole("complementary", { name: "행사 상세" });
 
@@ -100,37 +99,45 @@ async function run(browser, kind) {
 	const context = await newContext(browser, kind);
 	const page = await context.newPage();
 
-	// ---------- 게시판 → 글 패널 ----------
+	// ---------- 게시판 → 글 페이지 → 행사 패널 ----------
 	await page.goto(`${BASE}/board`, { waitUntil: "networkidle" });
 	await settle(page, 1600);
 	await shoot(page, kind, "01-board-home");
 
+	// 글은 원래대로 풀페이지로 이동 (패널 아님)
 	await page.getByRole("button", { name: /39기 멘티로 해봤는데/ }).click();
 	await settle(page, 1000);
-	expectUrl(page, /^\/board\/1$/, "글 클릭 → /board/1");
-	await expectVisible(postPanel(page), "글 패널(aside) 표시");
-	await shoot(page, kind, "02-post-panel");
+	expectUrl(page, /^\/board\/1$/, "글 클릭 → /board/1 (풀페이지)");
+	const noPanel = !(await eventPanel(page).isVisible().catch(() => false));
+	console.log(`  ${noPanel ? "PASS" : "FAIL"} 글 페이지에는 패널 없음`);
+	if (!noPanel) failures += 1;
+	await shoot(page, kind, "02-post-page");
+
+	// 글 안의 행사 버튼 → 우측 행사 패널
+	await page.getByRole("button", { name: /캠퍼스 멘토링 프로그램/ }).first().click();
+	await settle(page, 400);
+	expectUrl(page, /^\/board\/1\?event=809$/, "글의 행사 클릭 → /board/1?event=809");
+	await eventPanel(page)
+		.getByText("지원 링크로 이동하기")
+		.waitFor({ timeout: 15000 })
+		.catch(() => console.log("  (행사 상세 로딩 대기 초과)"));
+	await settle(page, 800);
+	await expectVisible(eventPanel(page), "행사 패널(aside) 표시");
+	await shoot(page, kind, "03-post-event-panel");
 
 	if (kind === "desktop") {
-		// 패널이 열린 채로 뒤쪽 목록의 다른 글을 누르면 내용만 바뀐다 (히스토리는 replace)
-		await page.getByRole("button", { name: /플로깅 준비물/ }).click();
-		await settle(page, 900);
-		expectUrl(page, /^\/board\/4$/, "뒤쪽 목록 다른 글 → /board/4");
-		await shoot(page, kind, "03-post-panel-switch");
-
-		// 패널 안에서 댓글까지 스크롤
-		const panel = postPanel(page);
-		await panel
-			.locator("textarea")
-			.evaluate((el) => el.scrollIntoView({ block: "center" }));
+		await eventPanel(page)
+			.getByText("이 행사에 대해서 얘기하기")
+			.evaluate((el) => el.scrollIntoView({ block: "center" }))
+			.catch(() => {});
 		await settle(page, 500);
-		await shoot(page, kind, "04-post-panel-comments");
+		await shoot(page, kind, "04-post-event-panel-scrolled");
 	}
 
-	await page.getByRole("button", { name: "글 닫기" }).click();
+	await eventPanel(page).getByRole("button").first().click();
 	await settle(page, 900);
-	expectUrl(page, /^\/board$/, "글 닫기 → /board");
-	await shoot(page, kind, "05-post-panel-closed");
+	expectUrl(page, /^\/board\/1$/, "행사 패널 닫기 → /board/1");
+	await shoot(page, kind, "05-post-event-panel-closed");
 
 	// ---------- 내 후기 → 행사 패널 ----------
 	await page.goto(`${BASE}/review`, { waitUntil: "networkidle" });
