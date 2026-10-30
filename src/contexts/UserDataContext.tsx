@@ -7,7 +7,7 @@ import {
 	useState,
 } from "react";
 import * as userService from "@api/user";
-import type { Category, Event, Memo } from "@types";
+import type { Category, Event } from "@types";
 import { useAuth } from "./AuthProvider";
 
 interface UserDataContextType {
@@ -15,9 +15,7 @@ interface UserDataContextType {
 	isBookmarksLoaded: boolean;
 	interestCategories: Category[];
 	excludedKeywords: { id: number; keyword: string }[];
-	eventMemos: Memo[];
 
-	memoLoading: boolean;
 	excludedKeywordLoading: boolean;
 
 	refreshUserData: () => Promise<void>;
@@ -25,20 +23,6 @@ interface UserDataContextType {
 	addExcludedKeyword: (keyword: string) => Promise<void>;
 	deleteExcludedKeyword: (id: number) => Promise<void>;
 	toggleBookmark: (event: Event | number) => Promise<void>;
-	getMemoByTag: (tagId: number) => Promise<Memo[]>;
-	addMemo: (
-		eventId: number,
-		content: string,
-		tagNames: string[],
-	) => Promise<void>;
-	deleteMemo: (id: number) => Promise<void>;
-	updateMemo: (
-		id: number,
-		updates: {
-			content?: string | undefined;
-			tagNames?: string[] | undefined;
-		},
-	) => Promise<Memo | null>;
 }
 
 const UserDataContext = createContext<UserDataContextType | undefined>(
@@ -53,8 +37,6 @@ export const UserDataProvider = ({ children }: { children: ReactNode }) => {
 	const [bookmarkedEvents, setBookmarkedEvents] = useState<Event[]>([]);
 	const [isBookmarksLoaded, setIsBookmarksLoaded] = useState(false);
 	const [interestCategories, setInterestCategories] = useState<Category[]>([]);
-	const [eventMemos, setEventMemos] = useState<Memo[]>([]);
-	const [memoLoading, setMemoLoading] = useState<boolean>(false);
 	const [excludedKeywordLoading, setExcludedKeywordLoading] =
 		useState<boolean>(false);
 
@@ -62,24 +44,18 @@ export const UserDataProvider = ({ children }: { children: ReactNode }) => {
 		if (!isAuthenticated) return;
 		setIsBookmarksLoaded(false);
 		try {
-			setMemoLoading(true);
 			// Parallel fetch
-			const [excludedData, bookmarksData, interestsData, memoData] =
-				await Promise.all([
-					userService.getExcludedKeywords(),
-					userService.getBookmarks(1), // Fetch first page/all
-					userService.getInterestCategories(),
-					userService.getMemos(),
-				]);
+			const [excludedData, bookmarksData, interestsData] = await Promise.all([
+				userService.getExcludedKeywords(),
+				userService.getBookmarks(1), // Fetch first page/all
+				userService.getInterestCategories(),
+			]);
 			setExcludedKeywords(excludedData);
 			setBookmarkedEvents(bookmarksData);
 			setInterestCategories(interestsData);
-			setEventMemos(memoData);
 			setIsBookmarksLoaded(true);
 		} catch (error) {
 			console.error("Failed to load user data", error);
-		} finally {
-			setMemoLoading(false);
 		}
 	}, [isAuthenticated]);
 
@@ -91,35 +67,25 @@ export const UserDataProvider = ({ children }: { children: ReactNode }) => {
 			setBookmarkedEvents([]);
 			setIsBookmarksLoaded(false);
 			setInterestCategories([]);
-			setEventMemos([]);
 		}
 	}, [isAuthenticated, fetchAll]);
 
 	const toggleBookmark = async (event: Event | number) => {
 		const eventId = typeof event === "number" ? event : event.id;
-		const memo = eventMemos.find((memo) => memo.eventId === eventId);
 		const isBookmarked = isBookmarksLoaded
 			? bookmarkedEvents.some(
 					(bookmarkedEvent) => bookmarkedEvent.id === eventId,
 				)
 			: typeof event === "number"
-				? Boolean(memo?.isBookmarked)
+				? false
 				: Boolean(event.isBookmarked);
 		const previousBookmarks = bookmarkedEvents;
-		const previousMemos = eventMemos;
 		setBookmarkedEvents((current) =>
 			isBookmarked
 				? current.filter((bookmarkedEvent) => bookmarkedEvent.id !== eventId)
 				: typeof event === "number"
 					? current
 					: [...current, { ...event, isBookmarked: true }],
-		);
-		setEventMemos((current) =>
-			current.map((memo) =>
-				memo.eventId === eventId
-					? { ...memo, isBookmarked: !isBookmarked }
-					: memo,
-			),
 		);
 		try {
 			if (isBookmarked) {
@@ -132,7 +98,6 @@ export const UserDataProvider = ({ children }: { children: ReactNode }) => {
 			setBookmarkedEvents(newBookmarks);
 		} catch (error) {
 			setBookmarkedEvents(previousBookmarks);
-			setEventMemos(previousMemos);
 			console.error(error);
 			throw error;
 		}
@@ -175,56 +140,6 @@ export const UserDataProvider = ({ children }: { children: ReactNode }) => {
 		}
 	};
 
-	/* --- Memo --- */
-	const getMemoByTag = async (tagId: number) => {
-		try {
-			const resultMemos: Memo[] = await userService.getMemoByTag(tagId);
-			return resultMemos;
-		} catch (error) {
-			console.error("error in getting memos by Tag", error);
-			return [];
-		}
-	};
-
-	const addMemo = async (eventId: number, content: string, tags: string[]) => {
-		try {
-			await userService.addMemo(eventId, content, tags);
-			// refresh on add
-			const newMemos = await userService.getMemos();
-			setEventMemos(newMemos);
-		} catch (error) {
-			console.error("error in adding memos", error);
-		}
-	};
-
-	const deleteMemo = async (id: number) => {
-		try {
-			await userService.deleteMemo(id);
-			const newMemos = await userService.getMemos();
-			setEventMemos(newMemos);
-		} catch (error) {
-			console.error("error in deleting memos", error);
-		}
-	};
-
-	const updateMemo = async (
-		id: number,
-		updates: { content?: string; tagNames?: string[] },
-	) => {
-		try {
-			const newMemo: Memo = await userService.editMemo(id, updates);
-
-			setEventMemos((prevMemos) =>
-				prevMemos.map((memo) => (memo.id === id ? newMemo : memo)),
-			);
-
-			return newMemo;
-		} catch (error) {
-			console.error("error in updating memo", error);
-			return null;
-		}
-	};
-
 	return (
 		<UserDataContext.Provider
 			value={{
@@ -232,16 +147,10 @@ export const UserDataProvider = ({ children }: { children: ReactNode }) => {
 				bookmarkedEvents,
 				isBookmarksLoaded,
 				interestCategories,
-				eventMemos,
-				memoLoading,
 				excludedKeywordLoading,
 				refreshUserData: fetchAll,
 				saveInterestPreferences,
 				toggleBookmark,
-				getMemoByTag,
-				addMemo,
-				deleteMemo,
-				updateMemo,
 				addExcludedKeyword,
 				deleteExcludedKeyword,
 			}}

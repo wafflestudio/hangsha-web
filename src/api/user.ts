@@ -1,5 +1,5 @@
 import { transformEvent } from "@/util/calendar/transformEvent";
-import type { CategoryType, EventDTO, Memo } from "@types";
+import type { CategoryType, EventDTO } from "@types";
 import api from "./axios";
 
 // --- Excluded Keywords ---
@@ -85,63 +85,3 @@ export const removeInterestCategory = async (
 	});
 };
 
-// --- Memos ---
-type MemoDTO = Omit<Memo, "createdAt" | "updatedAt" | "applyEnd"> & {
-	createdAt?: string;
-	updatedAt?: string;
-	applyEnd?: string | null;
-};
-
-// helper mapping func
-const mapMemoDTO = (m: MemoDTO): Memo => {
-	return {
-		...m,
-		createdAt: m.createdAt ? new Date(m.createdAt) : undefined,
-		updatedAt: m.updatedAt ? new Date(m.updatedAt) : undefined,
-		applyEnd:
-			m.applyEnd === null
-				? null
-				: m.applyEnd
-					? new Date(m.applyEnd)
-					: undefined,
-	};
-};
-
-export const getMemos = async () => {
-	const res = await api.get<{ items: MemoDTO[] }>("/memos");
-	const memos: Memo[] = res.data.items.map(mapMemoDTO);
-
-	return memos;
-};
-
-// 특정 태그를 가진 메모 목록 반환
-export const getMemoByTag = async (id: number) => {
-	const res = await api.get<{ items: MemoDTO[] }>(`/memos/by-tag/${id}`);
-	const memos: Memo[] = res.data.items.map(mapMemoDTO);
-	return memos;
-};
-
-export const addMemo = async (
-	eventId: number,
-	content: string,
-	tagNames: string[],
-) => {
-	await api.post(`/memos`, { eventId, content, tagNames });
-};
-
-export const deleteMemo = async (id: number) => {
-	await api.delete(`/memos/${id}`);
-};
-
-export const editMemo = async (
-	id: number,
-	updates: { content?: string | null; tagNames?: string[] },
-) => {
-	const { data: newMemoDTO } = await api.patch<MemoDTO>(`/memos/${id}`, {
-		content: updates.content,
-		tagNames: updates.tagNames,
-	});
-
-	const newMemo = mapMemoDTO(newMemoDTO);
-	return newMemo;
-};

@@ -3,7 +3,7 @@ import Navigationbar from "@/components/layout/Navigationbar";
 import BugReportForm from "@/components/feature/bugReport/BugReportForm";
 import styles from "./MyPage.module.css";
 import { BookmarkWidget } from "@/pages/bookmark/Bookmark";
-import { MemoWidget } from "@/pages/memo/Memo";
+import MyReviewWidget from "@/components/feature/review/MyReviewWidget";
 import { useNavigate } from "react-router-dom";
 import { useTimetable } from "@/contexts/TimetableContext";
 import { useEffect, useState } from "react";
@@ -346,7 +346,7 @@ const MyPage = () => {
 					/>
 					<div className={styles.widgetsWrapper}>
 						<BookmarkWidget />
-						<MemoWidget />
+						<MyReviewWidget />
 						<BugReportForm showTopBorder />
 						<LogoutSection />
 						<AccountDeletionSection />

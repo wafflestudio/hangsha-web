@@ -11,7 +11,6 @@ export interface User {
 	// excluded_keywords: string[];
 	// interest_categories: Category[];
 	// bookmarks: string[]; // list of event id's
-	// memos: Memo[];
 }
 
 interface EventBase {
@@ -82,30 +81,6 @@ export interface Category {
 }
 
 export type CategoryType = "EVENT_STATUS" | "EVENT_TYPE" | "ORGANIZATION";
-
-export interface MemoTag {
-	id: number;
-	name: string;
-}
-
-export interface MemoOrganization {
-	id: number;
-	name: string;
-}
-
-export interface Memo {
-	id: number;
-	eventId: number;
-	eventTitle: string;
-	eventTypeId: number;
-	content: string;
-	tags: MemoTag[];
-	createdAt?: Date;
-	updatedAt?: Date;
-	applyEnd?: Date | null;
-	organization?: MemoOrganization | null;
-	isBookmarked: boolean;
-}
 
 // 시간표 전체
 
