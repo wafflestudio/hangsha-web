@@ -1,4 +1,6 @@
+/* 우측 상세 패널(SidePanel)의 기준점이므로 position: relative */
 .main {
+	position: relative;
 	display: flex;
 	flex-direction: row;
 	width: 100vw;
@@ -266,40 +268,6 @@
 	white-space: pre-line;
 }
 
-/* ----- 상세 사이드 패널 ----- */
-
-.sidePanel {
-	position: absolute;
-	right: 0;
-	top: 0;
-	max-width: 50%;
-	height: 100vh;
-	border-left: 1px solid #e0e0e0;
-	background-color: #ffffff;
-	box-shadow: -4px 0 24px rgba(0, 0, 0, 0.05);
-	z-index: 120;
-	overflow-y: auto;
-	flex-shrink: 0;
-	animation: slideIn 0.3s ease-out;
-}
-
-@keyframes slideIn {
-	from {
-		transform: translateX(100%);
-		opacity: 0;
-	}
-	to {
-		transform: translateX(0);
-		opacity: 1;
-	}
-}
-
-@media (max-width: 1024px) {
-	.sidePanel {
-		width: 340px;
-	}
-}
-
 @media (max-width: 576px) {
 	.header,
 	.summary,
@@ -322,10 +290,5 @@
 
 	.card {
 		padding: 14px;
-	}
-
-	.sidePanel {
-		width: 100%;
-		max-width: 100%;
 	}
 }

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import {
 	FaChevronLeft,
 	FaHeart,
@@ -10,6 +10,8 @@ import Navigationbar from "@/components/layout/Navigationbar";
 import BottomNav from "@/components/layout/BottomNav";
 import Modal from "@/components/ui/Modal";
 import Stars from "@/components/feature/review/Stars";
+import DetailView from "@/components/layout/sidePannel/DetailView";
+import SidePanel from "@/components/layout/sidePannel/SidePanel";
 import {
 	averageRating,
 	formatRelative,
@@ -82,6 +84,32 @@ const MyReviews = () => {
 	const navigate = useNavigate();
 	const [deletingId, setDeletingId] = useState<number | null>(null);
 
+	// 후기의 행사를 누르면 캘린더로 보내지 않고 이 화면 위에 우측 패널로 띄운다 (?event=ID).
+	// URL에 담아 두므로 새로고침·공유해도 같은 패널이 열린다.
+	const [searchParams, setSearchParams] = useSearchParams();
+	const openEventId = Number(searchParams.get("event"));
+	const hasOpenEvent = Number.isSafeInteger(openEventId) && openEventId > 0;
+
+	const openEvent = (eventId: number) =>
+		setSearchParams(
+			(prev) => {
+				const next = new URLSearchParams(prev);
+				next.set("event", String(eventId));
+				return next;
+			},
+			// 패널이 이미 열려 있으면 히스토리를 쌓지 않는다 (닫기 = 뒤로 한 번)
+			{ replace: hasOpenEvent },
+		);
+	const closeEvent = () =>
+		setSearchParams(
+			(prev) => {
+				const next = new URLSearchParams(prev);
+				next.delete("event");
+				return next;
+			},
+			{ replace: true },
+		);
+
 	const handleDelete = () => {
 		if (deletingId !== null) removeReview(deletingId);
 		setDeletingId(null);
@@ -152,7 +180,7 @@ const MyReviews = () => {
 								<ReviewRow
 									key={review.id}
 									review={review}
-									onOpenEvent={(eventId) => navigate(`/events/${eventId}`)}
+									onOpenEvent={openEvent}
 									onToggleLike={toggleReviewLike}
 									onDelete={setDeletingId}
 								/>
@@ -165,6 +193,12 @@ const MyReviews = () => {
 					)}
 				</div>
 			</div>
+
+			{hasOpenEvent && (
+				<SidePanel label="행사 상세">
+					<DetailView eventId={openEventId} onClose={closeEvent} />
+				</SidePanel>
+			)}
 
 			{deletingId !== null && (
 				<Modal
