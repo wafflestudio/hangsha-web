@@ -218,7 +218,6 @@ const EventReviews = ({ eventId, onRequireLogin }: EventReviewsProps) => {
 				</div>
 			) : (
 				<button type="button" className={styles.trigger} onClick={handleOpen}>
-					<Stars value={0} size={16} />
 					<span>후기 달기</span>
 				</button>
 			)}
