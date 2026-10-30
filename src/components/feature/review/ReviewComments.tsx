@@ -1,14 +1,13 @@
 import { useState } from "react";
 import { FaHeart, FaRegHeart, FaTrashCan } from "react-icons/fa6";
-import { useReviews } from "@/contexts/ReviewContext";
 import { avatarColor } from "./avatarColor";
 import {
 	displayInitial,
-	displayName,
 	formatRelative,
 	type Review,
 	type ReviewComment,
-} from "./reviewMock";
+} from "./reviewModel";
+import { useReviewActions, useReviewComments } from "./useReviewQueries";
 import styles from "./ReviewComments.module.css";
 
 /** 댓글 입력창. 익명 체크는 글 하나마다 새로 고른다. */
@@ -68,20 +67,16 @@ const CommentForm = ({
 
 const CommentRow = ({
 	comment,
-	labels,
 	isReply,
-	isReviewAuthor,
 	onReply,
 	onToggleLike,
 	onDelete,
 }: {
 	comment: ReviewComment;
-	labels: Map<string, string>;
 	isReply: boolean;
-	isReviewAuthor: boolean;
 	/** 넘기면 "답글" 버튼이 생긴다. 최상위 댓글에만 넘긴다. */
 	onReply?: () => void;
-	onToggleLike: (id: number) => void;
+	onToggleLike: (comment: ReviewComment) => void;
 	onDelete: (id: number) => void;
 }) => {
 	// 답글이 남아 있어 자리만 지키는 댓글. 작성자·본문·좋아요를 모두 숨긴다.
@@ -93,7 +88,7 @@ const CommentRow = ({
 		);
 	}
 
-	const color = avatarColor(comment.authorKey, comment.isAnonymous);
+	const color = avatarColor(comment.authorName ?? "", comment.isAnonymous);
 
 	return (
 		<div className={`${styles.row} ${isReply ? styles.reply : ""}`}>
@@ -106,8 +101,8 @@ const CommentRow = ({
 			</span>
 			<div className={styles.body}>
 				<div className={styles.meta}>
-					<span className={styles.author}>{displayName(comment, labels)}</span>
-					{isReviewAuthor && <span className={styles.badge}>작성자</span>}
+					<span className={styles.author}>{comment.authorName}</span>
+					{comment.isReviewAuthor && <span className={styles.badge}>작성자</span>}
 					<span className={styles.time}>
 						{formatRelative(comment.createdAt)}
 					</span>
@@ -127,7 +122,7 @@ const CommentRow = ({
 					<button
 						type="button"
 						className={`${styles.likeBtn} ${comment.isLiked ? styles.liked : ""}`}
-						onClick={() => onToggleLike(comment.id)}
+						onClick={() => onToggleLike(comment)}
 						aria-pressed={comment.isLiked}
 						aria-label={`좋아요 ${comment.likeCount}개`}
 					>
@@ -151,25 +146,23 @@ const CommentRow = ({
  */
 const ReviewComments = ({
 	review,
-	labels,
 	onRequireLogin,
 	canWrite,
 }: {
 	review: Review;
-	/** 행사 단위로 매겨진 익명 번호. */
-	labels: Map<string, string>;
 	canWrite: boolean;
 	onRequireLogin?: () => void;
 }) => {
-	const { commentsByReview, addComment, removeComment, toggleCommentLike } =
-		useReviews();
+	const { addComment, removeComment, toggleCommentLike } = useReviewActions();
 	const [isOpen, setIsOpen] = useState(false);
 	const [replyingTo, setReplyingTo] = useState<number | null>(null);
 
-	const thread = commentsByReview(review.id);
+	// 펼쳤을 때만 불러온다. 개수는 후기 응답의 commentCount(삭제 자리 제외)를 쓴다.
+	const { data: thread = [] } = useReviewComments(review.id, isOpen);
 	const roots = thread.filter((c) => c.parentId === null);
-	// 개수에는 "삭제된 댓글입니다" 자리를 세지 않는다
-	const liveCount = thread.filter((c) => !c.isDeleted).length;
+	const onToggleLike = (c: ReviewComment) =>
+		toggleCommentLike({ id: c.id, isLiked: c.isLiked });
+	const onDelete = (id: number) => removeComment(id);
 
 	const submit = (
 		content: string,
@@ -180,7 +173,7 @@ const ReviewComments = ({
 			onRequireLogin?.();
 			return;
 		}
-		addComment(review.id, content, isAnonymous, parentId);
+		addComment({ reviewId: review.id, content, isAnonymous, parentId });
 	};
 
 	return (
@@ -191,7 +184,7 @@ const ReviewComments = ({
 				onClick={() => setIsOpen((v) => !v)}
 				aria-expanded={isOpen}
 			>
-				댓글 {liveCount}
+				댓글 {review.commentCount}
 			</button>
 
 			{isOpen && (
@@ -210,9 +203,7 @@ const ReviewComments = ({
 								<div key={root.id} className={styles.group}>
 									<CommentRow
 										comment={root}
-										labels={labels}
 										isReply={false}
-										isReviewAuthor={root.authorKey === review.authorKey}
 										onReply={
 											root.isDeleted
 												? undefined
@@ -221,8 +212,8 @@ const ReviewComments = ({
 															cur === root.id ? null : root.id,
 														)
 										}
-										onToggleLike={toggleCommentLike}
-										onDelete={removeComment}
+										onToggleLike={onToggleLike}
+										onDelete={onDelete}
 									/>
 									{thread
 										.filter((c) => c.parentId === root.id)
@@ -230,17 +221,15 @@ const ReviewComments = ({
 											<CommentRow
 												key={child.id}
 												comment={child}
-												labels={labels}
 												isReply
-												isReviewAuthor={child.authorKey === review.authorKey}
-												onToggleLike={toggleCommentLike}
-												onDelete={removeComment}
+												onToggleLike={onToggleLike}
+												onDelete={onDelete}
 											/>
 										))}
 									{replyingTo === root.id && (
 										<div className={styles.replyForm}>
 											<CommentForm
-												placeholder={`${displayName(root, labels)}님에게 답글 남기기`}
+												placeholder={`${root.authorName}님에게 답글 남기기`}
 												onCancel={() => setReplyingTo(null)}
 												onSubmit={(content, isAnonymous) => {
 													submit(content, isAnonymous, root.id);

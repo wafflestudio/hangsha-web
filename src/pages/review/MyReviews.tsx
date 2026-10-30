@@ -13,12 +13,14 @@ import Stars from "@/components/feature/review/Stars";
 import DetailView from "@/components/layout/sidePannel/DetailView";
 import SidePanel from "@/components/layout/sidePannel/SidePanel";
 import {
-	averageRating,
 	formatRelative,
 	type Review,
-} from "@/components/feature/review/reviewMock";
+} from "@/components/feature/review/reviewModel";
+import {
+	useMyReviews,
+	useReviewActions,
+} from "@/components/feature/review/useReviewQueries";
 import { useAuth } from "@/contexts/AuthProvider";
-import { useReviews } from "@/contexts/ReviewContext";
 import styles from "./MyReviews.module.css";
 
 const ReviewRow = ({
@@ -29,7 +31,7 @@ const ReviewRow = ({
 }: {
 	review: Review;
 	onOpenEvent: (eventId: number) => void;
-	onToggleLike: (id: number) => void;
+	onToggleLike: (review: Review) => void;
 	onDelete: (id: number) => void;
 }) => (
 	<li className={styles.card}>
@@ -67,7 +69,7 @@ const ReviewRow = ({
 		<button
 			type="button"
 			className={`${styles.likeBtn} ${review.isLiked ? styles.liked : ""}`}
-			onClick={() => onToggleLike(review.id)}
+			onClick={() => onToggleLike(review)}
 			aria-pressed={review.isLiked}
 			aria-label={`좋아요 ${review.likeCount}개`}
 		>
@@ -79,8 +81,10 @@ const ReviewRow = ({
 
 /** 내가 남긴 후기를 모아 보는 페이지. 기존 메모 모음 페이지 자리를 대체한다. */
 const MyReviews = () => {
-	const { myReviews, removeReview, toggleReviewLike } = useReviews();
 	const { user } = useAuth();
+	const { data } = useMyReviews(!!user);
+	const { removeReview, toggleReviewLike } = useReviewActions();
+	const myReviews = data?.reviews ?? [];
 	const navigate = useNavigate();
 	const [deletingId, setDeletingId] = useState<number | null>(null);
 
@@ -130,7 +134,7 @@ const MyReviews = () => {
 		);
 	}
 
-	const average = averageRating(myReviews);
+	const average = data?.averageRating ?? null;
 
 	return (
 		<div className={styles.main}>
@@ -158,7 +162,9 @@ const MyReviews = () => {
 					<div className={styles.summary}>
 						<div className={styles.summaryItem}>
 							<span className={styles.summaryLabel}>남긴 후기</span>
-							<span className={styles.summaryValue}>{myReviews.length}개</span>
+							<span className={styles.summaryValue}>
+								{data?.reviewCount ?? 0}개
+							</span>
 						</div>
 						<span className={styles.summaryDivider} />
 						<div className={styles.summaryItem}>
@@ -181,7 +187,9 @@ const MyReviews = () => {
 									key={review.id}
 									review={review}
 									onOpenEvent={openEvent}
-									onToggleLike={toggleReviewLike}
+									onToggleLike={(r) =>
+										toggleReviewLike({ id: r.id, isLiked: r.isLiked })
+									}
 									onDelete={setDeletingId}
 								/>
 							))}

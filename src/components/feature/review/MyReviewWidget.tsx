@@ -1,14 +1,17 @@
 import { useNavigate } from "react-router-dom";
 import { FaChevronRight, FaRegHeart } from "react-icons/fa6";
-import { useReviews } from "@/contexts/ReviewContext";
-import { formatRelative } from "./reviewMock";
+import { useAuth } from "@/contexts/AuthProvider";
+import { formatRelative } from "./reviewModel";
 import Stars from "./Stars";
+import { useMyReviews } from "./useReviewQueries";
 import styles from "./MyReviewWidget.module.css";
 
 /** 마이페이지의 내 후기 미리보기. 기존 메모 위젯 자리를 대체한다. */
 const MyReviewWidget = () => {
 	const navigate = useNavigate();
-	const { myReviews } = useReviews();
+	const { user } = useAuth();
+	const { data } = useMyReviews(!!user);
+	const myReviews = data?.reviews ?? [];
 
 	return (
 		<div className={styles.container}>

@@ -195,18 +195,6 @@
 	background: #ffffff;
 }
 
-.deletedCard {
-	justify-content: center;
-	min-height: 52px;
-	background: #fafafa;
-}
-
-.deletedText {
-	margin: 0;
-	font-size: 13px;
-	color: #9a9a9a;
-}
-
 .edited {
 	font-size: 11px;
 	color: #9a9a9a;

@@ -1,23 +1,15 @@
 import { useEffect, useRef, useState } from "react";
 import { FaHeart, FaPen, FaRegHeart, FaTrashCan } from "react-icons/fa6";
 import { useAuth } from "@/contexts/AuthProvider";
-import { useReviews } from "@/contexts/ReviewContext";
 import { avatarColor } from "./avatarColor";
 import ReviewComments from "./ReviewComments";
-import {
-	averageRating,
-	buildAnonLabels,
-	displayInitial,
-	displayName,
-	formatRelative,
-	type Review,
-} from "./reviewMock";
+import { displayInitial, formatRelative, type Review } from "./reviewModel";
 import Stars from "./Stars";
+import { useEventReviews, useReviewActions } from "./useReviewQueries";
 import styles from "./EventReviews.module.css";
 
 const ReviewCard = ({
 	review,
-	labels,
 	onToggleLike,
 	onUpdate,
 	onDelete,
@@ -25,8 +17,7 @@ const ReviewCard = ({
 	onRequireLogin,
 }: {
 	review: Review;
-	labels: Map<string, string>;
-	onToggleLike: (id: number) => void;
+	onToggleLike: (review: Review) => void;
 	onUpdate: (id: number, rating: number, content: string) => void;
 	onDelete: (id: number) => void;
 	canWrite: boolean;
@@ -35,14 +26,8 @@ const ReviewCard = ({
 	const [editing, setEditing] = useState(false);
 	const [rating, setRating] = useState(review.rating);
 	const [content, setContent] = useState(review.content);
-	if (review.isDeleted) {
-		return (
-			<li className={`${styles.card} ${styles.deletedCard}`}>
-				<p className={styles.deletedText}>삭제된 후기입니다.</p>
-			</li>
-		);
-	}
-	const color = avatarColor(review.authorKey, review.isAnonymous);
+	// 서버가 작성자 id를 주지 않으므로 표시 이름으로 색을 고정한다
+	const color = avatarColor(review.authorName, review.isAnonymous);
 
 	return (
 		<li className={styles.card}>
@@ -55,7 +40,7 @@ const ReviewCard = ({
 					{displayInitial(review)}
 				</span>
 				<div className={styles.authorCol}>
-					<span className={styles.author}>{displayName(review, labels)}</span>
+					<span className={styles.author}>{review.authorName}</span>
 					<span className={styles.time}>
 						{formatRelative(review.createdAt)}
 					</span>
@@ -100,7 +85,7 @@ const ReviewCard = ({
 			<button
 				type="button"
 				className={`${styles.likeBtn} ${review.isLiked ? styles.liked : ""}`}
-				onClick={() => onToggleLike(review.id)}
+				onClick={() => onToggleLike(review)}
 				aria-pressed={review.isLiked}
 				aria-label={`좋아요 ${review.likeCount}개`}
 			>
@@ -128,7 +113,6 @@ const ReviewCard = ({
 
 			<ReviewComments
 				review={review}
-				labels={labels}
 				canWrite={canWrite}
 				onRequireLogin={onRequireLogin}
 			/>
@@ -138,24 +122,14 @@ const ReviewCard = ({
 
 interface EventReviewsProps {
 	eventId: number;
-	eventTitle: string;
 	onRequireLogin?: () => void;
 }
 
 /** 행사 상세 패널의 후기 섹션 (v2 카드 + 별점). */
-const EventReviews = ({
-	eventId,
-	eventTitle,
-	onRequireLogin,
-}: EventReviewsProps) => {
-	const {
-		reviewsByEvent,
-		commentsByReview,
-		addReview,
-		updateReview,
-		removeReview,
-		toggleReviewLike,
-	} = useReviews();
+const EventReviews = ({ eventId, onRequireLogin }: EventReviewsProps) => {
+	const { data } = useEventReviews(eventId);
+	const { addReview, updateReview, removeReview, toggleReviewLike } =
+		useReviewActions();
 	const { user } = useAuth();
 
 	const [isWriting, setIsWriting] = useState(false);
@@ -169,14 +143,9 @@ const EventReviews = ({
 		if (isWriting) textareaRef.current?.focus();
 	}, [isWriting]);
 
-	const list = reviewsByEvent(eventId);
-	const liveList = list.filter((review) => !review.isDeleted);
-	const average = averageRating(liveList);
-	// 익명 번호는 행사 하나 전체에서 통일한다
-	const labels = buildAnonLabels(
-		list,
-		list.flatMap((r) => commentsByReview(r.id)),
-	);
+	// 지운 후기는 서버가 목록에서 빼고 보낸다. 익명 번호도 서버가 행사 단위로 매긴다.
+	const list = data?.reviews ?? [];
+	const average = data?.averageRating ?? null;
 
 	const reset = () => {
 		setIsWriting(false);
@@ -195,7 +164,7 @@ const EventReviews = ({
 
 	const handleSubmit = () => {
 		if (!content.trim()) return;
-		addReview({ rating, content, isAnonymous }, eventId, eventTitle);
+		addReview({ eventId, rating, content, isAnonymous });
 		reset();
 	};
 
@@ -209,7 +178,7 @@ const EventReviews = ({
 						<Stars value={average} />
 					</>
 				)}
-				<span className={styles.count}>후기 {liveList.length}개</span>
+				<span className={styles.count}>후기 {data?.reviewCount ?? 0}개</span>
 			</header>
 
 			{isWriting ? (
@@ -260,10 +229,13 @@ const EventReviews = ({
 						<ReviewCard
 							key={review.id}
 							review={review}
-							labels={labels}
-							onToggleLike={toggleReviewLike}
-							onUpdate={updateReview}
-							onDelete={removeReview}
+							onToggleLike={(r) =>
+								toggleReviewLike({ id: r.id, isLiked: r.isLiked })
+							}
+							onUpdate={(id, nextRating, nextContent) =>
+								updateReview({ id, rating: nextRating, content: nextContent })
+							}
+							onDelete={(id) => removeReview(id)}
 							canWrite={!!user}
 							onRequireLogin={onRequireLogin}
 						/>

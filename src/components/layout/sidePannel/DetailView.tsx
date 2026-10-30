@@ -159,7 +159,6 @@ const DetailView = ({
 			>
 				<EventReviews
 					eventId={eventId}
-					eventTitle={event.title}
 					onRequireLogin={() => setIsLoginModalOpen(true)}
 				/>
 			</div>
