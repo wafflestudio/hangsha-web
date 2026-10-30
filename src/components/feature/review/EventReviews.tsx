@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { FaHeart, FaRegHeart } from "react-icons/fa6";
+import { FaHeart, FaPen, FaRegHeart, FaTrashCan } from "react-icons/fa6";
 import { useAuth } from "@/contexts/AuthProvider";
 import { useReviews } from "@/contexts/ReviewContext";
 import { avatarColor } from "./avatarColor";
@@ -19,15 +19,29 @@ const ReviewCard = ({
 	review,
 	labels,
 	onToggleLike,
+	onUpdate,
+	onDelete,
 	canWrite,
 	onRequireLogin,
 }: {
 	review: Review;
 	labels: Map<string, string>;
 	onToggleLike: (id: number) => void;
+	onUpdate: (id: number, rating: number, content: string) => void;
+	onDelete: (id: number) => void;
 	canWrite: boolean;
 	onRequireLogin?: () => void;
 }) => {
+	const [editing, setEditing] = useState(false);
+	const [rating, setRating] = useState(review.rating);
+	const [content, setContent] = useState(review.content);
+	if (review.isDeleted) {
+		return (
+			<li className={`${styles.card} ${styles.deletedCard}`}>
+				<p className={styles.deletedText}>삭제된 후기입니다.</p>
+			</li>
+		);
+	}
 	const color = avatarColor(review.authorKey, review.isAnonymous);
 
 	return (
@@ -45,11 +59,43 @@ const ReviewCard = ({
 					<span className={styles.time}>
 						{formatRelative(review.createdAt)}
 					</span>
+					{review.isEdited && <span className={styles.edited}>수정됨</span>}
 				</div>
 				<Stars value={review.rating} />
 			</div>
 
-			<p className={styles.content}>{review.content}</p>
+			{editing ? (
+				<>
+					<Stars value={rating} size={17} onChange={setRating} />
+					<textarea
+						className={styles.textarea}
+						value={content}
+						onChange={(e) => setContent(e.currentTarget.value)}
+					/>
+					<div className={styles.editActions}>
+						<button
+							type="button"
+							className={styles.cancelBtn}
+							onClick={() => setEditing(false)}
+						>
+							취소
+						</button>
+						<button
+							type="button"
+							className={styles.submitBtn}
+							disabled={!content.trim()}
+							onClick={() => {
+								onUpdate(review.id, rating, content);
+								setEditing(false);
+							}}
+						>
+							저장
+						</button>
+					</div>
+				</>
+			) : (
+				<p className={styles.content}>{review.content}</p>
+			)}
 
 			<button
 				type="button"
@@ -61,6 +107,24 @@ const ReviewCard = ({
 				{review.isLiked ? <FaHeart size={12} /> : <FaRegHeart size={12} />}
 				<span>{review.likeCount}</span>
 			</button>
+			{review.isMine && !editing && (
+				<div className={styles.manageActions}>
+					<button
+						type="button"
+						className={styles.manageBtn}
+						onClick={() => setEditing(true)}
+					>
+						<FaPen size={11} /> 수정
+					</button>
+					<button
+						type="button"
+						className={styles.manageBtn}
+						onClick={() => onDelete(review.id)}
+					>
+						<FaTrashCan size={11} /> 삭제
+					</button>
+				</div>
+			)}
 
 			<ReviewComments
 				review={review}
@@ -84,8 +148,14 @@ const EventReviews = ({
 	eventTitle,
 	onRequireLogin,
 }: EventReviewsProps) => {
-	const { reviewsByEvent, commentsByReview, addReview, toggleReviewLike } =
-		useReviews();
+	const {
+		reviewsByEvent,
+		commentsByReview,
+		addReview,
+		updateReview,
+		removeReview,
+		toggleReviewLike,
+	} = useReviews();
 	const { user } = useAuth();
 
 	const [isWriting, setIsWriting] = useState(false);
@@ -100,7 +170,8 @@ const EventReviews = ({
 	}, [isWriting]);
 
 	const list = reviewsByEvent(eventId);
-	const average = averageRating(list);
+	const liveList = list.filter((review) => !review.isDeleted);
+	const average = averageRating(liveList);
 	// 익명 번호는 행사 하나 전체에서 통일한다
 	const labels = buildAnonLabels(
 		list,
@@ -138,7 +209,7 @@ const EventReviews = ({
 						<Stars value={average} />
 					</>
 				)}
-				<span className={styles.count}>후기 {list.length}개</span>
+				<span className={styles.count}>후기 {liveList.length}개</span>
 			</header>
 
 			{isWriting ? (
@@ -191,6 +262,8 @@ const EventReviews = ({
 							review={review}
 							labels={labels}
 							onToggleLike={toggleReviewLike}
+							onUpdate={updateReview}
+							onDelete={removeReview}
 							canWrite={!!user}
 							onRequireLogin={onRequireLogin}
 						/>

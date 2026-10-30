@@ -34,6 +34,18 @@
 	gap: 12px;
 }
 
+.group {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+
+/* 답글은 아바타 폭(24px) + 간격(8px)만큼 들여쓴다 */
+.reply,
+.replyForm {
+	margin-left: 32px;
+}
+
 /* ----- 댓글 한 줄 ----- */
 
 .row {
@@ -132,6 +144,34 @@
 .likeBtn:hover,
 .liked {
 	color: #e2517a;
+}
+
+.actions {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+}
+
+.textBtn {
+	padding: 0;
+	border: none;
+	background: none;
+	cursor: pointer;
+	font-family: inherit;
+	font-size: 11px;
+	font-weight: 600;
+	color: #9a9a9a;
+}
+
+.textBtn:hover {
+	color: #f59300;
+}
+
+.deleted {
+	margin: 0;
+	padding: 2px 0;
+	font-size: 12px;
+	color: #b4b4b4;
 }
 
 .empty {

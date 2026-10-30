@@ -195,6 +195,42 @@
 	background: #ffffff;
 }
 
+.deletedCard {
+	justify-content: center;
+	min-height: 52px;
+	background: #fafafa;
+}
+
+.deletedText {
+	margin: 0;
+	font-size: 13px;
+	color: #9a9a9a;
+}
+
+.edited {
+	font-size: 11px;
+	color: #9a9a9a;
+}
+
+.manageActions,
+.editActions {
+	display: flex;
+	justify-content: flex-end;
+	gap: 8px;
+}
+
+.manageBtn {
+	display: inline-flex;
+	align-items: center;
+	gap: 4px;
+	border: 0;
+	background: transparent;
+	cursor: pointer;
+	font: inherit;
+	font-size: 12px;
+	color: #888;
+}
+
 .cardHead {
 	display: flex;
 	align-items: center;

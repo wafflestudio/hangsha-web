@@ -25,15 +25,24 @@ export interface Review extends Authored {
 	createdAt: Date;
 	likeCount: number;
 	isLiked: boolean;
+	isDeleted: boolean;
+	isEdited: boolean;
 }
 
 /**
- * 후기에 달리는 댓글. **대댓글은 없다** — 모든 댓글이 후기 바로 아래
- * 한 단에 평평하게 쌓인다. 댓글에 다시 댓글을 달 수 없다.
+ * 후기에 달리는 댓글과 답글. 답글은 **1단까지** — 최상위 댓글(parentId = null)에만
+ * 달 수 있고, 답글에 다시 답글은 달 수 없다.
  */
 export interface ReviewComment extends Authored {
 	id: number;
 	reviewId: number;
+	/** null이면 최상위 댓글, 값이 있으면 그 댓글의 답글. */
+	parentId: number | null;
+	/**
+	 * 작성자가 지웠지만 살아 있는 답글이 있어 "삭제된 댓글입니다" 자리로 남은 댓글.
+	 * 답글이 없는 댓글은 지우면 목록에서 바로 빠진다.
+	 */
+	isDeleted: boolean;
 	content: string;
 	createdAt: Date;
 	likeCount: number;
@@ -79,6 +88,8 @@ const SEED_REVIEWS: Review[] = [
 		createdAt: ago(2 * DAY),
 		likeCount: 12,
 		isLiked: false,
+		isDeleted: false,
+		isEdited: false,
 	},
 	{
 		id: 2,
@@ -94,6 +105,8 @@ const SEED_REVIEWS: Review[] = [
 		createdAt: ago(6 * DAY),
 		likeCount: 4,
 		isLiked: true,
+		isDeleted: false,
+		isEdited: false,
 	},
 	{
 		id: 3,
@@ -109,6 +122,8 @@ const SEED_REVIEWS: Review[] = [
 		createdAt: ago(9 * DAY),
 		likeCount: 6,
 		isLiked: false,
+		isDeleted: false,
+		isEdited: false,
 	},
 	{
 		id: 4,
@@ -124,6 +139,8 @@ const SEED_REVIEWS: Review[] = [
 		createdAt: ago(11 * DAY),
 		likeCount: 2,
 		isLiked: false,
+		isDeleted: false,
+		isEdited: false,
 	},
 	{
 		id: 5,
@@ -139,6 +156,8 @@ const SEED_REVIEWS: Review[] = [
 		createdAt: ago(3 * HOUR),
 		likeCount: 8,
 		isLiked: true,
+		isDeleted: false,
+		isEdited: false,
 	},
 ];
 
@@ -146,6 +165,8 @@ const SEED_COMMENTS: ReviewComment[] = [
 	{
 		id: 1,
 		reviewId: 1,
+		parentId: null,
+		isDeleted: false,
 		author: "서울대붕어빵",
 		authorKey: "u2",
 		isAnonymous: true,
@@ -158,6 +179,8 @@ const SEED_COMMENTS: ReviewComment[] = [
 	{
 		id: 2,
 		reviewId: 1,
+		parentId: 1,
+		isDeleted: false,
 		author: "감자밭관리인",
 		authorKey: "u1",
 		isAnonymous: false,
@@ -170,6 +193,8 @@ const SEED_COMMENTS: ReviewComment[] = [
 	{
 		id: 3,
 		reviewId: 1,
+		parentId: 1,
+		isDeleted: false,
 		author: ME.author,
 		authorKey: ME.authorKey,
 		isAnonymous: true,
@@ -182,6 +207,8 @@ const SEED_COMMENTS: ReviewComment[] = [
 	{
 		id: 4,
 		reviewId: 1,
+		parentId: null,
+		isDeleted: false,
 		author: "관악산다람쥐",
 		authorKey: "u3",
 		isAnonymous: false,
@@ -194,6 +221,8 @@ const SEED_COMMENTS: ReviewComment[] = [
 	{
 		id: 5,
 		reviewId: 3,
+		parentId: null,
+		isDeleted: false,
 		author: "서울대붕어빵",
 		authorKey: "u2",
 		isAnonymous: true,
@@ -201,6 +230,48 @@ const SEED_COMMENTS: ReviewComment[] = [
 		content: "명함 안 만들어봤는데 그냥 학과랑 이름만 적어가도 되나요?",
 		createdAt: ago(5 * DAY),
 		likeCount: 3,
+		isLiked: false,
+	},
+	{
+		id: 6,
+		reviewId: 3,
+		parentId: 5,
+		isDeleted: false,
+		author: "샤로수길러",
+		authorKey: "u4",
+		isAnonymous: false,
+		isMine: false,
+		content: "네 저도 그렇게 갔는데 문제없었어요.",
+		createdAt: ago(4 * DAY),
+		likeCount: 1,
+		isLiked: false,
+	},
+	{
+		id: 7,
+		reviewId: 3,
+		parentId: null,
+		isDeleted: true,
+		author: "관악산다람쥐",
+		authorKey: "u3",
+		isAnonymous: false,
+		isMine: false,
+		content: "",
+		createdAt: ago(3 * DAY),
+		likeCount: 0,
+		isLiked: false,
+	},
+	{
+		id: 8,
+		reviewId: 3,
+		parentId: 7,
+		isDeleted: false,
+		author: "서울대붕어빵",
+		authorKey: "u2",
+		isAnonymous: true,
+		isMine: false,
+		content: "저도 같은 생각이에요.",
+		createdAt: ago(2 * DAY),
+		likeCount: 0,
 		isLiked: false,
 	},
 ];
@@ -230,6 +301,8 @@ export const useMockReviews = () => {
 					createdAt: new Date(),
 					likeCount: 0,
 					isLiked: false,
+					isDeleted: false,
+					isEdited: false,
 				},
 				...prev,
 			]);
@@ -239,9 +312,27 @@ export const useMockReviews = () => {
 	);
 
 	const removeReview = useCallback((id: number) => {
-		setReviews((prev) => prev.filter((r) => r.id !== id));
-		setComments((prev) => prev.filter((c) => c.reviewId !== id));
+		setReviews((prev) =>
+			prev.map((r) =>
+				r.id === id
+					? { ...r, content: "", isDeleted: true, likeCount: 0, isLiked: false }
+					: r,
+			),
+		);
 	}, []);
+
+	const updateReview = useCallback(
+		(id: number, rating: number, content: string) => {
+			setReviews((prev) =>
+				prev.map((review) =>
+					review.id === id
+						? { ...review, rating, content: content.trim(), isEdited: true }
+						: review,
+				),
+			);
+		},
+		[],
+	);
 
 	const toggleReviewLike = useCallback((id: number) => {
 		setReviews((prev) =>
@@ -258,29 +349,57 @@ export const useMockReviews = () => {
 	}, []);
 
 	const addComment = useCallback(
-		(reviewId: number, content: string, isAnonymous: boolean) => {
+		(
+			reviewId: number,
+			content: string,
+			isAnonymous: boolean,
+			parentId: number | null = null,
+		) => {
 			nextCommentId += 1;
-			setComments((prev) => [
-				...prev,
-				{
-					id: nextCommentId,
-					reviewId,
-					author: ME.author,
-					authorKey: ME.authorKey,
-					isAnonymous,
-					isMine: true,
-					content: content.trim(),
-					createdAt: new Date(),
-					likeCount: 0,
-					isLiked: false,
-				},
-			]);
+			const id = nextCommentId;
+			setComments((prev) => {
+				// 답글은 1단까지. 답글이나 지워진 댓글에는 달 수 없다.
+				if (parentId !== null) {
+					const parent = prev.find((c) => c.id === parentId);
+					if (!parent || parent.parentId !== null || parent.isDeleted) {
+						return prev;
+					}
+				}
+				return [
+					...prev,
+					{
+						id,
+						reviewId,
+						parentId,
+						isDeleted: false,
+						author: ME.author,
+						authorKey: ME.authorKey,
+						isAnonymous,
+						isMine: true,
+						content: content.trim(),
+						createdAt: new Date(),
+						likeCount: 0,
+						isLiked: false,
+					},
+				];
+			});
 		},
 		[],
 	);
 
+	/**
+	 * 댓글 삭제는 항상 "삭제된 댓글입니다" 자리로 남긴다.
+	 */
 	const removeComment = useCallback((id: number) => {
-		setComments((prev) => prev.filter((c) => c.id !== id));
+		setComments((prev) => {
+			const target = prev.find((c) => c.id === id);
+			if (!target) return prev;
+			return prev.map((c) =>
+				c.id === id
+					? { ...c, isDeleted: true, content: "", likeCount: 0, isLiked: false }
+					: c,
+			);
+		});
 	}, []);
 
 	const toggleCommentLike = useCallback((id: number) => {
@@ -319,6 +438,7 @@ export const useMockReviews = () => {
 		commentsByReview,
 		addReview,
 		removeReview,
+		updateReview,
 		toggleReviewLike,
 		addComment,
 		removeComment,
